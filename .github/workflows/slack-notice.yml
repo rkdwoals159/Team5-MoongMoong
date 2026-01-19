@@ -1,4 +1,4 @@
-name: slack-notice.yml
+name: slack-notice
 
 on:
   pull_request:
@@ -11,24 +11,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Build mention list
+        id: mention
+        shell: bash
+        run: |
+          AUTHOR="${{ github.event.pull_request.user.login }}"
+
+          MEMBERS=(
+            "joyjhm:${{ secrets.HYUNMIN_SLACK_ID }}"
+            "coli-geonwoo:${{ secrets.GEONWOO_SLACK_ID }}"
+            "yeonjinJoo:${{ secrets.YEONJIN_SLACK_ID }}"
+          )
+
+          MENTIONS=""
+          for entry in "${MEMBERS[@]}"; do
+            NAME="${entry%%:*}"
+            ID="${entry##*:}"
+            if [ "$NAME" != "$AUTHOR" ]; then
+              MENTIONS="$MENTIONS <@$ID>"
+            fi
+          done
+
+          echo "mentions=$MENTIONS" >> "$GITHUB_OUTPUT"
+
       - name: Notify Slack (PR opened)
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
             {
-              "text": "*🔔 새로운 Pull Request 생성*\n\n*📌 제목*\n${{ github.event.pull_request.title }}\n\n*👤 작성자*\n${{ github.event.pull_request.user.login }}\n\n*🌿 브랜치*\n${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}\n\n👉 PR 바로가기\n${{ github.event.pull_request.html_url }}"
+              "link_names": true,
+              "text": "${{ steps.mention.outputs.mentions }}\n*🔔 새로운 Pull Request 생성*\n\n*📌 제목*\n${{ github.event.pull_request.title }}\n\n*👤 작성자*\n${{ github.event.pull_request.user.login }}\n\n*🌿 브랜치*\n${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}\n\n👉 PR 바로가기\n${{ github.event.pull_request.html_url }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      - name: Notify Slack (Merge)
+      - name: Notify Slack (PR merged)
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
             {
-              "text": "*🔔 PR Closed 알림*\n\n*📌 제목*\n${{ github.event.pull_request.title }}\n\n*👤 작성자*\n${{ github.event.pull_request.user.login }}\n\n*🌿 브랜치*\n${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}\n\n👉 PR 바로가기\n${{ github.event.pull_request.html_url }}"
+              "link_names": true,
+              "text": "${{ steps.mention.outputs.mentions }}\n*✅ Pull Request 머지 완료*\n\n*📌 제목*\n${{ github.event.pull_request.title }}\n\n*👤 작성자*\n${{ github.event.pull_request.user.login }}\n\n*🌿 브랜치*\n${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}\n\n👉 PR 바로가기\n${{ github.event.pull_request.html_url }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-
