@@ -1,9 +1,6 @@
 name: Auto PR Setting
 
 on:
-  push:
-    branches:
-      - chore/#5-issue-pr-template
   pull_request:
     types: [opened]
 
