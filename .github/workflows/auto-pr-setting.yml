@@ -40,48 +40,40 @@ jobs:
           # ===== 팀 설정 =====
           BE_ASSIGNEES=("joyjhm" "coli-geonwoo" "yeonjinJoo")
           FE_ASSIGNEES=("rkdwoals159" "bonsng" "yyoonngg")
-          TEAM_MEMBERS=("joyjhm" "coli-geonwoo" "yeonjinJoo" "rkdwoals159" "bonsng" "yyoonngg")
+          
+          AUTHOR="${{ github.actor }}"
           
           # ===== 이슈 데이터 파싱 =====
           LABELS=$(echo "${ISSUE_DATA}" | jq -r '.labels | join(",")')
           PROJECTS=$(echo "${ISSUE_DATA}" | jq -r '.projects | join(",")')
           LABEL_ARRAY=($(echo "${ISSUE_DATA}" | jq -r '.labels[]'))
-      
-          FINAL_ASSIGNEES=()
-      
-          # ===== 라벨 기반 assignee 결정 =====
-          for LABEL in "${LABEL_ARRAY[@]}"; do
-            if [[ "$LABEL" == "be" ]]; then
-              FINAL_ASSIGNEES+=("${BE_ASSIGNEES[@]}")
-            fi
-            if [[ "$LABEL" == "fe" ]]; then
-              FINAL_ASSIGNEES+=("${FE_ASSIGNEES[@]}")
-            fi
-          done
-      
-          # ===== 라벨 없을 경우 fallback =====
-          if [ ${#FINAL_ASSIGNEES[@]} -eq 0 ]; then
-            FINAL_ASSIGNEES+=("${{ github.actor }}")
-          fi
-      
-          # ===== assignee 중복 제거 =====
-          FINAL_ASSIGNEES=$(printf "%s\n" "${FINAL_ASSIGNEES[@]}" | sort -u | paste -sd ",")
           
-          # ===== Reviewer 계산 (assignee 제외) =====
-          IFS=',' read -r -a ASSIGNEE_ARRAY <<< "${FINAL_ASSIGNEES}"
+          # ===== Reviewer 계산 (작성자 소속 팀 기준) =====
           REVIEWERS=()
-
-          for MEMBER in "${TEAM_MEMBERS[@]}"; do
-            if [[ ! " ${ASSIGNEE_ARRAY[@]} " =~ " ${MEMBER} " ]]; then
-              REVIEWERS+=("${MEMBER}")
-            fi
+          
+          if [[ " ${BE_ASSIGNEES[@]} " =~ " ${AUTHOR} " ]]; then
+            for MEMBER in "${BE_ASSIGNEES[@]}"; do
+              if [[ "${MEMBER}" != "${AUTHOR}" ]]; then
+                REVIEWERS+=("${MEMBER}")
+              fi
           done
-
+          elif [[ " ${FE_ASSIGNEES[@]} " =~ " ${AUTHOR} " ]]; then
+            for MEMBER in "${FE_ASSIGNEES[@]}"; do
+              if [[ "${MEMBER}" != "${AUTHOR}" ]]; then
+                REVIEWERS+=("${MEMBER}")
+              fi
+            done
+          else
+            echo "작성자가 BE/FE 어느 팀에도 속하지 않음: ${AUTHOR}"
+          fi
+          
           REVIEWER_LIST=$(IFS=','; echo "${REVIEWERS[*]}")
-
+          
           # ===== PR 설정 적용 =====
           gh pr edit ${{ github.event.pull_request.number }} \
-           --add-assignee "${FINAL_ASSIGNEES}" \
-           --add-label "${LABELS}" \
-           --add-reviewer "${REVIEWER_LIST}" \
-           --add-project "${PROJECTS}"
+          --add-assignee "${AUTHOR}" \
+          --add-label "${LABELS}" \
+          --add-reviewer "${REVIEWER_LIST}" \
+          --add-project "${PROJECTS}"
+
+
