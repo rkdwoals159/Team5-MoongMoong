@@ -81,4 +81,4 @@ jobs:
            --add-assignee "${FINAL_ASSIGNEES}" \
            --add-label "${LABELS}" \
            --add-reviewer "${REVIEWER_LIST}" \
-           --add-project "${PROJECTS}
+           --add-project "${PROJECTS}"
