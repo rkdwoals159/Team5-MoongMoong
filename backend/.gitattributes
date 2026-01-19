@@ -1,0 +1,8 @@
+# gradlew 스크립트는 Unix 계열(macOS/Linux)에서 실행되므로 줄바꿈을 LF로 강제 (CRLF면 실행 안 되는 경우 있음)
+gradlew text eol=lf
+
+# Windows용 배치 파일은 CRLF가 필요하므로 Windows 표준 줄바꿈(CRLF)으로 유지
+*.bat text eol=crlf
+
+# jar 파일은 바이너리 파일이므로 줄바꿈 변환, diff, merge 대상에서 제외
+*.jar binary

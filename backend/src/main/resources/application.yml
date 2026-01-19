@@ -1,0 +1,23 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger
+    enabled: true
+    #검색
+    filter: true
+    deep-linking: true
+    #정렬
+    tags-sorter: alpha
+    operations-sorter: alpha
+    #UX
+    display-request-duration: true
+    disable-swagger-default-url: true

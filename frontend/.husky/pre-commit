@@ -1,0 +1,9 @@
+FRONTEND_STAGED="$(git diff --cached --name-only | grep '^frontend/' || true)"
+if [ -z "$FRONTEND_STAGED" ]; then
+  exit 0
+fi
+
+cd frontend || exit 1
+
+yarn format:check || (yarn format && git -C .. add -A)
+yarn lint
