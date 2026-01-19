@@ -1,0 +1,36 @@
+name: slack-notice.yml
+
+on:
+  pull_request:
+    types: [ opened, closed ]
+    paths:
+      - "backend/**"
+
+jobs:
+  notify-slack:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Notify Slack (PR opened)
+        if: github.event.action == 'opened'
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "*🔔 새로운 Pull Request 생성*\n\n*📌 제목*\n${{ github.event.pull_request.title }}\n\n*👤 작성자*\n${{ github.event.pull_request.user.login }}\n\n*🌿 브랜치*\n${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}\n\n👉 PR 바로가기\n${{ github.event.pull_request.html_url }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Slack (Merge)
+        if: github.event.action == 'closed' && github.event.pull_request.merged == true
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "*🔔 PR Closed 알림*\n\n*📌 제목*\n${{ github.event.pull_request.title }}\n\n*👤 작성자*\n${{ github.event.pull_request.user.login }}\n\n*🌿 브랜치*\n${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}\n\n👉 PR 바로가기\n${{ github.event.pull_request.html_url }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+
