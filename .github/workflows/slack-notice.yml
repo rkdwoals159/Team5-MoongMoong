@@ -2,9 +2,9 @@ name: slack-notice.yml
 
 on:
   pull_request:
-    types: [ opened, closed ]
     paths:
       - "backend/**"
+      - ".github/workflows/slack-notice.yml"
 
 jobs:
   notify-slack:
@@ -12,7 +12,6 @@ jobs:
 
     steps:
       - name: Notify Slack (PR opened)
-        if: github.event.action == 'opened'
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
@@ -23,7 +22,6 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Notify Slack (Merge)
-        if: github.event.action == 'closed' && github.event.pull_request.merged == true
         uses: slackapi/slack-github-action@v1.24.0
         with:
           payload: |
