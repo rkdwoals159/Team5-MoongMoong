@@ -1,0 +1,84 @@
+name: Auto PR Setting
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  assign-issue:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Auth Token
+        run: echo "GH_TOKEN=${{ secrets.PERSONAL_ACCESS_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Get Issue Number
+        id: get_issue
+        run: |
+          PR_DATA=$(gh pr view ${{ github.event.pull_request.number }} --json headRefName)
+          echo "PR_DATA=${PR_DATA}" >> $GITHUB_ENV
+          BRANCH_NAME=$(echo "${PR_DATA}" | jq -r '.headRefName')
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+          ISSUE_NUMBER=$(echo "${BRANCH_NAME}" | awk -F'#' '{print $2}' | grep -Eo '^[0-9]+')
+          echo "ISSUE_NUMBER=${ISSUE_NUMBER}" >> $GITHUB_ENV
+
+      - name: Get Issue Details
+        id: get_issue_details
+        run: |
+          ISSUE_DATA=$(gh issue view "${ISSUE_NUMBER}" --json assignees,labels,projectItems --jq '{assignees: [.assignees[].login], labels: [.labels[].name], projects: [.projectItems[].title]}')
+          echo "ISSUE_DATA=${ISSUE_DATA}" >> $GITHUB_ENV
+
+      - name: Setting PR
+        id: setting_pr
+        run: |
+          # ===== 팀 설정 =====
+          BE_ASSIGNEES=("joyjhm" "coli-geonwoo" "yeonjinJoo")
+          FE_ASSIGNEES=("rkdwoals159" "bonsng" "yyoonngg")
+          TEAM_MEMBERS=("joyjhm" "coli-geonwoo" "yeonjinJoo" "rkdwoals159" "bonsng" "yyoonngg")
+          
+          # ===== 이슈 데이터 파싱 =====
+          LABELS=$(echo "${ISSUE_DATA}" | jq -r '.labels | join(",")')
+          PROJECTS=$(echo "${ISSUE_DATA}" | jq -r '.projects | join(",")')
+          LABEL_ARRAY=($(echo "${ISSUE_DATA}" | jq -r '.labels[]'))
+      
+          FINAL_ASSIGNEES=()
+      
+          # ===== 라벨 기반 assignee 결정 =====
+          for LABEL in "${LABEL_ARRAY[@]}"; do
+            if [[ "$LABEL" == "be" ]]; then
+              FINAL_ASSIGNEES+=("${BE_ASSIGNEES[@]}")
+            fi
+            if [[ "$LABEL" == "fe" ]]; then
+              FINAL_ASSIGNEES+=("${FE_ASSIGNEES[@]}")
+            fi
+          done
+      
+          # ===== 라벨 없을 경우 fallback =====
+          if [ ${#FINAL_ASSIGNEES[@]} -eq 0 ]; then
+            FINAL_ASSIGNEES+=("${{ github.actor }}")
+          fi
+      
+          # ===== assignee 중복 제거 =====
+          FINAL_ASSIGNEES=$(printf "%s\n" "${FINAL_ASSIGNEES[@]}" | sort -u | paste -sd ",")
+          
+          # ===== Reviewer 계산 (assignee 제외) =====
+          IFS=',' read -r -a ASSIGNEE_ARRAY <<< "${FINAL_ASSIGNEES}"
+          REVIEWERS=()
+
+          for MEMBER in "${TEAM_MEMBERS[@]}"; do
+            if [[ ! " ${ASSIGNEE_ARRAY[@]} " =~ " ${MEMBER} " ]]; then
+              REVIEWERS+=("${MEMBER}")
+            fi
+          done
+
+          REVIEWER_LIST=$(IFS=','; echo "${REVIEWERS[*]}")
+
+          # ===== PR 설정 적용 =====
+          gh pr edit ${{ github.event.pull_request.number }} \
+           --add-assignee "${FINAL_ASSIGNEES}" \
+           --add-label "${LABELS}" \
+           --add-reviewer "${REVIEWER_LIST}" \
+           --add-project "${PROJECTS}
