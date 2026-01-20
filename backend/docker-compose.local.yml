@@ -1,0 +1,9 @@
+services:
+  web:
+    image: ${DOCKERHUB_USERNAME}/${DOCKERHUB_REPOSITORY}:${TAG}
+    container_name: moong-moong-dev
+    ports:
+      - "8080:8080"
+    platform: linux/amd64
+    environment:
+      SPRING_PROFILES_ACTIVE: local
