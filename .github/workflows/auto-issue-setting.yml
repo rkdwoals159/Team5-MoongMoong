@@ -1,0 +1,49 @@
+name: Auto Issue Setting
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-assign issue creator
+        uses: pozil/auto-assign-issue@v2
+        with:
+          repo-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          assignees: ${{ github.actor }}
+
+      - name: Auto add BE / FE label by assignee
+        run: |
+          # ===== 인증 =====
+          echo "GH_TOKEN=${{ secrets.PERSONAL_ACCESS_TOKEN }}" >> $GITHUB_ENV
+
+          # ===== 팀 설정 =====
+          BE_ASSIGNEES=("joyjhm" "coli-geonwoo" "yeonjinJoo")
+          FE_ASSIGNEES=("rkdwoals159" "bonsng" "yyoonngg")
+
+          ISSUE_NUMBER=${{ github.event.issue.number }}
+          ASSIGNEE=${{ github.actor }}
+
+          LABELS=()
+
+          # ===== BE 판별 =====
+          for BE in "${BE_ASSIGNEES[@]}"; do
+            if [[ "$ASSIGNEE" == "$BE" ]]; then
+              LABELS+=("BE")
+            fi
+          done
+
+          # ===== FE 판별 =====
+          for FE in "${FE_ASSIGNEES[@]}"; do
+            if [[ "$ASSIGNEE" == "$FE" ]]; then
+              LABELS+=("FE")
+            fi
+          done
+
+          # ===== 라벨 추가 =====
+          if [ ${#LABELS[@]} -gt 0 ]; then
+            LABEL_LIST=$(IFS=','; echo "${LABELS[*]}")
+            gh issue edit "$ISSUE_NUMBER" --add-label "$LABEL_LIST"
+          fi

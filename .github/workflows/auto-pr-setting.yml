@@ -1,0 +1,76 @@
+name: Auto PR Setting
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  assign-issue:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Auth Token
+        run: echo "GH_TOKEN=${{ secrets.PERSONAL_ACCESS_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Get Issue Number
+        id: get_issue
+        run: |
+          PR_DATA=$(gh pr view ${{ github.event.pull_request.number }} --json headRefName)
+          echo "PR_DATA=${PR_DATA}" >> $GITHUB_ENV
+          BRANCH_NAME=$(echo "${PR_DATA}" | jq -r '.headRefName')
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+          ISSUE_NUMBER=$(echo "${BRANCH_NAME}" | awk -F'#' '{print $2}' | grep -Eo '^[0-9]+')
+          echo "ISSUE_NUMBER=${ISSUE_NUMBER}" >> $GITHUB_ENV
+
+      - name: Get Issue Details
+        id: get_issue_details
+        run: |
+          ISSUE_DATA=$(gh issue view "${ISSUE_NUMBER}" --json assignees,labels,projectItems --jq '{assignees: [.assignees[].login], labels: [.labels[].name], projects: [.projectItems[].title]}')
+          echo "ISSUE_DATA=${ISSUE_DATA}" >> $GITHUB_ENV
+
+      - name: Setting PR
+        id: setting_pr
+        run: |
+          # ===== 팀 설정 =====
+          BE_ASSIGNEES=("joyjhm" "coli-geonwoo" "yeonjinJoo")
+          FE_ASSIGNEES=("rkdwoals159" "bonsng" "yyoonngg")
+          
+          AUTHOR="${{ github.actor }}"
+          
+          # ===== 이슈 데이터 파싱 =====
+          LABELS=$(echo "${ISSUE_DATA}" | jq -r '.labels | join(",")')
+          PROJECTS=$(echo "${ISSUE_DATA}" | jq -r '.projects | join(",")')
+          LABEL_ARRAY=($(echo "${ISSUE_DATA}" | jq -r '.labels[]'))
+          
+          # ===== Reviewer 계산 (작성자 소속 팀 기준) =====
+          REVIEWERS=()
+          
+          if [[ " ${BE_ASSIGNEES[@]} " =~ " ${AUTHOR} " ]]; then
+            for MEMBER in "${BE_ASSIGNEES[@]}"; do
+              if [[ "${MEMBER}" != "${AUTHOR}" ]]; then
+                REVIEWERS+=("${MEMBER}")
+              fi
+          done
+          elif [[ " ${FE_ASSIGNEES[@]} " =~ " ${AUTHOR} " ]]; then
+            for MEMBER in "${FE_ASSIGNEES[@]}"; do
+              if [[ "${MEMBER}" != "${AUTHOR}" ]]; then
+                REVIEWERS+=("${MEMBER}")
+              fi
+            done
+          else
+            echo "작성자가 BE/FE 어느 팀에도 속하지 않음: ${AUTHOR}"
+          fi
+          
+          REVIEWER_LIST=$(IFS=','; echo "${REVIEWERS[*]}")
+          
+          # ===== PR 설정 적용 =====
+          gh pr edit ${{ github.event.pull_request.number }} \
+          --add-assignee "${AUTHOR}" \
+          --add-label "${LABELS}" \
+          --add-reviewer "${REVIEWER_LIST}" \
+          --add-project "${PROJECTS}"
+
+
