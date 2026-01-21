@@ -1,11 +1,10 @@
-name: slack-notice
+name: slack-notice-fe
 
 on:
   pull_request:
     types: [ opened, closed ]
     paths:
-      - "backend/**"
-      - ".github/workflows/slack-notice.yml"
+      - "frontend/**"
 
 jobs:
   notify-slack:
@@ -19,9 +18,9 @@ jobs:
           AUTHOR="${{ github.event.pull_request.user.login }}"
 
           MEMBERS=(
-            "joyjhm:${{ secrets.HYUNMIN_SLACK_ID }}"
-            "coli-geonwoo:${{ secrets.GEONWOO_SLACK_ID }}"
-            "yeonjinJoo:${{ secrets.YEONJIN_SLACK_ID }}"
+            "bonsng:${{ secrets.BONSNG_SLACK_ID }}"
+            "rkdwoals159:${{ secrets.JAEMIN_SLACK_ID }}"
+            "yyoonngg:${{ secrets.YOUNGHYUN_SLACK_ID }}"
           )
 
           MENTIONS=""
