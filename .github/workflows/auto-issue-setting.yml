@@ -15,10 +15,9 @@ jobs:
           assignees: ${{ github.actor }}
 
       - name: Auto add BE / FE label by assignee
+        env:
+          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
-          # ===== 인증 =====
-          echo "GH_TOKEN=${{ secrets.PERSONAL_ACCESS_TOKEN }}" >> $GITHUB_ENV
-
           # ===== 팀 설정 =====
           BE_ASSIGNEES=("joyjhm" "coli-geonwoo" "yeonjinJoo")
           FE_ASSIGNEES=("rkdwoals159" "bonsng" "yyoonngg")
@@ -31,14 +30,14 @@ jobs:
           # ===== BE 판별 =====
           for BE in "${BE_ASSIGNEES[@]}"; do
             if [[ "$ASSIGNEE" == "$BE" ]]; then
-              LABELS+=("BE")
+              LABELS+=("be")
             fi
           done
 
           # ===== FE 판별 =====
           for FE in "${FE_ASSIGNEES[@]}"; do
             if [[ "$ASSIGNEE" == "$FE" ]]; then
-              LABELS+=("FE")
+              LABELS+=("fe")
             fi
           done
 
