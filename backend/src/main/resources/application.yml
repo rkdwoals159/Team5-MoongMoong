@@ -21,3 +21,5 @@ springdoc:
     #UX
     display-request-duration: true
     disable-swagger-default-url: true
+
+

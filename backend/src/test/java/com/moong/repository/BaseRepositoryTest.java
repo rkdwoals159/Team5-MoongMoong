@@ -1,6 +1,7 @@
 package com.moong.repository;
 
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 public abstract class BaseRepositoryTest {
