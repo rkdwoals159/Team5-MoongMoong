@@ -43,3 +43,9 @@ next-env.d.ts
 .husky
 
 yarn.lock
+
+.codex
+.agents
+.cursor
+*storybook.log
+storybook-static
