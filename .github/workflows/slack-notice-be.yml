@@ -43,7 +43,7 @@ jobs:
               "text": "${{ steps.mention.outputs.mentions }}\n*🔔 새로운 Pull Request 생성*\n\n*📌 제목*\n${{ github.event.pull_request.title }}\n\n*👤 작성자*\n${{ github.event.pull_request.user.login }}\n\n*🌿 브랜치*\n${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}\n\n👉 PR 바로가기\n${{ github.event.pull_request.html_url }}"
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_BE }}
 
       - name: Notify Slack (PR merged)
         if: github.event.action == 'closed' && github.event.pull_request.merged == true
@@ -55,4 +55,4 @@ jobs:
               "text": "${{ steps.mention.outputs.mentions }}\n*✅ Pull Request 머지 완료*\n\n*📌 제목*\n${{ github.event.pull_request.title }}\n\n*👤 작성자*\n${{ github.event.pull_request.user.login }}\n\n*🌿 브랜치*\n${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}\n\n👉 PR 바로가기\n${{ github.event.pull_request.html_url }}"
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_BE }}
