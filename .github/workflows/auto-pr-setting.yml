@@ -89,7 +89,7 @@ jobs:
           # ===== PR 설정 적용 =====
           gh pr edit ${{ github.event.pull_request.number }} \
           --add-assignee "${AUTHOR}" \
-          --add-label "${LABELS}" \
+          --add-label "${FINAL_LABELS}" \
           --add-reviewer "${REVIEWER_LIST}" \
           --add-project "${PROJECTS}"
 

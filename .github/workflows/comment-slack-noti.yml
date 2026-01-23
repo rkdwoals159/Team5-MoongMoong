@@ -11,13 +11,22 @@ on:
 jobs:
   notify-slack:
     runs-on: ubuntu-latest
-    if: github.event.comment != null
+    if: >
+      github.event.comment != null ||
+      github.event.review != null
 
     steps:
       - name: Check and send to Slack
         run: |
-          COMMENT="${{ github.event.comment.body }}"
-          
+          if [[ "${{ github.event.comment.body }}" != "" ]]; then
+            COMMENT="${{ github.event.comment.body }}"
+          elif [[ "${{ github.event.review.body }}" != "" ]]; then
+            COMMENT="${{ github.event.review.body }}"
+          else
+            echo "No comment body"
+            exit 0
+          fi
+  
           if [[ "$COMMENT" == /noti-be* ]]; then
             WEBHOOK_URL="${{ secrets.SLACK_WEBHOOK_URL_BE }}"
           elif [[ "$COMMENT" == /noti-fe* ]]; then
@@ -43,7 +52,6 @@ jobs:
             MAPPED_COMMENT="${MAPPED_COMMENT//@$github_user/<@$slack_id>}"
           done
           
-          # /noti-be 또는 /noti-fe 제거
           MAPPED_COMMENT="${MAPPED_COMMENT#/noti-be}"
           MAPPED_COMMENT="${MAPPED_COMMENT#/noti-fe}"
           MAPPED_COMMENT="${MAPPED_COMMENT## }"
