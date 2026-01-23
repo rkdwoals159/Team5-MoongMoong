@@ -44,5 +44,7 @@ jobs:
           # ===== 라벨 추가 =====
           if [ ${#LABELS[@]} -gt 0 ]; then
             LABEL_LIST=$(IFS=','; echo "${LABELS[*]}")
-            gh issue edit "$ISSUE_NUMBER" --add-label "$LABEL_LIST"
+            gh issue edit "$ISSUE_NUMBER" \
+            --repo "${{ github.repository }}" \
+            --add-label "$LABEL_LIST"
           fi

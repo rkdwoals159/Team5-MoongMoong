@@ -29,4 +29,7 @@ public class WorriedDisease {
     @JoinColumn(name = "pet_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Pet pet;
 
+    public WorriedDisease(Disease disease, Pet pet) {
+        this(null, disease, pet);
+    }
 }

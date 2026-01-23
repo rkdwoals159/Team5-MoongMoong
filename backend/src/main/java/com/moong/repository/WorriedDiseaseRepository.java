@@ -1,9 +1,8 @@
 package com.moong.repository;
 
 import com.moong.domain.entity.WorriedDisease;
-import org.springframework.data.repository.Repository;
-
 import java.util.List;
+import org.springframework.data.repository.Repository;
 
 public interface WorriedDiseaseRepository extends Repository<WorriedDisease, Long> {
 

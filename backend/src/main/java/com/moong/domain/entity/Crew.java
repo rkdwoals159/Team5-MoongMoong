@@ -13,7 +13,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "crew")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Crew {
 
     @Id
@@ -40,4 +43,8 @@ public class Crew {
     @NotNull
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
+    public Crew(PetGroup petGroup, Member member) {
+        this(null, petGroup, member, LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+    }
 }

@@ -13,13 +13,14 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PetRepositoryTest extends BaseRepositoryTest{
+
     @Autowired
     private PetRepository petRepository;
 
     @DisplayName("펫을 저장할 수 있다")
     @Test
     void save() {
-        Pet pet = new Pet(null, "코코", Breed.BEA, Gender.F, LocalDate.of(2025, 5, 29), "서울시", "중구");
+        Pet pet = petFixtureGenerator.generateUnSaved();
         Pet savedPet = petRepository.save(pet);
 
         Optional<Pet> foundPet = petRepository.findById(savedPet.getId());

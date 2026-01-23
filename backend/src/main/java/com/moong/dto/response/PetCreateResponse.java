@@ -5,35 +5,49 @@ import com.moong.domain.entity.WorriedDisease;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.Gender;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-import java.time.LocalDate;
+import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.YearMonth;
 import java.util.List;
 
-@Getter
-@RequiredArgsConstructor
-public class PetCreateResponse {
+@Schema(description = "반려동물 생성 응답")
+public record PetCreateResponse(
+        @Schema(description = "반려동물 아이디", example = "1")
+        long petId,
 
-    private final long petId;
-    private final String petName;
-    private final Breed breed;
-    private final Gender gender;
-    private final LocalDate birthDate;
-    private final String city;
-    private final String district;
-    private final List<Disease> diseases;
+        @Schema(description = "반려동물 이름", example = "초코")
+        String petName,
+
+        @Schema(description = "반려동물 종류", example = "DAS")
+        Breed breed,
+
+        @Schema(description = "성별", example = "M")
+        Gender gender,
+
+        @Schema(description = "생년 월", example = "2026-02")
+        YearMonth birthDate,
+
+        @Schema(description = "거주 시", example = "서울시")
+        String city,
+
+        @Schema(description = "거주 구역", example = "종로주")
+        String district,
+
+        @Schema(description = "우려하는 질병 목록", example = "OCU, MUS")
+        List<Disease> diseases
+) {
 
     public PetCreateResponse(Pet pet, List<WorriedDisease> worriedDiseases) {
-        petId = pet.getId();
-        petName = pet.getName();
-        breed = pet.getBreed();
-        gender = pet.getGender();
-        birthDate = pet.getBirthDate();
-        city = pet.getCity();
-        district = pet.getDistrict();
-        diseases = worriedDiseases.stream()
-                .map(WorriedDisease::getDisease)
-                .toList();
+        this(
+                pet.getId(),
+                pet.getName(),
+                pet.getBreed(),
+                pet.getGender(),
+                YearMonth.of(pet.getBirthDate().getYear(), pet.getBirthDate().getMonthValue()),
+                pet.getCity(),
+                pet.getDistrict(),
+                worriedDiseases.stream()
+                        .map(WorriedDisease::getDisease)
+                        .toList()
+        );
     }
 }

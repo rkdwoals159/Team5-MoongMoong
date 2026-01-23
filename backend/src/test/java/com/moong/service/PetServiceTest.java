@@ -1,5 +1,8 @@
 package com.moong.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.WorriedDisease;
 import com.moong.domain.enums.Breed;
@@ -9,15 +12,11 @@ import com.moong.dto.request.PetCreateRequest;
 import com.moong.dto.response.PetCreateResponse;
 import com.moong.repository.PetRepository;
 import com.moong.repository.WorriedDiseaseRepository;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 class PetServiceTest extends BaseServiceTest {
 
@@ -37,7 +36,7 @@ class PetServiceTest extends BaseServiceTest {
                 "코코",
                 Breed.BEA,
                 Gender.F,
-                LocalDate.of(2025, 5, 29),
+                YearMonth.of(2025, 5),
                 "서울시",
                 "중구",
                 diseases
@@ -45,7 +44,7 @@ class PetServiceTest extends BaseServiceTest {
 
         PetCreateResponse response = petService.createPet(petCreateRequest);
 
-        Optional<Pet> savedPet = petRepository.findById(response.getPetId());
+        Optional<Pet> savedPet = petRepository.findById(response.petId());
         List<WorriedDisease> savedWorriedDiseases = worriedDiseaseRepository.findAll();
 
         assertAll(
