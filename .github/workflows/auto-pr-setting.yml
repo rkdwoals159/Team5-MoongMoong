@@ -45,6 +45,26 @@ jobs:
           PROJECTS=$(echo "${ISSUE_DATA}" | jq -r '.projects | join(",")')
           LABEL_ARRAY=($(echo "${ISSUE_DATA}" | jq -r '.labels[]'))
           
+          # ===== 팀 라벨 결정 =====
+          TEAM_LABEL=""
+          
+          if [[ " ${BE_ASSIGNEES[@]} " =~ " ${AUTHOR} " ]]; then
+            TEAM_LABEL="be"
+          elif [[ " ${FE_ASSIGNEES[@]} " =~ " ${AUTHOR} " ]]; then
+            TEAM_LABEL="fe"
+          fi
+          
+          # ===== 최종 라벨 구성 =====
+          if [[ -n "${TEAM_LABEL}" ]]; then
+            if [[ -n "${LABELS}" ]]; then
+              FINAL_LABELS="${LABELS},${TEAM_LABEL}"
+            else
+              FINAL_LABELS="${TEAM_LABEL}"
+            fi
+          else
+            FINAL_LABELS="${LABELS}"
+          fi
+          
           # ===== Reviewer 계산 (작성자 소속 팀 기준) =====
           REVIEWERS=()
           
