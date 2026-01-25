@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -22,8 +23,12 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Entity
 @Table(name = "member_expense")
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberExpense {
+
+    public static final String SPENT_AT_COLUMN_NAME = "spentAt";
+    public static final String MODIFIED_AT_COLUMN_NAME = "modifiedAt";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -15,6 +15,7 @@ public enum ErrorCode {
     METHOD_NOT_SUPPORTED(405, "허용되지 않은 메서드입니다."),
     MEDIA_TYPE_NOT_SUPPORTED(415, "허용되지 않은 미디어 타입입니다."),
     ALREADY_DISCONNECTED(400, "이미 클라이언트에서 요청이 종료되었습니다."),
+    INVALID_DATE_RANGE(400, "시작일은 종료일보다 늦을 수 없습니다."),
 
     //5XX
     INTERNAL_SERVER_ERROR(500, "서버 오류가 발생했습니다. 관리자에게 문의하세요."),
