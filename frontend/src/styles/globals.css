@@ -199,6 +199,17 @@ body {
 
 /* “스타일 묶음” 유틸리티 클래스들 */
 @layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
   /* ---------- Headline ---------- */
   .typo-headline-l-bold {
     font-size: var(--fs-headline-l);

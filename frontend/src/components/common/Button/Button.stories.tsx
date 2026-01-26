@@ -1,3 +1,4 @@
+import type { ComponentProps } from "react";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 import Button from "./Button";
@@ -54,7 +55,6 @@ export const States: Story = {
   render: () => (
     <div className="flex flex-wrap gap-3">
       <Button>default</Button>
-      <Button isDisabled>disabled</Button>
     </div>
   ),
 };
@@ -72,7 +72,7 @@ export const FullWidth: Story = {
     fullWidth: true,
     children: "Full width",
   },
-  render: (args) => (
+  render: (args: ComponentProps<typeof Button>) => (
     <div className="w-full max-w-sm">
       <Button {...args} />
     </div>
