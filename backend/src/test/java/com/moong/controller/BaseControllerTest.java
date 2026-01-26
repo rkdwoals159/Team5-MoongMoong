@@ -2,7 +2,7 @@ package com.moong.controller;
 
 import com.moong.DataBaseCleaner;
 import com.moong.fixture.MemberGenerator;
-import com.moong.fixture.PetFixtureGenerator;
+import com.moong.fixture.PetGenerator;
 import com.moong.fixture.WorriedDiseaseGenerator;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -20,7 +20,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 public abstract class BaseControllerTest {
 
     @Autowired
-    protected PetFixtureGenerator petFixtureGenerator;
+    protected PetGenerator petGenerator;
 
     @Autowired
     protected WorriedDiseaseGenerator worriedDiseaseGenerator;

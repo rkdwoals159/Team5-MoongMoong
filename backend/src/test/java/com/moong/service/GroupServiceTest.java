@@ -28,7 +28,7 @@ class GroupServiceTest extends BaseServiceTest {
     @DisplayName("첫 회원가입시 개인이 혼자 존재하는 그룹을 만든다")
     @Test
     void firstJoin() {
-        Pet savedPet = petFixtureGenerator.generateSaved();
+        Pet savedPet = petGenerator.generateSaved();
         Member member = memberGenerator.generateSaved("coli");
 
         PetGroup petGroup = groupService.firstJoin(member, savedPet.getId());

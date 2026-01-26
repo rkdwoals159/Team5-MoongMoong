@@ -6,66 +6,82 @@ on:
   pull_request_review:
     types: [submitted]
   pull_request_review_comment:
-    types: [ created ]
+    types: [created]
 
 jobs:
   notify-slack:
     runs-on: ubuntu-latest
-    if: >
-      github.event.comment != null ||
-      github.event.review != null
 
     steps:
-      - name: Check and send to Slack
+      - name: Set Comment Content
+        id: set-comment
         run: |
-          if [[ "${{ github.event.comment.body }}" != "" ]]; then
-            COMMENT="${{ github.event.comment.body }}"
-          elif [[ "${{ github.event.review.body }}" != "" ]]; then
+          COMMENT="${{ github.event.comment.body }}"
+          if [[ -z "$COMMENT" ]]; then
             COMMENT="${{ github.event.review.body }}"
+          fi
+          echo "COMMENT<<EOF" >> $GITHUB_ENV
+          echo "$COMMENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Check Notification Command
+        id: check-command
+        run: |
+          COMMENT="${{ env.COMMENT }}"
+          
+          # 공백 제거 후 체크
+          TRIMMED_COMMENT=$(echo "$COMMENT" | sed 's/^[[:space:]]*//')
+          
+          if [[ "$TRIMMED_COMMENT" =~ ^/noti-be ]]; then
+            echo "WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL_BE }}" >> $GITHUB_ENV
+            echo "NOTI_TYPE=be" >> $GITHUB_ENV
+          elif [[ "$TRIMMED_COMMENT" =~ ^/noti-fe ]]; then
+            echo "WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL_FE }}" >> $GITHUB_ENV
+            echo "NOTI_TYPE=fe" >> $GITHUB_ENV
           else
-            echo "No comment body"
+            echo "Not a notification command (must start with /noti-be or /noti-fe)"
             exit 0
           fi
-  
-          if [[ "$COMMENT" == /noti-be* ]]; then
-            WEBHOOK_URL="${{ secrets.SLACK_WEBHOOK_URL_BE }}"
-          elif [[ "$COMMENT" == /noti-fe* ]]; then
-            WEBHOOK_URL="${{ secrets.SLACK_WEBHOOK_URL_FE }}"
-          else
-            echo "Not a notification comment"
-            exit 0
-          fi
+
+      - name: Map GitHub Users to Slack IDs
+        if: env.WEBHOOK_URL
+        run: |
+          COMMENT="${{ env.COMMENT }}"
           
           # GitHub 멘션을 Slack 멘션으로 변환
-          declare -A USER_MAP=(
-            ["joyjhm"]="${{ secrets.HYUNMIN_SLACK_ID }}"
-            ["coli-geonwoo"]="${{ secrets.GEONWOO_SLACK_ID }}"
-            ["yeonjinJoo"]="${{ secrets.YEONJIN_SLACK_ID }}"
-            ["bonsng"]="${{ secrets.BONSNG_SLACK_ID }}"
-            ["rkdwoals159"]="${{ secrets.JAEMIN_SLACK_ID }}"
-            ["yyoonngg"]="${{ secrets.YOUNGHYUN_SLACK_ID }}"
-          )
-          
           MAPPED_COMMENT="$COMMENT"
-          for github_user in "${!USER_MAP[@]}"; do
-            slack_id="${USER_MAP[$github_user]}"
-            MAPPED_COMMENT="${MAPPED_COMMENT//@$github_user/<@$slack_id>}"
-          done
+          MAPPED_COMMENT="${MAPPED_COMMENT//@joyjhm/<@${{ secrets.HYUNMIN_SLACK_ID }}>}"
+          MAPPED_COMMENT="${MAPPED_COMMENT//@coli-geonwoo/<@${{ secrets.GEONWOO_SLACK_ID }}>}"
+          MAPPED_COMMENT="${MAPPED_COMMENT//@yeonjinJoo/<@${{ secrets.YEONJIN_SLACK_ID }}>}"
+          MAPPED_COMMENT="${MAPPED_COMMENT//@bonsng/<@${{ secrets.BONSNG_SLACK_ID }}>}"
+          MAPPED_COMMENT="${MAPPED_COMMENT//@rkdwoals159/<@${{ secrets.JAEMIN_SLACK_ID }}>}"
+          MAPPED_COMMENT="${MAPPED_COMMENT//@yyoonngg/<@${{ secrets.YOUNGHYUN_SLACK_ID }}>}"
           
-          MAPPED_COMMENT="${MAPPED_COMMENT#/noti-be}"
-          MAPPED_COMMENT="${MAPPED_COMMENT#/noti-fe}"
-          MAPPED_COMMENT="${MAPPED_COMMENT## }"
-          
-          # PR URL 가져오기
-          if [[ "${{ github.event.issue }}" != "" ]]; then
-            PR_URL="${{ github.event.issue.html_url }}"
+          echo "MAPPED_COMMENT<<EOF" >> $GITHUB_ENV
+          echo "$MAPPED_COMMENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Set PR URL
+        if: env.WEBHOOK_URL
+        run: |
+          if [[ "${{ github.event.issue.html_url }}" != "" ]]; then
+            echo "PR_URL=${{ github.event.issue.html_url }}" >> $GITHUB_ENV
+          elif [[ "${{ github.event.pull_request.html_url }}" != "" ]]; then
+            echo "PR_URL=${{ github.event.pull_request.html_url }}" >> $GITHUB_ENV
           else
-            PR_URL="${{ github.event.pull_request.html_url }}"
+            echo "PR_URL=${{ github.event.review.html_url }}" >> $GITHUB_ENV
           fi
+
+      - name: Send Notification to Slack
+        if: env.WEBHOOK_URL
+        run: |
+          CLEAN_COMMENT="${{ env.MAPPED_COMMENT }}"
+          PR_URL="${{ env.PR_URL }}"
+          WEBHOOK_URL="${{ env.WEBHOOK_URL }}"
           
-          # Slack으로 전송
+          # JSON payload 생성 및 전송
           curl -X POST "$WEBHOOK_URL" \
             -H 'Content-Type: application/json' \
             -d "{
-              \"text\": \"${MAPPED_COMMENT}\n\n<${PR_URL}|View PR>\"
+              \"text\": \"${CLEAN_COMMENT}\n\n<${PR_URL}|View PR>\"
             }"

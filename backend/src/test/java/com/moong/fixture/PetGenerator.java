@@ -8,11 +8,11 @@ import java.time.LocalDate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PetFixtureGenerator {
+public class PetGenerator {
 
     private final PetRepository petRepository;
 
-    public PetFixtureGenerator(PetRepository petRepository) {
+    public PetGenerator(PetRepository petRepository) {
         this.petRepository = petRepository;
     }
 

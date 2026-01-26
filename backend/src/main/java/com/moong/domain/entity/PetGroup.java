@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "pet_group")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PetGroup {
 
     @Id

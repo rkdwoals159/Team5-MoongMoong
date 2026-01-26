@@ -33,16 +33,20 @@ public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver
             NativeWebRequest webRequest,
             WebDataBinderFactory binderFactory
     ) {
-        String memberId = webRequest.getParameter(REQUEST_PARAMETER_MEMBER_ID);
+        long memberId = getMemberId(webRequest);
         boolean shouldAuth = Boolean.parseBoolean(webRequest.getParameter(REQUEST_PARAMETER_AUTH));
-
         if (!shouldAuth) {
             return null;
         }
+        return authService.authorize(memberId);
+    }
 
-        if (shouldAuth && memberId == null) {
+    private long getMemberId(NativeWebRequest webRequest) {
+        try {
+            String memberId = webRequest.getParameter(REQUEST_PARAMETER_MEMBER_ID);
+            return Long.parseLong(memberId);
+        } catch (NumberFormatException exception) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED_EXCEPTION);
         }
-        return authService.authorize(Long.parseLong(memberId));
     }
 }

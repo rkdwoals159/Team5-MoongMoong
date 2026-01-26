@@ -14,7 +14,7 @@ public class MemberGenerator {
     }
 
     public Member generateSaved(String name) {
-        Member member = new Member("email@email.com", name, "imagUrl");
+        Member member = new Member("email@email.com", name, "imageUrl");
         return memberRepository.save(member);
     }
 }
