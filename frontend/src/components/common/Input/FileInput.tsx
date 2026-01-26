@@ -4,7 +4,7 @@ import { useRef } from "react";
 import cn from "@/utils/style";
 
 import type { FileInputProps } from "./Input.type";
-import CloseIcon from "@/assets/icons/close.svg";
+import CloseIcon from "@/assets/icons/components/close.svg";
 
 const FileInput = ({
   filePlaceholder = "강아지 진료비 영수증을 업로드해주세요.",

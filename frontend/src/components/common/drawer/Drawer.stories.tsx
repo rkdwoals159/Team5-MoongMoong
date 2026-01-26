@@ -31,8 +31,8 @@ export const Navigation: Story = {
             key={item.id}
             href={item.href}
             urlMatch={activeId === item.id}
-            onClick={(e) => {
-              e.preventDefault();
+            onClick={(event) => {
+              event.preventDefault();
               setActiveId(item.id);
             }}
           >

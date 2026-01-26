@@ -5,6 +5,7 @@ export type DrawerOwnProps = {
   urlMatch?: boolean;
   fullWidth?: boolean;
   startIcon?: React.ReactNode;
+  startIconSelected?: React.ReactNode;
   className?: string;
 };
 

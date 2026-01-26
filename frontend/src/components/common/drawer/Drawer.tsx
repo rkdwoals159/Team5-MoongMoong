@@ -1,18 +1,32 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { DrawerProps } from "./Drawer.type";
 import cn from "@/utils/style";
 
 const Drawer = ({
   href,
-  urlMatch = false,
+  urlMatch,
   className,
   children,
   fullWidth = false,
   startIcon,
+  startIconSelected,
   ...rest
 }: DrawerProps) => {
-  const variantKey = urlMatch ? "SELECTED" : "UNSELECTED";
+  const pathname = usePathname();
+  const hrefPath =
+    typeof href === "string" ? href : ((href as { pathname?: string })?.pathname ?? "");
+  const autoMatch = hrefPath
+    ? hrefPath === "/"
+      ? pathname === "/"
+      : pathname.startsWith(hrefPath)
+    : false;
+  const isSelected = urlMatch ?? autoMatch;
+  const variantKey = isSelected ? "SELECTED" : "UNSELECTED";
+  const iconToRender = isSelected && startIconSelected ? startIconSelected : startIcon;
 
   return (
     <Link
@@ -23,8 +37,8 @@ const Drawer = ({
       data-full-width={fullWidth ? "true" : "false"}
     >
       <span className="inline-flex items-center gap-[inherit]">
-        {startIcon && (
-          <span className="inline-flex items-center justify-center w-6 h-6">{startIcon}</span>
+        {iconToRender && (
+          <span className="inline-flex items-center justify-center w-6 h-6">{iconToRender}</span>
         )}
         {children}
       </span>

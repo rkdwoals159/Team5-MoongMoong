@@ -1,9 +1,13 @@
 import Link from "next/link";
-import LogoImage from "@/assets/components/logo_home.svg";
+
+import LogoImage from "@/assets/icons/sidebar/logo_home.svg";
 import cn from "@/utils/style";
 
 interface LogoProps {
+  href?: string;
+  ariaLabel?: string;
   className?: string;
+  imageClassName?: string;
 }
 
 /**
@@ -14,10 +18,22 @@ interface LogoProps {
  * @component
  * @param {string} className - 추가할 CSS 클래스명
  */
-const Logo = ({ className = "" }: LogoProps) => {
+const Logo = ({
+  href = "/",
+  ariaLabel = "메인 페이지로 이동",
+  className = "",
+  imageClassName = "",
+}: LogoProps) => {
   return (
-    <Link href="/" className={cn("inline-block p-850", className)}>
-      <LogoImage />
+    <Link
+      href={href}
+      aria-label={ariaLabel}
+      className={cn(
+        "inline-flex items-center rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-blue-500)]",
+        className,
+      )}
+    >
+      <LogoImage className={imageClassName} aria-hidden="true" />
     </Link>
   );
 };

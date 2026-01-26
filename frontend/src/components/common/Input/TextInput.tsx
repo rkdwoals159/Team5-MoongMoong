@@ -1,7 +1,7 @@
 "use client";
 
 import cn from "@/utils/style";
-import WarningIcon from "@/assets/icons/warning.svg";
+import WarningIcon from "@/assets/icons/components/warning.svg";
 import type { TextInputProps } from "./Input.type";
 import { useState } from "react";
 

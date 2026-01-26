@@ -1,6 +1,6 @@
 import cn from "@/utils/style";
-import ArrowLeftIcon from "@/assets/icons/arrow-left-medium.svg";
-import ArrowRightIcon from "@/assets/icons/arrow-right-medium.svg";
+import ArrowLeftIcon from "@/assets/icons/components/arrow-left-medium.svg";
+import ArrowRightIcon from "@/assets/icons/components/arrow-right-medium.svg";
 import type { PaginationButtonProps, PaginationDirection } from "./PaginationButton.type";
 
 const labelByDirection: Record<PaginationDirection, string> = {
