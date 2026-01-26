@@ -1,4 +1,4 @@
-package com.moong.dto.response;
+package com.moong.dto.response.pet;
 
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.WorriedDisease;

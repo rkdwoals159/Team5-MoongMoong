@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -23,7 +24,11 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Table(name = "group_expense")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class GroupExpense {
+
+    public static final String SPENT_AT_COLUMN_NAME = "spentAt";
+    public static final String MODIFIED_AT_COLUMN_NAME = "modifiedAt";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,11 +44,19 @@ public class GroupExpense {
     private int cost;
 
     @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_expense_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private MemberExpense memberExpense;
+
+    @NotNull
     @Column(name = "main_category", length = 50)
     private String mainCategory;
 
     @Column(name = "sub_category", length = 50)
     private String subCategory;
+
+    @Column(length = 20)
+    private String nickname;
 
     private String memo;
 

@@ -1,8 +1,11 @@
 package com.moong.controller;
 
 import com.moong.DataBaseCleaner;
+import com.moong.fixture.CrewGenerator;
+import com.moong.fixture.GroupExpenseGenerator;
 import com.moong.fixture.MemberGenerator;
 import com.moong.fixture.PetGenerator;
+import com.moong.fixture.PetGroupGenerator;
 import com.moong.fixture.WorriedDiseaseGenerator;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -27,6 +30,15 @@ public abstract class BaseControllerTest {
 
     @Autowired
     protected MemberGenerator memberGenerator;
+
+    @Autowired
+    protected PetGroupGenerator petGroupGenerator;
+
+    @Autowired
+    protected CrewGenerator crewGenerator;
+
+    @Autowired
+    protected GroupExpenseGenerator groupExpenseGenerator;
 
     @LocalServerPort
     private int port;

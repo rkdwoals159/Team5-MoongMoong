@@ -3,7 +3,7 @@ package com.moong.service;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.WorriedDisease;
 import com.moong.dto.request.PetCreateRequest;
-import com.moong.dto.response.PetCreateResponse;
+import com.moong.dto.response.pet.PetCreateResponse;
 import com.moong.repository.PetRepository;
 import com.moong.repository.WorriedDiseaseRepository;
 import java.util.List;

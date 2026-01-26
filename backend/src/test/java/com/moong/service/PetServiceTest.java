@@ -9,7 +9,7 @@ import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.Gender;
 import com.moong.dto.request.PetCreateRequest;
-import com.moong.dto.response.PetCreateResponse;
+import com.moong.dto.response.pet.PetCreateResponse;
 import com.moong.repository.PetRepository;
 import com.moong.repository.WorriedDiseaseRepository;
 import java.time.YearMonth;

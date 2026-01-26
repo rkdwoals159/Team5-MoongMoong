@@ -4,7 +4,7 @@ import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
 import com.moong.dto.request.PetCreateRequest;
-import com.moong.dto.response.PetCreateResponse;
+import com.moong.dto.response.pet.PetCreateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -1,9 +1,12 @@
 package com.moong.service;
 
 import com.moong.DataBaseCleaner;
-import com.moong.fixture.MemberExpenseGenerator;
+import com.moong.fixture.CrewGenerator;
+import com.moong.fixture.GroupExpenseGenerator;
 import com.moong.fixture.MemberGenerator;
 import com.moong.fixture.PetGenerator;
+import com.moong.fixture.PetGroupGenerator;
+import com.moong.fixture.MemberExpenseGenerator;
 import com.moong.fixture.WorriedDiseaseGenerator;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,15 @@ public abstract class BaseServiceTest {
 
     @Autowired
     protected MemberGenerator memberGenerator;
+
+    @Autowired
+    protected PetGroupGenerator petGroupGenerator;
+
+    @Autowired
+    protected CrewGenerator crewGenerator;
+
+    @Autowired
+    protected GroupExpenseGenerator groupExpenseGenerator;
 
     @Autowired
     protected MemberExpenseGenerator memberExpenseGenerator;

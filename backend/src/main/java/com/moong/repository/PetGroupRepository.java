@@ -10,4 +10,5 @@ public interface PetGroupRepository extends Repository<PetGroup, Long> {
 
     Optional<PetGroup> findById(long groupId);
 
+    Optional<PetGroup> findByPetId(long petId);
 }

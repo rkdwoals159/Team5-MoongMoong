@@ -4,14 +4,13 @@ import com.moong.annotation.auth.AuthMember;
 import com.moong.controller.swagger.PetControllerSwagger;
 import com.moong.domain.entity.Member;
 import com.moong.dto.request.PetCreateRequest;
-import com.moong.dto.response.PetCreateResponse;
+import com.moong.dto.response.pet.PetCreateResponse;
 import com.moong.service.GroupService;
 import com.moong.service.PetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
