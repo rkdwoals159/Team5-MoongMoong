@@ -1,7 +1,7 @@
 import { ToastType } from "./Toast.type";
 import cn from "@/utils/style";
-import WarningIcon from "@/assets/ic_warning.svg?react";
-import CheckIcon from "@/assets/ic_check.svg?react";
+import WarningIcon from "@/assets/ic_warning.svg";
+import CheckIcon from "@/assets/ic_check.svg";
 
 const Toast = ({ variant = "success", message, className }: ToastType) => {
   const icon = variant === "error" ? <WarningIcon /> : <CheckIcon />;

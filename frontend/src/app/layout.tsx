@@ -6,7 +6,7 @@ import ToastProvider from "@/components/ui/Toast/ToastProvider";
 const pretendard = localFont({
   src: [
     {
-      path: "@/../../public/fonts/PretendardVariable.woff2",
+      path: "../../public/fonts/PretendardVariable.woff2",
       style: "normal",
     },
   ],

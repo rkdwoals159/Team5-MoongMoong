@@ -44,6 +44,38 @@ body {
   animation: toast-out var(--toast-duration, 500ms) ease-in forwards;
 }
 
+/* Loading Animation */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes bounce-color {
+  0%,
+  100% {
+    fill: #1a1f27;
+  }
+  50% {
+    fill: #6d7683;
+  }
+}
+
+.loading-icon {
+  animation: bounce 1.2s ease-in-out infinite;
+  transform-origin: center;
+  animation-delay: var(--animation-delay, 0s);
+}
+
+.loading-icon path {
+  animation: bounce-color 1.2s ease-in-out infinite;
+  animation-delay: var(--animation-delay, 0s);
+}
+
 @theme {
   /* weights */
   --fw-regular: 400;

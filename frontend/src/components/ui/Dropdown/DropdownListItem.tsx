@@ -1,4 +1,4 @@
-import { DropdownListItemProps } from "@/components/common/Dropdown/Dropdown.type";
+import { DropdownListItemProps } from "@/components/ui/Dropdown/Dropdown.type";
 import CheckIcon from "@/assets/components/ic_check_medium.svg";
 import cn from "@/utils/style";
 

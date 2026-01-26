@@ -1,6 +1,7 @@
+import type { MouseEvent } from "react";
 import { FilterChipProps } from "./FilterChip.type";
 import cn from "@/utils/style";
-import CancelIcon from "@/assets/ic_out_small.svg?react";
+import CancelIcon from "@/assets/ic_out_small.svg";
 
 const FilterChip = ({
   label,
@@ -28,7 +29,7 @@ const FilterChip = ({
       {...rest}
       className={cn(...classes)}
       onClick={onSelect}
-      disabled={isSelected}
+      disabled={isSelected && !hasCancelIcon}
     >
       <div className={contentClasses}>
         <div className={labelGroupClasses}>
@@ -42,17 +43,16 @@ const FilterChip = ({
           <span className={labelClasses}>{label}</span>
         </div>
         {hasCancelIcon && (
-          <button
-            type="button"
+          <CancelIcon
+            width={40}
+            height={40}
             className={cancelButtonClasses}
-            onClick={(event) => {
+            onClick={(event: MouseEvent<SVGSVGElement>) => {
               event.stopPropagation();
               onCancel?.();
             }}
             aria-label="선택 해제"
-          >
-            <CancelIcon width={30} height={30} />
-          </button>
+          />
         )}
       </div>
     </button>
@@ -77,7 +77,8 @@ const labelGroupClasses = "flex items-center gap-[10px]";
 const labelClasses = "typo-body-m-medium";
 
 const indicatorClasses = "h-[14px] w-[14px] rounded-full";
-const cancelButtonClasses = "flex items-center justify-center p-[8px] text-[var(--color-gray-600)]";
+const cancelButtonClasses =
+  "z-50 flex items-center justify-center p-[8px] text-[var(--color-gray-600)] cursor-pointer";
 
 const indicatorPalette = [
   "var(--color-red-500)",
