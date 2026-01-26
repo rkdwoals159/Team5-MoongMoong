@@ -13,6 +13,37 @@ body {
     sans-serif;
 }
 
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toast-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+/* toast animation helpers */
+.toast-in {
+  animation: toast-in var(--toast-duration, 500ms) ease-out;
+}
+
+.toast-out {
+  animation: toast-out var(--toast-duration, 500ms) ease-in forwards;
+}
+
 @theme {
   /* weights */
   --fw-regular: 400;
