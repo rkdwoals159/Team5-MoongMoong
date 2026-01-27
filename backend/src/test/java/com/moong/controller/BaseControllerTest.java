@@ -38,6 +38,9 @@ public abstract class BaseControllerTest {
     protected GroupExpenseGenerator groupExpenseGenerator;
 
     @Autowired
+    protected MemberExpenseGenerator memberExpenseGenerator;
+
+    @Autowired
     protected GroupMedicalAdviceGenerator groupMedicalAdviceGenerator;
 
     @LocalServerPort

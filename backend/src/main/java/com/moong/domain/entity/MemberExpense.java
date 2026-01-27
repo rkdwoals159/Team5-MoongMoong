@@ -40,7 +40,7 @@ public class MemberExpense {
     @NotNull
     private String usage;
 
-    private int cost;
+    private long cost;
 
     @NotNull
     @Column(name = "main_category", length = 50)

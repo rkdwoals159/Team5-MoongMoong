@@ -1,12 +1,18 @@
 package com.moong.controller;
 
-import com.moong.dto.response.MemberExpensePeriodResponse;
+import com.moong.annotation.auth.AuthMember;
+import com.moong.domain.entity.Member;
+import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
+import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
 import com.moong.controller.swagger.MemberExpenseControllerSwagger;
+import com.moong.dto.response.memberexpense.MemberExpensesUpsertResponse;
 import com.moong.service.MemberExpenseService;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,15 +25,30 @@ public class MemberExpenseController implements MemberExpenseControllerSwagger {
     private final MemberExpenseService memberExpenseService;
 
     @Override
-    @GetMapping("")
-    public ResponseEntity<MemberExpensePeriodResponse> getMemberExpensesByPeriod(
-            @RequestParam(value = "memberId") long memberId,
+    @GetMapping
+    public ResponseEntity<MemberExpensesPeriodResponse> getMemberExpensesByPeriod(
+            @AuthMember Member member,
             @RequestParam(value = "startDate") LocalDate startDate,
             @RequestParam(value = "endDate") LocalDate endDate
     ) {
-        MemberExpensePeriodResponse response = memberExpenseService
-                .getMemberExpensesByPeriod(memberId, startDate, endDate);
+        MemberExpensesPeriodResponse response = memberExpenseService
+                .getMemberExpensesByPeriod(member, startDate, endDate);
 
         return ResponseEntity.ok(response);
     }
+
+    @Override
+    @PatchMapping
+    public ResponseEntity<MemberExpensesUpsertResponse> upsertMemberExpenses(
+            @AuthMember Member member,
+            @RequestBody MemberExpensesUpsertRequest request
+    ) {
+        MemberExpensesUpsertResponse response = memberExpenseService.upsertMemberExpenses(
+                member,
+                request
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
 }

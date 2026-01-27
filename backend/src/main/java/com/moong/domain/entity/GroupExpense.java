@@ -41,7 +41,7 @@ public class GroupExpense {
     @NotNull
     private String usage;
 
-    private int cost;
+    private long cost;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)

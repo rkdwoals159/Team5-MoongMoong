@@ -1,4 +1,4 @@
-package com.moong.dto.response;
+package com.moong.dto.response.memberexpense;
 
 import com.moong.domain.entity.MemberExpense;
 import java.time.LocalDate;
@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "소비내역 단건 응답 DTO")
-public record ExpenseResponse(
+public record MemberExpenseResponse(
 
         @Schema(description = "소비내역 ID", example = "1")
         long expenseId,
@@ -19,7 +19,7 @@ public record ExpenseResponse(
         String usage,
 
         @Schema(description = "소비 금액", example = "15000")
-        int cost,
+        long cost,
 
         @Schema(description = "대분류 카테고리", example = "병원비")
         String mainCategory,
@@ -34,7 +34,7 @@ public record ExpenseResponse(
         LocalDateTime modifiedAt
 ) {
 
-    public ExpenseResponse(MemberExpense memberExpense) {
+    public MemberExpenseResponse(MemberExpense memberExpense) {
         this(
                 memberExpense.getId(),
                 memberExpense.getSpentAt(),
