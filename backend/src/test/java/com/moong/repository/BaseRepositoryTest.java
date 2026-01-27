@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Import;
         PetGenerator.class,
         PetGroupGenerator.class,
         GroupExpenseGenerator.class,
-        CrewGenerator.class,
         MemberGenerator.class,
+        CrewGenerator.class,
         MemberExpenseGenerator.class,
         GroupMedicalAdviceGenerator.class,
 })

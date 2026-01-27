@@ -3,10 +3,12 @@ package com.moong.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.moong.domain.entity.GroupExpense;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
+import com.moong.dto.response.groupexpense.CategoryAnalysisResponse;
 import com.moong.dto.response.groupexpense.GroupExpensesResponse;
 import io.restassured.http.ContentType;
 import java.time.LocalDateTime;
@@ -78,6 +80,61 @@ class GroupExpenseControllerTest extends BaseControllerTest {
         assertAll(
                 () -> assertThat(response.total()).isEqualTo(300),
                 () -> assertThat(response.expenses()).hasSize(2)
+        );
+    }
+
+    @DisplayName("기간 내의 그룹 소비 내역의 카테고리별 분석 내역을 찾을 수 있다")
+    @Test
+    void findGroupExpenseCategoryAnalysisByPeriod() {
+        LocalDateTime now = LocalDateTime.now();
+        Member coli = memberGenerator.generateSaved("coli");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, coli);
+        MemberExpense memberExpense1 = new MemberExpense(
+                1L,
+                now.minusDays(2L).toLocalDate(),
+                "류몽민 닭갈비",
+                100,
+                "식비",
+                "소분류",
+                "메모",
+                now.minusDays(2L),
+                coli
+        );
+        MemberExpense memberExpense2 = new MemberExpense(
+                1L,
+                now.minusDays(1L).toLocalDate(),
+                "수건구입",
+                200,
+                "생필품",
+                "소분류",
+                "메모",
+                now.minusDays(1L),
+                coli
+        );
+        GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
+        GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2, coli.getName());
+
+        CategoryAnalysisResponse response = given().log().all()
+                .contentType(ContentType.JSON)
+                .queryParam("memberId", coli.getId())
+                .queryParam("startDate", now.minusDays(2).toLocalDate().toString())
+                .queryParam("endDate", now.minusDays(1).toLocalDate().toString())
+                .queryParam("auth", "true")
+                .get("/api/expenses/group/analysis/category")
+                .then()
+                .statusCode(200)
+                .extract()
+                .as(CategoryAnalysisResponse.class);
+
+        assertAll(
+                () -> assertThat(response.total()).isEqualTo(300),
+                () -> assertThat(response.categoryAnalysis()).hasSize(2),
+                () -> assertThat(response.categoryAnalysis().get(0).category()).isEqualTo(groupExpense2.getMainCategory()),
+                () -> assertThat(response.categoryAnalysis().get(0).cost()).isEqualTo(groupExpense2.getCost()),
+                () -> assertThat(response.categoryAnalysis().get(1).category()).isEqualTo(groupExpense1.getMainCategory()),
+                () -> assertThat(response.categoryAnalysis().get(1).cost()).isEqualTo(groupExpense1.getCost())
         );
     }
 }
