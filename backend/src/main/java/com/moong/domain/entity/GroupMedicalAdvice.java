@@ -13,12 +13,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "group_medical_advice")
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GroupMedicalAdvice {
 
@@ -31,7 +33,7 @@ public class GroupMedicalAdvice {
 
     @NotNull
     @Column(name = "expected_cost")
-    private int expectedCost;
+    private long expectedCost;
 
     @NotNull
     @Column(name = "advice_year")
@@ -41,4 +43,14 @@ public class GroupMedicalAdvice {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private PetGroup petGroup;
+
+    public GroupMedicalAdvice(String advice, long expectedCost, int year, PetGroup petGroup) {
+        this(
+           null,
+           advice,
+           expectedCost,
+           year,
+           petGroup
+        );
+    }
 }

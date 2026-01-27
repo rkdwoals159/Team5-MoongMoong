@@ -11,6 +11,7 @@ public enum ErrorCode {
     URL_PARAMETER_ERROR(400, "입력이 잘못되었습니다."),
     METHOD_ARGUMENT_TYPE_MISMATCH(400, "입력한 값의 타입이 잘못되었습니다."),
     CREW_NOT_FOUND(404, "해당하는 크루를 찾을 수 없습니다."),
+    MEDICAL_ADVICE_NOT_FOUND(404, "해당 그룹의 의사 권장사항을 찾을 수 없습니다."),
     NO_RESOURCE_FOUND(404, "요청한 리소스를 찾을 수 없습니다."),
     NO_SUCH_PET_FOUND(404, "PET을 찾을 수 없습니다."),
     METHOD_NOT_SUPPORTED(405, "허용되지 않은 메서드입니다."),
