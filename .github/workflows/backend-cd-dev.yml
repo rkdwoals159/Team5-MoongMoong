@@ -91,6 +91,7 @@ jobs:
         run: |
           export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
           export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
+          export INVITE_AES_KEY=${{ secrets.INVITE_AES_KEY }}
           export TAG=${{ github.sha }}-dev
           docker compose up -d
 

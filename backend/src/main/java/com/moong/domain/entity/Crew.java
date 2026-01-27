@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -20,8 +21,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "crew")
-@Getter
+@Table(
+        name = "crew",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_crew_group_member",
+                        columnNames = {"group_id", "member_id"}
+                )
+        }
+)@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Crew {
@@ -46,5 +54,9 @@ public class Crew {
 
     public Crew(PetGroup petGroup, Member member) {
         this(null, petGroup, member, LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+    }
+
+    public boolean isSame(long memberId) {
+        return member.getId().equals(memberId);
     }
 }

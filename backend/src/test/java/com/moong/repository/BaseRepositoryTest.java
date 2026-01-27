@@ -4,6 +4,7 @@ import com.moong.fixture.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
 @Import({
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Import;
         MemberExpenseGenerator.class,
         GroupMedicalAdviceGenerator.class,
 })
+@ActiveProfiles("test")
 public abstract class BaseRepositoryTest {
 
     @Autowired
