@@ -5,6 +5,7 @@ import com.moong.controller.swagger.GroupExpenseControllerSwagger;
 import com.moong.domain.entity.Member;
 import com.moong.dto.response.groupexpense.GroupExpensesResponse;
 import com.moong.dto.response.groupexpense.CategoryAnalysisResponse;
+import com.moong.dto.response.groupexpense.MedicalCategoryAnalysisResponse;
 import com.moong.service.GroupExpenseService;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class GroupExpenseController implements GroupExpenseControllerSwagger {
             @RequestParam(value = "startDate") LocalDate startDate,
             @RequestParam(value = "endDate") LocalDate endDate
     ) {
-        GroupExpensesResponse response = groupExpenseService.findByPeriod(member, startDate, endDate);
+        GroupExpensesResponse response = groupExpenseService.findGroupExpensesByPeriod(member, startDate, endDate);
         return ResponseEntity.ok(response);
     }
   
@@ -38,11 +39,26 @@ public class GroupExpenseController implements GroupExpenseControllerSwagger {
             @RequestParam(value = "startDate") LocalDate startDate,
             @RequestParam(value = "endDate") LocalDate endDate
     ) {
-        CategoryAnalysisResponse categoryAnalysis = groupExpenseService.findCategoryAnalysis(
+        CategoryAnalysisResponse categoryAnalysis = groupExpenseService.findCategoryAnalysisByPeriod(
                 member,
                 startDate,
                 endDate
         );
         return ResponseEntity.ok(categoryAnalysis);
+    }
+
+    @Override
+    @GetMapping("/api/expenses/group/analysis/medical")
+    public ResponseEntity<MedicalCategoryAnalysisResponse> findMedicalCategoryAnalysis(
+            @AuthMember Member member,
+            @RequestParam(value = "startDate") LocalDate startDate,
+            @RequestParam(value = "endDate") LocalDate endDate
+    ) {
+        MedicalCategoryAnalysisResponse response = groupExpenseService.findMedicalCategoryAnalysisByPeriod(
+                member,
+                startDate,
+                endDate
+        );
+        return ResponseEntity.ok(response);
     }
 }

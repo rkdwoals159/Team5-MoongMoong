@@ -79,4 +79,65 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 .extracting(GroupExpense::getId)
                 .containsExactly(expense3.getId(), expense1.getId(), expense2.getId());
     }
+
+    @DisplayName("기간내 카테고리에 대한 그룹 소비를 정렬(spendAt desc > createdAt desc) 기준에 맞추어 가져온다")
+    @Test
+    void findByPetGroup_IdAndMainCategoryAndSpentAtBetween() {
+        LocalDateTime now = LocalDateTime.now();
+        Member coli = memberGenerator.generateSaved("coli");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, coli);
+        MemberExpense memberExpense1 = new MemberExpense(
+                1L,
+                now.minusDays(1L).toLocalDate(),
+                "류몽민 닭갈비",
+                100,
+                "식비",
+                "소분류",
+                "메모",
+                now.minusDays(1L).plusSeconds(1L),
+                coli
+        );
+        MemberExpense memberExpense2 = new MemberExpense(
+                1L,
+                now.minusDays(1L).toLocalDate(),
+                "항아리 수제비",
+                200,
+                "식비",
+                "소분류",
+                "메모",
+                now.minusDays(1L),
+                coli
+        );
+        MemberExpense memberExpense3 = new MemberExpense(
+                1L,
+                now.toLocalDate(),
+                "수건 구입",
+                300,
+                "생활비",
+                "생필품",
+                "메모",
+                now,
+                coli
+        );
+        GroupExpense expense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
+        GroupExpense expense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2, coli.getName());
+        Sort expenseSort = Sort.by(
+                Sort.Order.desc(GroupExpense.SPENT_AT_COLUMN_NAME),
+                Sort.Order.desc(GroupExpense.MODIFIED_AT_COLUMN_NAME)
+        );
+
+        List<GroupExpense> actual = groupExpenseRepository.findByPetGroup_IdAndMainCategoryAndSpentAtBetween(
+                petGroup.getId(),
+                "식비",
+                now.minusDays(1L).toLocalDate(),
+                now.toLocalDate(),
+                expenseSort
+        );
+
+        assertThat(actual)
+                .extracting(GroupExpense::getId)
+                .containsExactly(expense1.getId(), expense2.getId());
+    }
 }

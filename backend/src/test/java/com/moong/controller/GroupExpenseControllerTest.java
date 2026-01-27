@@ -10,6 +10,7 @@ import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.response.groupexpense.CategoryAnalysisResponse;
 import com.moong.dto.response.groupexpense.GroupExpensesResponse;
+import com.moong.dto.response.groupexpense.MedicalCategoryAnalysisResponse;
 import io.restassured.http.ContentType;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
@@ -135,6 +136,61 @@ class GroupExpenseControllerTest extends BaseControllerTest {
                 () -> assertThat(response.categoryAnalysis().get(0).cost()).isEqualTo(groupExpense2.getCost()),
                 () -> assertThat(response.categoryAnalysis().get(1).category()).isEqualTo(groupExpense1.getMainCategory()),
                 () -> assertThat(response.categoryAnalysis().get(1).cost()).isEqualTo(groupExpense1.getCost())
+        );
+    }
+
+    @DisplayName("기한 내의 의료비 소비내역의 소분류별 분석 기록을 조회할 수 있다")
+    @Test
+    void findMedicalCategoryAnalysis() {
+        LocalDateTime now = LocalDateTime.now();
+        Member coli = memberGenerator.generateSaved("coli");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, coli);
+        MemberExpense memberExpense1 = new MemberExpense(
+                1L,
+                now.minusDays(2L).toLocalDate(),
+                "뚱이 수술",
+                100,
+                "의료비",
+                "수술비",
+                "메모",
+                now.minusDays(2L),
+                coli
+        );
+        MemberExpense memberExpense2 = new MemberExpense(
+                1L,
+                now.minusDays(1L).toLocalDate(),
+                "뚱이 약",
+                200,
+                "의료비",
+                "약/처방",
+                "메모",
+                now.minusDays(1L),
+                coli
+        );
+        GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
+        GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2, coli.getName());
+
+        MedicalCategoryAnalysisResponse response = given().log().all()
+                .contentType(ContentType.JSON)
+                .queryParam("memberId", coli.getId())
+                .queryParam("startDate", now.minusDays(2).toLocalDate().toString())
+                .queryParam("endDate", now.minusDays(1).toLocalDate().toString())
+                .queryParam("auth", "true")
+                .get("/api/expenses/group/analysis/medical")
+                .then()
+                .statusCode(200)
+                .extract()
+                .as(MedicalCategoryAnalysisResponse.class);
+
+        assertAll(
+                () -> assertThat(response.totalMedical()).isEqualTo(300),
+                () -> assertThat(response.medicalAnalysis()).hasSize(2),
+                () -> assertThat(response.medicalAnalysis().get(0).subCategory()).isEqualTo(groupExpense2.getSubCategory()),
+                () -> assertThat(response.medicalAnalysis().get(0).cost()).isEqualTo(groupExpense2.getCost()),
+                () -> assertThat(response.medicalAnalysis().get(1).subCategory()).isEqualTo(groupExpense1.getSubCategory()),
+                () -> assertThat(response.medicalAnalysis().get(1).cost()).isEqualTo(groupExpense1.getCost())
         );
     }
 }

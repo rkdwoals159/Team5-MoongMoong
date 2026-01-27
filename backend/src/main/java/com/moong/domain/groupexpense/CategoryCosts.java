@@ -12,6 +12,13 @@ public class CategoryCosts {
 
     private final List<CategoryCost> values;
 
+    public long getCategoryCosts(String mainCategory) {
+        return values.stream()
+                .filter(categoryCost -> categoryCost.isSameMainCategory(mainCategory))
+                .mapToLong(CategoryCost::getCost)
+                .sum();
+    }
+
     public Map<String, Long> getMainCategoryCosts() {
         return values.stream()
                 .collect(Collectors.groupingBy(

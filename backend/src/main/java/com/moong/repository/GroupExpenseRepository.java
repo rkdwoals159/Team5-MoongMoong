@@ -25,4 +25,12 @@ public interface GroupExpenseRepository extends Repository<GroupExpense, Long> {
             @Param(value = "endDate") LocalDate endDate,
             Sort sort
     );
+
+    List<GroupExpense> findByPetGroup_IdAndMainCategoryAndSpentAtBetween(
+            @Param(value = "groupId") long petGroupId,
+            @Param(value = "mainCategory") String mainCategory,
+            @Param(value = "startDate") LocalDate startDate,
+            @Param(value = "endDate") LocalDate endDate,
+            Sort sort
+    );
 }

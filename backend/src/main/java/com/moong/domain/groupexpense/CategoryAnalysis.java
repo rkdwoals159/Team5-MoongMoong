@@ -20,6 +20,10 @@ public class CategoryAnalysis {
         );
     }
 
+    public long getCategoryTotalCosts(String mainCategory) {
+        return categoryCosts.getCategoryCosts(mainCategory);
+    }
+
     private long getTotalCost(List<GroupExpense> groupExpenses) {
         return groupExpenses.stream()
                 .mapToLong(GroupExpense::getCost)
@@ -28,5 +32,9 @@ public class CategoryAnalysis {
 
     public Map<String, Long> getMainCategoryCosts() {
         return categoryCosts.getMainCategoryCosts();
+    }
+
+    public Map<String, Long> getSubCategoryCosts(String mainCategory) {
+        return categoryCosts.getSubCategoryCosts(mainCategory);
     }
 }
