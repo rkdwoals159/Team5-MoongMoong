@@ -3,6 +3,7 @@ package com.moong.controller;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
+import com.moong.domain.enums.Disease;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,5 +40,25 @@ class GroupMedicalControllerTest extends BaseControllerTest {
                 .get("/api/group/medical/info")
                 .then()
                 .statusCode(401);
+    }
+
+    @DisplayName("특정 질병의 의료비 데이터 리스트 반환 성공")
+    @Test
+    void getTreatmentSuccess() {
+        Member member = memberGenerator.generateSaved("softeer");
+        Pet pet = petGenerator.generateSaved("서울시", "중구");
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, member);
+        treatmentGenerator.generateSaved(Disease.DER, "피부염", pet.getCity(), pet.getDistrict());
+        treatmentGenerator.generateSaved(Disease.DER, "항생제 처방", pet.getCity(), pet.getDistrict());
+
+        given().log().all()
+                .contentType(ContentType.JSON)
+                .queryParam("memberId", member.getId())
+                .queryParam("auth", "true")
+                .queryParam("disease", "DER")
+                .get("/api/group/medical/disease/cost")
+                .then()
+                .statusCode(200);
     }
 }

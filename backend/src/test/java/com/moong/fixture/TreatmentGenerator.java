@@ -1,0 +1,30 @@
+package com.moong.fixture;
+
+import com.moong.domain.entity.Treatment;
+import com.moong.domain.enums.Disease;
+import com.moong.repository.TreatmentRepository;
+import org.springframework.stereotype.Component;
+
+@Component
+public class TreatmentGenerator {
+    private final TreatmentRepository treatmentRepository;
+
+    public TreatmentGenerator(TreatmentRepository treatmentRepository) {
+        this.treatmentRepository = treatmentRepository;
+    }
+
+    public Treatment generateSaved(Disease disease, String name, String city, String district) {
+        Treatment treatment = new Treatment(
+                null,
+                disease,
+                name,
+                "피부 트러블 등",
+                city,
+                district,
+                45000,
+                120000,
+                68000);
+
+        return treatmentRepository.save(treatment);
+    }
+}

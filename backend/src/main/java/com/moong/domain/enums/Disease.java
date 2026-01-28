@@ -1,5 +1,7 @@
 package com.moong.domain.enums;
 
+import com.moong.exception.custom.BusinessException;
+import com.moong.exception.errorcode.ErrorCode;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -61,7 +63,7 @@ public enum Disease {
         return Arrays.stream(values())
                 .filter(d -> d.code.equalsIgnoreCase(code))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("Unknown disease code: " + code));
+                .orElseThrow(() -> new BusinessException(ErrorCode.DISEASE_CODE_NOT_FOUND));
     }
 
     public static Disease fromKoreanName(String name) {

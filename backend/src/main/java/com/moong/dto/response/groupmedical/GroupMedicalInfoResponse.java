@@ -1,4 +1,4 @@
-package com.moong.dto.response;
+package com.moong.dto.response.groupmedical;
 
 import com.moong.domain.entity.GroupMedicalAdvice;
 import io.swagger.v3.oas.annotations.media.Schema;

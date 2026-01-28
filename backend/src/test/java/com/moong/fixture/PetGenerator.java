@@ -4,8 +4,9 @@ import com.moong.domain.entity.Pet;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Gender;
 import com.moong.repository.PetRepository;
-import java.time.LocalDate;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
 
 @Component
 public class PetGenerator {
@@ -18,6 +19,11 @@ public class PetGenerator {
 
     public Pet generateSaved() {
         return petRepository.save(generateUnSaved());
+    }
+
+    public Pet generateSaved(String city, String district) {
+        Pet pet = new Pet(null, "코코", Breed.BEA, Gender.F, LocalDate.of(2025, 5, 29), city, district);
+        return petRepository.save(pet);
     }
 
     public Pet generateUnSaved() {

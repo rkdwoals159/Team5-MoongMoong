@@ -3,12 +3,15 @@ package com.moong.controller;
 import com.moong.annotation.auth.AuthMember;
 import com.moong.controller.swagger.GroupMedicalControllerSwagger;
 import com.moong.domain.entity.Member;
-import com.moong.dto.response.GroupMedicalInfoResponse;
+import com.moong.domain.enums.Disease;
+import com.moong.dto.response.groupmedical.GroupMedicalInfoResponse;
+import com.moong.dto.response.groupmedical.TreatmentsResponse;
 import com.moong.service.GroupMedicalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,6 +27,16 @@ public class GroupMedicalController implements GroupMedicalControllerSwagger {
             @AuthMember Member member
     ) {
         GroupMedicalInfoResponse response = groupMedicalService.getGroupMedicalInfo(member);
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @GetMapping("/disease/cost")
+    public ResponseEntity<TreatmentsResponse> getTreatment(
+            @AuthMember Member member,
+            @RequestParam(value = "disease") Disease disease
+    ){
+        TreatmentsResponse response = groupMedicalService.getTreatment(member, disease);
         return ResponseEntity.ok(response);
     }
 }

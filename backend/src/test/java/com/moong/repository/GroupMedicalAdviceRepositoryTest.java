@@ -51,7 +51,6 @@ class GroupMedicalAdviceRepositoryTest extends BaseRepositoryTest {
 
         assertThatThrownBy(() -> groupMedicalAdviceRepository.getByPetGroup_Id(petGroup.getId()))
                 .isInstanceOf(BusinessException.class)
-                .extracting("errorCode")
-                .isEqualTo(ErrorCode.MEDICAL_ADVICE_NOT_FOUND);
+                .hasMessage(ErrorCode.MEDICAL_ADVICE_NOT_FOUND.getMessage());
     }
 }
