@@ -47,5 +47,6 @@ yarn.lock
 .codex
 .agents
 .cursor
+.vscode
 *storybook.log
 storybook-static
