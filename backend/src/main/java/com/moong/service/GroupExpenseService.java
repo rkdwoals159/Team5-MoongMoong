@@ -5,6 +5,7 @@ import com.moong.domain.entity.GroupExpense;
 import com.moong.domain.entity.Member;
 import com.moong.domain.groupexpense.CategoryAnalysis;
 import com.moong.dto.response.groupexpense.CategoryAnalysisResponse;
+import com.moong.dto.response.groupexpense.GroupExpensesDailyResponse;
 import com.moong.dto.response.groupexpense.GroupExpensesResponse;
 import com.moong.dto.response.groupexpense.MedicalCategoryAnalysisResponse;
 import com.moong.repository.CrewRepository;
@@ -68,6 +69,14 @@ public class GroupExpenseService {
     }
 
     //TODO 현민님이 해당 메서드를 후속 PR에서 사용하셔서 일단 머지될 때까지 놔두고 추후 중복코드 리팩터링
+    public GroupExpensesDailyResponse findBySpentAt(
+            Member member,
+            LocalDate spentAt
+    ) {
+        List<GroupExpense> dailyExpenses = findGroupExpensesBetween(member, spentAt, spentAt);
+        return new GroupExpensesDailyResponse(dailyExpenses);
+    }
+
     private List<GroupExpense> findGroupExpensesBetween(Member member, LocalDate startDate, LocalDate endDate) {
         Crew crew = crewRepository.getByMemberId(member.getId());
         Sort expenseSort = Sort.by(

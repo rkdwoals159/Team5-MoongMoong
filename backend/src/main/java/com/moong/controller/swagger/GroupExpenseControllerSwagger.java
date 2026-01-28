@@ -3,6 +3,8 @@ package com.moong.controller.swagger;
 import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
+import com.moong.dto.response.groupexpense.GroupExpensesDailyResponse;
+import com.moong.dto.response.groupexpense.GroupExpensesResponse;
 import com.moong.dto.response.groupexpense.CategoryAnalysisResponse;
 import com.moong.dto.response.groupexpense.GroupExpensesResponse;
 import com.moong.dto.response.groupexpense.MedicalCategoryAnalysisResponse;
@@ -95,5 +97,28 @@ public interface GroupExpenseControllerSwagger {
 
             @Parameter(description = "조회 종료 날짜", example = "2026-01-31", required = true)
             LocalDate endDate
+    );
+
+    @Operation(
+            summary = "캘린더 일자별 조회",
+            description = """
+                    캘린더에서 특정 날짜(spentAt)에 해당하는 그룹 소비 내역 리스트를 조회합니다.
+                    spentAt 기준 내림차순, modifiedAt 기준 내림차순으로 정렬됩니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "캘린더 특정 날짜 그룹 소비 내역 조회 성공",
+            content = @Content(schema = @Schema(implementation = GroupExpensesDailyResponse.class)
+            )
+    )
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<GroupExpensesDailyResponse> findGroupDailyExpenses(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member,
+
+            @Parameter(description = "조회 날짜", example = "2026-01-01", required = true)
+            LocalDate spentAt
     );
 }

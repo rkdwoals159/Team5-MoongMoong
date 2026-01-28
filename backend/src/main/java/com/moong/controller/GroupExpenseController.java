@@ -3,6 +3,7 @@ package com.moong.controller;
 import com.moong.annotation.auth.AuthMember;
 import com.moong.controller.swagger.GroupExpenseControllerSwagger;
 import com.moong.domain.entity.Member;
+import com.moong.dto.response.groupexpense.GroupExpensesDailyResponse;
 import com.moong.dto.response.groupexpense.GroupExpensesResponse;
 import com.moong.dto.response.groupexpense.CategoryAnalysisResponse;
 import com.moong.dto.response.groupexpense.MedicalCategoryAnalysisResponse;
@@ -22,7 +23,7 @@ public class GroupExpenseController implements GroupExpenseControllerSwagger {
 
 
     @Override
-    @GetMapping("/api/expenses/group")
+    @GetMapping(value = "/api/expenses/group", params = {"startDate", "endDate", "!spentAt"})
     public ResponseEntity<GroupExpensesResponse> findGroupExpenses(
             @AuthMember Member member,
             @RequestParam(value = "startDate") LocalDate startDate,
@@ -31,7 +32,7 @@ public class GroupExpenseController implements GroupExpenseControllerSwagger {
         GroupExpensesResponse response = groupExpenseService.findGroupExpensesByPeriod(member, startDate, endDate);
         return ResponseEntity.ok(response);
     }
-  
+
     @Override
     @GetMapping("/api/expenses/group/analysis/category")
     public ResponseEntity<CategoryAnalysisResponse> findCategoryAnalysis(
@@ -58,6 +59,19 @@ public class GroupExpenseController implements GroupExpenseControllerSwagger {
                 member,
                 startDate,
                 endDate
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @GetMapping(value = "/api/expenses/group", params = {"spentAt", "!startDate", "!endDate"})
+    public ResponseEntity<GroupExpensesDailyResponse> findGroupDailyExpenses(
+            @AuthMember Member member,
+            @RequestParam(value = "spentAt") LocalDate spentAt
+    ) {
+        GroupExpensesDailyResponse response = groupExpenseService.findBySpentAt(
+                member,
+                spentAt
         );
         return ResponseEntity.ok(response);
     }

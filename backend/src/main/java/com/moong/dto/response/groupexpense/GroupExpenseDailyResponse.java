@@ -1,0 +1,33 @@
+package com.moong.dto.response.groupexpense;
+
+import com.moong.domain.entity.GroupExpense;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "캘린더 특정 일자 소비내역")
+public record GroupExpenseDailyResponse(
+        @Schema(description = "멤버 닉네임", example = "코코맘")
+        String nickname,
+
+        @Schema(description = "사용 내역", example = "감기약 및 처방약 구매")
+        String usage,
+
+        @Schema(description = "소비 금액", example = "15000")
+        long cost,
+
+        @Schema(description = "대분류 카테고리", example = "병원비")
+        String mainCategory,
+
+        @Schema(description = "대분류 카테고리", example = "약/처방")
+        String subCategory
+) {
+
+    public GroupExpenseDailyResponse(GroupExpense groupExpense) {
+        this(
+                groupExpense.getNickname(),
+                groupExpense.getUsage(),
+                groupExpense.getCost(),
+                groupExpense.getMainCategory(),
+                groupExpense.getSubCategory()
+        );
+    }
+}

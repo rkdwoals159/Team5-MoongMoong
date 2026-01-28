@@ -9,6 +9,7 @@ import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.response.groupexpense.CategoryAnalysisResponse;
+import com.moong.dto.response.groupexpense.GroupExpensesDailyResponse;
 import com.moong.dto.response.groupexpense.GroupExpensesResponse;
 import com.moong.dto.response.groupexpense.MedicalCategoryAnalysisResponse;
 import io.restassured.http.ContentType;
@@ -191,6 +192,60 @@ class GroupExpenseControllerTest extends BaseControllerTest {
                 () -> assertThat(response.medicalAnalysis().get(0).cost()).isEqualTo(groupExpense2.getCost()),
                 () -> assertThat(response.medicalAnalysis().get(1).subCategory()).isEqualTo(groupExpense1.getSubCategory()),
                 () -> assertThat(response.medicalAnalysis().get(1).cost()).isEqualTo(groupExpense1.getCost())
+        );
+    }
+
+    @DisplayName("특정 날짜의 그룹 소비 내역을 조회할 수 있다.")
+    @Test
+    void findBySpentAt() {
+        LocalDateTime now = LocalDateTime.now();
+        Member member = memberGenerator.generateSaved("softeer");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, member);
+        MemberExpense memberExpense1 = new MemberExpense(
+                1L,
+                now.toLocalDate(),
+                "류몽민 닭갈비",
+                100,
+                "식비",
+                "소분류",
+                "메모",
+                now.minusDays(2L),
+                member
+        );
+        MemberExpense memberExpense2 = new MemberExpense(
+                1L,
+                now.toLocalDate(),
+                "수건 구입",
+                200,
+                "생필품",
+                "소분류",
+                "메모",
+                now.minusDays(1L),
+                member
+        );
+        GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1, member.getName());
+        GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2, member.getName());
+
+        GroupExpensesDailyResponse response = given().log().all()
+                .contentType(ContentType.JSON)
+                .queryParam("memberId", member.getId())
+                .queryParam("spentAt", now.toLocalDate().toString())
+                .queryParam("auth", "true")
+                .get("/api/expenses/group")
+                .then()
+                .statusCode(200)
+                .extract()
+                .as(GroupExpensesDailyResponse.class);
+
+        assertAll(
+                () -> assertThat(response.total()).isEqualTo(300),
+                () -> assertThat(response.expenses()).hasSize(2),
+                () -> assertThat(response.expenses().get(0).mainCategory()).isEqualTo(groupExpense2.getMainCategory()),
+                () -> assertThat(response.expenses().get(0).cost()).isEqualTo(groupExpense2.getCost()),
+                () -> assertThat(response.expenses().get(1).mainCategory()).isEqualTo(groupExpense1.getMainCategory()),
+                () -> assertThat(response.expenses().get(1).cost()).isEqualTo(groupExpense1.getCost())
         );
     }
 }
