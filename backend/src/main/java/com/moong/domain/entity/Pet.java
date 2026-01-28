@@ -4,6 +4,8 @@ import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import java.time.Period;
+import java.time.ZoneId;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

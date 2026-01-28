@@ -27,9 +27,11 @@ public enum ErrorCode {
     INVALID_DATE_RANGE(400, "시작일은 종료일보다 늦을 수 없습니다."),
 
     //5XX
+    INCONSISTENT_DISEASE_DATA(500, "서버 내부 데이터 정합성 오류입니다."),
+    INVALID_PET_BIRTH_DATA(500, "펫 생년월일 데이터가 유효하지 않습니다."),
     INVITE_CODE_ENCRYPT_ERROR(500, "초대코드 암호화 과정에서 문제가 생겼습니다"),
     INVITE_CODE_DECRYPT_ERROR(500, "초대코드 해독 과정에서 문제가 생겼습니다"),
-    INTERNAL_SERVER_ERROR(500, "서버 오류가 발생했습니다. 관리자에게 문의하세요."),
+    INTERNAL_SERVER_ERROR(500, "서버 오류가 발생했습니다. 관리자에게 문의하세요.")
     ;
 
     private final int statusCode;

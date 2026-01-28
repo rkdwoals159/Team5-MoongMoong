@@ -3,6 +3,7 @@ package com.moong.controller.swagger;
 import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
+import com.moong.dto.response.groupmedical.PetDiseaseRankingResponse;
 import com.moong.domain.enums.Disease;
 import com.moong.dto.response.groupmedical.GroupMedicalInfoResponse;
 import com.moong.dto.response.groupmedical.TreatmentsResponse;
@@ -20,9 +21,9 @@ public interface GroupMedicalControllerSwagger {
     @Operation(
             summary = "그룹 의사 권장사항 반환",
             description = """
-                         로그인한 사용자가 속한 모임의 반려동물 AI 의료 권장사항과
-                         내년 연간 예상 비용을 조회합니다.
-                         """
+                    로그인한 사용자가 속한 모임의 반려동물 AI 의료 권장사항과
+                    내년 연간 예상 비용을 조회합니다.
+                    """
     )
     @ApiResponse(
             responseCode = "200",
@@ -56,5 +57,24 @@ public interface GroupMedicalControllerSwagger {
             @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
             Member member,
             Disease disease
+    );
+
+    @Operation(
+            summary = "올해 기준 발병확률 순 질병 목록 반환",
+            description = """
+                    사용자의 펫 데이터를 통해 가장 주의해야할 질병부터 순서대로 반환합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "사용자의 그룹에 속한 펫의 발병확률 순 질병 목록 반환",
+            content = @Content(
+                    schema = @Schema(implementation = PetDiseaseRankingResponse.class))
+    )
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<PetDiseaseRankingResponse> findPetDiseaseRanking(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member
     );
 }

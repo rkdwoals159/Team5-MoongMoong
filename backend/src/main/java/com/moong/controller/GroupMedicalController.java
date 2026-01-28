@@ -6,6 +6,7 @@ import com.moong.domain.entity.Member;
 import com.moong.domain.enums.Disease;
 import com.moong.dto.response.groupmedical.GroupMedicalInfoResponse;
 import com.moong.dto.response.groupmedical.TreatmentsResponse;
+import com.moong.dto.response.groupmedical.PetDiseaseRankingResponse;
 import com.moong.service.GroupMedicalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,15 @@ public class GroupMedicalController implements GroupMedicalControllerSwagger {
             @AuthMember Member member
     ) {
         GroupMedicalInfoResponse response = groupMedicalService.getGroupMedicalInfo(member);
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @GetMapping("/disease")
+    public ResponseEntity<PetDiseaseRankingResponse> findPetDiseaseRanking(
+            @AuthMember Member member
+    ) {
+        PetDiseaseRankingResponse response = groupMedicalService.findPetDiseaseRanking(member);
         return ResponseEntity.ok(response);
     }
 

@@ -1,10 +1,18 @@
 package com.moong.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
+import com.moong.domain.entity.PetMedical;
 import com.moong.domain.enums.Disease;
+import com.moong.domain.pet.PetAge;
+import com.moong.dto.response.groupmedical.PetDiseaseRankingResponse;
 import io.restassured.http.ContentType;
+import java.util.Comparator;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -60,5 +68,39 @@ class GroupMedicalControllerTest extends BaseControllerTest {
                 .get("/api/group/medical/disease/cost")
                 .then()
                 .statusCode(200);
+    }
+
+    @DisplayName("사용자의 펫 데이터를 통해 가장 주의해야할 질병부터 순서대로 반환합니다.")
+    @Test
+    void findPetDiseaseRanking() {
+        Member member = memberGenerator.generateSaved("softeer");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        PetAge petAge = new PetAge(pet.getBirthDate());
+        crewGenerator.generateSaved(petGroup, member);
+        List<PetMedical> petMedicals = petMedicalGenerator.generateSavePetMedicals(
+                pet.getBreed(),
+                petAge.getAge(),
+                pet.getGender()
+        );
+        List<Disease> diseases = petMedicals.stream()
+                .sorted(Comparator.comparing(PetMedical::getRatio).reversed())
+                .map(PetMedical::getDisease)
+                .toList();
+
+        PetDiseaseRankingResponse response = given().log().all()
+                .contentType(ContentType.JSON)
+                .queryParam("memberId", member.getId())
+                .queryParam("auth", "true")
+                .get("/api/group/medical/disease")
+                .then()
+                .statusCode(200)
+                .extract().as(PetDiseaseRankingResponse.class);
+
+        assertAll(
+                () -> assertThat(response.diseases()).hasSize(diseases.size()),
+                () -> assertThat(response.diseases())
+                        .containsExactlyElementsOf(diseases)
+        );
     }
 }

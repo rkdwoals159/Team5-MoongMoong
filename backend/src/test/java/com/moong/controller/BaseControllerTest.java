@@ -46,6 +46,9 @@ public abstract class BaseControllerTest {
     @Autowired
     protected TreatmentGenerator treatmentGenerator;
 
+    @Autowired
+    protected PetMedicalGenerator petMedicalGenerator;
+
     @LocalServerPort
     private int port;
 
