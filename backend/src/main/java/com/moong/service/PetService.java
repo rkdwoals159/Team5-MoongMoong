@@ -1,9 +1,13 @@
 package com.moong.service;
 
+import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.WorriedDisease;
 import com.moong.dto.request.PetCreateRequest;
 import com.moong.dto.response.pet.PetCreateResponse;
+import com.moong.exception.custom.BusinessException;
+import com.moong.exception.errorcode.ErrorCode;
+import com.moong.repository.CrewRepository;
 import com.moong.repository.PetRepository;
 import com.moong.repository.WorriedDiseaseRepository;
 import java.util.List;
@@ -17,9 +21,11 @@ public class PetService {
 
     private final PetRepository petRepository;
     private final WorriedDiseaseRepository worriedDiseaseRepository;
+    private final CrewRepository crewRepository;
 
     @Transactional
-    public PetCreateResponse createPet(PetCreateRequest petCreateRequest) {
+    public PetCreateResponse createPet(Member member, PetCreateRequest petCreateRequest) {
+        validateAlreadyHasPet(member);
         Pet pet = petCreateRequest.toPet();
         Pet savedPet = petRepository.save(pet);
 
@@ -30,4 +36,9 @@ public class PetService {
         worriedDiseaseRepository.saveAll(worriedDiseases);
         return new PetCreateResponse(savedPet, worriedDiseases);
     }
-}
+
+    private void validateAlreadyHasPet(Member member) {
+        crewRepository.findByMemberId(member.getId())
+                .ifPresent(crew -> { throw new BusinessException(ErrorCode.ALREADY_EXISTS_PET);});
+    }
+ }

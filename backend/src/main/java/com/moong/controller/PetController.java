@@ -26,7 +26,7 @@ public class PetController implements PetControllerSwagger {
             @RequestBody PetCreateRequest petCreateRequest
     ) {
         //TODO Facade 고민
-        PetCreateResponse response = petService.createPet(petCreateRequest);
+        PetCreateResponse response = petService.createPet(member, petCreateRequest);
         groupService.firstJoin(member, response.petId());
         return ResponseEntity.ok(response);
     }

@@ -7,6 +7,7 @@ import com.moong.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -15,9 +16,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Slf4j
 @RequiredArgsConstructor
 public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver {
-
-    private static final String REQUEST_PARAMETER_MEMBER_ID = "memberId";
-    private static final String REQUEST_PARAMETER_AUTH = "auth";
 
     private final AuthService authService;
 
@@ -34,16 +32,12 @@ public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver
             WebDataBinderFactory binderFactory
     ) {
         long memberId = getMemberId(webRequest);
-        boolean shouldAuth = Boolean.parseBoolean(webRequest.getParameter(REQUEST_PARAMETER_AUTH));
-        if (!shouldAuth) {
-            return null;
-        }
         return authService.authorize(memberId);
     }
 
     private long getMemberId(NativeWebRequest webRequest) {
         try {
-            String memberId = webRequest.getParameter(REQUEST_PARAMETER_MEMBER_ID);
+            String memberId = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
             return Long.parseLong(memberId);
         } catch (NumberFormatException exception) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED_EXCEPTION);

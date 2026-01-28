@@ -10,6 +10,7 @@ import java.time.YearMonth;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 
 class PetControllerTest extends BaseControllerTest {
 
@@ -31,7 +32,7 @@ class PetControllerTest extends BaseControllerTest {
         given().log().all()
                 .contentType(ContentType.JSON)
                 .body(petCreateRequest)
-                .queryParam("memberId", member.getId())
+                .header(HttpHeaders.AUTHORIZATION, member.getId())
                 .queryParam("auth", "true")
                 .post("/api/pet")
                 .then()

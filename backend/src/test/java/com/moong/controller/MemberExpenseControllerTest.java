@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 
 class MemberExpenseControllerTest extends BaseControllerTest {
 
@@ -24,7 +25,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
 
         given().log().all()
                 .contentType(ContentType.JSON)
-                .queryParam("memberId", member.getId())
+                .header(HttpHeaders.AUTHORIZATION, member.getId())
                 .queryParam("auth", true)
                 .queryParam("startDate", startDate.toString())
                 .queryParam("endDate", endDate.toString())
@@ -42,7 +43,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
 
         given().log().all()
                 .contentType(ContentType.JSON)
-                .queryParam("memberId", member.getId())
+                .header(HttpHeaders.AUTHORIZATION, member.getId())
                 .queryParam("auth", true)
                 .queryParam("startDate", startDate.toString())
                 .queryParam("endDate", endDate.toString())
@@ -92,7 +93,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
 
         MemberExpensesUpsertResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .queryParam("memberId", member.getId())
+                .header(HttpHeaders.AUTHORIZATION, member.getId())
                 .queryParam("auth", true)
                 .body(request)
                 .patch("/api/expenses")

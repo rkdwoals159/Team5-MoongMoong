@@ -14,6 +14,7 @@ import com.moong.dto.response.groupexpense.GroupExpensesResponse;
 import com.moong.dto.response.groupexpense.MedicalCategoryAnalysisResponse;
 import io.restassured.http.ContentType;
 import java.time.LocalDateTime;
+import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -69,7 +70,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
 
         GroupExpensesResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .queryParam("memberId", coli.getId())
+                .header(HttpHeaders.AUTHORIZATION, coli.getId())
                 .queryParam("startDate", now.minusDays(2).toLocalDate().toString())
                 .queryParam("endDate", now.minusDays(1).toLocalDate().toString())
                 .queryParam("auth", "true")
@@ -120,10 +121,9 @@ class GroupExpenseControllerTest extends BaseControllerTest {
 
         CategoryAnalysisResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .queryParam("memberId", coli.getId())
+                .header(HttpHeaders.AUTHORIZATION, coli.getId())
                 .queryParam("startDate", now.minusDays(2).toLocalDate().toString())
                 .queryParam("endDate", now.minusDays(1).toLocalDate().toString())
-                .queryParam("auth", "true")
                 .get("/api/expenses/group/analysis/category")
                 .then()
                 .statusCode(200)
@@ -175,7 +175,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
 
         MedicalCategoryAnalysisResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .queryParam("memberId", coli.getId())
+                .header(HttpHeaders.AUTHORIZATION, coli.getId())
                 .queryParam("startDate", now.minusDays(2).toLocalDate().toString())
                 .queryParam("endDate", now.minusDays(1).toLocalDate().toString())
                 .queryParam("auth", "true")
@@ -230,9 +230,8 @@ class GroupExpenseControllerTest extends BaseControllerTest {
 
         GroupExpensesDailyResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .queryParam("memberId", member.getId())
+                .header(HttpHeaders.AUTHORIZATION, member.getId())
                 .queryParam("spentAt", now.toLocalDate().toString())
-                .queryParam("auth", "true")
                 .get("/api/expenses/group")
                 .then()
                 .statusCode(200)

@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 
 class GroupMedicalControllerTest extends BaseControllerTest {
 
@@ -29,8 +30,7 @@ class GroupMedicalControllerTest extends BaseControllerTest {
 
         given().log().all()
                 .contentType(ContentType.JSON)
-                .queryParam("memberId", member.getId())
-                .queryParam("auth", "true")
+                .header(HttpHeaders.AUTHORIZATION, member.getId())
                 .get("/api/group/medical/info")
                 .then()
                 .statusCode(200);
@@ -43,8 +43,7 @@ class GroupMedicalControllerTest extends BaseControllerTest {
 
         given().log().all()
                 .contentType(ContentType.JSON)
-                .queryParam("memberId", memberId)
-                .queryParam("auth", "true")
+                .header(HttpHeaders.AUTHORIZATION, memberId)
                 .get("/api/group/medical/info")
                 .then()
                 .statusCode(401);
@@ -62,8 +61,7 @@ class GroupMedicalControllerTest extends BaseControllerTest {
 
         given().log().all()
                 .contentType(ContentType.JSON)
-                .queryParam("memberId", member.getId())
-                .queryParam("auth", "true")
+                .header(org.apache.http.HttpHeaders.AUTHORIZATION, member.getId())
                 .queryParam("disease", "DER")
                 .get("/api/group/medical/disease/cost")
                 .then()
@@ -90,8 +88,7 @@ class GroupMedicalControllerTest extends BaseControllerTest {
 
         PetDiseaseRankingResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .queryParam("memberId", member.getId())
-                .queryParam("auth", "true")
+                .header(org.apache.http.HttpHeaders.AUTHORIZATION, member.getId())
                 .get("/api/group/medical/disease")
                 .then()
                 .statusCode(200)

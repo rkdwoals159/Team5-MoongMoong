@@ -32,7 +32,7 @@ public record PetCreateResponse(
         @Schema(description = "거주 구역", example = "종로주")
         String district,
 
-        @Schema(description = "우려하는 질병 목록", example = "OCU, MUS")
+        @Schema(description = "우려하는 질병 목록", example = "[\"OCU\", \"MUS\"]")
         List<Disease> diseases
 ) {
 
