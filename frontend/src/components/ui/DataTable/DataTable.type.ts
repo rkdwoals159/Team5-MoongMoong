@@ -21,4 +21,5 @@ export type DataTableProps<T> = {
   mode?: "read" | "edit";
   rowKey?: (row: T, index: number) => string | number;
   className?: string;
+  selectedCell?: { rowIndex: number; accessor: keyof T } | null;
 };
