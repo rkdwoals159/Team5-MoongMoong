@@ -44,6 +44,12 @@ public abstract class BaseServiceTest {
 
     @Autowired
     protected TreatmentGenerator treatmentGenerator;
+
+    @Autowired
+    protected GroupBankGenerator groupBankGenerator;
+
+    @Autowired
+    protected  CoinGenerator coinGenerator;
   
     protected void runAtSameTime(int count, Runnable task) throws InterruptedException {
         List<Thread> threads = IntStream.range(0, count)

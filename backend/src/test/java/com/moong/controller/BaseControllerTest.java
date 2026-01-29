@@ -49,6 +49,12 @@ public abstract class BaseControllerTest {
     @Autowired
     protected PetMedicalGenerator petMedicalGenerator;
 
+    @Autowired
+    protected GroupBankGenerator groupBankGenerator;
+
+    @Autowired
+    protected CoinGenerator coinGenerator;
+
     @LocalServerPort
     private int port;
 

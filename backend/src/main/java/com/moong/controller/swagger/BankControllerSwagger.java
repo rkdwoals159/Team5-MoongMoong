@@ -1,11 +1,14 @@
 package com.moong.controller.swagger;
 
+import com.moong.annotation.auth.AuthMember;
 import com.moong.annotation.swagger.ErrorCode400;
 import com.moong.annotation.swagger.ErrorCode401;
+import com.moong.annotation.swagger.ErrorCode404;
 import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
 import com.moong.dto.request.bank.BankCreateRequest;
 import com.moong.dto.response.bank.BankCreateResponse;
+import com.moong.dto.response.bank.BankInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,5 +43,25 @@ public interface BankControllerSwagger {
             @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
             Member member,
             BankCreateRequest request
+    );
+
+
+    @Operation(
+            summary = "저금통 정보 조회",
+            description = "현재 저금통 상태와 목표 금액, 랭킹 정보를 조회합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "저금통 정보 조회 성공",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = BankInfoResponse.class)
+            )
+    )
+    @ErrorCode404(description = "저금통이 아직 존재하지 않음")
+    @ErrorCode500
+    public ResponseEntity<BankInfoResponse> findBankInfo(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member
     );
 }

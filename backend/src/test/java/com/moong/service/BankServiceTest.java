@@ -1,22 +1,25 @@
 package com.moong.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import com.moong.domain.entity.Bank;
+import com.moong.domain.entity.Coin;
+import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.bank.BankCreateRequest;
 import com.moong.dto.response.bank.BankCreateResponse;
+import com.moong.dto.response.bank.BankInfoResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.BankRepository;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class BankServiceTest extends BaseServiceTest {
 
@@ -82,4 +85,43 @@ class BankServiceTest extends BaseServiceTest {
         assertThat(banks.size()).isEqualTo(1);
     }
 
+    @DisplayName("저금통 정보 및 랭킹 정보 조회에 성공한다")
+    @Test
+    void findBankInfoSuccess() {
+        Member member1 = memberGenerator.generateSaved("member1");
+        Member member2 = memberGenerator.generateSaved("member2");
+        Pet savedPet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
+        Crew crew1 = crewGenerator.generateSaved(petGroup, member1);
+        Crew crew2 = crewGenerator.generateSaved(petGroup, member2);
+        Bank bank = groupBankGenerator.generateSaved(petGroup, 1000000L);
+        Coin smallCoin = coinGenerator.generateSaved(bank, crew1, 100L);
+        Coin bigCoin = coinGenerator.generateSaved(bank, crew2, 200L);
+
+        BankInfoResponse bankInfo = bankService.findBankInfo(member1);
+
+        assertAll(
+                () -> assertThat(bankInfo.bankId()).isEqualTo(bank.getId()),
+                () -> assertThat(bankInfo.target()).isEqualTo(bank.getTargetAmount()),
+                () -> assertThat(bankInfo.current()).isEqualTo(bank.getCurrentAmount()),
+                () -> assertThat(bankInfo.rankings()).hasSize(2),
+                () -> assertThat(bankInfo.rankings().get(0).userName()).isEqualTo(member2.getName()),
+                () -> assertThat(bankInfo.rankings().get(0).total()).isEqualTo(bigCoin.getAmount()),
+                () -> assertThat(bankInfo.rankings().get(1).userName()).isEqualTo(member1.getName()),
+                () -> assertThat(bankInfo.rankings().get(1).total()).isEqualTo(smallCoin.getAmount())
+        );
+    }
+
+    @DisplayName("저금통 정보 조히 실패 : 저금통이 존재하지 않을 경우")
+    @Test
+    void findBankInfoFail() {
+        Member member1 = memberGenerator.generateSaved("member1");
+        Pet savedPet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
+        crewGenerator.generateSaved(petGroup, member1);
+
+        assertThatThrownBy(() -> bankService.findBankInfo(member1))
+                .isInstanceOf(BusinessException.class)
+                .hasMessage(ErrorCode.NO_SUCH_BANK_FOUND.getMessage());
+    }
 }

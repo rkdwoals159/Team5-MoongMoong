@@ -22,6 +22,7 @@ public enum ErrorCode {
     NO_RESOURCE_FOUND(404, "요청한 리소스를 찾을 수 없습니다."),
     MEMBER_EXPENSE_NOT_FOUND(404, "해당하는 사용자 소비내역을 찾을 수 없습니다"),
     NO_SUCH_PET_FOUND(404, "PET을 찾을 수 없습니다."),
+    NO_SUCH_BANK_FOUND(404, "저금통을 찾을 수 없습니다"),
     DISEASE_CODE_NOT_FOUND(404, "존재하지 않는 질병 코드입니다."),
     METHOD_NOT_SUPPORTED(405, "허용되지 않은 메서드입니다."),
     MEDIA_TYPE_NOT_SUPPORTED(415, "허용되지 않은 미디어 타입입니다."),
