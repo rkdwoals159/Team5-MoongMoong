@@ -8,6 +8,7 @@ public enum ErrorCode {
     //4XX
     INVALID_INVITE_CODE_URL(400, "잘못된 초대코드입니다"),
     ALREADY_EXISTS_PET(400, "이미 회원의 펫이 존재합니다"),
+    ALREADY_EXISTS_BANK(400, "이미 저금통이 존재합니다."),
     ALREADY_PARTICIPATE_ANOTHER_PET_GROUP(400, "이미 다른 펫 그룹에 참여중입니다"),
     PET_GROUP_IS_FULL(400, "펫 그룹 정원이 모두 차있습니다"),
     ALREADY_ATTENDED_PET_GROUP(400, "이미 참여한 펫 그룹입니다."),

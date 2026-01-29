@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Bank extends BaseEntity {
 
     @Id
@@ -35,4 +35,7 @@ public class Bank extends BaseEntity {
 
     private long currentAmount;
 
+    public Bank(PetGroup petGroup, long targetAmount) {
+        this(null, petGroup, targetAmount, 0);
+    }
 }
