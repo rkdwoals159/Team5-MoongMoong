@@ -1,10 +1,12 @@
 package com.moong.service;
 
+import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.WorriedDisease;
 import com.moong.dto.request.PetCreateRequest;
 import com.moong.dto.response.pet.PetCreateResponse;
+import com.moong.dto.response.pet.PetReadResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.CrewRepository;
@@ -35,6 +37,14 @@ public class PetService {
                 .toList();
         worriedDiseaseRepository.saveAll(worriedDiseases);
         return new PetCreateResponse(savedPet, worriedDiseases);
+    }
+
+    @Transactional(readOnly = true)
+    public PetReadResponse findPetInfo(Member member) {
+        Crew crew = crewRepository.getByMemberId(member.getId());
+        Pet pet = crew.getPetGroup().getPet();
+        List<WorriedDisease> worriedDisease = worriedDiseaseRepository.findAllByPet_Id(pet.getId());
+        return new PetReadResponse(pet, worriedDisease);
     }
 
     private void validateAlreadyHasPet(Member member) {

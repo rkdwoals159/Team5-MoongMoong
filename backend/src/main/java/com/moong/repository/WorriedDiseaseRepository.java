@@ -15,4 +15,6 @@ public interface WorriedDiseaseRepository extends Repository<WorriedDisease, Lon
     }
 
     List<WorriedDisease> findAll();
+
+    List<WorriedDisease> findAllByPet_Id(long petId);
 }

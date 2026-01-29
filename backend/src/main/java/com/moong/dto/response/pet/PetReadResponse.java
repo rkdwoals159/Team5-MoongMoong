@@ -9,8 +9,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.YearMonth;
 import java.util.List;
 
-@Schema(description = "반려동물 생성 응답")
-public record PetCreateResponse(
+@Schema(description = "반려동물 정보 응답")
+public record PetReadResponse(
         @Schema(description = "반려동물 아이디", example = "1")
         long petId,
 
@@ -36,7 +36,7 @@ public record PetCreateResponse(
         List<Disease> diseases
 ) {
 
-    public PetCreateResponse(Pet pet, List<WorriedDisease> worriedDiseases) {
+    public PetReadResponse(Pet pet, List<WorriedDisease> worriedDiseases) {
         this(
                 pet.getId(),
                 pet.getName(),
@@ -51,3 +51,4 @@ public record PetCreateResponse(
         );
     }
 }
+

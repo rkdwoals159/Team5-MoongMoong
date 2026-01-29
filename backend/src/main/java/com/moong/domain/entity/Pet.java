@@ -54,6 +54,10 @@ public class Pet {
     @Column(length = 20)
     private String district;
 
+    public String getName() {
+        return name.trim(); 
+    }
+  
     public PetAge getAge() {
         return new PetAge(birthDate);
     }
