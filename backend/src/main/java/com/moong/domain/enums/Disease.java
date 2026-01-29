@@ -79,4 +79,8 @@ public enum Disease {
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("Unknown disease englishName: " + name));
     }
+
+    public boolean isSame(Disease disease) {
+        return this == disease;
+    }
 }

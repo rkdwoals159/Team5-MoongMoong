@@ -5,6 +5,7 @@ import com.moong.controller.swagger.GroupMedicalControllerSwagger;
 import com.moong.domain.entity.Member;
 import com.moong.domain.enums.Disease;
 import com.moong.dto.response.groupmedical.GroupMedicalInfoResponse;
+import com.moong.dto.response.groupmedical.GroupMedicalStatisticsResponse;
 import com.moong.dto.response.groupmedical.TreatmentsResponse;
 import com.moong.dto.response.groupmedical.PetDiseaseRankingResponse;
 import com.moong.service.GroupMedicalService;
@@ -37,6 +38,15 @@ public class GroupMedicalController implements GroupMedicalControllerSwagger {
             @AuthMember Member member
     ) {
         PetDiseaseRankingResponse response = groupMedicalService.findPetDiseaseRanking(member);
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @GetMapping("/statistics")
+    public ResponseEntity<GroupMedicalStatisticsResponse> findGroupDieseaseStatistics(
+            @AuthMember Member member
+    ) {
+        GroupMedicalStatisticsResponse response = groupMedicalService.findGroupMedicalStatistics(member);
         return ResponseEntity.ok(response);
     }
 

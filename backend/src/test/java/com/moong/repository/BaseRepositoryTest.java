@@ -15,7 +15,8 @@ import org.springframework.test.context.ActiveProfiles;
         MemberGenerator.class,
         CrewGenerator.class,
         MemberExpenseGenerator.class,
-        GroupMedicalAdviceGenerator.class  
+        GroupMedicalAdviceGenerator.class,
+        PetMedicalGenerator.class
 })
 @ActiveProfiles("test")
 public abstract class BaseRepositoryTest {
@@ -43,4 +44,7 @@ public abstract class BaseRepositoryTest {
 
     @Autowired
     protected GroupMedicalAdviceGenerator groupMedicalAdviceGenerator;
+
+    @Autowired
+    PetMedicalGenerator petMedicalGenerator;
 }

@@ -53,6 +53,7 @@ public interface MemberExpenseControllerSwagger {
             })
     @ErrorCode400(description = "시작일은 종료일보다 늦을 수 없습니다.")
     ResponseEntity<MemberExpensesPeriodResponse> getMemberExpensesByPeriod(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
             Member member,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate

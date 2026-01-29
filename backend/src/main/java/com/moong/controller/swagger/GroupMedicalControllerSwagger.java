@@ -1,8 +1,10 @@
 package com.moong.controller.swagger;
 
+import com.moong.annotation.auth.AuthMember;
 import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
+import com.moong.dto.response.groupmedical.GroupMedicalStatisticsResponse;
 import com.moong.dto.response.groupmedical.PetDiseaseRankingResponse;
 import com.moong.domain.enums.Disease;
 import com.moong.dto.response.groupmedical.GroupMedicalInfoResponse;
@@ -57,6 +59,22 @@ public interface GroupMedicalControllerSwagger {
             @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
             Member member,
             Disease disease
+    );
+
+    @Operation(
+            summary = "그룹 질병 통계 조회",
+            description = "회원이 속한 그룹의 질병별 연도 통계 데이터를 조회합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공",
+            content = @Content(
+                    schema = @Schema(implementation = GroupMedicalStatisticsResponse.class)
+            )
+    )
+    ResponseEntity<GroupMedicalStatisticsResponse> findGroupDieseaseStatistics(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member
     );
 
     @Operation(

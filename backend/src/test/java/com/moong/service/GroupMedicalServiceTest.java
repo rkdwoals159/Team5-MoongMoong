@@ -1,8 +1,11 @@
 package com.moong.service;
 
 import com.moong.domain.entity.*;
+import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
+import com.moong.domain.enums.Gender;
 import com.moong.dto.response.groupmedical.GroupMedicalInfoResponse;
+import com.moong.dto.response.groupmedical.GroupMedicalStatisticsResponse;
 import com.moong.dto.response.groupmedical.TreatmentResponse;
 import com.moong.dto.response.groupmedical.TreatmentsResponse;
 import com.moong.domain.entity.GroupMedicalAdvice;
@@ -14,6 +17,7 @@ import com.moong.domain.pet.PetAge;
 import com.moong.dto.response.groupmedical.PetDiseaseRankingResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -44,6 +48,40 @@ class GroupMedicalServiceTest extends BaseServiceTest {
                 () -> assertThat(response.advice()).isEqualTo(groupMedicalAdvice.getAdvice()),
                 () -> assertThat(response.expectedCost()).isEqualTo(groupMedicalAdvice.getExpectedCost()),
                 () -> assertThat(response.year()).isEqualTo(groupMedicalAdvice.getYear())
+        );
+    }
+
+    @DisplayName("향후 7년간 질병 위험도를 조회할 수 있다")
+    @Test
+    void findGroupMedicalStatistics() {
+        Member member = memberGenerator.generateSaved("softeer");
+        Pet pet = petGenerator.generateSaved(Breed.BEA, Gender.F, LocalDate.now().minusYears(3L));
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, member);
+        //검색 범위 제외 나이
+        PetMedical chiFMedical0 = petMedicalGenerator.generateSaved(
+                Breed.CHL, 0, Gender.F, Disease.CAR, 3
+        );
+
+        //다른 성별
+        PetMedical beaMMedical3 = petMedicalGenerator.generateSaved(
+                Breed.BEA, 3, Gender.M, Disease.CAR, 3
+        );
+
+        PetMedical beaFMedical3 = petMedicalGenerator.generateSaved(
+                Breed.BEA, 3, Gender.F, Disease.CAR, 3
+        );
+
+        GroupMedicalStatisticsResponse response = groupMedicalService.findGroupMedicalStatistics(member);
+        List<Integer> carRatio = response.statistics().stream()
+                        .filter(statistic -> statistic.disease().isSame(Disease.CAR))
+                                .findAny()
+                                .get()
+                                .ratios();
+
+        assertAll(
+                () -> assertThat(response.startYear()).isEqualTo(LocalDate.now().getYear()),
+                () -> assertThat(carRatio).containsExactly(beaFMedical3.getRatio())
         );
     }
 
@@ -78,7 +116,7 @@ class GroupMedicalServiceTest extends BaseServiceTest {
         crewGenerator.generateSaved(petGroup, member);
         List<PetMedical> petMedicals = petMedicalGenerator.generateSavePetMedicals(
                 pet.getBreed(),
-                petAge.getAge(),
+                petAge.getValue(),
                 pet.getGender()
         );
         List<Disease> diseases = petMedicals.stream()
@@ -106,12 +144,12 @@ class GroupMedicalServiceTest extends BaseServiceTest {
 
         petMedicalGenerator.generateSavePetMedicals(
                 pet.getBreed(),
-                petAge.getAge(),
+                petAge.getValue(),
                 pet.getGender()
         );
         petMedicalGenerator.generateSaved(
                 pet.getBreed(),
-                petAge.getAge(),
+                petAge.getValue(),
                 pet.getGender(),
                 Disease.CAR,
                 50

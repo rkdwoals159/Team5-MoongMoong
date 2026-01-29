@@ -21,6 +21,11 @@ public class PetGenerator {
         return petRepository.save(generateUnSaved());
     }
 
+    public Pet generateSaved(Breed breed, Gender gender, LocalDate birthday) {
+        Pet pet = new Pet(null, "코코", breed, gender, birthday, "서울", "종로구");
+        return petRepository.save(pet);
+    }
+
     public Pet generateSaved(String city, String district) {
         Pet pet = new Pet(null, "코코", Breed.BEA, Gender.F, LocalDate.of(2025, 5, 29), city, district);
         return petRepository.save(pet);

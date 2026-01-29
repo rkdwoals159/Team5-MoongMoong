@@ -30,7 +30,8 @@ public interface PetControllerSwagger {
     @ErrorCode401
     @ErrorCode500
     ResponseEntity<PetCreateResponse> savePet(
-            @Parameter(hidden = true) Member member,
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member,
             PetCreateRequest petCreateRequest
     );
 }

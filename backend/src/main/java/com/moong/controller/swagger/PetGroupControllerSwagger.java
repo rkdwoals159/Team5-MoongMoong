@@ -8,6 +8,7 @@ import com.moong.dto.request.PetGroupParticipateRequest;
 import com.moong.dto.response.petgroup.PetGroupParticipateResponse;
 import com.moong.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,6 +38,7 @@ public interface PetGroupControllerSwagger {
     @ErrorCode401
     @ErrorCode500
     ResponseEntity<PetGroupParticipateResponse> participate(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
             Member member,
             PetGroupParticipateRequest request
     );

@@ -11,4 +11,6 @@ public interface PetMedicalRepository extends Repository<PetMedical, Long> {
     PetMedical save(PetMedical petMedical);
 
     List<PetMedical> findByBreedAndAgeAndGender(Breed breed, int age, Gender gender);
+
+    List<PetMedical> findByBreedAndGenderAndAgeBetween(Breed breed, Gender gender, int minAge, int maxAge);
 }

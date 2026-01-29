@@ -7,10 +7,14 @@ import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.domain.entity.PetMedical;
+import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
+import com.moong.domain.enums.Gender;
 import com.moong.domain.pet.PetAge;
+import com.moong.dto.response.groupmedical.GroupMedicalStatisticsResponse;
 import com.moong.dto.response.groupmedical.PetDiseaseRankingResponse;
 import io.restassured.http.ContentType;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -68,6 +72,49 @@ class GroupMedicalControllerTest extends BaseControllerTest {
                 .statusCode(200);
     }
 
+    @DisplayName("향후 7년간 질병 위험도를 조회할 수 있다")
+    @Test
+    void findGroupMedicalStatistics() {
+        Member member = memberGenerator.generateSaved("softeer");
+        Pet pet = petGenerator.generateSaved(Breed.BEA, Gender.F, LocalDate.now().minusYears(3L));
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, member);
+        //검색 범위 제외 나이
+        PetMedical chiFMedical0 = petMedicalGenerator.generateSaved(
+                Breed.CHL, 0, Gender.F, Disease.CAR, 3
+        );
+
+        //다른 성별
+        PetMedical beaMMedical3 = petMedicalGenerator.generateSaved(
+                Breed.BEA, 3, Gender.M, Disease.CAR, 3
+        );
+
+        PetMedical beaFMedical3 = petMedicalGenerator.generateSaved(
+                Breed.BEA, 3, Gender.F, Disease.CAR, 3
+        );
+
+        GroupMedicalStatisticsResponse response = given().log().all()
+                .contentType(ContentType.JSON)
+                .header(org.apache.http.HttpHeaders.AUTHORIZATION, member.getId())
+                .queryParam("disease", "DER")
+                .get("/api/group/medical/statistics")
+                .then()
+                .statusCode(200)
+                .extract()
+                .as(GroupMedicalStatisticsResponse.class);
+
+        List<Integer> carRatio = response.statistics().stream()
+                .filter(statistic -> statistic.disease().isSame(Disease.CAR))
+                .findAny()
+                .get()
+                .ratios();
+
+        assertAll(
+                () -> assertThat(response.startYear()).isEqualTo(LocalDate.now().getYear()),
+                () -> assertThat(carRatio).containsExactly(beaFMedical3.getRatio())
+        );
+    }
+
     @DisplayName("사용자의 펫 데이터를 통해 가장 주의해야할 질병부터 순서대로 반환합니다.")
     @Test
     void findPetDiseaseRanking() {
@@ -78,7 +125,7 @@ class GroupMedicalControllerTest extends BaseControllerTest {
         crewGenerator.generateSaved(petGroup, member);
         List<PetMedical> petMedicals = petMedicalGenerator.generateSavePetMedicals(
                 pet.getBreed(),
-                petAge.getAge(),
+                petAge.getValue(),
                 pet.getGender()
         );
         List<Disease> diseases = petMedicals.stream()
