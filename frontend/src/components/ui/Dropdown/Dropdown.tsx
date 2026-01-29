@@ -69,7 +69,7 @@ const Dropdown = ({
           setIsOpen(true);
           setFocusedIndex(0);
         } else if (focusedIndex >= 0) {
-          handleSelect(options[focusedIndex]);
+          handleSelect(options[focusedIndex] ?? "");
         }
         break;
       case "Escape":

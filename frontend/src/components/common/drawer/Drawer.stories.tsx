@@ -22,7 +22,7 @@ const navItems = [
 
 export const Navigation: Story = {
   render: () => {
-    const [activeId, setActiveId] = useState(navItems[0].id);
+    const [activeId, setActiveId] = useState(navItems[0]?.id);
 
     return (
       <div className="flex flex-col gap-2 w-[240px]">

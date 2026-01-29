@@ -12,7 +12,8 @@
     "prepare": "husky install",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "chromatic": "npx chromatic --exit-zero-on-changes"
+    "chromatic": "npx chromatic --exit-zero-on-changes",
+    "openapi-typescript": "npx openapi-typescript https://api.moongmoong.site/api-docs.yaml -o src/types/schema.d.ts"
   },
   "dependencies": {
     "@commitlint/cli": "^20.3.1",
@@ -44,6 +45,8 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-storybook": "^10.2.0",
     "husky": "^9.1.7",
+    "openapi-fetch": "^0.15.0",
+    "openapi-typescript": "^7.10.1",
     "playwright": "^1.57.0",
     "prettier": "^3.8.0",
     "tailwindcss": "^4.1.18",
