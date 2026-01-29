@@ -50,6 +50,9 @@ public abstract class BaseControllerTest {
     protected PetMedicalGenerator petMedicalGenerator;
 
     @Autowired
+    protected  BankGenerator bankGenerator;
+  
+    @Autowired
     protected GroupBankGenerator groupBankGenerator;
 
     @Autowired

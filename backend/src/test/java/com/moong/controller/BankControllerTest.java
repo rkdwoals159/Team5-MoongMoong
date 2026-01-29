@@ -37,6 +37,56 @@ class BankControllerTest extends BaseControllerTest {
                 .statusCode(200);
     }
 
+    @DisplayName("저금통 삭제 성공")
+    @Test
+    void breakBankSuccess() {
+        Member member = memberGenerator.generateSaved("softeer");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, member);
+        bankGenerator.generateSaved(petGroup, 10L, 10L);
+
+        given().log().all()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .delete("/api/group/bank")
+                .then()
+                .statusCode(200);
+    }
+
+    @DisplayName("저금통 삭제 실패 : 목표 금액 달성을 하지 못했을 경우")
+    @Test
+    void breakBankFailNotSucceedTargetAmount() {
+        Member member = memberGenerator.generateSaved("softeer");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, member);
+        bankGenerator.generateSaved(petGroup, 10L, 9L);
+
+        given().log().all()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .delete("/api/group/bank")
+                .then()
+                .statusCode(400);
+    }
+
+    @DisplayName("저금통 삭제 실패 : 저금통이 아직 생성되지 않은 경우")
+    @Test
+    void breakBankFail() {
+        Member member = memberGenerator.generateSaved("softeer");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, member);
+
+        given().log().all()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .delete("/api/group/bank")
+                .then()
+                .statusCode(404);
+    }
+  
     @DisplayName("저금통 정보 및 랭킹 정보 조회에 성공한다")
     @Test
     void findBankInfoSuccess() {

@@ -7,6 +7,7 @@ import com.moong.annotation.swagger.ErrorCode404;
 import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
 import com.moong.dto.request.bank.BankCreateRequest;
+import com.moong.dto.response.bank.BankBreakResponse;
 import com.moong.dto.response.bank.BankCreateResponse;
 import com.moong.dto.response.bank.BankInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,12 +45,11 @@ public interface BankControllerSwagger {
             Member member,
             BankCreateRequest request
     );
-
-
+      
     @Operation(
             summary = "저금통 정보 조회",
-            description = "현재 저금통 상태와 목표 금액, 랭킹 정보를 조회합니다."
-    )
+            description = "저금통의 현재, 목표 금액을 반환합니다"
+    )  
     @ApiResponse(
             responseCode = "200",
             description = "저금통 정보 조회 성공",
@@ -60,7 +60,23 @@ public interface BankControllerSwagger {
     )
     @ErrorCode404(description = "저금통이 아직 존재하지 않음")
     @ErrorCode500
-    public ResponseEntity<BankInfoResponse> findBankInfo(
+    ResponseEntity<BankInfoResponse> findBankInfo(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member
+    );
+  
+    @Operation(
+            summary = "저금통 깨기",
+            description = "저금통을 깨고, 저축 기간과 축하 메시지를 반환합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "저금통 깨기 성공",
+            content = @Content(schema = @Schema(implementation = BankBreakResponse.class))
+    )
+    @ErrorCode400(description = "그룹 저금통이 아직 없을 때")
+    @ErrorCode401
+    ResponseEntity<BankBreakResponse> breakBank(
             @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
             Member member
     );

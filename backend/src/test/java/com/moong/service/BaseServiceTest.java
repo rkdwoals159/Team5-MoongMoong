@@ -46,7 +46,7 @@ public abstract class BaseServiceTest {
     protected TreatmentGenerator treatmentGenerator;
 
     @Autowired
-    protected GroupBankGenerator groupBankGenerator;
+    protected BankGenerator bankGenerator;
 
     @Autowired
     protected  CoinGenerator coinGenerator;

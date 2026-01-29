@@ -17,22 +17,22 @@ import com.moong.repository.GroupExpenseRepository;
 import com.moong.repository.GroupMedicalAdviceRepository;
 import com.moong.repository.MemberRepository;
 import com.moong.repository.PetGroupRepository;
-import com.moong.repository.PetMedicalTestRepository;
+import com.moong.repository.PetMedicalRepository;
 import com.moong.repository.PetRepository;
-import com.moong.repository.PetTreatmentTestRepository;
+import com.moong.repository.TreatmentRepository;
 import com.moong.repository.memberexpense.MemberExpenseRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+@Profile("!test")
 @Component
 @RequiredArgsConstructor
 public class TestDataGenerator {
@@ -44,10 +44,8 @@ public class TestDataGenerator {
     private final GroupMedicalAdviceRepository groupMedicalAdviceRepository;
     private final GroupExpenseRepository groupExpenseRepository;
     private final MemberExpenseRepository memberExpenseRepository;
-
-    //TODO 충돌 날것 같아 클래스명으로 분리 -> 병합 후 정리 필요
-    private final PetTreatmentTestRepository treatmentRepository;
-    private final PetMedicalTestRepository petMedicalTestRepository;
+    private final TreatmentRepository treatmentRepository;
+    private final PetMedicalRepository petMedicalRepository;
 
     @Transactional
     @EventListener(ApplicationReadyEvent.class)
@@ -90,10 +88,9 @@ public class TestDataGenerator {
         );
         groupMedicalAdviceRepository.save(groupMedicalAdvice);
 
-        for (Disease disease : Disease.values()) {
-            PetMedical petMedical = new PetMedical(null, Breed.BEA, 0, Gender.M, disease,
-                    ThreadLocalRandom.current().nextInt(0, 10001));
-            petMedicalTestRepository.save(petMedical);
+        for(Disease disease : Disease.values()) {
+            PetMedical petMedical = new PetMedical(null, Breed.BEA, 0, Gender.M, disease, ThreadLocalRandom.current().nextInt(0, 10001));
+            petMedicalRepository.save(petMedical);
         }
 
         saveExampleTreatment();

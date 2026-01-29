@@ -21,6 +21,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+
 class BankServiceTest extends BaseServiceTest {
 
     @Autowired
@@ -85,6 +91,46 @@ class BankServiceTest extends BaseServiceTest {
         assertThat(banks.size()).isEqualTo(1);
     }
 
+    @DisplayName("저금통 삭제에 성공한다")
+    @Test
+    void breakBankSuccess() {
+        Pet savedPet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
+        Member member = memberGenerator.generateSaved("member");
+        crewGenerator.generateSaved(petGroup, member);
+        bankGenerator.generateSaved(petGroup, 10L, 10L);
+
+        assertThatCode(() -> bankService.breakBank(member))
+                .doesNotThrowAnyException();
+    }
+
+    @DisplayName("저금통이 목표금액을 달성하지 못한 경우 삭제에 실패한다")
+    @Test
+    void breakBankFailWhenNotSucceedTargetAmount() {
+        Pet savedPet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
+        Member member = memberGenerator.generateSaved("member");
+        crewGenerator.generateSaved(petGroup, member);
+        bankGenerator.generateSaved(petGroup, 10L, 9L);
+
+        assertThatThrownBy(() -> bankService.breakBank(member))
+                .isInstanceOf(BusinessException.class)
+                .hasMessage(ErrorCode.NOT_SUCCEED_BANK_TARGET_AMOUNT.getMessage());
+    }
+
+    @DisplayName("저금통이 없는 경우 삭제에 실패한다")
+    @Test
+    void breakBankFail() {
+        Pet savedPet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
+        Member member = memberGenerator.generateSaved("member");
+        crewGenerator.generateSaved(petGroup, member);
+
+        assertThatThrownBy(() -> bankService.breakBank(member))
+                .isInstanceOf(BusinessException.class)
+                .hasMessage(ErrorCode.NO_SUCH_BANK_FOUND.getMessage());
+    }
+                 
     @DisplayName("저금통 정보 및 랭킹 정보 조회에 성공한다")
     @Test
     void findBankInfoSuccess() {
@@ -94,7 +140,7 @@ class BankServiceTest extends BaseServiceTest {
         PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
         Crew crew1 = crewGenerator.generateSaved(petGroup, member1);
         Crew crew2 = crewGenerator.generateSaved(petGroup, member2);
-        Bank bank = groupBankGenerator.generateSaved(petGroup, 1000000L);
+        Bank bank = bankGenerator.generateSaved(petGroup, 1000000L, 0L);
         Coin smallCoin = coinGenerator.generateSaved(bank, crew1, 100L);
         Coin bigCoin = coinGenerator.generateSaved(bank, crew2, 200L);
 

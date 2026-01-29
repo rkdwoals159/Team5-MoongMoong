@@ -7,6 +7,7 @@ import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.bank.BankCreateRequest;
+import com.moong.dto.response.bank.BankBreakResponse;
 import com.moong.dto.response.bank.BankCreateResponse;
 import com.moong.dto.response.bank.BankInfoResponse;
 import com.moong.exception.custom.BusinessException;
@@ -40,19 +41,29 @@ public class BankService {
 
         return new BankCreateResponse(savedBank);
     }
-
+  
     public BankInfoResponse findBankInfo(Member member) {
         Crew crew = crewRepository.getByMemberId(member.getId());
         PetGroup petGroup = crew.getPetGroup();
-
-        //TODO 이전 delete PR과 중복 코드 걷어내기
-        Bank foundBank = bankRepository.findByPetGroupId(petGroup.getId())
-                .orElseThrow(() -> new BusinessException(ErrorCode.NO_SUCH_BANK_FOUND));
+        Bank foundBank = bankRepository.getByPetGroupId(petGroup.getId());
 
         //crew > member fetch join
         List<Coin> bankCoins = coinRepository.findFetchedAllByBank_Id(foundBank.getId());
         BankRankings bankRankings = new BankRankings(bankCoins);
         return new BankInfoResponse(foundBank, bankRankings);
+    }
+
+    public BankBreakResponse breakBank(Member member) {
+        Crew crew = crewRepository.getByMemberId(member.getId());
+        PetGroup petGroup = crew.getPetGroup();
+        Bank groupBank = bankRepository.getByPetGroupId(petGroup.getId());
+
+        if (!groupBank.canBreak()) {
+            throw new BusinessException(ErrorCode.NOT_SUCCEED_BANK_TARGET_AMOUNT);
+        }
+
+        bankRepository.deleteById(groupBank.getId());
+        return new BankBreakResponse(groupBank.getCreatedAt());
     }
 
     private void validateAlreadyHasBank(PetGroup petGroup) {
