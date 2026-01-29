@@ -14,6 +14,7 @@ import MedicHeavyIcon from "@/assets/icons/sidebar/ic_medic_heavy.svg";
 import SettingsIcon from "@/assets/icons/sidebar/ic_settings.svg";
 import SettingsHeavyIcon from "@/assets/icons/sidebar/ic_settings_heavy.svg";
 import SideBarNav from "@/components/ui/Nav/SidebarNav";
+import cn from "@/utils/style";
 
 const primaryNav = [
   {
@@ -63,9 +64,18 @@ const secondaryNav = [
   },
 ];
 
-export default function Sidebar() {
+type SidebarProps = {
+  className?: string;
+};
+
+export default function Sidebar({ className }: SidebarProps) {
   return (
-    <aside className="sticky top-0 flex h-screen w-[239px] flex-col bg-[var(--color-gray-30)] text-[var(--color-gray-600)]">
+    <aside
+      className={cn(
+        "sticky top-0 flex h-screen flex-col bg-gray-30 text-gray-600",
+        className ?? "",
+      )}
+    >
       <div className="px-[30px] pt-[30px]">
         <div className="flex h-[50px] items-center">
           <Logo

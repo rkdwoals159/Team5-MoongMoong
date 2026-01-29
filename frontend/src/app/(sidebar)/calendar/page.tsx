@@ -1,12 +1,52 @@
-export default function CalenderHomePage() {
+import { CalendarPageProps } from "@/types/calendar";
+import CalendarGrid from "./_components/CalendarGrid";
+import CalendarHeader from "./_components/CalendarHeader";
+import ExpenseModal from "./_components/modal/ExpenseModal";
+import { getExpensesForDate } from "@/lib/calendar/mocks";
+import {
+  getExpenseModalProps,
+  getGridProps,
+  getHeaderProps,
+} from "@/lib/calendar/getCalendarProps";
+
+export default async function CalendarPage({ searchParams }: CalendarPageProps) {
+  const resolvedSearchParams = (await searchParams) ?? {};
+  const { label, isCurrentMonth, prevMonthParam, nextMonthParam, todayMonthParam, todayDateParam } =
+    getHeaderProps(resolvedSearchParams);
+  const { days, weeks, monthParam } = getGridProps(resolvedSearchParams);
+  const { isModalOpen, selectedDate, modalTitle, closeHref } =
+    getExpenseModalProps(resolvedSearchParams);
+  const selectedExpenses = selectedDate ? getExpensesForDate(selectedDate) : [];
+
   return (
-    <div className="p-8">
-      <div className="rounded-2xl border border-[var(--color-border-light)] bg-white p-6">
-        <h1 className="typo-headline-s-bold text-[var(--color-text-base)]">대시보드 영역</h1>
-        <p className="typo-body-m-medium mt-2 text-[var(--color-gray-500)]">
-          콘텐츠는 추후 추가 예정입니다.
-        </p>
+    <article className="px-8">
+      <div className="flex flex-col gap-850">
+        <h1 className="typo-headline-s-bold text-(--color-text-base)">달력</h1>
+        <div className="flex flex-col gap-850">
+          <CalendarHeader
+            label={label}
+            isCurrentMonth={isCurrentMonth}
+            prevMonthParam={prevMonthParam}
+            nextMonthParam={nextMonthParam}
+            todayMonthParam={todayMonthParam}
+            todayDateParam={todayDateParam}
+          />
+          <div className="w-full overflow-x-auto">
+            <CalendarGrid
+              days={days}
+              weeks={weeks}
+              selectedDate={selectedDate}
+              monthParam={monthParam}
+            />
+          </div>
+          <ExpenseModal
+            open={isModalOpen && selectedExpenses.length > 0}
+            title={modalTitle}
+            items={selectedExpenses}
+            closeHref={closeHref}
+          />
+        </div>
       </div>
-    </div>
+    </article>
   );
 }

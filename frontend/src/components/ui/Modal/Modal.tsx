@@ -17,9 +17,14 @@ export default function Modal({
   }
 
   return (
-    <div className={cn(baseOverlayClasses, overlayClassName ?? "")}>
+    <section className={cn(baseOverlayClasses, overlayClassName ?? "")}>
       {showOverlayClose && closeHref && (
-        <Link href={closeHref} aria-label={closeLabel} className="absolute inset-0" />
+        <Link
+          draggable={false}
+          href={closeHref}
+          aria-label={closeLabel}
+          className="absolute inset-0"
+        />
       )}
       <div
         role="dialog"
@@ -30,7 +35,7 @@ export default function Modal({
       >
         {children}
       </div>
-    </div>
+    </section>
   );
 }
 

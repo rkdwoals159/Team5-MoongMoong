@@ -9,8 +9,8 @@ export default function SidebarLayout({
   return (
     <div className="h-screen bg-white-100">
       <div className="flex h-full">
-        <Sidebar />
-        <div className="flex flex-1 flex-col">
+        <Sidebar className="flex-1 min-w-[240px]" />
+        <div className="flex flex-5 flex-col">
           <Header className="shrink-0" />
           <main className="flex-1 overflow-auto">{children}</main>
         </div>

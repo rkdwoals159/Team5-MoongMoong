@@ -50,3 +50,7 @@ yarn.lock
 .vscode
 *storybook.log
 storybook-static
+
+.opencode
+opencode.json
+AGENTS.md
