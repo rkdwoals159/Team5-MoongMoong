@@ -23,7 +23,7 @@ public class GroupExpenseController implements GroupExpenseControllerSwagger {
 
 
     @Override
-    @GetMapping(value = "/api/expenses/group", params = {"startDate", "endDate", "!spentAt"})
+    @GetMapping(value = "/api/expenses/group")
     public ResponseEntity<GroupExpensesResponse> findGroupExpenses(
             @AuthMember Member member,
             @RequestParam(value = "startDate") LocalDate startDate,
@@ -64,7 +64,7 @@ public class GroupExpenseController implements GroupExpenseControllerSwagger {
     }
 
     @Override
-    @GetMapping(value = "/api/expenses/group", params = {"spentAt", "!startDate", "!endDate"})
+    @GetMapping(value = "/api/expenses/group/date")
     public ResponseEntity<GroupExpensesDailyResponse> findGroupDailyExpenses(
             @AuthMember Member member,
             @RequestParam(value = "spentAt") LocalDate spentAt

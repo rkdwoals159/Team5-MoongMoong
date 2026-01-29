@@ -232,7 +232,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.AUTHORIZATION, member.getId())
                 .queryParam("spentAt", now.toLocalDate().toString())
-                .get("/api/expenses/group")
+                .get("/api/expenses/group/date")
                 .then()
                 .statusCode(200)
                 .extract()
