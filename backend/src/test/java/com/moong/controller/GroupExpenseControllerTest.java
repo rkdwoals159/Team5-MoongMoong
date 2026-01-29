@@ -29,9 +29,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, coli);
 
-        //TODO generator 사용
-        MemberExpense memberExpense1 = new MemberExpense(
-                1L,
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(
                 now.minusDays(2L).toLocalDate(),
                 "류몽민 닭갈비",
                 100,
@@ -41,8 +39,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
                 now.minusDays(2L),
                 coli
         );
-        MemberExpense memberExpense2 = new MemberExpense(
-                1L,
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(
                 now.minusDays(1L).toLocalDate(),
                 "항아리 수제비",
                 200,
@@ -52,8 +49,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
                 now.minusDays(1L),
                 coli
         );
-        MemberExpense memberExpense3 = new MemberExpense(
-                1L,
+        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(
                 now.toLocalDate(),
                 "우럭 회",
                 300,
@@ -73,7 +69,6 @@ class GroupExpenseControllerTest extends BaseControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, coli.getId())
                 .queryParam("startDate", now.minusDays(2).toLocalDate().toString())
                 .queryParam("endDate", now.minusDays(1).toLocalDate().toString())
-                .queryParam("auth", "true")
                 .get("/api/expenses/group")
                 .then()
                 .statusCode(200)
@@ -94,8 +89,8 @@ class GroupExpenseControllerTest extends BaseControllerTest {
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, coli);
-        MemberExpense memberExpense1 = new MemberExpense(
-                1L,
+
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(
                 now.minusDays(2L).toLocalDate(),
                 "류몽민 닭갈비",
                 100,
@@ -105,8 +100,8 @@ class GroupExpenseControllerTest extends BaseControllerTest {
                 now.minusDays(2L),
                 coli
         );
-        MemberExpense memberExpense2 = new MemberExpense(
-                1L,
+
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(
                 now.minusDays(1L).toLocalDate(),
                 "수건구입",
                 200,
@@ -116,6 +111,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
                 now.minusDays(1L),
                 coli
         );
+
         GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
         GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2, coli.getName());
 
@@ -133,10 +129,14 @@ class GroupExpenseControllerTest extends BaseControllerTest {
         assertAll(
                 () -> assertThat(response.total()).isEqualTo(300),
                 () -> assertThat(response.categoryAnalysis()).hasSize(2),
-                () -> assertThat(response.categoryAnalysis().get(0).category()).isEqualTo(groupExpense2.getMainCategory()),
-                () -> assertThat(response.categoryAnalysis().get(0).cost()).isEqualTo(groupExpense2.getCost()),
-                () -> assertThat(response.categoryAnalysis().get(1).category()).isEqualTo(groupExpense1.getMainCategory()),
-                () -> assertThat(response.categoryAnalysis().get(1).cost()).isEqualTo(groupExpense1.getCost())
+                () -> assertThat(response.categoryAnalysis().get(0).category()).isEqualTo(
+                        groupExpense2.getMemberExpense().getMainCategory()),
+                () -> assertThat(response.categoryAnalysis().get(0).cost()).isEqualTo(
+                        groupExpense2.getMemberExpense().getCost()),
+                () -> assertThat(response.categoryAnalysis().get(1).category()).isEqualTo(
+                        groupExpense1.getMemberExpense().getMainCategory()),
+                () -> assertThat(response.categoryAnalysis().get(1).cost()).isEqualTo(
+                        groupExpense1.getMemberExpense().getCost())
         );
     }
 
@@ -148,8 +148,8 @@ class GroupExpenseControllerTest extends BaseControllerTest {
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, coli);
-        MemberExpense memberExpense1 = new MemberExpense(
-                1L,
+
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(
                 now.minusDays(2L).toLocalDate(),
                 "뚱이 수술",
                 100,
@@ -159,8 +159,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
                 now.minusDays(2L),
                 coli
         );
-        MemberExpense memberExpense2 = new MemberExpense(
-                1L,
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(
                 now.minusDays(1L).toLocalDate(),
                 "뚱이 약",
                 200,
@@ -178,7 +177,6 @@ class GroupExpenseControllerTest extends BaseControllerTest {
                 .header(HttpHeaders.AUTHORIZATION, coli.getId())
                 .queryParam("startDate", now.minusDays(2).toLocalDate().toString())
                 .queryParam("endDate", now.minusDays(1).toLocalDate().toString())
-                .queryParam("auth", "true")
                 .get("/api/expenses/group/analysis/medical")
                 .then()
                 .statusCode(200)
@@ -188,10 +186,14 @@ class GroupExpenseControllerTest extends BaseControllerTest {
         assertAll(
                 () -> assertThat(response.totalMedical()).isEqualTo(300),
                 () -> assertThat(response.medicalAnalysis()).hasSize(2),
-                () -> assertThat(response.medicalAnalysis().get(0).subCategory()).isEqualTo(groupExpense2.getSubCategory()),
-                () -> assertThat(response.medicalAnalysis().get(0).cost()).isEqualTo(groupExpense2.getCost()),
-                () -> assertThat(response.medicalAnalysis().get(1).subCategory()).isEqualTo(groupExpense1.getSubCategory()),
-                () -> assertThat(response.medicalAnalysis().get(1).cost()).isEqualTo(groupExpense1.getCost())
+                () -> assertThat(response.medicalAnalysis().get(0).subCategory()).isEqualTo(
+                        groupExpense2.getMemberExpense().getSubCategory()),
+                () -> assertThat(response.medicalAnalysis().get(0).cost()).isEqualTo(
+                        groupExpense2.getMemberExpense().getCost()),
+                () -> assertThat(response.medicalAnalysis().get(1).subCategory()).isEqualTo(
+                        groupExpense1.getMemberExpense().getSubCategory()),
+                () -> assertThat(response.medicalAnalysis().get(1).cost()).isEqualTo(
+                        groupExpense1.getMemberExpense().getCost())
         );
     }
 
@@ -203,8 +205,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, member);
-        MemberExpense memberExpense1 = new MemberExpense(
-                1L,
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(
                 now.toLocalDate(),
                 "류몽민 닭갈비",
                 100,
@@ -214,8 +215,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
                 now.minusDays(2L),
                 member
         );
-        MemberExpense memberExpense2 = new MemberExpense(
-                1L,
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(
                 now.toLocalDate(),
                 "수건 구입",
                 200,
@@ -241,10 +241,14 @@ class GroupExpenseControllerTest extends BaseControllerTest {
         assertAll(
                 () -> assertThat(response.total()).isEqualTo(300),
                 () -> assertThat(response.expenses()).hasSize(2),
-                () -> assertThat(response.expenses().get(0).mainCategory()).isEqualTo(groupExpense2.getMainCategory()),
-                () -> assertThat(response.expenses().get(0).cost()).isEqualTo(groupExpense2.getCost()),
-                () -> assertThat(response.expenses().get(1).mainCategory()).isEqualTo(groupExpense1.getMainCategory()),
-                () -> assertThat(response.expenses().get(1).cost()).isEqualTo(groupExpense1.getCost())
+                () -> assertThat(response.expenses().get(0).mainCategory()).isEqualTo(
+                        groupExpense2.getMemberExpense().getMainCategory()),
+                () -> assertThat(response.expenses().get(0).cost()).isEqualTo(
+                        groupExpense2.getMemberExpense().getCost()),
+                () -> assertThat(response.expenses().get(1).mainCategory()).isEqualTo(
+                        groupExpense1.getMemberExpense().getMainCategory()),
+                () -> assertThat(response.expenses().get(1).cost()).isEqualTo(
+                        groupExpense1.getMemberExpense().getCost())
         );
     }
 }

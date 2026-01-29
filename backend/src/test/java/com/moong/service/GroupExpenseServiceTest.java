@@ -31,8 +31,8 @@ class GroupExpenseServiceTest extends BaseServiceTest {
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, coli);
-        MemberExpense memberExpense1 = new MemberExpense(
-                1L,
+
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(
                 now.minusDays(2L).toLocalDate(),
                 "류몽민 닭갈비",
                 100,
@@ -42,8 +42,7 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(2L),
                 coli
         );
-        MemberExpense memberExpense2 = new MemberExpense(
-                1L,
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(
                 now.minusDays(1L).toLocalDate(),
                 "항아리 수제비",
                 200,
@@ -53,8 +52,7 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(1L),
                 coli
         );
-        MemberExpense memberExpense3 = new MemberExpense(
-                1L,
+        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(
                 now.toLocalDate(),
                 "우럭 회",
                 300,
@@ -64,6 +62,7 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now,
                 coli
         );
+
         groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
         groupExpenseGenerator.generateSaved(petGroup, memberExpense2, coli.getName());
         groupExpenseGenerator.generateSaved(petGroup, memberExpense3, coli.getName());
@@ -73,7 +72,6 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(1L).toLocalDate(),
                 now.toLocalDate()
         );
-
         assertAll(
                 () -> assertThat(response.total()).isEqualTo(500),
                 () -> assertThat(response.expenses()).hasSize(2)
@@ -88,8 +86,7 @@ class GroupExpenseServiceTest extends BaseServiceTest {
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, coli);
-        MemberExpense memberExpense1 = new MemberExpense(
-                1L,
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(
                 now.minusDays(2L).toLocalDate(),
                 "류몽민 닭갈비",
                 100,
@@ -99,8 +96,7 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(2L),
                 coli
         );
-        MemberExpense memberExpense2 = new MemberExpense(
-                1L,
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(
                 now.minusDays(1L).toLocalDate(),
                 "수건 구입",
                 200,
@@ -110,6 +106,7 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(1L),
                 coli
         );
+
         GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
         GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2, coli.getName());
 
@@ -122,10 +119,14 @@ class GroupExpenseServiceTest extends BaseServiceTest {
         assertAll(
                 () -> assertThat(response.total()).isEqualTo(300),
                 () -> assertThat(response.categoryAnalysis()).hasSize(2),
-                () -> assertThat(response.categoryAnalysis().get(0).category()).isEqualTo(groupExpense2.getMainCategory()),
-                () -> assertThat(response.categoryAnalysis().get(0).cost()).isEqualTo(groupExpense2.getCost()),
-                () -> assertThat(response.categoryAnalysis().get(1).category()).isEqualTo(groupExpense1.getMainCategory()),
-                () -> assertThat(response.categoryAnalysis().get(1).cost()).isEqualTo(groupExpense1.getCost())
+                () -> assertThat(response.categoryAnalysis().get(0).category()).isEqualTo(
+                        groupExpense2.getMemberExpense().getMainCategory()),
+                () -> assertThat(response.categoryAnalysis().get(0).cost()).isEqualTo(
+                        groupExpense2.getMemberExpense().getCost()),
+                () -> assertThat(response.categoryAnalysis().get(1).category()).isEqualTo(
+                        groupExpense1.getMemberExpense().getMainCategory()),
+                () -> assertThat(response.categoryAnalysis().get(1).cost()).isEqualTo(
+                        groupExpense1.getMemberExpense().getCost())
         );
     }
 
@@ -137,8 +138,7 @@ class GroupExpenseServiceTest extends BaseServiceTest {
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, member);
-        MemberExpense memberExpense1 = new MemberExpense(
-                1L,
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(
                 now.toLocalDate(),
                 "류몽민 닭갈비",
                 100,
@@ -148,8 +148,7 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(2L),
                 member
         );
-        MemberExpense memberExpense2 = new MemberExpense(
-                1L,
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(
                 now.toLocalDate(),
                 "수건 구입",
                 200,
@@ -170,10 +169,14 @@ class GroupExpenseServiceTest extends BaseServiceTest {
         assertAll(
                 () -> assertThat(response.total()).isEqualTo(300),
                 () -> assertThat(response.expenses()).hasSize(2),
-                () -> assertThat(response.expenses().get(0).mainCategory()).isEqualTo(groupExpense2.getMainCategory()),
-                () -> assertThat(response.expenses().get(0).cost()).isEqualTo(groupExpense2.getCost()),
-                () -> assertThat(response.expenses().get(1).mainCategory()).isEqualTo(groupExpense1.getMainCategory()),
-                () -> assertThat(response.expenses().get(1).cost()).isEqualTo(groupExpense1.getCost())
+                () -> assertThat(response.expenses().get(0).mainCategory()).isEqualTo(
+                        groupExpense2.getMemberExpense().getMainCategory()),
+                () -> assertThat(response.expenses().get(0).cost()).isEqualTo(
+                        groupExpense2.getMemberExpense().getCost()),
+                () -> assertThat(response.expenses().get(1).mainCategory()).isEqualTo(
+                        groupExpense1.getMemberExpense().getMainCategory()),
+                () -> assertThat(response.expenses().get(1).cost()).isEqualTo(
+                        groupExpense1.getMemberExpense().getCost())
         );
     }
 
@@ -185,8 +188,7 @@ class GroupExpenseServiceTest extends BaseServiceTest {
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, coli);
-        MemberExpense memberExpense1 = new MemberExpense(
-                1L,
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(
                 now.minusDays(2L).toLocalDate(),
                 "뚱이 수술",
                 100,
@@ -196,8 +198,7 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(2L),
                 coli
         );
-        MemberExpense memberExpense2 = new MemberExpense(
-                1L,
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(
                 now.minusDays(1L).toLocalDate(),
                 "뚱이 약",
                 200,
@@ -219,10 +220,14 @@ class GroupExpenseServiceTest extends BaseServiceTest {
         assertAll(
                 () -> assertThat(response.totalMedical()).isEqualTo(300),
                 () -> assertThat(response.medicalAnalysis()).hasSize(2),
-                () -> assertThat(response.medicalAnalysis().get(0).subCategory()).isEqualTo(groupExpense2.getSubCategory()),
-                () -> assertThat(response.medicalAnalysis().get(0).cost()).isEqualTo(groupExpense2.getCost()),
-                () -> assertThat(response.medicalAnalysis().get(1).subCategory()).isEqualTo(groupExpense1.getSubCategory()),
-                () -> assertThat(response.medicalAnalysis().get(1).cost()).isEqualTo(groupExpense1.getCost())
+                () -> assertThat(response.medicalAnalysis().get(0).subCategory()).isEqualTo(
+                        groupExpense2.getMemberExpense().getSubCategory()),
+                () -> assertThat(response.medicalAnalysis().get(0).cost()).isEqualTo(
+                        groupExpense2.getMemberExpense().getCost()),
+                () -> assertThat(response.medicalAnalysis().get(1).subCategory()).isEqualTo(
+                        groupExpense1.getMemberExpense().getSubCategory()),
+                () -> assertThat(response.medicalAnalysis().get(1).cost()).isEqualTo(
+                        groupExpense1.getMemberExpense().getCost())
         );
     }
 }

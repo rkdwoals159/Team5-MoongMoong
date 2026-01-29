@@ -1,6 +1,5 @@
 package com.moong.domain.groupexpense;
 
-import com.moong.domain.entity.GroupExpense;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -12,8 +11,8 @@ public class CategoryCost {
     private final String subCategory;
     private final long cost;
 
-    public CategoryCost(GroupExpense groupExpense) {
-        this(groupExpense.getMainCategory(), groupExpense.getSubCategory(), groupExpense.getCost());
+    public CategoryCost(GroupExpenseDetail expense) {
+        this(expense.getMainCategory(), expense.getSubCategory(), expense.getCost());
     }
 
     public boolean isSameMainCategory(String mainCategory) {

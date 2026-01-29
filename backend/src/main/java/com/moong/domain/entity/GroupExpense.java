@@ -1,6 +1,5 @@
 package com.moong.domain.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,61 +10,40 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
-@Table(name = "group_expense")
+@Table(
+        name = "group_expense",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_group_expense_member_expense",
+                        columnNames = {"member_expense_id"}
+                )
+        }
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class GroupExpense {
+public class GroupExpense extends BaseEntity {
 
-    public static final String SPENT_AT_COLUMN_NAME = "spentAt";
-    public static final String MODIFIED_AT_COLUMN_NAME = "modifiedAt";
+    public static final String MEMBER_EXPENSE_FILED_NAME = "memberExpense";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
-    @Column(name = "spent_at")
-    private LocalDate spentAt;
-
-    @NotNull
-    private String usage;
-
-    private long cost;
-
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_expense_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private MemberExpense memberExpense;
 
-    @NotNull
-    @Column(name = "main_category", length = 50)
-    private String mainCategory;
-
-    @Column(name = "sub_category", length = 50)
-    private String subCategory;
-
-    @Column(length = 20)
-    private String nickname;
-
-    private String memo;
-
-    @Column(name = "modified_at")
-    @LastModifiedDate
-    private LocalDateTime modifiedAt;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private PetGroup petGroup;
-
 }

@@ -1,6 +1,7 @@
 package com.moong.dto.response.groupexpense;
 
-import com.moong.domain.entity.GroupExpense;
+import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.groupexpense.GroupExpenseDetail;
 import java.util.List;
 
 public record GroupExpensesResponse(
@@ -8,10 +9,10 @@ public record GroupExpensesResponse(
         List<GroupExpenseResponse> expenses
 ) {
 
-    public GroupExpensesResponse(List<GroupExpense> expenses) {
+    public GroupExpensesResponse(List<GroupExpenseDetail> expenses) {
         this(
                 expenses.stream()
-                        .mapToLong(GroupExpense::getCost)
+                        .mapToLong(GroupExpenseDetail::getCost)
                         .sum(),
                 expenses.stream()
                         .map(GroupExpenseResponse::new)

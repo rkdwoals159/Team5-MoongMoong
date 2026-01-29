@@ -1,6 +1,6 @@
 package com.moong.dto.response.groupexpense;
 
-import com.moong.domain.entity.GroupExpense;
+import com.moong.domain.groupexpense.GroupExpenseDetail;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,6 +12,9 @@ public record GroupExpenseResponse(
 
         @Schema(description = "소비 날짜", example = "2026-01-20")
         LocalDate spendAt,
+
+        @Schema(description = "사용자 닉네임", example = "코코맘")
+        String nickName,
 
         @Schema(description = "사용 내역", example = "감기약 및 처방약 구매")
         String usage,
@@ -31,18 +34,19 @@ public record GroupExpenseResponse(
         @Schema(description = "수정 일시 (ISO-8601, 타임존 포함)", example = "2026-01-20T14:32:15.123+09:00")
         LocalDateTime modifiedAt
 ) {
-        public GroupExpenseResponse(GroupExpense expense) {
-                this(
-                        expense.getId(),
-                        expense.getSpentAt(),
-                        expense.getUsage(),
-                        expense.getCost(),
-                        expense.getMainCategory(),
-                        expense.getSubCategory(),
-                        expense.getMemo(),
-                        expense.getModifiedAt()
-                );
-        }
+    public GroupExpenseResponse(GroupExpenseDetail expense) {
+        this(
+                expense.getMemberExpenseId(),
+                expense.getSpentAt(),
+                expense.getNickName(),
+                expense.getUsage(),
+                expense.getCost(),
+                expense.getMainCategory(),
+                expense.getSubCategory(),
+                expense.getMemo(),
+                expense.getModifiedAt()
+        );
+    }
 
 }
 

@@ -1,6 +1,6 @@
 package com.moong.dto.response.groupexpense;
 
-import com.moong.domain.entity.GroupExpense;
+import com.moong.domain.groupexpense.GroupExpenseDetail;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "캘린더 특정 일자 소비내역")
@@ -21,13 +21,13 @@ public record GroupExpenseDailyResponse(
         String subCategory
 ) {
 
-    public GroupExpenseDailyResponse(GroupExpense groupExpense) {
+    public GroupExpenseDailyResponse(GroupExpenseDetail expense) {
         this(
-                groupExpense.getNickname(),
-                groupExpense.getUsage(),
-                groupExpense.getCost(),
-                groupExpense.getMainCategory(),
-                groupExpense.getSubCategory()
+                expense.getNickName(),
+                expense.getUsage(),
+                expense.getCost(),
+                expense.getMainCategory(),
+                expense.getSubCategory()
         );
     }
 }

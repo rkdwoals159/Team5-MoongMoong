@@ -3,7 +3,9 @@ package com.moong.service;
 import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.GroupExpense;
 import com.moong.domain.entity.Member;
+import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.groupexpense.CategoryAnalysis;
+import com.moong.domain.groupexpense.GroupExpenseDetail;
 import com.moong.dto.response.groupexpense.CategoryAnalysisResponse;
 import com.moong.dto.response.groupexpense.GroupExpensesDailyResponse;
 import com.moong.dto.response.groupexpense.GroupExpensesResponse;
@@ -31,7 +33,7 @@ public class GroupExpenseService {
             LocalDate startDate,
             LocalDate endDate
     ) {
-        List<GroupExpense> periodExpenses = findGroupExpensesBetween(member, startDate, endDate);
+        List<GroupExpenseDetail> periodExpenses = findGroupExpensesBetween(member, startDate, endDate);
         return new GroupExpensesResponse(periodExpenses);
     }
 
@@ -40,7 +42,7 @@ public class GroupExpenseService {
             LocalDate startDate,
             LocalDate endDate
     ) {
-        List<GroupExpense> periodExpenses = findGroupExpensesBetween(member, startDate, endDate);
+        List<GroupExpenseDetail> periodExpenses = findGroupExpensesBetween(member, startDate, endDate);
         CategoryAnalysis categoryAnalysis = new CategoryAnalysis(periodExpenses);
         return new CategoryAnalysisResponse(categoryAnalysis);
     }
@@ -51,11 +53,8 @@ public class GroupExpenseService {
             LocalDate endDate
     ) {
         Crew crew = crewRepository.getByMemberId(member.getId());
-        Sort expenseSort = Sort.by(
-                Sort.Order.desc(GroupExpense.SPENT_AT_COLUMN_NAME),
-                Sort.Order.desc(GroupExpense.MODIFIED_AT_COLUMN_NAME)
-        );
-        List<GroupExpense> medicalExpenses = groupExpenseRepository.findByPetGroup_IdAndMainCategoryAndSpentAtBetween(
+        Sort expenseSort = getSortBySpentAtAndModifiedAt();
+        List<GroupExpenseDetail> medicalExpenses = groupExpenseRepository.getFetchedByPetGroupIdAndMainCategoryAndPeriod(
                 crew.getPetGroup().getId(),
                 MEDICAL_CATEGORY_NAME,
                 startDate,
@@ -73,21 +72,33 @@ public class GroupExpenseService {
             Member member,
             LocalDate spentAt
     ) {
-        List<GroupExpense> dailyExpenses = findGroupExpensesBetween(member, spentAt, spentAt);
+        List<GroupExpenseDetail> dailyExpenses = findGroupExpensesBetween(member, spentAt, spentAt);
         return new GroupExpensesDailyResponse(dailyExpenses);
     }
 
-    private List<GroupExpense> findGroupExpensesBetween(Member member, LocalDate startDate, LocalDate endDate) {
+    private List<GroupExpenseDetail> findGroupExpensesBetween(Member member, LocalDate startDate, LocalDate endDate) {
         Crew crew = crewRepository.getByMemberId(member.getId());
-        Sort expenseSort = Sort.by(
-                Sort.Order.desc(GroupExpense.SPENT_AT_COLUMN_NAME),
-                Sort.Order.desc(GroupExpense.MODIFIED_AT_COLUMN_NAME)
-        );
-        return groupExpenseRepository.findByPeriod(
+        Sort expenseSort = getSortBySpentAtAndModifiedAt();
+        return groupExpenseRepository.getFetchedByGroupIdAndPeriod(
                 crew.getPetGroup().getId(),
                 startDate,
                 endDate,
                 expenseSort
+        );
+    }
+
+    private Sort getSortBySpentAtAndModifiedAt() {
+        return Sort.by(
+                Sort.Order.desc(String.format("%s.%s",
+                                GroupExpense.MEMBER_EXPENSE_FILED_NAME,
+                                MemberExpense.SPENT_AT_COLUMN_NAME
+                        )
+                ),
+                Sort.Order.desc(String.format("%s.%s",
+                                GroupExpense.MEMBER_EXPENSE_FILED_NAME,
+                                MemberExpense.MODIFIED_AT_COLUMN_NAME
+                        )
+                )
         );
     }
 }

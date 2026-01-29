@@ -56,7 +56,7 @@ public class MemberExpenseGenerator {
                 id,
                 spentAt,
                 usage,
-                1000,
+                cost,
                 mainCategory,
                 subCategory,
                 memo,

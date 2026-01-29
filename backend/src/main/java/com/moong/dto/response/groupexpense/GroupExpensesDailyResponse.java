@@ -1,6 +1,8 @@
 package com.moong.dto.response.groupexpense;
 
 import com.moong.domain.entity.GroupExpense;
+import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.groupexpense.GroupExpenseDetail;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
@@ -17,10 +19,10 @@ public record GroupExpensesDailyResponse(
         List<GroupExpenseDailyResponse> expenses
 ) {
 
-    public GroupExpensesDailyResponse(List<GroupExpense> expenses) {
+    public GroupExpensesDailyResponse(List<GroupExpenseDetail> expenses) {
         this(
                 expenses.stream()
-                        .mapToLong(GroupExpense::getCost)
+                        .mapToLong(GroupExpenseDetail::getCost)
                         .sum(),
                 expenses.stream()
                         .map(GroupExpenseDailyResponse::new)

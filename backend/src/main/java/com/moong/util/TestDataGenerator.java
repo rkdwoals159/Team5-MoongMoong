@@ -90,8 +90,9 @@ public class TestDataGenerator {
         );
         groupMedicalAdviceRepository.save(groupMedicalAdvice);
 
-        for(Disease disease : Disease.values()) {
-            PetMedical petMedical = new PetMedical(null, Breed.BEA, 0, Gender.M, disease, ThreadLocalRandom.current().nextInt(0, 10001));
+        for (Disease disease : Disease.values()) {
+            PetMedical petMedical = new PetMedical(null, Breed.BEA, 0, Gender.M, disease,
+                    ThreadLocalRandom.current().nextInt(0, 10001));
             petMedicalTestRepository.save(petMedical);
         }
 
@@ -100,7 +101,7 @@ public class TestDataGenerator {
 
     private void saveExampleTreatment() {
 
-        for (Disease disease: Disease.values()) {
+        for (Disease disease : Disease.values()) {
             for (int i = 0; i < 4; i++) {
                 Treatment treatment = new Treatment(
                         null,
@@ -129,15 +130,7 @@ public class TestDataGenerator {
     public GroupExpense convertToGroupExpense(MemberExpense memberExpense, PetGroup petGroup) {
         return new GroupExpense(
                 null,
-                memberExpense.getSpentAt(),
-                memberExpense.getUsage(),
-                memberExpense.getCost(),
                 memberExpense,
-                memberExpense.getMainCategory(),
-                memberExpense.getSubCategory(),
-                memberExpense.getMember().getName(),
-                memberExpense.getMemo(),
-                memberExpense.getModifiedAt(),
                 petGroup
         );
     }
