@@ -1,5 +1,6 @@
 import EditableDataTable from "./_components/EditableDataTable";
-import { ExpenseData } from "./_types/dashboard.type";
+import ProgressSummarySection from "./_components/ProgressSummarySection";
+import { ExpenseData, ProgressData, ImageData } from "./_types/dashboard.type";
 
 // TODO: API 호출 (SERVER)
 const initialData: ExpenseData[] = [
@@ -71,15 +72,29 @@ const initialData: ExpenseData[] = [
   },
 ];
 
+// TODO: API 호출 (SERVER)
+// - 응답에 petName 포함(전역 상태에서 가져오면 "use client" 필요)
+const progressData: ProgressData = {
+  totalExpense: {
+    forecast: 26,
+    isMinus: true,
+  },
+  medicalExpense: {
+    forecast: 14,
+    isMinus: false,
+  },
+  petName: "코코",
+};
+
+// TODO: API 호출 (SERVER)
+const imageData: ImageData = {
+  src: "/images/img_dog_sample.png",
+};
+
 export default function DashboardHomePage() {
   return (
-    <div className="p-8">
-      <div className="rounded-2xl border border-[var(--color-border-light)] bg-white p-6">
-        <h1 className="typo-headline-s-bold text-[var(--color-text-base)]">대시보드 영역</h1>
-        <p className="typo-body-m-medium mt-2 text-[var(--color-gray-500)]">
-          콘텐츠는 추후 추가 예정입니다.
-        </p>
-      </div>
+    <div className="p-8 flex flex-col gap-850">
+      <ProgressSummarySection data={progressData} image={imageData} />
       <EditableDataTable initialData={initialData} className="h-[480px]" />
     </div>
   );
