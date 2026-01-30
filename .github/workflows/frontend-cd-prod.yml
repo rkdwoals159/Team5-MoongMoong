@@ -1,0 +1,162 @@
+name: Frontend CD (Prod)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "frontend/**"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+      NEXT_PUBLIC_MOCKING: ${{ secrets.NEXT_PUBLIC_MOCKING }}
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 25.2.1
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Format check
+        run: yarn format:check
+
+      - name: Build
+        run: yarn build
+
+  deploy-staging:
+    needs: validate
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    outputs:
+      staging_url: ${{ steps.deploy.outputs.staging_url }}
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 25.2.1
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Pull Vercel Environment
+        run: vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
+
+      - name: Build
+        run: vercel build --token=$VERCEL_TOKEN
+
+      - name: Deploy to Staging
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --token=$VERCEL_TOKEN)
+          echo "staging_url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Health Check (Staging)
+        run: |
+          STAGING_URL="${{ steps.deploy.outputs.staging_url }}"
+          echo "Checking $STAGING_URL ..."
+          for i in 1 2 3 4 5; do
+            STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$STAGING_URL")
+            if [ "$STATUS" -eq 200 ]; then
+              echo "Health check passed (HTTP $STATUS)"
+              exit 0
+            fi
+            echo "Attempt $i: HTTP $STATUS — retrying..."
+            sleep 10
+          done
+          echo "Health check failed after 5 attempts"
+          exit 1
+
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 25.2.1
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Pull Vercel Environment
+        run: vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+
+      - name: Build
+        run: vercel build --prod --token=$VERCEL_TOKEN
+
+      - name: Deploy to Production
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN)
+          echo "prod_url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Health Check (Production)
+        id: healthcheck
+        run: |
+          PROD_URL="${{ steps.deploy.outputs.prod_url }}"
+          echo "Checking $PROD_URL ..."
+          for i in 1 2 3 4 5; do
+            STATUS=$(curl -L -o /dev/null -s -w "%{http_code}" "$PROD_URL")
+            if [ "$STATUS" -eq 200 ]; then
+              echo "Health check passed (HTTP $STATUS)"
+              exit 0
+            fi
+            echo "Attempt $i: HTTP $STATUS — retrying..."
+            sleep 10
+          done
+          echo "Health check failed after 5 attempts"
+          exit 1
+
+      - name: Rollback on Failure
+        if: failure() && steps.healthcheck.outcome == 'failure'
+        run: |
+          echo "Production health check failed. Rolling back..."
+          LAST_DEPLOYMENT=$(vercel ls --token=$VERCEL_TOKEN --meta gitCommitSha | sed -n '2p' | awk '{print $2}')
+          if [ -n "$LAST_DEPLOYMENT" ]; then
+            vercel rollback "$LAST_DEPLOYMENT" --token=$VERCEL_TOKEN
+            echo "Rolled back to $LAST_DEPLOYMENT"
+          else
+            echo "::error::Could not find previous deployment to rollback"
+            exit 1
+          fi
+
+      - name: Summary
+        if: success()
+        run: |
+          echo "### Production Deployed" >> "$GITHUB_STEP_SUMMARY"
+          echo "${{ steps.deploy.outputs.prod_url }}" >> "$GITHUB_STEP_SUMMARY"
