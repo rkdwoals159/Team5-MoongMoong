@@ -1,13 +1,11 @@
-import { CalendarDay } from "@/types/calendar";
-import { formatDateKey } from "../../utils/date";
-import { getExpensesForDate } from "@/lib/calendar/mocks";
-
-import { categoryColorMap } from "@/lib/calendar/mocks/constants";
-import { ExpenseCategory } from "@/types/calendar";
+import { CalendarDay, ExpenseMap } from "@/app/(sidebar)/calendar/_types";
+import { formatDateKey } from "../../../../utils/date";
+import { categoryColorMap } from "@/app/(sidebar)/calendar/_constants";
+import { ExpenseCategory } from "@/app/(sidebar)/calendar/_types";
 
 export const getChipColorForCategory = (category: ExpenseCategory) => categoryColorMap[category];
 
-export const buildCalendarDays = (year: number, month: number) => {
+export const buildCalendarDays = (year: number, month: number, expenseMap: ExpenseMap) => {
   const firstOfMonth = new Date(year, month, 1);
   const lastOfMonth = new Date(year, month + 1, 0);
   const daysInMonth = lastOfMonth.getDate();
@@ -31,7 +29,7 @@ export const buildCalendarDays = (year: number, month: number) => {
     }
 
     const dateKey = formatDateKey(cellDate);
-    const expenses = inCurrentMonth ? getExpensesForDate(dateKey) : [];
+    const expenses = inCurrentMonth ? (expenseMap[dateKey] ?? []) : [];
     const dayOfWeek = cellDate.getDay();
 
     return {

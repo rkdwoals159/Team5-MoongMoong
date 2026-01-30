@@ -1,4 +1,4 @@
-import { ExpenseCountChipProps } from "@/types/calendar";
+import { ExpenseCountChipProps } from "@/app/(sidebar)/calendar/_types";
 
 export default function ExpenseCountChip({ count }: ExpenseCountChipProps) {
   return (

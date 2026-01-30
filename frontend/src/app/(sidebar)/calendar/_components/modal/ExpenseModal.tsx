@@ -3,11 +3,11 @@ import Chip from "@/components/common/Chip/Chip";
 import Modal from "@/components/ui/Modal/Modal";
 import DataTable from "@/components/ui/DataTable/DataTable";
 import type { DataTableColumn } from "@/components/ui/DataTable/DataTable.type";
-import { getChipColorForCategory } from "@/lib/calendar/buildCalendarDays";
+import { getChipColorForCategory } from "@/app/(sidebar)/calendar/_lib/buildCalendarDays";
 import { formatAmount, formatAmountPlain } from "@/utils/amount";
-import type { ExpenseItem, ExpenseModalProps } from "@/types/calendar";
+import type { ExpenseItem, ExpenseModalProps } from "@/app/(sidebar)/calendar/_types";
 import Link from "next/link";
-import { SCROLL_THRESHOLD } from "@/lib/calendar/mocks/constants";
+import { SCROLL_THRESHOLD } from "@/app/(sidebar)/calendar/_constants";
 
 export default function ExpenseModal({ open, title, items, closeHref }: ExpenseModalProps) {
   const total = items.reduce((sum, item) => sum + item.cost, 0);

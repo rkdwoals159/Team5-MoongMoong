@@ -1,6 +1,4 @@
-import { DAY_LABELS } from "@/lib/calendar/mocks/constants";
-
-export const getDayLabels = () => DAY_LABELS;
+import { DAY_LABELS } from "@/app/(sidebar)/calendar/_constants";
 
 const monthLabelFormatter = new Intl.DateTimeFormat("ko-KR", {
   year: "numeric",
@@ -68,6 +66,16 @@ export const isDateInMonth = (dateKey: string, year: number, monthIndex: number)
   return dateYear === year && dateMonth === monthIndex + 1;
 };
 
+export const resolveMonthRange = (monthParam?: string) => {
+  const today = new Date();
+  const parsed = parseMonthParam(monthParam);
+  const year = parsed?.year ?? today.getFullYear();
+  const monthIndex = parsed?.monthIndex ?? today.getMonth();
+  const startDate = formatDateKey(new Date(year, monthIndex, 1));
+  const endDate = formatDateKey(new Date(year, monthIndex + 1, 0));
+
+  return { startDate, endDate };
+};
 export const formatDateWithDots = (date: string): string => {
   return date.replace(/-/g, ".");
 };

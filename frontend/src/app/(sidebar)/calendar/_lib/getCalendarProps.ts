@@ -8,8 +8,8 @@ import {
   isValidDateParam,
   parseMonthParam,
 } from "@/utils/date";
-import { buildCalendarDays } from "@/lib/calendar/buildCalendarDays";
-import { CalendarContext, CalendarSearchParams } from "@/types/calendar";
+import { buildCalendarDays } from "@/app/(sidebar)/calendar/_lib/buildCalendarDays";
+import { CalendarContext, CalendarSearchParams, ExpenseMap } from "@/app/(sidebar)/calendar/_types";
 
 //캘린더 헤더 컴포넌트 속성 조회
 export function getHeaderProps(resolvedSearchParams: CalendarSearchParams) {
@@ -27,9 +27,9 @@ export function getHeaderProps(resolvedSearchParams: CalendarSearchParams) {
 }
 
 //캘린더 표 컴포넌트 속성 조회
-export function getGridProps(resolvedSearchParams: CalendarSearchParams) {
+export function getGridProps(resolvedSearchParams: CalendarSearchParams, expenseMap: ExpenseMap) {
   const context = resolveCalendarContext(resolvedSearchParams);
-  const { days, weeks } = buildCalendarDays(context.viewYear, context.viewMonth);
+  const { days, weeks } = buildCalendarDays(context.viewYear, context.viewMonth, expenseMap);
 
   return { days, weeks, monthParam: context.monthParam };
 }

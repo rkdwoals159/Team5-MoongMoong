@@ -44,6 +44,27 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/group/bank": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * 저금통 생성
+     * @description 로그인한 사용자가 속한 모임에
+     *     목표 금액을 가진 저금통을 생성합니다.
+     */
+    post: operations["createBank"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/expenses": {
     parameters: {
       query?: never;
@@ -138,11 +159,33 @@ export interface paths {
       cookie?: never;
     };
     /**
+     * 모임 소비 내역 조회
+     * @description 로그인한 사용자가 속한 모임의 소비 내역을
+     *     지정한 기간(startDate ~ endDate) 기준으로 조회합니다.
+     *     spendAt 기준 내림차순 > modifiedAt 기준 내림차순 정렬됩니다.
+     */
+    get: operations["findGroupExpenses"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/expenses/group/date": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
      * 캘린더 일자별 조회
      * @description 캘린더에서 특정 날짜(spentAt)에 해당하는 그룹 소비 내역 리스트를 조회합니다.
      *     spentAt 기준 내림차순, modifiedAt 기준 내림차순으로 정렬됩니다.
      */
-    get: operations["findGroupExpenses_1"];
+    get: operations["findGroupDailyExpenses"];
     put?: never;
     post?: never;
     delete?: never;
@@ -299,6 +342,12 @@ export interface components {
         | "INF"
       )[];
     };
+    ErrorResponse: {
+      code?: string;
+      /** Format: int32 */
+      status?: number;
+      message?: string;
+    };
     /** @description 반려동물 생성 응답 */
     PetCreateResponse: {
       /**
@@ -408,12 +457,6 @@ export interface components {
         | "INF"
       )[];
     };
-    ErrorResponse: {
-      code?: string;
-      /** Format: int32 */
-      status?: number;
-      message?: string;
-    };
     Member: {
       /** Format: int64 */
       id?: number;
@@ -437,6 +480,30 @@ export interface components {
        * @example 1
        */
       crewId?: number;
+    };
+    /** @description 저금통 생성 요청 */
+    BankCreateRequest: {
+      /**
+       * Format: int64
+       * @description 저금통 목표 금액
+       * @example 15000000
+       */
+      target?: number;
+    };
+    /** @description 저금통 생성 응답 */
+    BankCreateResponse: {
+      /**
+       * Format: int64
+       * @description 저금통 아이디
+       * @example 1
+       */
+      bankId?: number;
+      /**
+       * Format: int64
+       * @description 저금통 목표 금액
+       * @example 15000000
+       */
+      target?: number;
     };
     /** @description 소비내역 단건 응답 DTO */
     MemberExpenseResponse: {
@@ -635,6 +702,11 @@ export interface components {
        * @example 2026-01-20
        */
       spendAt?: string;
+      /**
+       * @description 사용자 닉네임
+       * @example 코코맘
+       */
+      nickName?: string;
       /**
        * @description 사용 내역
        * @example 감기약 및 처방약 구매
@@ -838,6 +910,57 @@ export interface operations {
        *     - 그룹 정원이 모두 찬 경우
        *     - 이미 다른 그룹에 참여 중인 경우 (2명 이상 구성원 보유)
        */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  createBank: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json;charset=UTF-8": components["schemas"]["BankCreateRequest"];
+      };
+    };
+    responses: {
+      /** @description 저금통 생성 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["BankCreateResponse"];
+        };
+      };
+      /** @description 저금통이 이미 존재하는 경우 저금통 생성에 실패합니다. */
       400: {
         headers: {
           [name: string]: unknown;
@@ -1083,7 +1206,7 @@ export interface operations {
       };
     };
   };
-  findGroupExpenses_1: {
+  findGroupExpenses: {
     parameters: {
       query: {
         /**
@@ -1096,6 +1219,45 @@ export interface operations {
          * @example 2026-01-31
          */
         endDate: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 모임 소비 내역 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["GroupExpensesResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  findGroupDailyExpenses: {
+    parameters: {
+      query: {
         /**
          * @description 조회 날짜
          * @example 2026-01-01
@@ -1114,9 +1276,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json;charset=UTF-8":
-            | components["schemas"]["GroupExpensesDailyResponse"]
-            | components["schemas"]["GroupExpensesResponse"];
+          "application/json;charset=UTF-8": components["schemas"]["GroupExpensesDailyResponse"];
         };
       };
       /** @description 인증되지 않은 사용자 */

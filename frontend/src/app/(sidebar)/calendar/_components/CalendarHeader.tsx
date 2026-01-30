@@ -2,8 +2,8 @@
 
 import ArrowLeftIcon from "@/assets/icons/components/arrow-left-medium.svg";
 import ArrowRightIcon from "@/assets/icons/components/arrow-right-medium.svg";
-import useCalendarNavigation from "@/hooks/calendar/useCalendarNavigation";
-import { CalendarHeaderProps } from "@/types/calendar";
+import useCalendarNavigation from "@/app/(sidebar)/calendar/_hooks/useCalendarNavigation";
+import { CalendarHeaderProps } from "@/app/(sidebar)/calendar/_types";
 
 export default function CalendarHeader({
   label,

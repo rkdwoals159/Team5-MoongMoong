@@ -1,6 +1,6 @@
 import CalendarDayCell from "./CalendarDayCell";
-import { getDayLabels } from "@/utils/date";
-import type { CalendarGridProps } from "@/types/calendar";
+import { getDayLabels } from "@/app/(sidebar)/calendar/_utils";
+import type { CalendarGridProps } from "@/app/(sidebar)/calendar/_types";
 
 export default function CalendarGrid({ days, weeks, selectedDate, monthParam }: CalendarGridProps) {
   const labels = getDayLabels();
