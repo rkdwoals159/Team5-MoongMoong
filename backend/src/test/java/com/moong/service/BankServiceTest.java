@@ -1,6 +1,7 @@
 package com.moong.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -13,9 +14,13 @@ import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.bank.BankCreateRequest;
 import com.moong.dto.response.bank.BankCreateResponse;
 import com.moong.dto.response.bank.BankInfoResponse;
+import com.moong.dto.response.bank.CoinResponse;
+import com.moong.dto.response.bank.CoinsResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.BankRepository;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -169,5 +174,38 @@ class BankServiceTest extends BaseServiceTest {
         assertThatThrownBy(() -> bankService.findBankInfo(member1))
                 .isInstanceOf(BusinessException.class)
                 .hasMessage(ErrorCode.NO_SUCH_BANK_FOUND.getMessage());
+    }
+
+    @DisplayName("멤버가 속한 그룹의 저금통 저금 내역을 과거순으로 정렬해서 조회한다.")
+    @Test
+    void findCoins() {
+        Member member1 = memberGenerator.generateSaved("member1");
+        Member member2 = memberGenerator.generateSaved("member2");
+        Pet savedPet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
+        Crew crew1 = crewGenerator.generateSaved(petGroup, member1);
+        Crew crew2 = crewGenerator.generateSaved(petGroup, member2);
+        Bank bank = bankGenerator.generateSaved(petGroup, 1000000L, 0L);
+        Coin smallCoin = coinGenerator.generateSaved(bank, crew1, 100L);
+        Coin bigCoin = coinGenerator.generateSaved(bank, crew2, 200L);
+
+        CoinsResponse response = bankService.findCoins(member1);
+
+        List<LocalDateTime> createdAts = response.coins().stream()
+                .map(CoinResponse::createdAt)
+                .toList();
+
+        assertAll(
+                () -> assertThat(response.coins()).hasSize(2),
+                () -> assertThat(response.coins().get(0).amount()).isEqualTo(smallCoin.getAmount()),
+                () -> assertThat(response.coins().get(0).name()).isEqualTo(member1.getName()),
+                () -> assertThat(response.coins().get(0).createdAt())
+                        .isCloseTo(smallCoin.getCreatedAt(), within(1, ChronoUnit.MICROS)),
+                () -> assertThat(response.coins().get(1).amount()).isEqualTo(bigCoin.getAmount()),
+                () -> assertThat(response.coins().get(1).name()).isEqualTo(member2.getName()),
+                () -> assertThat(response.coins().get(1).createdAt())
+                        .isCloseTo(bigCoin.getCreatedAt(), within(1, ChronoUnit.MICROS)),
+                () -> assertThat(createdAts).isSorted()
+        );
     }
 }

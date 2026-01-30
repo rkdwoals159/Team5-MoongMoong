@@ -7,12 +7,14 @@ import com.moong.dto.request.bank.BankCreateRequest;
 import com.moong.dto.response.bank.BankBreakResponse;
 import com.moong.dto.response.bank.BankCreateResponse;
 import com.moong.dto.response.bank.BankInfoResponse;
+import com.moong.dto.response.bank.CoinsResponse;
 import com.moong.service.BankService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +35,7 @@ public class BankController implements BankControllerSwagger {
         BankCreateResponse response = bankService.createBank(member, request);
         return ResponseEntity.ok(response);
     }
-  
+
     @Override
     @GetMapping
     public ResponseEntity<BankInfoResponse> findBankInfo(
@@ -42,7 +44,15 @@ public class BankController implements BankControllerSwagger {
         BankInfoResponse response = bankService.findBankInfo(member);
         return ResponseEntity.ok(response);
     }
-  
+
+    @GetMapping("/coins")
+    public ResponseEntity<CoinsResponse> findCoins(
+            @AuthMember Member member
+    ) {
+        CoinsResponse response = bankService.findCoins(member);
+        return ResponseEntity.ok(response);
+    }
+
     @Override
     @DeleteMapping
     public ResponseEntity<BankBreakResponse> breakBank(

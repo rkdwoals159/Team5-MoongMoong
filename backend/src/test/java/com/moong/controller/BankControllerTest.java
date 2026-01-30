@@ -1,6 +1,7 @@
 package com.moong.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.moong.domain.entity.Bank;
@@ -11,7 +12,12 @@ import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.bank.BankCreateRequest;
 import com.moong.dto.response.bank.BankInfoResponse;
+import com.moong.dto.response.bank.CoinResponse;
+import com.moong.dto.response.bank.CoinsResponse;
 import io.restassured.http.ContentType;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -86,7 +92,7 @@ class BankControllerTest extends BaseControllerTest {
                 .then()
                 .statusCode(404);
     }
-  
+
     @DisplayName("저금통 정보 및 랭킹 정보 조회에 성공한다")
     @Test
     void findBankInfoSuccess() {
@@ -135,5 +141,44 @@ class BankControllerTest extends BaseControllerTest {
                 .get("/api/group/bank")
                 .then()
                 .statusCode(404);
+    }
+
+    @DisplayName("멤버가 속한 그룹의 저금통 저금 내역을 조회한다.")
+    @Test
+    void findCoins() {
+        Member member1 = memberGenerator.generateSaved("member1");
+        Member member2 = memberGenerator.generateSaved("member2");
+        Pet savedPet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
+        Crew crew1 = crewGenerator.generateSaved(petGroup, member1);
+        Crew crew2 = crewGenerator.generateSaved(petGroup, member2);
+        Bank bank = bankGenerator.generateSaved(petGroup, 1000000L, 0L);
+        Coin smallCoin = coinGenerator.generateSaved(bank, crew1, 100L);
+        Coin bigCoin = coinGenerator.generateSaved(bank, crew2, 200L);
+
+        CoinsResponse response = given().log().all()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, member1.getId())
+                .get("/api/group/bank/coins")
+                .then()
+                .statusCode(200)
+                .extract().as(CoinsResponse.class);
+
+        List<LocalDateTime> createdAts = response.coins().stream()
+                .map(CoinResponse::createdAt)
+                .toList();
+
+        assertAll(
+                () -> assertThat(response.coins()).hasSize(2),
+                () -> assertThat(response.coins().get(0).amount()).isEqualTo(smallCoin.getAmount()),
+                () -> assertThat(response.coins().get(0).name()).isEqualTo(member1.getName()),
+                () -> assertThat(response.coins().get(0).createdAt())
+                        .isCloseTo(smallCoin.getCreatedAt(), within(1, ChronoUnit.MICROS)),
+                () -> assertThat(response.coins().get(1).amount()).isEqualTo(bigCoin.getAmount()),
+                () -> assertThat(response.coins().get(1).name()).isEqualTo(member2.getName()),
+                () -> assertThat(response.coins().get(1).createdAt())
+                        .isCloseTo(bigCoin.getCreatedAt(), within(1, ChronoUnit.MICROS)),
+                () -> assertThat(createdAts).isSorted()
+        );
     }
 }

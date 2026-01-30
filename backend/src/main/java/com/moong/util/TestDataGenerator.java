@@ -1,5 +1,7 @@
 package com.moong.util;
 
+import com.moong.domain.entity.Bank;
+import com.moong.domain.entity.Coin;
 import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.GroupExpense;
 import com.moong.domain.entity.GroupMedicalAdvice;
@@ -12,6 +14,8 @@ import com.moong.domain.entity.Treatment;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.Gender;
+import com.moong.repository.BankRepository;
+import com.moong.repository.CoinRepository;
 import com.moong.repository.CrewRepository;
 import com.moong.repository.GroupExpenseRepository;
 import com.moong.repository.GroupMedicalAdviceRepository;
@@ -46,6 +50,8 @@ public class TestDataGenerator {
     private final MemberExpenseRepository memberExpenseRepository;
     private final TreatmentRepository treatmentRepository;
     private final PetMedicalRepository petMedicalRepository;
+    private final BankRepository bankRepository;
+    private final CoinRepository coinRepository;
 
     @Transactional
     @EventListener(ApplicationReadyEvent.class)
@@ -66,10 +72,18 @@ public class TestDataGenerator {
         petGroupRepository.save(petGroup1);
         petGroupRepository.save(petGroup2);
 
+        Bank bank = new Bank(petGroup1, 100000);
+        bankRepository.save(bank);
+
         Crew crew1 = new Crew(petGroup1, member1);
         Crew crew2 = new Crew(petGroup2, member2);
         crewRepository.save(crew1);
         crewRepository.save(crew2);
+
+        List<Coin> exampleCoins = getExampleCoins(bank, crew1);
+        for (Coin coin : exampleCoins) {
+            coinRepository.save(coin);
+        }
 
         List<MemberExpense> exampleMemberExpense = getExampleMemberExpense(member1);
         memberExpenseRepository.saveAll(exampleMemberExpense);
@@ -255,5 +269,13 @@ public class TestDataGenerator {
         );
         return List.of(memberExpense1, memberExpense2, memberExpense3, memberExpense4, memberExpense5,
                 memberExpense6, memberExpense7, memberExpense8, memberExpense9, memberExpense10);
+    }
+
+    private List<Coin> getExampleCoins(Bank bank, Crew crew) {
+        Coin coin1 = new Coin(null, bank, crew, 5000);
+        Coin coin2 = new Coin(null, bank, crew, 3000);
+        Coin coin3 = new Coin(null, bank, crew, 2000);
+
+        return List.of(coin1, coin2, coin3);
     }
 }

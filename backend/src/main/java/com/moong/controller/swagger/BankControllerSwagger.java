@@ -10,6 +10,7 @@ import com.moong.dto.request.bank.BankCreateRequest;
 import com.moong.dto.response.bank.BankBreakResponse;
 import com.moong.dto.response.bank.BankCreateResponse;
 import com.moong.dto.response.bank.BankInfoResponse;
+import com.moong.dto.response.bank.CoinsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -64,7 +65,26 @@ public interface BankControllerSwagger {
             @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
             Member member
     );
-  
+
+    @Operation(
+            summary = "모임가계부 저금통 코인 내역 반환",
+            description = "저금통의 코인 내역의 정보들의 리스트를 반환합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "저금통 코인 내역 조회 성공",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = CoinsResponse.class)
+            )
+    )
+    @ErrorCode404(description = "저금통이 아직 존재하지 않음")
+    @ErrorCode500
+    ResponseEntity<CoinsResponse> findCoins(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member
+    );
+
     @Operation(
             summary = "저금통 깨기",
             description = "저금통을 깨고, 저축 기간과 축하 메시지를 반환합니다."

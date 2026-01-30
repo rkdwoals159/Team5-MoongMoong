@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Coin extends BaseEntity {
 
+    public static final String CREATED_AT_COLUMN_NAME = "createdAt";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
