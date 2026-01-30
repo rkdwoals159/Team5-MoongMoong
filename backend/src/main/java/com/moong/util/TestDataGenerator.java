@@ -267,8 +267,32 @@ public class TestDataGenerator {
                 now,
                 member1
         );
+
+        MemberExpense memberExpense11 = new MemberExpense(
+                null,
+                now.minusDays(11L).toLocalDate(),
+                "엑스레이 검사",
+                120000,
+                "의료",
+                "검사비",
+                null,
+                now,
+                member1
+        );
+
+        MemberExpense memberExpense12 = new MemberExpense(
+                null,
+                now.minusDays(12L).toLocalDate(),
+                "교통사고 수순",
+                3000,
+                "의료",
+                "수술비",
+                null,
+                now,
+                member1
+        );
         return List.of(memberExpense1, memberExpense2, memberExpense3, memberExpense4, memberExpense5,
-                memberExpense6, memberExpense7, memberExpense8, memberExpense9, memberExpense10);
+                memberExpense6, memberExpense7, memberExpense8, memberExpense9, memberExpense10, memberExpense11, memberExpense12);
     }
 
     private List<Coin> getExampleCoins(Bank bank, Crew crew) {

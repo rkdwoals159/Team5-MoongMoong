@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GroupExpenseService {
 
-    private static final String MEDICAL_CATEGORY_NAME = "의료비";
+    private static final String MEDICAL_CATEGORY_NAME = "의료";
 
     private final GroupExpenseRepository groupExpenseRepository;
     private final CrewRepository crewRepository;
