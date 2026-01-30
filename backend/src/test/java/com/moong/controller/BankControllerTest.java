@@ -1,5 +1,6 @@
 package com.moong.controller;
 
+import com.moong.domain.entity.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -11,6 +12,7 @@ import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.bank.BankCreateRequest;
+import com.moong.dto.request.bank.BankUpdateRequest;
 import com.moong.dto.response.bank.BankInfoResponse;
 import com.moong.dto.response.bank.CoinResponse;
 import com.moong.dto.response.bank.CoinsResponse;
@@ -33,7 +35,6 @@ class BankControllerTest extends BaseControllerTest {
         crewGenerator.generateSaved(petGroup, member);
 
         BankCreateRequest bankCreateRequest = new BankCreateRequest(150000L);
-
         given().log().all()
                 .contentType(ContentType.JSON)
                 .body(bankCreateRequest)
@@ -141,6 +142,26 @@ class BankControllerTest extends BaseControllerTest {
                 .get("/api/group/bank")
                 .then()
                 .statusCode(404);
+    }
+
+    @DisplayName("저금통 목표 금액 변경 성공")
+    @Test
+    void updateBankSuccess() {
+        Member member = memberGenerator.generateSaved("member1");
+        Pet savedPet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
+        crewGenerator.generateSaved(petGroup, member);
+        bankGenerator.generateSaved(petGroup, 10L, 9L);
+
+        BankUpdateRequest bankUpdateRequest = new BankUpdateRequest(150000L);
+
+        given().log().all()
+                .contentType(ContentType.JSON)
+                .body(bankUpdateRequest)
+                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .patch("/api/group/bank")
+                .then()
+                .statusCode(200);
     }
 
     @DisplayName("멤버가 속한 그룹의 저금통 저금 내역을 조회한다.")

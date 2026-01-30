@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "저금통 생성 요청")
 public record BankCreateRequest(
-        @Schema(description = "저금통 목표 금액", example = "15000000")
+        @Schema(description = "저금통 목표 금액", example = "1500000")
         long target
 ) {
         public Bank toBank(PetGroup petGroup) {

@@ -18,6 +18,9 @@ public enum ErrorCode {
     ALREADY_DISCONNECTED(400, "이미 클라이언트에서 요청이 종료되었습니다."),
     INVALID_DATE_RANGE(400, "시작일은 종료일보다 늦을 수 없습니다."),
     NOT_SUCCEED_BANK_TARGET_AMOUNT(400, "목표 금액을 아직 달성하지 못했습니다"),
+    BANK_TARGET_BELOW_ZERO(400, "저금통 목표 금액은 0원 이하일 수 없습니다."),
+    BANK_TARGET_EXCEED_LIMIT(400, "저금통 목표 금액은 1000만원을 초과할 수 없습니다."),
+    BANK_TARGET_LESS_THAN_CURRENT(400, "저금통 목표 금액은 현재 저금된 금액보다 적어질 수 없습니다."),
 
     //401
     UNAUTHORIZED_EXCEPTION(401, "잘못된 유저 접근입니다"),

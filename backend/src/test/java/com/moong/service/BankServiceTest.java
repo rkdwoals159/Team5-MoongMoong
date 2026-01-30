@@ -1,16 +1,6 @@
 package com.moong.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
-import com.moong.domain.entity.Bank;
-import com.moong.domain.entity.Coin;
-import com.moong.domain.entity.Crew;
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.Pet;
-import com.moong.domain.entity.PetGroup;
+import com.moong.domain.entity.*;
 import com.moong.dto.request.bank.BankCreateRequest;
 import com.moong.dto.response.bank.BankCreateResponse;
 import com.moong.dto.response.bank.BankInfoResponse;
@@ -19,18 +9,17 @@ import com.moong.dto.response.bank.CoinsResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.BankRepository;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class BankServiceTest extends BaseServiceTest {
 
@@ -135,7 +124,7 @@ class BankServiceTest extends BaseServiceTest {
                 .isInstanceOf(BusinessException.class)
                 .hasMessage(ErrorCode.NO_SUCH_BANK_FOUND.getMessage());
     }
-                 
+
     @DisplayName("저금통 정보 및 랭킹 정보 조회에 성공한다")
     @Test
     void findBankInfoSuccess() {
@@ -163,7 +152,7 @@ class BankServiceTest extends BaseServiceTest {
         );
     }
 
-    @DisplayName("저금통 정보 조히 실패 : 저금통이 존재하지 않을 경우")
+    @DisplayName("저금통 정보 조회 실패 : 저금통이 존재하지 않을 경우")
     @Test
     void findBankInfoFail() {
         Member member1 = memberGenerator.generateSaved("member1");

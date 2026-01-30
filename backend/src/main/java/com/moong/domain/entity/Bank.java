@@ -1,5 +1,7 @@
 package com.moong.domain.entity;
 
+import com.moong.exception.custom.BusinessException;
+import com.moong.exception.errorcode.ErrorCode;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,6 +34,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Bank extends BaseEntity {
 
+    private static final long MAX_TARGET_AMOUNT = 10_000_000L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -46,10 +50,28 @@ public class Bank extends BaseEntity {
     private long currentAmount;
 
     public Bank(PetGroup petGroup, long targetAmount) {
-        this(null, petGroup, targetAmount, 0);
+        validateTargetAmount(targetAmount);
+        this.petGroup = petGroup;
+        this.targetAmount = targetAmount;
+        this.currentAmount = 0L;
     }
 
     public boolean canBreak() {
         return currentAmount >= targetAmount;
+    }
+
+    public void updateTargetAmount(long targetAmount) {
+        validateTargetAmount(targetAmount);
+
+        if (targetAmount < currentAmount) {
+            throw new BusinessException(ErrorCode.BANK_TARGET_LESS_THAN_CURRENT);
+        }
+
+        this.targetAmount = targetAmount;
+    }
+
+    private void validateTargetAmount(long target) {
+        if (target <= 0L) throw new BusinessException(ErrorCode.BANK_TARGET_BELOW_ZERO);
+        if (target > MAX_TARGET_AMOUNT) throw new BusinessException(ErrorCode.BANK_TARGET_EXCEED_LIMIT);
     }
 }

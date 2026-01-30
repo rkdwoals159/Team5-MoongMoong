@@ -2,27 +2,21 @@ package com.moong.service;
 
 import com.moong.domain.bank.BankRankings;
 import com.moong.domain.bank.CoinView;
-import com.moong.domain.entity.Bank;
-import com.moong.domain.entity.Coin;
-import com.moong.domain.entity.Crew;
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.PetGroup;
+import com.moong.domain.entity.*;
 import com.moong.dto.request.bank.BankCreateRequest;
-import com.moong.dto.response.bank.BankBreakResponse;
-import com.moong.dto.response.bank.BankCreateResponse;
-import com.moong.dto.response.bank.BankInfoResponse;
-import com.moong.dto.response.bank.CoinsResponse;
+import com.moong.dto.request.bank.BankUpdateRequest;
+import com.moong.dto.response.bank.*;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.BankRepository;
 import com.moong.repository.CoinRepository;
 import com.moong.repository.CrewRepository;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.transaction.Transactional;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -54,10 +48,19 @@ public class BankService {
         return new BankInfoResponse(foundBank, bankRankings);
     }
 
+    @Transactional
+    public BankUpdateResponse updateBank(Member member,
+                                         BankUpdateRequest bankUpdateRequest) {
+        long target = bankUpdateRequest.target();
+        Bank foundBank = findBank(member.getId());
+
+        foundBank.updateTargetAmount(target);
+
+        return new BankUpdateResponse(foundBank.getTargetAmount());
+    }
+
     public BankBreakResponse breakBank(Member member) {
-        Crew crew = crewRepository.getByMemberId(member.getId());
-        PetGroup petGroup = crew.getPetGroup();
-        Bank groupBank = bankRepository.getByPetGroupId(petGroup.getId());
+        Bank groupBank = findBank(member.getId());
 
         if (!groupBank.canBreak()) {
             throw new BusinessException(ErrorCode.NOT_SUCCEED_BANK_TARGET_AMOUNT);
