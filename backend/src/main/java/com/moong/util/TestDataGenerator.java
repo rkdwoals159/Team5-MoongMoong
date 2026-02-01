@@ -103,7 +103,7 @@ public class TestDataGenerator {
         groupMedicalAdviceRepository.save(groupMedicalAdvice);
 
         for(Disease disease : Disease.values()) {
-            PetMedical petMedical = new PetMedical(null, Breed.BEA, 0, Gender.M, disease, ThreadLocalRandom.current().nextInt(0, 10001));
+            PetMedical petMedical = new PetMedical(null, Breed.BEA, 3, Gender.M, disease, ThreadLocalRandom.current().nextInt(0, 10001));
             petMedicalRepository.save(petMedical);
         }
 
