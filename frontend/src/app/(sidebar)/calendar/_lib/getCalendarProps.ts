@@ -83,14 +83,10 @@ const buildMonthNavParams = ({ viewYear, viewMonth, today }: CalendarContext) =>
 
 const resolveSelectedDate = (
   selectedParam: string | null,
-  { viewYear, viewMonth, isCurrentMonth, todayKey }: CalendarContext,
+  { viewYear, viewMonth }: CalendarContext,
 ) => {
   if (selectedParam && isDateInMonth(selectedParam, viewYear, viewMonth)) {
     return selectedParam;
-  }
-
-  if (isCurrentMonth) {
-    return todayKey;
   }
 
   return null;

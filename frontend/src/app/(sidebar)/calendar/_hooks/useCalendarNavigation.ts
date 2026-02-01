@@ -29,9 +29,7 @@ export default function useCalendarNavigation({
   const router = useRouter();
 
   const handleNavigate = (monthParam: string) => {
-    const shouldSelectToday = monthParam === todayMonthParam;
-    const selected = shouldSelectToday ? todayDateParam : undefined;
-    router.push(buildQuery(monthParam, selected));
+    router.push(buildQuery(monthParam));
   };
 
   const handlePrev = () => handleNavigate(prevMonthParam);

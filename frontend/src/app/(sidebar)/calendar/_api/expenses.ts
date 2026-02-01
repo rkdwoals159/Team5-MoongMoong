@@ -19,10 +19,6 @@ export async function getCalendarExpenses(monthParam?: string): Promise<ExpenseM
         // member: MEMBER_PROFILE,
       },
     },
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "1",
-    },
   });
 
   if (error || !data) {
@@ -54,10 +50,6 @@ export async function getGroupDailyExpenses(spentAt: string): Promise<ExpenseIte
       query: {
         spentAt,
       },
-    },
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "1",
     },
   });
 
