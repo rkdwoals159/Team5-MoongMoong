@@ -56,7 +56,14 @@ public class Bank extends BaseEntity {
         this.currentAmount = 0L;
     }
 
-    public boolean canBreak() {
+    public void updateCurrentAmount(long amount) {
+        if (amount <= 0L) throw new BusinessException(ErrorCode.BANK_SAVING_BELOW_ZERO);
+        if (isSucceedTargetAmount()) throw new BusinessException(ErrorCode.ALREADY_SUCCEED_BANK_TARGET_AMOUNT);
+
+        currentAmount += amount;
+    }
+
+    public boolean isSucceedTargetAmount() {
         return currentAmount >= targetAmount;
     }
 

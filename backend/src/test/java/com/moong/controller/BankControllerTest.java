@@ -1,10 +1,5 @@
 package com.moong.controller;
 
-import com.moong.domain.entity.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import com.moong.domain.entity.Bank;
 import com.moong.domain.entity.Coin;
 import com.moong.domain.entity.Crew;
@@ -13,16 +8,22 @@ import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.bank.BankCreateRequest;
 import com.moong.dto.request.bank.BankUpdateRequest;
+import com.moong.dto.request.bank.CoinCreateRequest;
 import com.moong.dto.response.bank.BankInfoResponse;
 import com.moong.dto.response.bank.CoinResponse;
 import com.moong.dto.response.bank.CoinsResponse;
 import io.restassured.http.ContentType;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class BankControllerTest extends BaseControllerTest {
 
@@ -40,6 +41,26 @@ class BankControllerTest extends BaseControllerTest {
                 .body(bankCreateRequest)
                 .header(HttpHeaders.AUTHORIZATION, member.getId())
                 .post("/api/group/bank")
+                .then()
+                .statusCode(200);
+    }
+
+    @DisplayName("저금하기 성공")
+    @Test
+    void createCoinSuccess() {
+        Member member = memberGenerator.generateSaved("member1");
+        Pet savedPet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
+        crewGenerator.generateSaved(petGroup, member);
+        bankGenerator.generateSaved(petGroup, 100L, 10L);
+
+        CoinCreateRequest coinCreateRequest = new CoinCreateRequest(50L);
+
+        given().log().all()
+                .contentType(ContentType.JSON)
+                .body(coinCreateRequest)
+                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .post("/api/group/bank/coins")
                 .then()
                 .statusCode(200);
     }

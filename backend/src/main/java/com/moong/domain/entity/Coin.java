@@ -31,5 +31,4 @@ public class Coin extends BaseEntity {
     private Crew crew;
 
     private long amount;
-
 }

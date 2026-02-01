@@ -21,6 +21,8 @@ public enum ErrorCode {
     BANK_TARGET_BELOW_ZERO(400, "저금통 목표 금액은 0원 이하일 수 없습니다."),
     BANK_TARGET_EXCEED_LIMIT(400, "저금통 목표 금액은 1000만원을 초과할 수 없습니다."),
     BANK_TARGET_LESS_THAN_CURRENT(400, "저금통 목표 금액은 현재 저금된 금액보다 적어질 수 없습니다."),
+    ALREADY_SUCCEED_BANK_TARGET_AMOUNT(400, "이미 목표 금액을 달성하여 저금에 실패하였습니다."),
+    BANK_SAVING_BELOW_ZERO(400, "저금 금액은 0원 이하일 수 없습니다."),
 
     //401
     UNAUTHORIZED_EXCEPTION(401, "잘못된 유저 접근입니다"),

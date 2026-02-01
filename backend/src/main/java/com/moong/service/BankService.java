@@ -2,10 +2,20 @@ package com.moong.service;
 
 import com.moong.domain.bank.BankRankings;
 import com.moong.domain.bank.CoinView;
-import com.moong.domain.entity.*;
+import com.moong.domain.entity.Bank;
+import com.moong.domain.entity.Coin;
+import com.moong.domain.entity.Crew;
+import com.moong.domain.entity.Member;
+import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.bank.BankCreateRequest;
 import com.moong.dto.request.bank.BankUpdateRequest;
-import com.moong.dto.response.bank.*;
+import com.moong.dto.request.bank.CoinCreateRequest;
+import com.moong.dto.response.bank.BankBreakResponse;
+import com.moong.dto.response.bank.BankCreateResponse;
+import com.moong.dto.response.bank.BankInfoResponse;
+import com.moong.dto.response.bank.BankUpdateResponse;
+import com.moong.dto.response.bank.CoinCreateResponse;
+import com.moong.dto.response.bank.CoinsResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.BankRepository;
@@ -40,6 +50,21 @@ public class BankService {
         return new BankCreateResponse(savedBank);
     }
 
+    @Transactional
+    public CoinCreateResponse createCoin(Member member,
+                                         CoinCreateRequest coinCreateRequest) {
+        long amount = coinCreateRequest.amount();
+        Crew crew = crewRepository.getByMemberId(member.getId());
+        PetGroup petGroup = crew.getPetGroup();
+        Bank groupBank = bankRepository.getByPetGroupId(petGroup.getId());
+
+        groupBank.updateCurrentAmount(amount);
+        Coin coin = coinCreateRequest.toCoin(groupBank, crew);
+        Coin savedCoin = coinRepository.save(coin);
+
+        return new CoinCreateResponse(savedCoin, member);
+    }
+
     public BankInfoResponse findBankInfo(Member member) {
         Bank foundBank = findBank(member.getId());
         //crew > member fetch join
@@ -62,7 +87,7 @@ public class BankService {
     public BankBreakResponse breakBank(Member member) {
         Bank groupBank = findBank(member.getId());
 
-        if (!groupBank.canBreak()) {
+        if (!groupBank.isSucceedTargetAmount()) {
             throw new BusinessException(ErrorCode.NOT_SUCCEED_BANK_TARGET_AMOUNT);
         }
 

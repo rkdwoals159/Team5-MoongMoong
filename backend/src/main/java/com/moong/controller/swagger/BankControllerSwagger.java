@@ -7,10 +7,12 @@ import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
 import com.moong.dto.request.bank.BankCreateRequest;
 import com.moong.dto.request.bank.BankUpdateRequest;
+import com.moong.dto.request.bank.CoinCreateRequest;
 import com.moong.dto.response.bank.BankBreakResponse;
 import com.moong.dto.response.bank.BankCreateResponse;
 import com.moong.dto.response.bank.BankInfoResponse;
 import com.moong.dto.response.bank.BankUpdateResponse;
+import com.moong.dto.response.bank.CoinCreateResponse;
 import com.moong.dto.response.bank.CoinsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -95,8 +97,8 @@ public interface BankControllerSwagger {
             description = "저금통 깨기 성공",
             content = @Content(schema = @Schema(implementation = BankBreakResponse.class))
     )
-    @ErrorCode400(description = "그룹 저금통이 아직 없을 때")
     @ErrorCode401
+    @ErrorCode404(description = "저금통이 아직 존재하지 않음")
     ResponseEntity<BankBreakResponse> breakBank(
             @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
             Member member
@@ -122,5 +124,26 @@ public interface BankControllerSwagger {
             @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
             Member member,
             BankUpdateRequest request
+    );
+
+    @Operation(
+            summary = "저금하기",
+            description = "원하는 금액만큼을 저금합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "저금 성공",
+            content = @Content(schema = @Schema(implementation = CoinCreateResponse.class))
+    )
+    @ErrorCode400(description = """
+            - 저금하기 금액이 0원 이하
+            - 이미 저금통 목표 금액 도달
+            """)
+    @ErrorCode401
+    @ErrorCode404(description = "저금통이 아직 존재하지 않음")
+    ResponseEntity<CoinCreateResponse> createCoin(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member,
+            CoinCreateRequest request
     );
 }
