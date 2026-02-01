@@ -1,7 +1,11 @@
 package com.moong.service;
 
+import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.Member;
+import com.moong.domain.entity.Pet;
+import com.moong.domain.memberexpense.MonthlyExpenseStats;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
+import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
 import com.moong.domain.entity.MemberExpense;
 import com.moong.dto.response.memberexpense.MemberExpensesUpsertResponse;
@@ -10,6 +14,8 @@ import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.CrewRepository;
 import com.moong.repository.memberexpense.MemberExpenseRepository;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class MemberExpenseService {
+
+    //TODO: ENUM 타입으로 분리
+    private static final String MEDICAL_CATEGORY_NAME = "의료";
 
     private final MemberExpenseRepository memberExpenseRepository;
     private final CrewRepository crewRepository;
@@ -47,6 +56,53 @@ public class MemberExpenseService {
         );
 
         return new MemberExpensesPeriodResponse(findMemberExpenses);
+    }
+
+    public LastMonthComparisonResponse compareLastMonthExpense(Member member) {
+        YearMonth currentMonth = YearMonth.now(ZoneId.of("Asia/Seoul"));
+        YearMonth lastMonth = currentMonth.minusMonths(1);
+
+        long previousTotal = getMonthlyTotal(member.getId(), lastMonth);
+        long currentTotal = getMonthlyTotal(member.getId(), currentMonth);
+        long previousMedicalTotal = getMainCategoryMonthlyTotal(
+                member.getId(),
+                MEDICAL_CATEGORY_NAME,
+                lastMonth
+        );
+        long currentMedicalTotal = getMainCategoryMonthlyTotal(
+                member.getId(),
+                MEDICAL_CATEGORY_NAME,
+                currentMonth
+        );
+
+        MonthlyExpenseStats monthlyStats = new MonthlyExpenseStats(
+                previousTotal,
+                previousMedicalTotal,
+                currentTotal,
+                currentMedicalTotal
+        );
+
+        Crew crew = crewRepository.getFetchedByMemberId(member.getId());
+        Pet pet = crew.getPetGroup().getPet();
+
+        return new LastMonthComparisonResponse(monthlyStats, pet.getName(), member.getImageUrl());
+    }
+
+    private long getMonthlyTotal(long memberId, YearMonth month) {
+        return memberExpenseRepository.sumCostByMemberIdAndPeriod(
+                memberId,
+                month.atDay(1),
+                month.atEndOfMonth()
+        );
+    }
+
+    private long getMainCategoryMonthlyTotal(long memberId, String mainCategory, YearMonth month) {
+        return memberExpenseRepository.sumCostByMemberIdAndMainCategoryAndPeriod(
+                memberId,
+                mainCategory,
+                month.atDay(1),
+                month.atEndOfMonth()
+        );
     }
 
     @Transactional

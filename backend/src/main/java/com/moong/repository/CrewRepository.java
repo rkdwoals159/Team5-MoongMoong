@@ -5,6 +5,7 @@ import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 public interface CrewRepository extends Repository<Crew, Long> {
@@ -19,6 +20,14 @@ public interface CrewRepository extends Repository<Crew, Long> {
         return findByMemberId(memberId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.CREW_NOT_FOUND));
     }
+
+    @Query("""
+            select c from Crew c
+            join fetch c.petGroup pg
+            join fetch pg.pet
+            where c.member.id = :memberId
+            """)
+    Crew getFetchedByMemberId(long memberId);
 
     long countByPetGroup_Id(long petGroupId);
 

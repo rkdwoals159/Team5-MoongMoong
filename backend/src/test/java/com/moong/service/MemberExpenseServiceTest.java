@@ -4,8 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.moong.domain.entity.Pet;
+import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.memberexpense.MemberExpenseUpsertRequest;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
+import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpenseResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
 import com.moong.domain.entity.Member;
@@ -15,6 +18,9 @@ import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.memberexpense.MemberExpenseRepository;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -89,6 +95,108 @@ class MemberExpenseServiceTest extends BaseServiceTest {
         assertThatThrownBy(() -> memberExpenseService.getMemberExpensesByPeriod(member, startDate, endDate))
                 .isInstanceOf(BusinessException.class)
                 .hasMessage(ErrorCode.INVALID_DATE_RANGE.getMessage());
+    }
+
+    @DisplayName("지난달 소비내역 통계를 모두 반환한다.")
+    @Test
+    void compareLastMonthExpense() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime lastMonth = now.minusMonths(1);
+
+        Member member = memberGenerator.generateSaved("멤버1");
+        Pet savedPet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
+        crewGenerator.generateSaveCrews(petGroup, List.of(member));
+
+        memberExpenseGenerator.generateSaved(
+                lastMonth.toLocalDate(),
+                "코코 과자",
+                5000,
+                "식비",
+                "소분류",
+                null,
+                now,
+                member
+        );
+        memberExpenseGenerator.generateSaved(
+                lastMonth.toLocalDate(),
+                "코코 약",
+                5000,
+                "의료",
+                "소분류",
+                null,
+                now,
+                member
+        );
+        memberExpenseGenerator.generateSaved(
+                now.toLocalDate(),
+                "코코 진료비",
+                10000,
+                "의료",
+                "소분류",
+                null,
+                now,
+                member
+        );
+        memberExpenseGenerator.generateSaved(
+                now.toLocalDate(),
+                "코코 옷",
+                20000,
+                "물품구매",
+                "소분류",
+                null,
+                now,
+                member
+        );
+
+        LastMonthComparisonResponse response = memberExpenseService.compareLastMonthExpense(member);
+
+        assertAll(
+                () -> assertThat(response.totalRatio()).isEqualTo(200),
+                () -> assertThat(response.medicalRatio()).isEqualTo(100),
+                () -> assertThat(response.petName()).isEqualTo(savedPet.getName()),
+                () -> assertThat(response.petImageUrl()).isEqualTo(member.getImageUrl())
+        );
+    }
+
+    @DisplayName("지난달 소비내역이 0원일 때는 ratio로 null을 반환한다.")
+    @Test
+    void compareLastMonthExpense_lastMonthZero() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+
+        Member member = memberGenerator.generateSaved("멤버1");
+        Pet savedPet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
+        crewGenerator.generateSaveCrews(petGroup, List.of(member));
+        memberExpenseGenerator.generateSaved(
+                now.toLocalDate(),
+                "코코 진료비",
+                15000,
+                "의료",
+                "소분류",
+                null,
+                now,
+                member
+        );
+        memberExpenseGenerator.generateSaved(
+                now.toLocalDate(),
+                "코코 옷",
+                20000,
+                "물품구매",
+                "소분류",
+                null,
+                now,
+                member
+        );
+
+        LastMonthComparisonResponse response = memberExpenseService.compareLastMonthExpense(member);
+
+        assertAll(
+                () -> assertThat(response.totalRatio()).isNull(),
+                () -> assertThat(response.medicalRatio()).isNull(),
+                () -> assertThat(response.petName()).isEqualTo(savedPet.getName()),
+                () -> assertThat(response.petImageUrl()).isEqualTo(member.getImageUrl())
+        );
     }
 
     @DisplayName("소비 내역 생성, 수정, 삭제 요청을 모두 반영한다.")

@@ -5,6 +5,7 @@ import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
+import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesUpsertResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,12 +25,6 @@ public interface MemberExpenseControllerSwagger {
     @Operation(summary = "기간 내의 개인 소비내역 반환",
             description = "시작일/종료일을 기준으로 기간 내 개인 소비내역을 최신순으로 조회합니다.",
             parameters = {
-                    @Parameter(
-                            name = "memberId",
-                            description = "회원 ID",
-                            example = "1",
-                            required = true
-                    ),
                     @Parameter(
                             name = "startDate",
                             description = "조회 시작일 (yyyy-MM-dd)",
@@ -57,6 +52,21 @@ public interface MemberExpenseControllerSwagger {
             Member member,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate
+    );
+
+    @Operation(summary = "지난달 소비 내역 통계",
+            description = "지난달 소비내역과 의료비 소비내역 통계를 반환합니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "지난달 소비 내역 통계 반환 성공",
+                            content = @Content(schema = @Schema(implementation = LastMonthComparisonResponse.class))
+                    ),
+
+            })
+    ResponseEntity<LastMonthComparisonResponse> compareLastMonthExpense(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member
     );
 
     @Operation(summary = "개인 소비 지출 입력",

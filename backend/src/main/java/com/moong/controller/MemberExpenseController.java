@@ -3,6 +3,7 @@ package com.moong.controller;
 import com.moong.annotation.auth.AuthMember;
 import com.moong.domain.entity.Member;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
+import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
 import com.moong.controller.swagger.MemberExpenseControllerSwagger;
 import com.moong.dto.response.memberexpense.MemberExpensesUpsertResponse;
@@ -34,6 +35,15 @@ public class MemberExpenseController implements MemberExpenseControllerSwagger {
         MemberExpensesPeriodResponse response = memberExpenseService
                 .getMemberExpensesByPeriod(member, startDate, endDate);
 
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/compare/last-month")
+    public ResponseEntity<LastMonthComparisonResponse> compareLastMonthExpense(
+            @AuthMember Member member
+    ) {
+        LastMonthComparisonResponse response = memberExpenseService
+                .compareLastMonthExpense(member);
         return ResponseEntity.ok(response);
     }
 

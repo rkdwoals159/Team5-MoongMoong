@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
 
 public interface MemberExpenseRepository extends Repository<MemberExpense, Long>, MemberExpenseJdbcRepository {
 
@@ -39,6 +40,32 @@ public interface MemberExpenseRepository extends Repository<MemberExpense, Long>
             LocalDate startDate,
             LocalDate endDate,
             Sort sort
+    );
+
+    @Query("""
+            select coalesce(sum(me.cost), 0)
+            from MemberExpense me
+            where me.member.id = :memberId
+              and me.spentAt between :startDate and :endDate
+            """)
+    long sumCostByMemberIdAndPeriod(
+            @Param("memberId") long memberId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
+
+    @Query("""
+            select coalesce(sum(me.cost), 0)
+            from MemberExpense me
+            where me.member.id = :memberId
+              and me.mainCategory = :mainCategory
+              and me.spentAt between :startDate and :endDate
+            """)
+    long sumCostByMemberIdAndMainCategoryAndPeriod(
+            long memberId,
+            String mainCategory,
+            LocalDate startDate,
+            LocalDate endDate
     );
 
     @Query("""

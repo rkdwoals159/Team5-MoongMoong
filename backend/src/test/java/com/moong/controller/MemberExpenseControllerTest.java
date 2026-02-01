@@ -1,14 +1,20 @@
 package com.moong.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.entity.Pet;
+import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.memberexpense.MemberExpenseUpsertRequest;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
+import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesUpsertResponse;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,6 +54,119 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 .get("/api/expenses")
                 .then()
                 .statusCode(400);
+    }
+
+    @DisplayName("지난달 소비내역 통계를 모두 반환한다.")
+    @Test
+    void compareLastMonthExpense() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime lastMonth = now.minusMonths(1);
+
+        Member member = memberGenerator.generateSaved("멤버1");
+        Pet savedPet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
+        crewGenerator.generateSaveCrews(petGroup, List.of(member));
+        memberExpenseGenerator.generateSaved(
+                lastMonth.toLocalDate(),
+                "코코 과자",
+                5000,
+                "식비",
+                "소분류",
+                null,
+                now,
+                member
+        );
+        memberExpenseGenerator.generateSaved(
+                lastMonth.toLocalDate(),
+                "코코 약",
+                5000,
+                "의료",
+                "소분류",
+                null,
+                now,
+                member
+        );
+        memberExpenseGenerator.generateSaved(
+                now.toLocalDate(),
+                "코코 진료비",
+                10000,
+                "의료",
+                "소분류",
+                null,
+                now,
+                member
+        );
+        memberExpenseGenerator.generateSaved(
+                now.toLocalDate(),
+                "코코 옷",
+                20000,
+                "물품구매",
+                "소분류",
+                null,
+                now,
+                member
+        );
+
+        LastMonthComparisonResponse response = given().log().all()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .get("/api/expenses/compare/last-month")
+                .then()
+                .statusCode(200)
+                .extract().as(LastMonthComparisonResponse.class);
+
+        assertAll(
+                () -> assertThat(response.totalRatio()).isEqualTo(200),
+                () -> assertThat(response.medicalRatio()).isEqualTo(100),
+                () -> assertThat(response.petName()).isEqualTo(savedPet.getName()),
+                () -> assertThat(response.petImageUrl()).isEqualTo(member.getImageUrl())
+        );
+    }
+
+    @DisplayName("지난달 소비내역이 0원일 때는 ratio로 null을 반환한다.")
+    @Test
+    void compareLastMonthExpense_lastMonthZero() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+
+        Member member = memberGenerator.generateSaved("멤버1");
+        Pet savedPet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
+        crewGenerator.generateSaveCrews(petGroup, List.of(member));
+        memberExpenseGenerator.generateSaved(
+                now.toLocalDate(),
+                "코코 진료비",
+                15000,
+                "의료",
+                "소분류",
+                null,
+                now,
+                member
+        );
+        memberExpenseGenerator.generateSaved(
+                now.toLocalDate(),
+                "코코 옷",
+                20000,
+                "물품구매",
+                "소분류",
+                null,
+                now,
+                member
+        );
+
+        LastMonthComparisonResponse response = given().log().all()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .get("/api/expenses/compare/last-month")
+                .then()
+                .statusCode(200)
+                .extract().as(LastMonthComparisonResponse.class);
+
+        assertAll(
+                () -> assertThat(response.totalRatio()).isNull(),
+                () -> assertThat(response.medicalRatio()).isNull(),
+                () -> assertThat(response.petName()).isEqualTo(savedPet.getName()),
+                () -> assertThat(response.petImageUrl()).isEqualTo(member.getImageUrl())
+        );
     }
 
     @DisplayName("소비내역 생성, 수정, 삭제 요청을 성공한다")
