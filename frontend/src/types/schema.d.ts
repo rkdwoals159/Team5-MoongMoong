@@ -11,7 +11,11 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get?: never;
+    /**
+     * 반려동물 정보 조회
+     * @description 로그인한 회원의 반려동물 정보를 조회합니다.
+     */
+    get: operations["findPetInfo"];
     put?: never;
     /**
      * 반려동물 등록
@@ -51,7 +55,11 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get?: never;
+    /**
+     * 저금통 정보 조회
+     * @description 저금통의 현재, 목표 금액을 반환합니다
+     */
+    get: operations["findBankInfo"];
     put?: never;
     /**
      * 저금통 생성
@@ -59,10 +67,18 @@ export interface paths {
      *     목표 금액을 가진 저금통을 생성합니다.
      */
     post: operations["createBank"];
-    delete?: never;
+    /**
+     * 저금통 깨기
+     * @description 저금통을 깨고, 저축 기간과 축하 메시지를 반환합니다.
+     */
+    delete: operations["breakBank"];
     options?: never;
     head?: never;
-    patch?: never;
+    /**
+     * 저금통 목표 금액 변경
+     * @description 저금통 목표 금액을 변경하고, 변경된 금액을 반환합니다.
+     */
+    patch: operations["updateBank"];
     trace?: never;
   };
   "/api/expenses": {
@@ -87,6 +103,42 @@ export interface paths {
      * @description 개인 소비 내역을 생성하거나 수정하고, 삭제 대상 내역은 함께 제거합니다.
      */
     patch: operations["upsertMemberExpenses"];
+    trace?: never;
+  };
+  "/api/member": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["findMember"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/group/medical/statistics": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 그룹 질병 통계 조회
+     * @description 회원이 속한 그룹의 질병별 연도 통계 데이터를 조회합니다.
+     */
+    get: operations["findGroupDieseaseStatistics"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
     trace?: never;
   };
   "/api/group/medical/info": {
@@ -143,6 +195,26 @@ export interface paths {
      *     그리고 치료비의 최소·최대·평균값을 조회합니다.
      */
     get: operations["getTreatment"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/group/bank/coins": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 모임가계부 저금통 코인 내역 반환
+     * @description 저금통의 코인 내역의 정보들의 리스트를 반환합니다.
+     */
+    get: operations["findCoins"];
     put?: never;
     post?: never;
     delete?: never;
@@ -320,7 +392,7 @@ export interface components {
       city?: string;
       /**
        * @description 거주 구역
-       * @example 종로주
+       * @example 종로구
        */
       district?: string;
       /**
@@ -341,12 +413,6 @@ export interface components {
         | "END"
         | "INF"
       )[];
-    };
-    ErrorResponse: {
-      code?: string;
-      /** Format: int32 */
-      status?: number;
-      message?: string;
     };
     /** @description 반려동물 생성 응답 */
     PetCreateResponse: {
@@ -432,7 +498,7 @@ export interface components {
       city?: string;
       /**
        * @description 거주 구역
-       * @example 종로주
+       * @example 종로구
        */
       district?: string;
       /**
@@ -457,12 +523,11 @@ export interface components {
         | "INF"
       )[];
     };
-    Member: {
-      /** Format: int64 */
-      id?: number;
-      email: string;
-      name: string;
-      imageUrl?: string;
+    ErrorResponse: {
+      code?: string;
+      /** Format: int32 */
+      status?: number;
+      message?: string;
     };
     /** @description 그룹 초대 요청 */
     PetGroupParticipateRequest: {
@@ -486,7 +551,7 @@ export interface components {
       /**
        * Format: int64
        * @description 저금통 목표 금액
-       * @example 15000000
+       * @example 1500000
        */
       target?: number;
     };
@@ -502,6 +567,24 @@ export interface components {
        * Format: int64
        * @description 저금통 목표 금액
        * @example 15000000
+       */
+      target?: number;
+    };
+    /** @description 저금통 목표 금액 변경 요청 */
+    BankUpdateRequest: {
+      /**
+       * Format: int64
+       * @description 저금통 목표 금액
+       * @example 1500000
+       */
+      target?: number;
+    };
+    /** @description 저금통 목표 금액 변경 응답 */
+    BankUpdateResponse: {
+      /**
+       * Format: int64
+       * @description 저금통 목표 금액
+       * @example 1500000
        */
       target?: number;
     };
@@ -607,6 +690,171 @@ export interface components {
       /** @description 삭제할 소비내역 ID 목록 */
       deletedIds?: number[];
     };
+    /** @description 반려동물 정보 응답 */
+    PetReadResponse: {
+      /**
+       * Format: int64
+       * @description 반려동물 아이디
+       * @example 1
+       */
+      petId?: number;
+      /**
+       * @description 반려동물 이름
+       * @example 초코
+       */
+      petName?: string;
+      /**
+       * @description 반려동물 종류
+       * @example DAS
+       * @enum {string}
+       */
+      breed?:
+        | "GRE"
+        | "DAL"
+        | "DAS"
+        | "DOB"
+        | "GOL"
+        | "LAB"
+        | "MAL"
+        | "BUL"
+        | "BEA"
+        | "BIC"
+        | "SHE"
+        | "SCH"
+        | "MIL"
+        | "MIS"
+        | "HUS"
+        | "HOU"
+        | "GER"
+        | "JIN"
+        | "CHS"
+        | "CHL"
+        | "COC"
+        | "TER"
+        | "POM"
+        | "POO"
+        | "SHI"
+        | "WEL"
+        | "ETC";
+      /**
+       * @description 성별
+       * @example M
+       * @enum {string}
+       */
+      gender?: "M" | "F";
+      /**
+       * @description 생년 월
+       * @example 2026-02
+       */
+      birthDate?: {
+        /** Format: int32 */
+        year?: number;
+        /** @enum {string} */
+        month?:
+          | "JANUARY"
+          | "FEBRUARY"
+          | "MARCH"
+          | "APRIL"
+          | "MAY"
+          | "JUNE"
+          | "JULY"
+          | "AUGUST"
+          | "SEPTEMBER"
+          | "OCTOBER"
+          | "NOVEMBER"
+          | "DECEMBER";
+        /** Format: int32 */
+        monthValue?: number;
+        leapYear?: boolean;
+      };
+      /**
+       * @description 거주 시
+       * @example 서울시
+       */
+      city?: string;
+      /**
+       * @description 거주 구역
+       * @example 종로구
+       */
+      district?: string;
+      /**
+       * @description 우려하는 질병 목록
+       * @example [
+       *       "OCU",
+       *       "MUS"
+       *     ]
+       */
+      diseases?: (
+        | "DER"
+        | "MUS"
+        | "NEU"
+        | "OCU"
+        | "RES"
+        | "CAR"
+        | "HEM"
+        | "GAS"
+        | "URI"
+        | "REP"
+        | "END"
+        | "INF"
+      )[];
+    };
+    Member: {
+      /** Format: int64 */
+      id?: number;
+      email: string;
+      name: string;
+      imageUrl?: string;
+    };
+    MemberInfoResponse: {
+      memberName?: string;
+      memberImageUrl?: string;
+    };
+    /** @description 그룹 질병 통계 응답 */
+    GroupMedicalStatisticsResponse: {
+      /**
+       * Format: int64
+       * @description 통계 시작 연도
+       * @example 2026
+       */
+      startYear?: number;
+      /** @description 질병별 통계 목록 */
+      statistics?: components["schemas"]["MedicalStatisticsResponse"][];
+    };
+    /** @description 질병별 통계 정보 */
+    MedicalStatisticsResponse: {
+      /**
+       * @description 질병 코드
+       * @example DER
+       * @enum {string}
+       */
+      disease?:
+        | "DER"
+        | "MUS"
+        | "NEU"
+        | "OCU"
+        | "RES"
+        | "CAR"
+        | "HEM"
+        | "GAS"
+        | "URI"
+        | "REP"
+        | "END"
+        | "INF";
+      /**
+       * @description 질병 확률 리스트
+       * @example [
+       *       12,
+       *       14,
+       *       16,
+       *       18,
+       *       20,
+       *       22,
+       *       24
+       *     ]
+       */
+      ratios?: number[];
+    };
     /** @description 그룹 의사 권장사항 응답 */
     GroupMedicalInfoResponse: {
       /**
@@ -677,6 +925,66 @@ export interface components {
     TreatmentsResponse: {
       /** @description 특정 질병의 의료비 데이터 리스트 응답 */
       treatments?: components["schemas"]["TreatmentResponse"][];
+    };
+    BankInfoResponse: {
+      /**
+       * Format: int64
+       * @description 저금통 ID
+       * @example 1
+       */
+      bankId?: number;
+      /**
+       * Format: int64
+       * @description 현재 저축 금액
+       * @example 75000
+       */
+      current?: number;
+      /**
+       * Format: int64
+       * @description 목표 저축 금액
+       * @example 200000
+       */
+      target?: number;
+      rankings?: components["schemas"]["BankRankingResponse"][];
+    };
+    /** @description 저금통 랭킹 정보 */
+    BankRankingResponse: {
+      /**
+       * @description 사용자 이름
+       * @example 건우
+       */
+      userName?: string;
+      /**
+       * Format: int64
+       * @description 누적 저축 금액
+       * @example 150000
+       */
+      total?: number;
+    };
+    /** @description 코인 내역 */
+    CoinResponse: {
+      /**
+       * @description 저금한 멤버 닉네임
+       * @example 코코맘
+       */
+      name?: string;
+      /**
+       * Format: int64
+       * @description 저금한 금액
+       * @example 5000
+       */
+      amount?: number;
+      /**
+       * Format: date-time
+       * @description 생성 일자
+       * @example 2026-01-30T14:32:15.123+09:00
+       */
+      createdAt?: string;
+    };
+    /** @description 저금통 코인 내역 조회 응답 */
+    CoinsResponse: {
+      /** @description 저금통 코인 내역 리스트 */
+      coins?: components["schemas"]["CoinResponse"][];
     };
     /** @description 멤버 소비내역 기간 조회 응답 */
     MemberExpensesPeriodResponse: {
@@ -828,6 +1136,20 @@ export interface components {
        */
       ratio?: number;
     };
+    /** @description 저금통 깨기 응답 */
+    BankBreakResponse: {
+      /**
+       * Format: int64
+       * @description 저금통을 유지한 총 일수
+       * @example 42
+       */
+      days?: number;
+      /**
+       * @description 저금통을 깼을 때 출력되는 축하 메시지
+       * @example 축하해요! 저금통이 열렸어요!
+       */
+      message?: string;
+    };
   };
   responses: never;
   parameters: never;
@@ -837,6 +1159,53 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+  findPetInfo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 반려동물 정보 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PetReadResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 반려동물 정보가 없을 때 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
   savePet: {
     parameters: {
       query?: never;
@@ -881,9 +1250,7 @@ export interface operations {
   };
   participate: {
     parameters: {
-      query: {
-        member: components["schemas"]["Member"];
-      };
+      query?: never;
       header?: never;
       path?: never;
       cookie?: never;
@@ -920,6 +1287,44 @@ export interface operations {
       };
       /** @description 인증되지 않은 사용자 */
       401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  findBankInfo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 저금통 정보 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BankInfoResponse"];
+        };
+      };
+      /** @description 저금통이 아직 존재하지 않음 */
+      404: {
         headers: {
           [name: string]: unknown;
         };
@@ -989,6 +1394,99 @@ export interface operations {
       };
     };
   };
+  breakBank: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 저금통 깨기 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["BankBreakResponse"];
+        };
+      };
+      /** @description 그룹 저금통이 아직 없을 때 */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  updateBank: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json;charset=UTF-8": components["schemas"]["BankUpdateRequest"];
+      };
+    };
+    responses: {
+      /** @description 저금통 목표 금액 변경 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["BankUpdateResponse"];
+        };
+      };
+      /**
+       * @description - 현재 저금통에 쌓인 금액보다 낮은 금액으로 변경 시도
+       *     - 목표 금액이 1000만원 초과
+       *     - 목표 금액이 0원 이하
+       */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 저금통이 아직 존재하지 않음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
   getMemberExpensesByPeriod: {
     parameters: {
       query: {
@@ -1007,7 +1505,6 @@ export interface operations {
          * @example 2026-01-31
          */
         endDate: string;
-        // member: components["schemas"]["Member"];
       };
       header?: never;
       path?: never;
@@ -1074,6 +1571,48 @@ export interface operations {
         };
         content: {
           "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  findMember: {
+    parameters: {
+      query: {
+        member: components["schemas"]["Member"];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["MemberInfoResponse"];
+        };
+      };
+    };
+  };
+  findGroupDieseaseStatistics: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["GroupMedicalStatisticsResponse"];
         };
       };
     };
@@ -1188,6 +1727,44 @@ export interface operations {
       };
       /** @description 인증되지 않은 사용자 */
       401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  findCoins: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 저금통 코인 내역 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CoinsResponse"];
+        };
+      };
+      /** @description 저금통이 아직 존재하지 않음 */
+      404: {
         headers: {
           [name: string]: unknown;
         };

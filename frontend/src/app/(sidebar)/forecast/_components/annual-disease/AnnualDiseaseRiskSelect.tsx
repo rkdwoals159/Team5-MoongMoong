@@ -1,12 +1,14 @@
 import FilterChip from "@/components/common/FilterChip/FilterChip";
 import Button from "@/components/common/Button/Button";
+import { DiseaseCode } from "@/app/(sidebar)/forecast/_types";
+import { DISEASE_CODE_FULL_NAMES } from "../../_constants";
 
 type AnnualDiseaseRiskSelectProps = {
-  selectedDiseases: string[];
-  unselectedDiseases: string[];
+  selectedDiseases: DiseaseCode[];
+  unselectedDiseases: DiseaseCode[];
   onReset: () => void;
-  onCancel: (label: string) => void;
-  onSelect: (label: string) => void;
+  onCancel: (code: DiseaseCode) => void;
+  onSelect: (code: DiseaseCode) => void;
 };
 
 const AnnualDiseaseRiskSelect = ({
@@ -28,21 +30,25 @@ const AnnualDiseaseRiskSelect = ({
       </Button>
     </div>
     <div className="flex flex-wrap gap-300">
-      {selectedDiseases.map((label, index) => (
+      {selectedDiseases.map((code, index) => (
         <FilterChip
-          key={label}
-          label={label}
+          key={code}
+          label={DISEASE_CODE_FULL_NAMES[code]}
           number={index + 1}
           hasCancelIcon
           colorIndicator
-          onCancel={() => onCancel(label)}
+          onCancel={() => onCancel(code)}
         />
       ))}
     </div>
     <div className="w-full border-t border-dashed border-gray-100 my-500" />
     <div className="flex flex-wrap gap-300">
-      {unselectedDiseases.map((label) => (
-        <FilterChip key={label} label={label} onSelect={() => onSelect(label)} />
+      {unselectedDiseases.map((code) => (
+        <FilterChip
+          key={code}
+          label={DISEASE_CODE_FULL_NAMES[code]}
+          onSelect={() => onSelect(code)}
+        />
       ))}
     </div>
   </div>

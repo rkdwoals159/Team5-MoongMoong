@@ -7,8 +7,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { RiskLineRow } from "@/app/(sidebar)/forecast/forecast.type";
-import { DISEASE_CODE_BY_KO, DISEASE_KO_BY_CODE } from "@/app/(sidebar)/forecast/forecast-util";
+import { DiseaseCode, RiskLineRow } from "@/app/(sidebar)/forecast/_types";
+import { DISEASE_CODE_FULL_NAMES } from "@/app/(sidebar)/forecast/_constants";
 const tooltipStyles = {
   backgroundColor: "var(--color-white-100)",
   borderColor: "var(--color-gray-100)",
@@ -21,7 +21,7 @@ const AnnualDiseaseRiskChart = ({
   selectedDiseases,
 }: {
   chartData: RiskLineRow[];
-  selectedDiseases: string[];
+  selectedDiseases: DiseaseCode[];
 }) => {
   return (
     <div className="h-[260px] w-full pt-600">
@@ -43,17 +43,15 @@ const AnnualDiseaseRiskChart = ({
           <Tooltip
             contentStyle={tooltipStyles}
             labelStyle={{ color: "var(--color-gray-600)", fontSize: 12 }}
-            formatter={(value, name) => {
-              const diseaseLabel =
-                DISEASE_KO_BY_CODE[name as keyof typeof DISEASE_KO_BY_CODE] ?? String(name);
-              return [`${value}%`, `${diseaseLabel} 위험도`];
+            formatter={(value, code) => {
+              return [`${value}%`, `${DISEASE_CODE_FULL_NAMES[code as DiseaseCode]} 위험도`];
             }}
           />
-          {selectedDiseases.map((disease, index) => (
+          {selectedDiseases.map((code, index) => (
             <Line
-              key={disease}
+              key={`${code}-${index}`}
               type="monotone"
-              dataKey={DISEASE_CODE_BY_KO[disease]}
+              dataKey={code}
               stroke={resolveIndicatorColor(index + 1)}
               strokeWidth={3}
               dot={{ r: 3, fill: resolveIndicatorColor(index + 1) }}

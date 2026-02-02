@@ -1,58 +1,51 @@
 import PaginationButton from "@/components/common/PaginationButton/PaginationButton";
 import TreatmentCard from "@/app/(sidebar)/forecast/_components/medical-expense/TreatmentCard";
-import SkeletonCard from "@/app/(sidebar)/forecast/_components/medical-expense/TreatmentSkeletonCard";
-import { DiseaseCostResponse } from "@/app/(sidebar)/forecast/forecast.type";
+import { DiseaseCode, DiseaseCostResponse } from "@/app/(sidebar)/forecast/_types";
+import Link from "next/link";
 
 type Treatment = DiseaseCostResponse["treatments"][number];
 
 type MedicalExpenseTreatmentsProps = {
-  isLoading: boolean;
   visibleTreatments: Treatment[];
-  skeletonCount: number;
   totalPages: number;
-  canGoPrev: boolean;
-  canGoNext: boolean;
-  onPrev: () => void;
-  onNext: () => void;
+  selectedDisease: DiseaseCode;
+  currentPage: number;
 };
 
 const MedicalExpenseTreatments = ({
-  isLoading,
   visibleTreatments,
-  skeletonCount,
   totalPages,
-  canGoPrev,
-  canGoNext,
-  onPrev,
-  onNext,
+  selectedDisease,
+  currentPage,
 }: MedicalExpenseTreatmentsProps) => {
   return (
     <div className={cardsContainerClasses}>
       <div className={cardsGridClasses}>
-        {isLoading
-          ? Array.from({ length: skeletonCount }).map((_, i) => <SkeletonCard key={i} />)
-          : visibleTreatments.map((treatment) => (
-              <TreatmentCard key={treatment.name} treatment={treatment} />
-            ))}
+        {visibleTreatments.map((treatment) => (
+          <TreatmentCard key={`${treatment.name}-${treatment.description}`} treatment={treatment} />
+        ))}
       </div>
 
-      {!isLoading && totalPages > 1 && (
+      {totalPages > 1 && (
         <>
-          {canGoPrev && (
-            <PaginationButton
-              direction="left"
-              isDisabled={false}
+          {/* TODO: 페이지네이션 버튼 nesting 해결 */}
+          {currentPage > 0 && (
+            <Link
+              href={`?disease=${selectedDisease}&page=${currentPage - 1}`}
+              scroll={false}
               className="absolute left-[-23px] top-1/2 -translate-y-1/2"
-              onClick={onPrev}
-            />
+            >
+              <PaginationButton direction="left" />
+            </Link>
           )}
-          {canGoNext && (
-            <PaginationButton
-              direction="right"
-              isDisabled={false}
+          {currentPage < totalPages - 1 && (
+            <Link
+              href={`?disease=${selectedDisease}&page=${currentPage + 1}`}
+              scroll={false}
               className="absolute right-[-20px] top-1/2 -translate-y-1/2"
-              onClick={onNext}
-            />
+            >
+              <PaginationButton direction="right" />
+            </Link>
           )}
         </>
       )}

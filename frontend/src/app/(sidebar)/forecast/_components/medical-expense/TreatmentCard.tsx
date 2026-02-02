@@ -1,4 +1,4 @@
-import { TreatmentCardProps } from "@/app/(sidebar)/forecast/forecast.type";
+import { TreatmentCardProps } from "@/app/(sidebar)/forecast/_types";
 
 const TreatmentCard = ({ treatment }: TreatmentCardProps) => {
   const { name, description, minPrice, maxPrice, averagePrice } = treatment;

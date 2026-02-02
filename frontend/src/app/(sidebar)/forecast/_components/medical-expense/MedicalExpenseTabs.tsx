@@ -1,35 +1,32 @@
-import { DiseaseCode } from "@/app/(sidebar)/forecast/forecast.type";
-import { DISEASE_CODE_SHORT_NAMES } from "@/app/(sidebar)/forecast/forecast.constants";
+import { DiseaseCode } from "@/app/(sidebar)/forecast/_types";
+import { DISEASE_CODE_SHORT_NAMES } from "@/app/(sidebar)/forecast/_constants";
+import Link from "next/link";
+import cn from "@/utils/style";
 
 type MedicalExpenseTabsProps = {
   diseaseList: DiseaseCode[];
   selectedDisease: DiseaseCode;
-  onSelect: (disease: DiseaseCode) => void;
 };
 
-const MedicalExpenseTabs = ({
-  diseaseList,
-  selectedDisease,
-  onSelect,
-}: MedicalExpenseTabsProps) => {
+const MedicalExpenseTabs = ({ diseaseList, selectedDisease }: MedicalExpenseTabsProps) => {
   return (
     <div className={tabScrollContainerClasses}>
-      <div className={tabScrollClasses}>
+      <div className={tabScrollClasses} role="tablist" aria-label="질병 선택">
         {diseaseList.map((diseaseCode, index) => {
           const label = DISEASE_CODE_SHORT_NAMES[diseaseCode];
           const isSelected = diseaseCode === selectedDisease;
           return (
-            <div key={diseaseCode} className="flex items-center">
-              <button
-                type="button"
-                onClick={() => onSelect(diseaseCode)}
-                className={`${tabBaseClasses} ${isSelected ? tabSelectedClasses : tabUnselectedClasses}`}
-              >
-                {index < 3 && <RankingTag rank={index + 1} />}
-                {label ?? diseaseCode}
-              </button>
-              <div className="border-r border-gray-100 h-full" />
-            </div>
+            <Link
+              key={diseaseCode}
+              href={`?disease=${diseaseCode}&page=0`}
+              scroll={false}
+              className={cn(tabBaseClasses, isSelected ? tabSelectedClasses : tabUnselectedClasses)}
+              role="tab"
+              aria-selected={isSelected}
+            >
+              {index < 3 && <RankingTag rank={index + 1} />}
+              {label}
+            </Link>
           );
         })}
       </div>

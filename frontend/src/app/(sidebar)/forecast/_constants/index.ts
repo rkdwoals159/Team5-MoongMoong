@@ -1,5 +1,10 @@
-import { DiseaseCode } from "./forecast.type";
+import type { DiseaseCode } from "@/app/(sidebar)/forecast/_types";
+export const ONE_DAY = 60 * 60 * 24;
+export const ONE_HOUR = 60 * 60;
+export const ONE_MINUTE = 60;
+export const ONE_SECOND = 1;
 
+// TODO: 질병 매핑 DB 에 탑재하기
 export const DISEASE_TAB_ORDER: DiseaseCode[] = [
   "DER",
   "OCU",
@@ -30,8 +35,26 @@ export const DISEASE_CODE_SHORT_NAMES: Record<DiseaseCode, string> = {
   GAS: "소화기",
 } as const;
 
+export const DISEASE_CODE_FULL_NAMES: Record<DiseaseCode, string> = {
+  DER: "피부과 질환",
+  MUS: "근골격계 질환",
+  NEU: "신경계 질환",
+  OCU: "안과 질환",
+  RES: "호흡기 질환",
+  CAR: "심장/순환기 질환",
+  HEM: "혈액 질환",
+  GAS: "소화기 질환",
+  URI: "비뇨기 질환",
+  REP: "생식기 질환",
+  END: "내분비 질환",
+  INF: "감염성 질환",
+} as const;
+
 export const TITLE_TEXT = "AI 의사 권장사항";
 export const TOOLTIP_DESCRIPTION =
   "AI가 분석한 의료비 예측 결과와 권장사항입니다. 정기적인 건강 관리를 통해 예상 의료비를 줄일 수 있습니다.";
 export const AI_RECOMMENDATION_DESCRIPTION =
   "반려견 데이터를 학습한 AI 모델이 반려견의 정보를 기반으로 향후 특정 질병 발생 확률을 추정합니다.";
+
+export const DEFAULT_SELECT_COUNT = 3;
+export const PAGE_SIZE = 3;
