@@ -14,11 +14,25 @@ export function useEditableRows<T>(initialData: T[]) {
     );
   }, []);
 
+  const updateCellOrAppend = useCallback(
+    (rowIndex: number, accessor: keyof T, value: string, emptyRow: T) => {
+      setRows((prev) => {
+        if (rowIndex < prev.length) {
+          return prev.map((item, index) =>
+            index === rowIndex ? { ...item, [accessor]: value } : item,
+          );
+        }
+        return [...prev, { ...emptyRow, [accessor]: value }];
+      });
+    },
+    [],
+  );
+
   // TODO: 클라이언트에서 데이터 재요청 로직
   // const refreshData = async () => {
   //   const newData = await fetch('/api/expenses').then(res => res.json());
   //   setRows(newData);
   // };
 
-  return { rows, updateCell };
+  return { rows, updateCell, updateCellOrAppend };
 }

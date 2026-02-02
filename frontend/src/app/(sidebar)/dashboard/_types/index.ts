@@ -72,3 +72,13 @@ export type ProgressCardProps = {
   petName?: string;
   className?: string;
 };
+
+/**
+ * ExpenseTableToolbar 컴포넌트 타입 (지출 테이블 하단 툴바)
+ */
+export type ExpenseTableToolbarProps = {
+  totalExpense?: number;
+  selectedCount?: number;
+  hasUnsavedChanges?: boolean;
+  className?: string;
+};

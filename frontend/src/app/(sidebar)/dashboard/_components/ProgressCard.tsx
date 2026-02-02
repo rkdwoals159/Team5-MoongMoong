@@ -1,4 +1,4 @@
-import { ProgressCardProps } from "../_types/dashboard.type";
+import { ProgressCardProps } from "../_types";
 import cn from "@/utils/style";
 import GraphDegradeIcon from "@/assets/icons/dashboard/img_graph_degrade.svg";
 import GraphRisingIcon from "@/assets/icons/dashboard/img_graph_rising.svg";

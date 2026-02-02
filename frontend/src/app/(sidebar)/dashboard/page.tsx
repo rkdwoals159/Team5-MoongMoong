@@ -1,6 +1,7 @@
-import EditableDataTable from "./_components/EditableDataTable";
+import DashboardTableSection from "./_components/DashboardTableSection";
+import ExpenseTableToolbar from "./_components/ExpenseTableToolbar";
 import ProgressSummarySection from "./_components/ProgressSummarySection";
-import { ExpenseData, ProgressData, ImageData } from "./_types/dashboard.type";
+import { ExpenseData, ProgressData, ImageData } from "./_types";
 
 // TODO: API 호출 (SERVER)
 const initialData: ExpenseData[] = [
@@ -93,9 +94,16 @@ const imageData: ImageData = {
 
 export default function DashboardHomePage() {
   return (
-    <div className="p-8 flex flex-col gap-850">
-      <ProgressSummarySection data={progressData} image={imageData} />
-      <EditableDataTable initialData={initialData} className="h-[480px]" />
-    </div>
+    <>
+      <div className="flex-1 min-h-0 flex flex-col gap-850 px-8">
+        <ProgressSummarySection data={progressData} image={imageData} />
+        <DashboardTableSection
+          initialData={initialData}
+          tableClassName="min-h-0 flex-1 overflow-auto"
+        />
+      </div>
+      {/* TODO: totalExpense, selectedCount, hasUnsavedChanges 상태 전달 방법 고민 */}
+      <ExpenseTableToolbar totalExpense={1000000} selectedCount={2} hasUnsavedChanges={true} />
+    </>
   );
 }

@@ -1,11 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { MAIN_CATEGORIES, SUB_CATEGORIES } from "../_constants/categoryMap";
-import { CategoryPopupProps } from "../_types/dashboard.type";
-
-/** 팝업 높이 (위치 계산용으로 EditableDataTable에서도 사용) */
-export const CATEGORY_POPUP_HEIGHT = 336;
+import { CATEGORY_POPUP_HEIGHT, MAIN_CATEGORIES, SUB_CATEGORIES } from "../_constants";
+import { CategoryPopupProps } from "../_types";
 
 /**
  * 카테고리 선택 팝업
