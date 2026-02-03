@@ -1,0 +1,22 @@
+const WALL_THICKNESS = 36;
+
+export const PIGGY_BANK = {
+  GRAVITY: 1.1,
+  DEFAULT_WIDTH: 800,
+  DEFAULT_HEIGHT: 420,
+  WALL_THICKNESS,
+  WALL_OFFSET: WALL_THICKNESS / 2,
+  FLOOR_OVERFLOW: 80,
+  BALL_DROP_OFFSET: 40,
+  MIN_RADIUS: 30,
+  SCALE_BASE: 268,
+  BALL_RESTITUTION: 0.45,
+  BALL_FRICTION: 0.1,
+  BALL_DROP_Y: 20,
+  LABEL_FILL_COLOR: "rgba(0, 0, 0, 0.5)",
+  LABEL_FONT: "bold 16px pretendard",
+  LABEL_RADIUS_RATIO: 0.7,
+  COIN_TEXTURE_PATH: "/images/img_coin_texture.png",
+} as const;
+
+export const DROP_DELAY = 200;
