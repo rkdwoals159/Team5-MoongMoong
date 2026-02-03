@@ -81,6 +81,34 @@ export interface paths {
     patch: operations["updateBank"];
     trace?: never;
   };
+  "/api/group/bank/coins": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 모임가계부 저금통 코인 내역 반환
+     * @description 저금통의 코인 내역의 정보들의 리스트를 반환합니다.
+     */
+    get: operations["findCoins"];
+    put?: never;
+    /**
+     * 저금하기
+     * @description 원하는 금액만큼을 저금합니다.
+     */
+    post: operations["createCoin"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 저금통 목표 금액 변경
+     * @description 저금통 목표 금액을 변경하고, 변경된 금액을 반환합니다.
+     */
+    patch: operations["updateBank"];
+    trace?: never;
+  };
   "/api/expenses": {
     parameters: {
       query?: never;
@@ -302,6 +330,26 @@ export interface paths {
      *     소비내역이 가장 많은 카테고리별 순으로 내림차순 정렬됩니다.
      */
     get: operations["findCategoryAnalysis"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/expenses/compare/last-month": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 지난달 소비 내역 통계
+     * @description 지난달 소비내역과 의료비 소비내역 통계를 반환합니다.
+     */
+    get: operations["compareLastMonthExpense"];
     put?: never;
     post?: never;
     delete?: never;
@@ -569,6 +617,41 @@ export interface components {
        * @example 15000000
        */
       target?: number;
+    };
+    /** @description 저금하기 요청 */
+    CoinCreateRequest: {
+      /**
+       * Format: int64
+       * @description 저금 금액
+       * @example 5000
+       */
+      amount?: number;
+    };
+    /** @description 저금하기 응답 */
+    CoinCreateResponse: {
+      /**
+       * Format: int64
+       * @description 저금 내역 ID
+       * @example 1
+       */
+      coinId?: number;
+      /**
+       * Format: date-time
+       * @description 생성 일자
+       * @example 2026-01-30T14:32:15.123+09:00
+       */
+      createdAt?: string;
+      /**
+       * Format: int64
+       * @description 저금 금액
+       * @example 5000
+       */
+      amount?: number;
+      /**
+       * @description 저금한 사람
+       * @example 민수
+       */
+      name?: string;
     };
     /** @description 저금통 목표 금액 변경 요청 */
     BankUpdateRequest: {
@@ -1136,6 +1219,31 @@ export interface components {
        */
       ratio?: number;
     };
+    /** @description 지난달 소비내역 통계 응답 */
+    LastMonthComparisonResponse: {
+      /**
+       * Format: int32
+       * @description 전월 대비 총 지출 변동률 (단위: %)
+       * @example -26
+       */
+      totalRatio?: number | null;
+      /**
+       * Format: int32
+       * @description 전월 대비 의료비 지출 변동률 (단위: %)
+       * @example 14
+       */
+      medicalRatio?: number | null;
+      /**
+       * @description 강아지 이름
+       * @example 코코
+       */
+      petName?: string;
+      /**
+       * @description 강아지 사진 URL
+       * @example https://avatars.githubusercontent.com/u/148152234?v=4
+       */
+      petImageUrl?: string;
+    };
     /** @description 저금통 깨기 응답 */
     BankBreakResponse: {
       /**
@@ -1412,8 +1520,8 @@ export interface operations {
           "application/json;charset=UTF-8": components["schemas"]["BankBreakResponse"];
         };
       };
-      /** @description 그룹 저금통이 아직 없을 때 */
-      400: {
+      /** @description 인증되지 않은 사용자 */
+      401: {
         headers: {
           [name: string]: unknown;
         };
@@ -1421,8 +1529,8 @@ export interface operations {
           "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
         };
       };
-      /** @description 인증되지 않은 사용자 */
-      401: {
+      /** @description 저금통이 아직 존재하지 않음 */
+      404: {
         headers: {
           [name: string]: unknown;
         };
@@ -1487,14 +1595,101 @@ export interface operations {
       };
     };
   };
+  findCoins: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 저금통 코인 내역 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["CoinsResponse"];
+        };
+      };
+      /** @description 저금통이 아직 존재하지 않음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  createCoin: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json;charset=UTF-8": components["schemas"]["CoinCreateRequest"];
+      };
+    };
+    responses: {
+      /** @description 저금 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["CoinCreateResponse"];
+        };
+      };
+      /**
+       * @description - 저금하기 금액이 0원 이하
+       *     - 이미 저금통 목표 금액 도달
+       */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 저금통이 아직 존재하지 않음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
   getMemberExpensesByPeriod: {
     parameters: {
       query: {
-        /**
-         * @description 회원 ID
-         * @example 1
-         */
-        memberId: string;
         /**
          * @description 조회 시작일 (yyyy-MM-dd)
          * @example 2026-01-01
@@ -1970,6 +2165,26 @@ export interface operations {
         };
         content: {
           "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  compareLastMonthExpense: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 지난달 소비 내역 통계 반환 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["LastMonthComparisonResponse"];
         };
       };
     };
