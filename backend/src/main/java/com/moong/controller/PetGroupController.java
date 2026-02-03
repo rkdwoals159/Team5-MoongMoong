@@ -19,7 +19,7 @@ public class PetGroupController implements PetGroupControllerSwagger {
     private final GroupService groupService;
 
     @Override
-    @PostMapping("/api/group/particiapte")
+    @PostMapping("/api/group/participate")
     public ResponseEntity<PetGroupParticipateResponse> participate(
             @AuthMember Member member,
             @RequestBody PetGroupParticipateRequest request
