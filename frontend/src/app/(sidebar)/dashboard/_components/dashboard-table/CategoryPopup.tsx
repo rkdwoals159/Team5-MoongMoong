@@ -1,8 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { CATEGORY_POPUP_HEIGHT, MAIN_CATEGORIES, SUB_CATEGORIES } from "../_constants";
-import { CategoryPopupProps } from "../_types";
+import {
+  CATEGORY_POPUP_HEIGHT,
+  MAIN_CATEGORIES,
+  SUB_CATEGORIES,
+} from "@/app/(sidebar)/dashboard/_constants";
+import { CategoryPopupProps } from "@/app/(sidebar)/dashboard/_types";
 
 /**
  * 카테고리 선택 팝업

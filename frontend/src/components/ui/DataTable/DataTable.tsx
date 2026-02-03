@@ -29,37 +29,25 @@ const DataTable = <T,>({
         className ?? "",
       )}
     >
-      {/* thead: 스크롤 밖, 항상 고정 */}
-      <table
-        {...rest}
-        className="w-full border-separate border-spacing-0 text-left table-fixed shrink-0"
-      >
-        <colgroup>
-          {columns.map((col) => (
-            <col key={String(col.accessor)} style={{ width: col.width ?? colWidth }} />
-          ))}
-        </colgroup>
-        <thead className="bg-gray-50">
-          <tr>
-            {columns.map((col) => (
-              <th
-                key={String(col.accessor)}
-                className="h-[48px] px-500 py-200 bg-gray-50 text-text-base typo-body-m-bold"
-              >
-                {col.label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-      </table>
-      {/* tbody: 이 영역만 스크롤 */}
-      <div className="flex-1 min-h-0 overflow-auto border-t border-gray-50">
-        <table className="w-full border-separate border-spacing-0 text-left table-fixed">
+      <div className="data-table-scroll flex-1 min-h-0 overflow-auto">
+        <table {...rest} className="w-full border-separate border-spacing-0 text-left table-fixed">
           <colgroup>
             {columns.map((col) => (
               <col key={String(col.accessor)} style={{ width: col.width ?? colWidth }} />
             ))}
           </colgroup>
+          <thead className="bg-gray-50 sticky top-0 z-10">
+            <tr>
+              {columns.map((col) => (
+                <th
+                  key={String(col.accessor)}
+                  className="h-[48px] px-500 py-200 bg-gray-50 text-text-base typo-body-m-bold border-b border-gray-50"
+                >
+                  {col.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
           <tbody>
             {data.map((row, rowIndex) => (
               <tr
@@ -73,7 +61,7 @@ const DataTable = <T,>({
                     <td
                       key={`${rowIndex}-${String(col.accessor)}`}
                       className={cn(
-                        "h-[48px] bg-white-100 text-text-base typo-body-m-regular transition-all hover:bg-yellow-50",
+                        "h-[48px] bg-white-100 text-text-base typo-body-m-regular transition-all hover:bg-yellow-50 border-b border-gray-50",
                         isSelected ? "ring-2 ring-yellow-300 ring-inset" : "",
                       )}
                     >

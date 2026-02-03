@@ -1,9 +1,9 @@
 "use client";
 
+import { EditableDataTableProps, ExpenseData } from "@/app/(sidebar)/dashboard/_types";
+import { useEditableExpenseTable } from "@/app/(sidebar)/dashboard/_hooks/useEditableExpenseTable";
 import DataTable from "@/components/ui/DataTable/DataTable";
-import CategoryPopup from "./CategoryPopup";
-import { EditableDataTableProps, ExpenseData } from "../_types";
-import { useEditableExpenseTable } from "../_hooks/useEditableExpenseTable";
+import CategoryPopup from "@/app/(sidebar)/dashboard/_components/dashboard-table/CategoryPopup";
 
 /**
  * 수정 가능한 DataTable 컴포넌트

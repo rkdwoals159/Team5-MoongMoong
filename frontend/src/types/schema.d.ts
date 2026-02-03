@@ -133,6 +133,26 @@ export interface paths {
     patch: operations["upsertMemberExpenses"];
     trace?: never;
   };
+  "/api/expenses/compare/last-month": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 지난달 대비 비교 데이터 조회
+     * @description 총지출/의료비 비율, 반려동물 이름·이미지 URL 반환
+     */
+    get: operations["getCompareLastMonth"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/member": {
     parameters: {
       query?: never;
@@ -1080,6 +1100,17 @@ export interface components {
       /** @description 조회한 소비 내역 목록 */
       expenses?: components["schemas"]["MemberExpenseResponse"][];
     };
+    /** @description 지난달 대비 비교 API 응답 */
+    LastMonthCompareResponse: {
+      /** @description 총 지출 전월 대비 비율 (%) */
+      totalRatio?: number;
+      /** @description 의료비 전월 대비 비율 (%) */
+      medicalRatio?: number;
+      /** @description 반려동물 이름 */
+      petName?: string;
+      /** @description 반려동물 이미지 URL */
+      petImageUrl?: string;
+    };
     GroupExpenseResponse: {
       /**
        * Format: int64
@@ -1721,6 +1752,52 @@ export interface operations {
         headers: {
           [name: string]: unknown;
         };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  getCompareLastMonth: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 지난달 대비 비교 데이터 반환 성공 */
+      200: {
+        headers: { [name: string]: unknown };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["LastMonthCompareResponse"];
+        };
+      };
+      /** @description 실패 - MEMBER_ID_MISMATCH 등 */
+      400: {
+        headers: { [name: string]: unknown };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자(유효하지 않은 memberId) */
+      401: {
+        headers: { [name: string]: unknown };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 존재하지 않은 테이블 */
+      404: {
+        headers: { [name: string]: unknown };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: { [name: string]: unknown };
         content: {
           "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
         };

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 };
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex flex-col flex-1 min-h-0">{children}</div>;
+  return <div className="flex-1 min-h-0 flex flex-col gap-600 px-8">{children}</div>;
 };
 
 export default DashboardLayout;

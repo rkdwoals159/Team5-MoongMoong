@@ -2,12 +2,18 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { DataTableColumn } from "@/components/ui/DataTable/DataTable.type";
+import { useEditableRows } from "@/app/(sidebar)/dashboard/_hooks/useEditableRows";
+import { ExpenseData } from "@/app/(sidebar)/dashboard/_types";
+import {
+  CATEGORY_POPUP_HEIGHT,
+  EDITABLE_TABLE_MIN_ROWS,
+  CATEGORY_COLOR_MAP,
+  DEFAULT_CATEGORY_COLOR,
+} from "@/app/(sidebar)/dashboard/_constants";
+import { createEmptyRow } from "@/app/(sidebar)/dashboard/_utils";
+import { formatDateKey } from "@/utils/date";
+import NativeDateInput from "@/components/common/DateRangePicker/NativeDateInput";
 import Chip from "@/components/common/Chip/Chip";
-import { useEditableRows } from "./useEditableRows";
-import { CATEGORY_COLOR_MAP, DEFAULT_CATEGORY_COLOR } from "../_constants";
-import { ExpenseData } from "../_types";
-import { CATEGORY_POPUP_HEIGHT, EDITABLE_TABLE_MIN_ROWS } from "../_constants";
-import { createEmptyRow } from "../_utils/expenseUtils";
 
 type SelectedCell = {
   rowIndex: number;
@@ -127,7 +133,7 @@ export function useEditableExpenseTable(initialData: ExpenseData[]): UseEditable
   /** 읽기 모드에서 사용할 셀 렌더러 */
   const createRender = useCallback(
     (value: ExpenseData[keyof ExpenseData], _row: ExpenseData, rowIndex: number) => {
-      const mainCategory = String(value);
+      const mainCategory = String(value ?? "");
       const subCategory = String(_row?.subCategory ?? "");
       const color = CATEGORY_COLOR_MAP[mainCategory] || DEFAULT_CATEGORY_COLOR;
 
@@ -136,10 +142,10 @@ export function useEditableExpenseTable(initialData: ExpenseData[]): UseEditable
           type="button"
           id={`category-btn-${rowIndex}`}
           className="w-full h-full cursor-pointer px-500 py-200 flex items-center justify-start transition-colors gap-1"
-          aria-label={`${mainCategory} 카테고리 선택`}
+          aria-label={mainCategory ? `${mainCategory} 카테고리 선택` : "카테고리 선택"}
           onClick={() => handleCellClick(rowIndex, "mainCategory")}
         >
-          <Chip label={mainCategory} level="major" color={color} />
+          {mainCategory && <Chip label={mainCategory} level="major" color={color} />}
           {subCategory && <Chip label={subCategory} level="minor" color="none" />}
         </button>
       );
@@ -147,16 +153,45 @@ export function useEditableExpenseTable(initialData: ExpenseData[]): UseEditable
     [handleCellClick],
   );
 
+  /** 날짜 변경 핸들러 */
+  const handleDateChange = useCallback(
+    (rowIndex: number, date: string) => {
+      const empty = createEmptyRow(0);
+      if (rowIndex < rows.length) {
+        updateCell(rowIndex, "spentAt", date);
+      } else {
+        updateCellOrAppend(rowIndex, "spentAt", date, empty);
+      }
+    },
+    [rows.length, updateCell, updateCellOrAppend],
+  );
+
+  /** 날짜 셀 렌더러 */
+  const createRenderDate = useCallback(
+    (value: ExpenseData[keyof ExpenseData], _row: ExpenseData, rowIndex: number) => {
+      return (
+        <NativeDateInput
+          className="w-full h-full cursor-pointer px-500 py-200 flex items-center justify-start transition-colors gap-1"
+          value={value ? formatDateKey(new Date(value)) : ""}
+          displayText={value ? formatDateKey(new Date(value)) : ""}
+          ariaLabel="날짜 선택"
+          onChange={(date: string) => handleDateChange(rowIndex, date)}
+        />
+      );
+    },
+    [handleDateChange],
+  );
+
   /** 컬럼 메타데이터 */
   const columns = useMemo<DataTableColumn<ExpenseData>[]>(
     () => [
-      { label: "날짜", accessor: "spentAt", editor: createEditor("spentAt") },
+      { label: "날짜", accessor: "spentAt", render: createRenderDate },
       { label: "사용내역", accessor: "usage", editor: createEditor("usage") },
       { label: "비용", accessor: "cost", editor: createEditor("cost") },
       { label: "항목", accessor: "mainCategory", render: createRender },
       { label: "메모", accessor: "memo", editor: createEditor("memo") },
     ],
-    [createEditor, createRender],
+    [createEditor, createRender, createRenderDate],
   );
 
   return {

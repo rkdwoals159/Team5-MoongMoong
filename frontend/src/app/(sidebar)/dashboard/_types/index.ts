@@ -5,8 +5,8 @@ export type ExpenseData = {
   expenseId: number;
   spentAt: string;
   usage: string;
-  cost: number;
-  mainCategory: string;
+  cost?: number | null;
+  mainCategory?: string | null;
   subCategory?: string;
   memo: string;
   modifiedAt?: string;
@@ -56,17 +56,16 @@ export type CategoryPopupProps = {
 };
 
 /**
- * ProgressSummarySection 컴포넌트 타입
+ * SummaryCardsWrapper 컴포넌트 타입
  */
-export type ProgressSummarySectionProps = {
+export type SummaryCardsWrapperProps = {
   data: ProgressData;
-  image: ImageData;
 };
 
 /**
- * ProgressCard 컴포넌트 타입
+ * SummaryCard 컴포넌트 타입
  */
-export type ProgressCardProps = {
+export type SummaryCardProps = {
   variant: "totalExpense" | "medicalExpense";
   data: ProgressStat | null;
   petName?: string;
@@ -81,4 +80,31 @@ export type ExpenseTableToolbarProps = {
   selectedCount?: number;
   hasUnsavedChanges?: boolean;
   className?: string;
+};
+
+/**
+ * 소비내역 기간별 조회 응답 타입
+ */
+export type ExpensesByPeriodResponse = {
+  total: number;
+  expenses: ExpenseData[];
+};
+
+/**
+ * 지난달 대비 비교 API 응답 타입
+ * GET /api/expenses/compare/last-month
+ */
+export type LastMonthCompareResponse = {
+  totalRatio: number;
+  medicalRatio: number;
+  petName: string;
+  petImageUrl: string;
+};
+
+/**
+ * Summary 섹션용 통합 데이터 (API 응답을 ProgressData + ImageData 형태로 변환한 값)
+ */
+export type SummaryData = {
+  progressData: ProgressData;
+  imageData: ImageData;
 };

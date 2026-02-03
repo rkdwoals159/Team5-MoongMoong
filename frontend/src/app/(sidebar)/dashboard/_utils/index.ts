@@ -1,4 +1,4 @@
-import { ExpenseData } from "../_types";
+import { ExpenseData } from "@/app/(sidebar)/dashboard/_types";
 
 /** 빈 행용 placeholder (expenseId < 0 으로 구분) */
 export function createEmptyRow(placeholderId: number): ExpenseData {
@@ -6,8 +6,6 @@ export function createEmptyRow(placeholderId: number): ExpenseData {
     expenseId: placeholderId,
     spentAt: "",
     usage: "",
-    cost: 0,
-    mainCategory: "",
     memo: "",
   };
 }
