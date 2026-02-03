@@ -1,6 +1,5 @@
 package com.moong.dto.response.groupexpense;
 
-import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.groupexpense.GroupExpenseDetail;
 import java.util.List;
 

@@ -84,6 +84,11 @@ public class TestDataGenerator {
         for (Coin coin : exampleCoins) {
             coinRepository.save(coin);
         }
+        long currentAmount = exampleCoins
+                .stream()
+                .mapToLong(Coin::getAmount)
+                .sum();
+        bank.updateCurrentAmount(currentAmount);
 
         List<MemberExpense> exampleMemberExpense = getExampleMemberExpense(member1);
         memberExpenseRepository.saveAll(exampleMemberExpense);
@@ -103,8 +108,10 @@ public class TestDataGenerator {
         groupMedicalAdviceRepository.save(groupMedicalAdvice);
 
         for(Disease disease : Disease.values()) {
-            PetMedical petMedical = new PetMedical(null, Breed.BEA, 3, Gender.M, disease, ThreadLocalRandom.current().nextInt(0, 10001));
-            petMedicalRepository.save(petMedical);
+            for (int i = 0; i < 21; i++) {
+                PetMedical petMedical = new PetMedical(null, Breed.BEA, i, Gender.M, disease, ThreadLocalRandom.current().nextInt(0, 101));
+                petMedicalRepository.save(petMedical);
+            }
         }
 
         saveExampleTreatment();
@@ -299,7 +306,10 @@ public class TestDataGenerator {
         Coin coin1 = new Coin(null, bank, crew, 5000);
         Coin coin2 = new Coin(null, bank, crew, 3000);
         Coin coin3 = new Coin(null, bank, crew, 2000);
+        Coin coin4 = new Coin(null, bank, crew, 30000);
+        Coin coin5 = new Coin(null, bank, crew, 20000);
+        Coin coin6 = new Coin(null, bank, crew, 1000);
 
-        return List.of(coin1, coin2, coin3);
+        return List.of(coin1, coin2, coin3, coin4, coin5, coin6);
     }
 }

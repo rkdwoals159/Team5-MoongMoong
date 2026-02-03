@@ -83,8 +83,8 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
 
         long result = memberExpenseRepository.sumCostByMemberIdAndPeriod(
                 member.getId(),
-                LocalDate.now().minusDays(1),
-                LocalDate.now().plusDays(1)
+                now.toLocalDate().minusDays(1),
+                now.toLocalDate().plusDays(1)
         );
 
         assertThat(result).isEqualTo(expected);
@@ -144,8 +144,8 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
         long result = memberExpenseRepository.sumCostByMemberIdAndMainCategoryAndPeriod(
                 member.getId(),
                 "의료",
-                LocalDate.now().minusDays(1),
-                LocalDate.now().plusDays(1)
+                now.toLocalDate().minusDays(1),
+                now.toLocalDate().plusDays(1)
         );
 
         assertThat(result).isEqualTo(expected);

@@ -1,7 +1,5 @@
 package com.moong.dto.response.groupexpense;
 
-import com.moong.domain.entity.GroupExpense;
-import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.groupexpense.GroupExpenseDetail;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
