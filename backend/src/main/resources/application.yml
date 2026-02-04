@@ -44,6 +44,20 @@ spring:
     defer-datasource-initialization: true
     open-in-view: false
 
+logging:
+  file:
+    path: logs
+    name: app.log
+
+  logback:
+    rollingpolicy:
+      max-file-size: 5MB #한 파일의 최대 크기
+      max-history: 30 #최대 보관 일자(최근 30일간 기록까지만 저장)
+      total-size-cap: 150MB #전체 차지가능한 디스크 용량
+
+slack:
+  webhook-url: ${ERROR_SLACK_WEBHOOK_URL:}
+
 category-classification:
   system-prompt: |
       유저가 입력한 소비 내역의 카테고리를 다음 중에 분류해    

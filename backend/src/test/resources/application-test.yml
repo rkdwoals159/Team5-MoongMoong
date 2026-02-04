@@ -1,6 +1,20 @@
 invite:
   key: yQ0PZ3V1+g8v5H2z2s5gPZpYxQqzZzJZ9f0uHn0x0K8=
 
+logging:
+  file:
+    path: logs
+    name: app.log
+
+  logback:
+    rollingpolicy:
+      max-file-size: 5MB #한 파일의 최대 크기
+      max-history: 30 #최대 보관 일자
+      total-size-cap: 150MB #전체 차지가능한 디스크 용량
+
+slack:
+  webhook-url: test_url
+
 category-classification:
   system: |
     유저가 입력한 소비 내역의 카테고리를 다음 중에 분류해    
