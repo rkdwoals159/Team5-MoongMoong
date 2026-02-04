@@ -1,10 +1,13 @@
 package com.moong.controller.swagger;
 
+import com.moong.annotation.auth.AuthMember;
 import com.moong.annotation.swagger.ErrorCode400;
 import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
+import com.moong.dto.request.memberexpense.CategorizeRequest;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
+import com.moong.dto.response.categorize.CategorizeResponse;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesUpsertResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
@@ -89,5 +92,27 @@ public interface MemberExpenseControllerSwagger {
                     content = @Content(schema = @Schema(implementation = MemberExpensesUpsertRequest.class))
             )
             MemberExpensesUpsertRequest request
+    );
+
+    @Operation(summary = "자동 카테고리 분류",
+            description = "유저의 사용내역을 보고 대분류/소분류 카테고리를 자동 분류합니다",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "카테고리 분류 성공",
+                            content = @Content(schema = @Schema(implementation = CategorizeResponse.class))
+                    )
+            }
+    )
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<CategorizeResponse> categorizeMemberExpenses(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member,
+            @RequestBody(
+                    description = "자동카테고리 분류 요청",
+                    content = @Content(schema = @Schema(implementation = CategorizeRequest.class))
+            )
+            CategorizeRequest request
     );
 }

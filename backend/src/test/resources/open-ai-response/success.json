@@ -1,0 +1,76 @@
+{
+  "id": "resp_******************************",
+  "object": "response",
+  "created_at": 1769792084,
+  "status": "completed",
+  "background": false,
+  "billing": {
+    "payer": "developer"
+  },
+  "completed_at": 1769792095,
+  "error": null,
+  "frequency_penalty": 0.0,
+  "incomplete_details": null,
+  "instructions": null,
+  "max_output_tokens": null,
+  "max_tool_calls": null,
+  "model": "gpt-5-nano-2025-08-07",
+  "output": [
+    {
+      "id": "rs_******************************",
+      "type": "reasoning",
+      "summary": []
+    },
+    {
+      "id": "msg_******************************",
+      "type": "message",
+      "status": "completed",
+      "content": [
+        {
+          "type": "output_text",
+          "annotations": [],
+          "logprobs": [],
+          "text": "{\n  \"mainCategory\": \"의료비\",\n  \"subCategory\": \"수술비\"\n}"
+        }
+      ],
+      "role": "assistant"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "presence_penalty": 0.0,
+  "previous_response_id": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": null,
+  "reasoning": {
+    "effort": "medium",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "store": true,
+  "temperature": 1.0,
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "tool_choice": "auto",
+  "tools": [],
+  "top_logprobs": 0,
+  "top_p": 1.0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 328,
+    "input_tokens_details": {
+      "cached_tokens": 0
+    },
+    "output_tokens": 691,
+    "output_tokens_details": {
+      "reasoning_tokens": 640
+    },
+    "total_tokens": 1019
+  },
+  "user": null,
+  "metadata": {}
+}

@@ -36,6 +36,10 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.6.0'
 
+    //WebClient
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+
     implementation 'org.ow2.asm:asm:9.7'
     implementation 'org.ow2.asm:asm-tree:9.7'
 

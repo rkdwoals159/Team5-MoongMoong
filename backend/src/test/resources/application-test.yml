@@ -1,2 +1,34 @@
 invite:
   key: yQ0PZ3V1+g8v5H2z2s5gPZpYxQqzZzJZ9f0uHn0x0K8=
+
+category-classification:
+  system: |
+    유저가 입력한 소비 내역의 카테고리를 다음 중에 분류해    
+    
+    조건:
+    - mainCategory는 대분류고 subCategory는 소분류야
+    - mainCategory는 '사료/간식', '의료비', `물품구매비`, `미용`, `기타` 중 하나로 분류해줘
+    - mainCategory가 `의료비`가 아닌 경우 subCategory에는 null을 반환해.   
+    - mainCategory가 `의료비`일 경우 subCategory도 생성해줘     
+    - mainCategory가 의료비인 경우 subCategory는 [진료비, 예방접종, 약/처방, 검사비, 수술/입원, 기타 의료비] 중 하나로 분류해줘
+
+  prompt: |
+    반려동물 소비 카테고리 대분류 -> mainCategory
+    소비 카테고리 소분류 -> subCategory
+    
+    유저 입력: {input}
+
+  format-message: |
+    응답은 반드시 다음 JSON 스키마에 맞춰 정확한 JSON 형식으로 제공해주세요(맨 처음에 ```json 같은 것도 절대 포함하지 마세요).
+    
+    {
+      "mainCategory": "string",
+      "subCategory": "string"
+    }
+    
+    응답에는 JSON만 포함하고, 다른 텍스트나 설명은 포함하지 마세요.
+    JSON 형식으로만 응답해야 하며, 내가 그대로 파싱할 예정입니다.
+
+openai:
+  base-url: https://api.openai.com/v1
+  secret-key: testKey

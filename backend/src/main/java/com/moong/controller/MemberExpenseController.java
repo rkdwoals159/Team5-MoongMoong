@@ -2,7 +2,9 @@ package com.moong.controller;
 
 import com.moong.annotation.auth.AuthMember;
 import com.moong.domain.entity.Member;
+import com.moong.dto.request.memberexpense.CategorizeRequest;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
+import com.moong.dto.response.categorize.CategorizeResponse;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
 import com.moong.controller.swagger.MemberExpenseControllerSwagger;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,4 +64,13 @@ public class MemberExpenseController implements MemberExpenseControllerSwagger {
         return ResponseEntity.ok(response);
     }
 
+    @Override
+    @PostMapping
+    public ResponseEntity<CategorizeResponse> categorizeMemberExpenses(
+            @AuthMember Member member,
+            @RequestBody CategorizeRequest request
+    ) {
+        CategorizeResponse response = memberExpenseService.categorize(request);
+        return ResponseEntity.ok(response);
+    }
 }

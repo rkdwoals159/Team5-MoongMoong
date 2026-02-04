@@ -1,5 +1,15 @@
 package com.moong.service;
 
+import com.moong.ai.OpenAiModel;
+import com.moong.ai.OpenAiResult;
+import com.moong.ai.TokenUsage;
+import com.moong.client.categorize.ExpenseCategorizeClient;
+import com.moong.domain.entity.Member;
+import com.moong.domain.entity.MemberExpense;
+import com.moong.dto.request.memberexpense.CategorizeRequest;
+import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
+import com.moong.dto.response.categorize.AiCategorizeResponse;
+import com.moong.dto.response.categorize.CategorizeResponse;
 import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
@@ -7,7 +17,6 @@ import com.moong.domain.memberexpense.MonthlyExpenseStats;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
-import com.moong.domain.entity.MemberExpense;
 import com.moong.dto.response.memberexpense.MemberExpensesUpsertResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
@@ -17,6 +26,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -31,6 +41,7 @@ public class MemberExpenseService {
     //TODO: ENUM 타입으로 분리
     private static final String MEDICAL_CATEGORY_NAME = "의료";
 
+    private final ExpenseCategorizeClient expenseCategorizeClient;
     private final MemberExpenseRepository memberExpenseRepository;
     private final CrewRepository crewRepository;
 
@@ -130,5 +141,30 @@ public class MemberExpenseService {
                         .toList();
 
         return MemberExpensesUpsertResponse.from(expenses);
+    }
+
+    public CategorizeResponse categorize(CategorizeRequest request) {
+        //5초 이후에는 `기타` 값 반환
+        OpenAiResult<AiCategorizeResponse> fallBackResponse = new OpenAiResult<>(
+                AiCategorizeResponse.noneCategory(),
+                TokenUsage.zeroUsage()
+        );
+
+        OpenAiResult<AiCategorizeResponse> result = expenseCategorizeClient.categorize(
+                        request,
+                        OpenAiModel.GPT_4_1_MODEL.getModel()
+                )
+                .completeOnTimeout(
+                        fallBackResponse,
+                        5L,
+                        TimeUnit.SECONDS
+                ).exceptionally(exception -> fallBackResponse)
+                .join();
+
+        return new CategorizeResponse(
+                request.requestId(),
+                result.getResult().mainCategory(),
+                result.getResult().subCategory()
+        );
     }
 }
