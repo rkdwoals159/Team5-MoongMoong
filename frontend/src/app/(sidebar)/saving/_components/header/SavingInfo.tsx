@@ -5,7 +5,7 @@ import { calcProgress } from "@/app/(sidebar)/saving/_utils";
 
 export default function SavingInfo() {
   const { status } = useSavingStatus();
-  const progress = calcProgress(status.total, status.target);
+  const progress = calcProgress(status.current, status.target);
 
   return (
     <div>

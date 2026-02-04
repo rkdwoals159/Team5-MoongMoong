@@ -76,6 +76,135 @@ body {
   animation-delay: var(--animation-delay, 0s);
 }
 
+/* Saving break summary modal animations */
+.saving-break-overlay-in {
+  animation: saving-break-overlay-in 220ms ease-out both;
+}
+
+.saving-break-panel-in {
+  animation: saving-break-panel-in 240ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.saving-break-overlay-out {
+  animation: saving-break-overlay-out 180ms ease-in both;
+}
+
+.saving-break-panel-out {
+  animation: saving-break-panel-out 180ms ease-in both;
+}
+
+.saving-break-stagger-in {
+  opacity: 0;
+  animation: saving-break-fade-up 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.saving-break-cta-pulse-once {
+  animation: saving-break-pulse-once 900ms ease-out 620ms 1 both;
+}
+
+.saving-break-confetti-piece {
+  position: absolute;
+  top: -24px;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  opacity: 0;
+  animation-name: saving-break-confetti-fall;
+  animation-timing-function: cubic-bezier(0.18, 0.86, 0.22, 1);
+  animation-fill-mode: both;
+}
+
+@keyframes saving-break-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes saving-break-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes saving-break-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes saving-break-panel-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+
+@keyframes saving-break-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes saving-break-pulse-once {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes saving-break-confetti-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0) rotate(0deg);
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--confetti-drift), 180px, 0) rotate(var(--confetti-rotate));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saving-break-overlay-in,
+  .saving-break-panel-in,
+  .saving-break-overlay-out,
+  .saving-break-panel-out,
+  .saving-break-stagger-in,
+  .saving-break-cta-pulse-once,
+  .saving-break-confetti-piece {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
 /* 스크롤바 숨기기 */
 /* 스크롤은 되는데 스크롤바는 숨김 */
 .no-scrollbar::-webkit-scrollbar {

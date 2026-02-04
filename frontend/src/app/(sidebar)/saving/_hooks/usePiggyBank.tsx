@@ -143,11 +143,19 @@ const usePiggyBank = () => {
     [],
   );
 
+  const clearCoins = useCallback(() => {
+    if (!engineRef.current) return;
+    const bodies = Composite.allBodies(engineRef.current.world);
+    const coins = bodies.filter((body) => !wallsRef.current.includes(body));
+    Composite.remove(engineRef.current.world, coins);
+  }, []);
+
   return {
     ready,
     toolTip,
     sceneRef,
     handleDrop,
+    clearCoins,
   };
 };
 

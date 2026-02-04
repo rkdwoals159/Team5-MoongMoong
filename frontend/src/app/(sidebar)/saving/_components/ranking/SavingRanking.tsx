@@ -15,7 +15,7 @@ const SavingRanking = () => {
             <div className="flex flex-col gap-100 py-550 px-800 border border-gray-100 rounded-300 flex-1">
               <div className="typo-title-s-bold text-gray-800">{ranking.userName}</div>
               <div className="typo-body-m-bold text-gray-500">
-                {ranking.total.toLocaleString()}원 저금
+                {ranking.total?.toLocaleString() ?? 0}원 저금
               </div>
             </div>
           </div>

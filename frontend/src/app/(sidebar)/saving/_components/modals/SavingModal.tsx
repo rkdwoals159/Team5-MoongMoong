@@ -8,40 +8,43 @@ import { AMOUNT_PRESETS } from "@/app/(sidebar)/saving/_constants";
 import { SavingModalProps } from "@/app/(sidebar)/saving/_types";
 import { updateRankings } from "@/app/(sidebar)/saving/_lib";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
+import { saveCoin } from "@/app/(sidebar)/saving/_api";
+import { useToast } from "@/components/ui/Toast/ToastProvider";
+import { useAmountInput } from "@/app/(sidebar)/saving/_hooks/useAmountInput";
 
 export default function SavingModal({ open, onClose, handleDrop }: SavingModalProps) {
   const { status, setStatus } = useSavingStatus();
   const [showConfirm, setShowConfirm] = useState(false);
-  const [amount, setAmount] = useState("");
+  const { value, numericValue, handleChange, reset, addAmount } = useAmountInput();
+  const { showToast } = useToast();
+
   if (!open) return null;
 
-  const numericAmount = Number(amount);
-  const isValid = amount.length > 0 && numericAmount > 0;
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value.replace(/[^0-9]/g, "");
-    setAmount(raw);
-  };
-
-  const handleAddAmount = (value: number) => {
-    setAmount((prev) => String(Number(prev || "0") + value));
-  };
+  const isValid = numericValue > 0;
 
   const handleSubmitClick = () => {
     if (!isValid) return;
     setShowConfirm(true);
   };
 
-  const handleConfirm = () => {
-    // TODO: 송금 API 호출
-    handleDrop("또리맘", Number(amount), new Date().toISOString(), status.target);
+  const handleConfirm = async () => {
+    const response = await saveCoin(numericValue);
+    if (!response) {
+      showToast({
+        variant: "error",
+        message: "저금에 실패했어요.",
+      });
+      return;
+    }
+
+    handleDrop(response.name ?? "", response.amount ?? 0, response.createdAt ?? "", status.target);
     setStatus((prev) => ({
       ...prev,
-      total: prev.total + numericAmount,
-      rankings: updateRankings(prev.rankings, "또리맘", numericAmount),
+      current: prev.current + numericValue,
+      rankings: updateRankings(prev.rankings, response.name ?? "", numericValue),
     }));
     setShowConfirm(false);
-    setAmount("");
+    reset();
     onClose();
   };
 
@@ -54,7 +57,7 @@ export default function SavingModal({ open, onClose, handleDrop }: SavingModalPr
       setShowConfirm(false);
       return;
     }
-    setAmount("");
+    reset();
     onClose();
   };
 
@@ -70,7 +73,7 @@ export default function SavingModal({ open, onClose, handleDrop }: SavingModalPr
           tabIndex={-1}
         >
           <p className="typo-title-s-bold text-center text-(--color-text-base)">
-            {formatAmount(numericAmount)}을 저금하시겠습니까?
+            {formatAmount(numericValue)}을 저금하시겠습니까?
           </p>
           <div className="mt-700 flex gap-300">
             <Button variant="secondary" size="large" fullWidth onClick={handleCancel}>
@@ -107,7 +110,7 @@ export default function SavingModal({ open, onClose, handleDrop }: SavingModalPr
               type="text"
               inputMode="numeric"
               placeholder="금액을 입력해주세요"
-              value={amount ? formatAmountPlain(numericAmount) : ""}
+              value={value ? formatAmountPlain(numericValue) : ""}
               onChange={handleChange}
               className="flex-1 bg-transparent outline-none typo-body-m-medium placeholder:text-gray-300"
               autoFocus
@@ -120,7 +123,7 @@ export default function SavingModal({ open, onClose, handleDrop }: SavingModalPr
               <button
                 key={preset}
                 type="button"
-                onClick={() => handleAddAmount(preset)}
+                onClick={() => addAmount(preset)}
                 className={presetButtonClasses}
               >
                 +{formatAmountPlain(preset)}원

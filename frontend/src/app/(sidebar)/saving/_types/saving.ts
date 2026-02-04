@@ -1,22 +1,29 @@
-export type Coin = {
-  name: string;
-  amount: number;
-  createdAt: string;
-};
+import { components } from "@/types/schema";
 
-export type Ranking = {
-  userName: string;
-  total: number;
-};
+export type BankInfo = components["schemas"]["BankInfoResponse"];
+export type Coin = components["schemas"]["CoinResponse"];
+export type BankRanking = components["schemas"]["BankRankingResponse"];
 
 export type SavingStatus = {
+  bankId: number;
   target: number;
-  total: number;
-  rankings: Ranking[];
+  current: number;
+  rankings: BankRanking[];
 };
 
-export type SavingClientProps = SavingStatus & {
+export type SavingClientProps = {
+  bankInfo: BankInfo;
   coins: Coin[];
+};
+
+// SavingTargetModal
+export type SavingTargetModalProps = {
+  ref: React.RefObject<HTMLDivElement | null>;
+  initialTarget: number;
+  currentAmount: number;
+  onClose: () => void;
+  onSubmit: (amount: number) => void;
+  focusRef: React.RefObject<HTMLInputElement | null>;
 };
 
 // usePiggyBank
@@ -37,4 +44,15 @@ export type BallBody = {
   position: { x: number; y: number };
   plugin?: BallPluginData;
   circleRadius?: number;
+};
+
+// SavingBreakSummaryModal
+export type BreakSummary = {
+  days: number;
+  message: string;
+};
+
+export type SavingBreakSummaryModalProps = {
+  summary: BreakSummary | null;
+  onRefresh: () => void;
 };

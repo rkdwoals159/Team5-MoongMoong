@@ -24,6 +24,20 @@ export type FileInputOwnProps = {
   className?: string;
 };
 
+export type AmountInputOwnProps = {
+  placeholder?: string;
+  isDisabled?: boolean;
+  renderError?: (message: string) => ReactNode;
+  showError?: boolean;
+  errorMessage?: string;
+  touched?: boolean;
+  onTouchedChange?: (value: boolean) => void;
+  className?: string;
+  value?: string;
+  suffix?: string;
+  ref?: React.RefObject<HTMLInputElement | null>;
+};
+
 type InputBaseProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type">;
 
 export type TextInputProps = TextInputOwnProps &
@@ -34,4 +48,9 @@ export type TextInputProps = TextInputOwnProps &
 export type FileInputProps = FileInputOwnProps &
   InputBaseProps & {
     type: "file";
+  };
+
+export type AmountInputProps = AmountInputOwnProps &
+  Omit<InputBaseProps, "value"> & {
+    type?: "amount";
   };
