@@ -5,40 +5,52 @@ import DataTable from "@/components/ui/DataTable/DataTable";
 import type { DataTableColumn } from "@/components/ui/DataTable/DataTable.type";
 import { getChipColorForCategory } from "@/app/(sidebar)/calendar/_lib/buildCalendarDays";
 import { formatAmount, formatAmountPlain } from "@/utils/amount";
-import type { ExpenseItem, ExpenseModalProps } from "@/app/(sidebar)/calendar/_types";
+import type {
+  ExpenseCategory,
+  ExpenseModalProps,
+  GroupDailyExpenseItem,
+} from "@/app/(sidebar)/calendar/_types";
 import Link from "next/link";
 import { SCROLL_THRESHOLD } from "@/app/(sidebar)/calendar/_constants";
 
 export default function ExpenseModal({ open, title, items, closeHref }: ExpenseModalProps) {
-  const total = items.reduce((sum, item) => sum + item.cost, 0);
-  const columns: DataTableColumn<ExpenseItem>[] = [
+  if (!items) return null;
+  const total = items.reduce((sum, item) => sum + (item.cost ?? 0), 0);
+  const columns: DataTableColumn<NonNullable<GroupDailyExpenseItem["expenses"]>[number]>[] = [
     {
       label: "닉네임",
       accessor: "nickname",
-      render: (value) => <span className="block max-w-[94px] truncate">{String(value)}</span>,
+      render: (value) => (
+        <span className="px-500 py-200 block max-w-[94px] truncate">{String(value)}</span>
+      ),
     },
     {
       label: "사용내역",
-      accessor: "description",
-      render: (value) => <span className="block max-w-[260px] truncate">{String(value)}</span>,
+      accessor: "usage",
+      render: (value) => (
+        <span className="px-500 py-200 block max-w-[260px] truncate">{String(value)}</span>
+      ),
     },
     {
       label: "비용",
       accessor: "cost",
       render: (value) => (
-        <span className="tabular-nums text-gray-700">{formatAmountPlain(Number(value))}</span>
+        <span className="px-500 py-200 tabular-nums text-gray-700">
+          {formatAmountPlain(Number(value))}
+        </span>
       ),
     },
     {
       label: "항목",
-      accessor: "category",
+      accessor: "mainCategory",
       render: (value) => (
-        <Chip
-          className="w-full"
-          label={String(value)}
-          level="major"
-          color={getChipColorForCategory(value as ExpenseItem["category"])}
-        />
+        <div className="px-500 py-200">
+          <Chip
+            label={String(value)}
+            level="major"
+            color={getChipColorForCategory(value as ExpenseCategory)}
+          />
+        </div>
       ),
     },
   ];
@@ -71,7 +83,9 @@ export default function ExpenseModal({ open, title, items, closeHref }: ExpenseM
               className="border-(--color-gray-50) rounded-600"
               columns={columns}
               data={items}
-              rowKey={(row) => row.id}
+              rowKey={(row) =>
+                `${String(row.nickname ?? "")}-${String(row.usage ?? "")}-${String(row.cost ?? "")}-${String(row.mainCategory ?? "")}`
+              }
             />
           </div>
         </div>

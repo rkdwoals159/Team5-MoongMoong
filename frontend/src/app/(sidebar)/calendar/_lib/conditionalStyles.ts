@@ -15,9 +15,10 @@ export const getDateTextColor = (
   }
   return "text-(--color-text-base)";
 };
+
 export const getTopExpenses = (expenses: ExpenseItem[]) => {
   return expenses
     .slice()
-    .sort((a, b) => b.cost - a.cost)
+    .sort((a, b) => Number(b.cost ?? 0) - Number(a.cost ?? 0))
     .slice(0, 2);
 };

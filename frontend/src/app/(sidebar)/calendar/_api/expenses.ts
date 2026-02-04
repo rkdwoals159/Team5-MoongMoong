@@ -1,5 +1,5 @@
 import client from "@/lib/api";
-import type { ExpenseCategory, ExpenseItem, ExpenseMap } from "@/app/(sidebar)/calendar/_types";
+import type { ExpenseMap } from "@/app/(sidebar)/calendar/_types";
 import { MEMBER_ID } from "../_constants";
 import { resolveMonthRange } from "@/utils/date";
 
@@ -8,7 +8,7 @@ import { resolveMonthRange } from "@/utils/date";
  * @param monthParam : 조회할 월 파라미터
  * @returns : 조회된 소비내역 맵
  */
-export async function getCalendarExpenses(monthParam?: string): Promise<ExpenseMap> {
+export async function getCalendarExpenses(monthParam?: string) {
   const { startDate, endDate } = resolveMonthRange(monthParam);
   const { data, error } = await client.GET("/api/expenses", {
     params: {
@@ -27,13 +27,12 @@ export async function getCalendarExpenses(monthParam?: string): Promise<ExpenseM
   }
 
   const expenses = data.expenses ?? [];
-  return expenses.reduce<ExpenseMap>((acc, expense, index) => {
+  return expenses.reduce<ExpenseMap>((acc, expense) => {
     const dateKey = expense.spentAt;
     if (!dateKey) {
       return acc;
     }
-    const item = mapMemberExpense(expense, index);
-    acc[dateKey] = acc[dateKey] ? [...acc[dateKey], item] : [item];
+    acc[dateKey] = acc[dateKey] ? [...acc[dateKey], expense] : [expense];
     return acc;
   }, {});
 }
@@ -44,7 +43,7 @@ export async function getCalendarExpenses(monthParam?: string): Promise<ExpenseM
  * @returns : 조회된 소비내역 목록
  */
 
-export async function getGroupDailyExpenses(spentAt: string): Promise<ExpenseItem[]> {
+export async function getGroupDailyExpenses(spentAt: string) {
   const { data, error } = await client.GET("/api/expenses/group/date", {
     params: {
       query: {
@@ -58,42 +57,5 @@ export async function getGroupDailyExpenses(spentAt: string): Promise<ExpenseIte
     return [];
   }
 
-  const expenses = data.expenses ?? [];
-  return expenses.map((expense, index) => mapGroupDailyExpense(expense, index));
+  return data.expenses ?? [];
 }
-
-// ------------- 내부 구성함수 -------------------
-const mapMemberExpense = (
-  expense: {
-    expenseId?: number;
-    spentAt?: string;
-    usage?: string;
-    cost?: number;
-    mainCategory?: string;
-    memo?: string;
-  },
-  index: number,
-): ExpenseItem => ({
-  // todo : 닉네임 처리로직
-  id: String(expense.expenseId ?? `member-${index}`),
-  nickname: "나",
-  description: expense.usage ?? expense.memo ?? "",
-  cost: expense.cost ?? 0,
-  category: expense.mainCategory as ExpenseCategory,
-});
-
-const mapGroupDailyExpense = (
-  expense: {
-    nickname?: string;
-    usage?: string;
-    cost?: number;
-    mainCategory?: string;
-  },
-  index: number,
-): ExpenseItem => ({
-  id: `group-${index}`,
-  nickname: expense.nickname ?? "",
-  description: expense.usage ?? "",
-  cost: expense.cost ?? 0,
-  category: expense.mainCategory as ExpenseCategory,
-});

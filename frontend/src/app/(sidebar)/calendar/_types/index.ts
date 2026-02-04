@@ -1,3 +1,5 @@
+import { components } from "@/types/schema";
+
 export type ExpenseCategory =
   | "미용"
   | "의료비"
@@ -8,14 +10,9 @@ export type ExpenseCategory =
   | "장난감"
   | "기타";
 
-export type ExpenseItem = {
-  id: string;
-  nickname: string;
-  description: string;
-  cost: number;
-  category: ExpenseCategory;
-};
+export type ExpenseItem = components["schemas"]["MemberExpenseResponse"];
 
+export type GroupDailyExpenseItem = components["schemas"]["GroupExpensesDailyResponse"];
 export type ExpenseMap = Record<string, ExpenseItem[]>;
 
 export type CalendarDay = {
@@ -24,7 +21,7 @@ export type CalendarDay = {
   inCurrentMonth: boolean;
   isToday: boolean;
   isWeekend: boolean;
-  expenses: ExpenseItem[];
+  expenses: ExpenseMap[string];
 };
 
 export type CalendarDayCellProps = {
@@ -58,7 +55,7 @@ export type ExpenseCountChipProps = {
 export type ExpenseModalProps = {
   open: boolean;
   title: string;
-  items: ExpenseItem[];
+  items: GroupDailyExpenseItem["expenses"];
   closeHref: string;
 };
 
@@ -77,9 +74,6 @@ export type CalendarSearchParams = {
 
 export type CalendarContext = {
   today: Date;
-  todayKey: string;
   viewYear: number;
   viewMonth: number;
-  monthParam: string;
-  isCurrentMonth: boolean;
 };

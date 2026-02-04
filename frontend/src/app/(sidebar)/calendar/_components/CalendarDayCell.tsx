@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Chip from "@/components/common/Chip/Chip";
 import ExpenseCountChip from "./expense/ExpenseCountChip";
 import { getChipColorForCategory } from "@/app/(sidebar)/calendar/_lib/buildCalendarDays";
-import type { CalendarDayCellProps } from "@/app/(sidebar)/calendar/_types";
+import type { CalendarDayCellProps, ExpenseCategory } from "@/app/(sidebar)/calendar/_types";
 import { getDateTextColor, getTopExpenses } from "../_lib/conditionalStyles";
 
 export default function CalendarDayCell({
@@ -51,12 +51,12 @@ export default function CalendarDayCell({
       </div>
       {day.expenses.length > 0 && (
         <div className="mt-350 flex w-full flex-col gap-200">
-          {topExpenses.map((expense) => (
+          {topExpenses.map((expense, idx) => (
             <Chip
-              key={expense.id}
-              label={expense.category}
+              key={expense.expenseId ?? idx}
+              label={expense.mainCategory ?? ""}
               level="major"
-              color={getChipColorForCategory(expense.category)}
+              color={getChipColorForCategory(expense.mainCategory as ExpenseCategory)}
               price={expense.cost}
             />
           ))}
