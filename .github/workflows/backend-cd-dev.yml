@@ -71,38 +71,131 @@ jobs:
 
   pull-and-deploy:
     needs: build-and-push
-    runs-on: moong
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          envs: DOCKERHUB_USERNAME,DOCKERHUB_REPOSITORY,INVITE_AES_KEY,OPEN_AI_KEY, ERROR_SLACK_WEBHOOK_URL, JWT_SECRET_KEY, JWT_ACCESS_EXPIRATION, JWT_REFRESH_EXPIRATION, TAG
+          script: |
+            set -e  # 에러 발생 시 즉시 중단
+            
+            # 환경 변수 설정
+            export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+            export DOCKERHUB_REPOSITORY=${{ env.DOCKERHUB_REPOSITORY }}
+            export INVITE_AES_KEY=${{ secrets.INVITE_AES_KEY }}
+            export OPEN_AI_KEY=${{ secrets.OPEN_AI_KEY }}
+            export ERROR_SLACK_WEBHOOK_URL=${{ secrets.ERROR_SLACK_WEBHOOK_URL }}
+            export JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+            export JWT_ACCESS_EXPIRATION=${{ secrets.JWT_ACCESS_EXPIRATION }}
+            export JWT_REFRESH_EXPIRATION=${{ secrets.JWT_REFRESH_EXPIRATION }}
+            export TAG=${{ github.sha }}-dev
+            
+            # Docker Hub 로그인
+            echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+            
+            # 기존 컨테이너 완전히 중지 및 삭제
+            echo "=== Stopping and removing existing containers ==="
+            docker compose down --remove-orphans || true
+          
+            # 사용하지 않는 이미지만 삭제 (실행 중인 컨테이너의 이미지는 제외)
+            echo "=== Cleaning up unused images ==="
+            docker image prune -f || true
+          
+            # 새 이미지로 배포
+            echo "=== Starting new containers ==="
+            if ! docker compose up -d; then
+              echo "ERROR: Failed to start containers"
+              exit 1
+            fi
+            sleep 10
 
-      - name: Clean Up Legacy Image
-        run: |
-          export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
-          export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
-          export TAG=${{ github.sha }}-dev
-          docker compose down || true
-          docker rmi $(docker images -q) -f || true
+      - name: Health Check with Retry
+        uses: nick-invision/retry@v2
+        with:
+            timeout_minutes: 1
+            max_attempts: 5
+            retry_wait_seconds: 6
+            command: |
+              response=$(curl -s https://api.moongmoong.site/actuator/health || echo '{"status":"DOWN"}')
+              status=$(echo $response | jq -r '.status')
+              if [ "$status" = "UP" ]; then
+                echo "✅ Health check passed: Status is UP"
+                exit 0
+              else
+                echo "❌ Health check failed: Status is $status"
+                exit 1
+              fi
 
-      - name: Docker Compose up
-        run: |
-          export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
-          export DOCKERHUB_REPOSITORY=$DOCKERHUB_REPOSITORY
-          export INVITE_AES_KEY=${{ secrets.INVITE_AES_KEY }}
-          export ERROR_SLACK_WEBHOOK-URL=${{ secrets.ERROR_SLACK_WEBHOOK_URL }}
-          export OPEN_AI_KEY=${{ secrets.OPEN_AI_KEY }}
-          export TAG=${{ github.sha }}-dev
-          docker compose up -d
+      - name: Rollback if Health Check fails
+        if: failure()
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+              echo "=== 🔄 Starting Rollback Process ==="
+            
+              # 환경 변수 설정
+              export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+              export DOCKERHUB_REPOSITORY=${{ env.DOCKERHUB_REPOSITORY }}
+              export INVITE_AES_KEY=${{ secrets.INVITE_AES_KEY }}
+              export OPEN_AI_KEY=${{ secrets.OPEN_AI_KEY }}
+              export ERROR_SLACK_WEBHOOK_URL=${{ secrets.ERROR_SLACK_WEBHOOK_URL }}
+              export JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+              export JWT_ACCESS_EXPIRATION=${{ secrets.JWT_ACCESS_EXPIRATION }}
+              export JWT_REFRESH_EXPIRATION=${{ secrets.JWT_REFRESH_EXPIRATION }}
+              export TAG=latest
+            
+              # 실패한 컨테이너 중지 및 삭제
+              echo "=== Stopping failed deployment ==="
+              docker compose down --remove-orphans || true
+              docker rm -f moong-moong-dev || true
+              
+              # 이미지 정리
+              echo "=== Cleaning up failed images ==="
+              docker rmi $(docker images -q) -f || true
+              
+              # previous 이미지 pull
+              echo "=== Pulling previous stable image ==="
+              docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_REPOSITORY }}:previous
+              
+              # previous 이미지로 재배포
+              echo "=== Starting containers with previous image ==="
+              docker compose up -d
+              
+              # 컨테이너 확인
+              sleep 5
+              docker ps
+            
+              # previous를 latest로 다시 태깅
+              echo "=== Re-tagging previous as latest (rollback complete) ==="
+              docker tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_REPOSITORY }}:previous ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_REPOSITORY }}:latest
+              docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_REPOSITORY }}:latest
+              
+              echo "=== ✅ Rollback completed ==="
 
       - name: Tag successful deployment as latest
         if: success()
-        run: |
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:${{ github.sha }}-dev ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$DOCKERHUB_REPOSITORY:latest
-
-      - name: Check Docker Process
-        if: always()
-        run: docker ps
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+            host: ${{ secrets.EC2_HOST }}
+            username: ${{ secrets.EC2_USERNAME }}
+            key: ${{ secrets.EC2_SSH_KEY }}
+            port: 22
+            script: |
+              echo "=== 🏷️ Tagging successful deployment as latest ==="
+              echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+              
+              # latest 태그 업데이트
+              docker tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_REPOSITORY }}:${{ github.sha }}-dev ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_REPOSITORY }}:latest
+              docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_REPOSITORY }}:latest
+              
+              echo "=== ✅ Successfully tagged as dev-latest ==="
