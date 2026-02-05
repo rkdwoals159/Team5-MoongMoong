@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "@/styles/globals.css";
 import ToastProvider from "@/components/ui/Toast/ToastProvider";
 import AgentationClient from "@/app/_components/AgentationClient";
+import DataDogInit from "@/app/_components/DataDogInit";
 
 const pretendard = localFont({
   src: [
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body className={`${pretendard.variable} antialiased`}>
         <ToastProvider>{children}</ToastProvider>
         <AgentationClient />
+        <DataDogInit />
       </body>
     </html>
   );
