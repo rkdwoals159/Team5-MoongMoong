@@ -7,15 +7,19 @@ import type {
   SummaryData,
 } from "@/app/(sidebar)/dashboard/_types";
 
+import { EXPENSES_ERROR_MESSAGE } from "@/app/(sidebar)/dashboard/_constants";
+
 /**
  * 기간별 개인 소비내역 조회 (Server Action)
  * GET /api/expenses?startDate=&endDate=
+ *
+ * 성공 시 데이터 반환, 실패 시 throw. 호출부에서는 try/catch로 처리한다.
  */
 export const getExpensesByPeriod = async (
   startDate: string,
   endDate: string,
 ): Promise<ExpensesByPeriodResponse> => {
-  const { data, error } = await client.GET("/api/expenses", {
+  const { data, error, response } = await client.GET("/api/expenses", {
     params: {
       query: {
         startDate,
@@ -24,16 +28,14 @@ export const getExpensesByPeriod = async (
     },
   });
 
-  if (error || !data) {
+  if (!response.ok) {
     console.error("getExpensesByPeriod error:", error?.message ?? "no data");
-    return { total: 0, expenses: [] };
+    throw new Error(EXPENSES_ERROR_MESSAGE);
   }
 
-  const total = data.total ?? 0;
-  const expenses = (data.expenses ?? []).map(mapExpenseResponse);
-  const result: ExpensesByPeriodResponse = { total, expenses };
-
-  return result;
+  const total = data!.total ?? 0;
+  const expenses = (data!.expenses ?? []).map(mapExpenseResponse);
+  return { total, expenses };
 };
 
 /**
@@ -45,47 +47,19 @@ export const getCompareLastMonth = async (): Promise<SummaryData> => {
 
   if (error || !data) {
     console.error("getCompareLastMonth error:", error?.message ?? "no data");
-    return {
-      progressData: {
-        totalExpense: null,
-        medicalExpense: null,
-        petName: "",
-      },
-      imageData: { src: "/images/img_dog_sample.png" },
-    };
+    // dashboard/error.tsx 페이지 띄우기
+    throw new Error("지난달 비교 데이터를 불러오지 못했어요.");
   }
 
-  return mapCompareResponseToSummary(data);
-};
-
-/**
- * 지난달 대비 비교 데이터 매핑
- */
-const mapCompareResponseToSummary = (raw: {
-  totalRatio?: number;
-  medicalRatio?: number;
-  petName?: string;
-  petImageUrl?: string;
-}): SummaryData => {
-  const totalRatio = raw.totalRatio ?? 0;
-  const medicalRatio = raw.medicalRatio ?? 0;
   return {
     progressData: {
-      totalExpense: {
-        forecast: Math.abs(totalRatio),
-        isMinus: totalRatio < 0,
-      },
-      medicalExpense: {
-        forecast: Math.abs(medicalRatio),
-        isMinus: medicalRatio < 0,
-      },
-      petName: raw.petName ?? "",
+      totalRatio: data.totalRatio ?? 0,
+      medicalRatio: data.medicalRatio ?? 0,
+      petName: data.petName ?? "",
     },
-    imageData: {
-      // TODO: 백엔드 S3 작업 이후, 변경 필요
-      src: "/images/img_dog_sample.png",
-      // src: raw.petImageUrl ?? "/images/img_dog_sample.png",
-    },
+    // TODO: 백엔드 S3 작업 이후, 변경 필요
+    // petImageUrl: data.petImageUrl ?? "/images/img_dog_default.svg",
+    petImageUrl: "/images/img_dog_default.svg",
   };
 };
 

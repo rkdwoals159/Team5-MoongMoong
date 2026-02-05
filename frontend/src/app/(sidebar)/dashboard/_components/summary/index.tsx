@@ -1,9 +1,9 @@
 import { getCompareLastMonth } from "@/app/(sidebar)/dashboard/_api";
 import PetProfileImage from "@/app/(sidebar)/dashboard/_components/summary/PetProfileImage";
-import SummaryCardsWrapper from "@/app/(sidebar)/dashboard/_components/summary/SummaryCardsWrapper";
+import SummaryCard from "./SummaryCard";
 
 const Summary = async () => {
-  const { progressData, imageData } = await getCompareLastMonth();
+  const { progressData, petImageUrl } = await getCompareLastMonth();
 
   return (
     <section className="w-full">
@@ -11,8 +11,17 @@ const Summary = async () => {
         className="grid w-full items-stretch gap-500"
         style={{ gridTemplateColumns: "1fr 1fr 210px" }}
       >
-        <SummaryCardsWrapper data={progressData} />
-        <PetProfileImage image={imageData} />
+        <SummaryCard
+          variant="totalExpense"
+          data={progressData.totalRatio ?? null}
+          petName={progressData.petName ?? ""}
+        />
+        <SummaryCard
+          variant="medicalExpense"
+          data={progressData.medicalRatio ?? null}
+          petName={progressData.petName ?? ""}
+        />
+        <PetProfileImage petImageUrl={petImageUrl} />
       </div>
     </section>
   );

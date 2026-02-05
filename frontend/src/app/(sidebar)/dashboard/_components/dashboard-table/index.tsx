@@ -5,6 +5,8 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { ExpenseData } from "@/app/(sidebar)/dashboard/_types";
 import { getExpensesByPeriod } from "@/app/(sidebar)/dashboard/_api";
 import { resolveDashboardRange } from "@/app/(sidebar)/dashboard/_lib/dashboardRange";
+import { EXPENSES_ERROR_MESSAGE } from "@/app/(sidebar)/dashboard/_constants";
+import { useToast } from "@/components/ui/Toast/ToastProvider";
 import EditableDataTable from "@/app/(sidebar)/dashboard/_components/dashboard-table/EditableDataTable";
 import ExpenseTableToolbar from "@/app/(sidebar)/dashboard/_components/dashboard-table/ExpenseTableToolbar";
 import DateRangePicker from "@/components/common/DateRangePicker/DateRangePicker";
@@ -18,6 +20,7 @@ const DashboardTable = ({ tableClassName }: DashboardTableProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const { showToast } = useToast();
 
   const { startDate, endDate } = resolveDashboardRange({
     startDate: searchParams.get("startDate"),
@@ -37,23 +40,27 @@ const DashboardTable = ({ tableClassName }: DashboardTableProps) => {
   useEffect(() => {
     let cancelled = false;
 
-    getExpensesByPeriod(startDate, endDate)
-      .then(({ total, expenses: list }) => {
-        if (!cancelled) {
-          setExpenses(list);
-          setTotalExpense(total);
-        }
-      })
-      .catch((error) => {
-        if (!cancelled) {
-          console.error("Failed to load expenses for period:", error);
-        }
-      });
+    const loadExpenses = async () => {
+      try {
+        const data = await getExpensesByPeriod(startDate, endDate);
+        if (cancelled) return;
+        setExpenses(data.expenses);
+        setTotalExpense(data.total);
+      } catch (error) {
+        if (cancelled) return;
+        console.error("Failed to load expenses for period:", error);
+        showToast({
+          variant: "error",
+          message: error instanceof Error ? error.message : EXPENSES_ERROR_MESSAGE,
+        });
+      }
+    };
 
+    loadExpenses();
     return () => {
       cancelled = true;
     };
-  }, [startDate, endDate]);
+  }, [startDate, endDate, showToast]);
 
   return (
     <>

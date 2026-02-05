@@ -1,9 +1,10 @@
 import { SummaryCardProps } from "@/app/(sidebar)/dashboard/_types";
-import { getLabelNoData, getLabelWithData } from "@/app/(sidebar)/dashboard/_constants";
-import GraphDegradeIcon from "@/assets/icons/dashboard/img_graph_degrade.svg";
-import GraphRisingIcon from "@/assets/icons/dashboard/img_graph_rising.svg";
-import GraphStraightIcon from "@/assets/icons/dashboard/img_graph_straight.svg";
-import DoctorIcon from "@/assets/icons/dashboard/img_doctor.svg";
+import {
+  getLabelNoData,
+  getLabelWithData,
+  getSummaryValue,
+  getSummaryIcon,
+} from "@/app/(sidebar)/dashboard/_constants";
 import cn from "@/utils/style";
 
 const SummaryCard = ({ variant, data, petName, className }: SummaryCardProps) => {
@@ -11,19 +12,8 @@ const SummaryCard = ({ variant, data, petName, className }: SummaryCardProps) =>
   const labelText = hasData
     ? getLabelWithData(petName ?? "")[variant]
     : getLabelNoData(petName ?? "")[variant];
-  const value = hasData ? `${data.forecast}% ${data.isMinus ? "줄였어요" : "늘었어요"}` : "-";
-  const icon =
-    variant === "medicalExpense" ? (
-      <DoctorIcon />
-    ) : hasData ? (
-      data.isMinus ? (
-        <GraphDegradeIcon />
-      ) : (
-        <GraphRisingIcon />
-      )
-    ) : (
-      <GraphStraightIcon />
-    );
+  const value = getSummaryValue(data);
+  const iconElement = getSummaryIcon(variant, data);
 
   return (
     <div
@@ -38,7 +28,7 @@ const SummaryCard = ({ variant, data, petName, className }: SummaryCardProps) =>
             "flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-500 bg-blue-100 [&>svg]:h-full [&>svg]:w-full [&>svg]:object-contain",
           )}
         >
-          {icon}
+          {iconElement}
         </div>
         <div className="flex flex-col gap-1">
           <p className="typo-body-l-bold text-gray-500">{labelText}</p>

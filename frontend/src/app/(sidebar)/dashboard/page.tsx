@@ -1,8 +1,10 @@
+import { Suspense } from "react";
 import { formatMonthLabel } from "@/utils/date";
 import PageHeader from "@/components/layout/Header/PageHeader";
 import Summary from "@/app/(sidebar)/dashboard/_components/summary";
+import SummarySkeleton from "@/app/(sidebar)/dashboard/_components/summary/SummarySkeleton";
 import DashboardTable from "@/app/(sidebar)/dashboard/_components/dashboard-table";
-import { Suspense } from "react";
+import DashboardTableSkeleton from "@/app/(sidebar)/dashboard/_components/dashboard-table/DashboardTableSkeleton";
 
 export default function DashboardHomePage() {
   const now = new Date();
@@ -11,8 +13,10 @@ export default function DashboardHomePage() {
   return (
     <>
       <PageHeader title={monthLabel} />
-      <Summary />
-      <Suspense fallback={<div>Table Loading...</div>}>
+      <Suspense fallback={<SummarySkeleton />}>
+        <Summary />
+      </Suspense>
+      <Suspense fallback={<DashboardTableSkeleton />}>
         <DashboardTable />
       </Suspense>
     </>

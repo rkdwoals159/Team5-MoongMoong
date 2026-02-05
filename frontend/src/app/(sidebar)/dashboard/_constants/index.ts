@@ -7,4 +7,6 @@ export {
   DEFAULT_CATEGORY_COLOR,
 } from "./categoryMap";
 
-export { getLabelNoData, getLabelWithData } from "./summaryLabels";
+export { getLabelNoData, getLabelWithData, getSummaryValue, getSummaryIcon } from "./summaryLabels";
+
+export { EXPENSES_ERROR_MESSAGE } from "./messages";

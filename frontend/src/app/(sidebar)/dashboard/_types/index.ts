@@ -13,27 +13,12 @@ export type ExpenseData = {
 };
 
 /**
- * 카드 한 개 지표 데이터 (forecast, isMinus)
- */
-export type ProgressStat = {
-  forecast: number;
-  isMinus: boolean;
-};
-
-/**
  * 총지출, 의료비 지출 데이터 타입
  */
 export type ProgressData = {
-  totalExpense?: ProgressStat | null;
-  medicalExpense?: ProgressStat | null;
+  totalRatio?: number | null;
+  medicalRatio?: number | null;
   petName?: string;
-};
-
-/**
- * Image 데이터 타입
- */
-export type ImageData = {
-  src: string;
 };
 
 /**
@@ -56,18 +41,11 @@ export type CategoryPopupProps = {
 };
 
 /**
- * SummaryCardsWrapper 컴포넌트 타입
- */
-export type SummaryCardsWrapperProps = {
-  data: ProgressData;
-};
-
-/**
  * SummaryCard 컴포넌트 타입
  */
 export type SummaryCardProps = {
   variant: "totalExpense" | "medicalExpense";
-  data: ProgressStat | null;
+  data: number | null;
   petName?: string;
   className?: string;
 };
@@ -106,5 +84,12 @@ export type LastMonthCompareResponse = {
  */
 export type SummaryData = {
   progressData: ProgressData;
-  imageData: ImageData;
+  petImageUrl: string;
+};
+
+/**
+ * PetProfileImage 컴포넌트 타입
+ */
+export type PetProfileImageProps = {
+  petImageUrl: string;
 };
