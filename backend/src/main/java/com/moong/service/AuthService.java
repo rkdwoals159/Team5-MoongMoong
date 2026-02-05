@@ -1,6 +1,11 @@
 package com.moong.service;
 
+import com.moong.client.oauth.OAuthClient;
+import com.moong.controller.tool.jwt.AuthManager;
 import com.moong.domain.entity.Member;
+import com.moong.domain.member.MemberInfo;
+import com.moong.dto.response.auth.JwtTokenResponse;
+import com.moong.dto.response.auth.MemberInfoWithTokenResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.MemberRepository;
@@ -12,9 +17,17 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final MemberRepository memberRepository;
+    private final AuthManager authManager;
+    private final OAuthClient oAuthClient;
 
     public Member authorize(long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED_EXCEPTION));
+    }
+
+    public MemberInfoWithTokenResponse findMemberInfoAndGenerateToken(String accessToken) {
+        MemberInfo memberInfo = oAuthClient.requestMemberInfo(accessToken);
+        JwtTokenResponse jwtTokenResponse = authManager.issueToken(memberInfo);
+        return new MemberInfoWithTokenResponse(memberInfo, jwtTokenResponse);
     }
 }

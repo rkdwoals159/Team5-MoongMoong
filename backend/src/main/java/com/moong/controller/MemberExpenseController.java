@@ -41,6 +41,7 @@ public class MemberExpenseController implements MemberExpenseControllerSwagger {
         return ResponseEntity.ok(response);
     }
 
+    @Override
     @GetMapping("/compare/last-month")
     public ResponseEntity<LastMonthComparisonResponse> compareLastMonthExpense(
             @AuthMember Member member

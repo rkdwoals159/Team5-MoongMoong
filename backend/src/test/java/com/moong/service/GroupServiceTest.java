@@ -147,35 +147,57 @@ class GroupServiceTest extends BaseServiceTest {
                             guest2,
                             new PetGroupParticipateRequest(InviteCode.HTTP_INVITE_URL_PREFIX + inviteCode.getCode())
                     );
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
             });
 
-        List<Crew> crews = crewRepository.findAllByPetGroup_Id(petGroup1.getId());
+            List<Crew> crews = crewRepository.findAllByPetGroup_Id(petGroup1.getId());
 
-        assertThat(crews)
+            assertThat(crews)
                     .extracting(crew -> crew.getMember().getId())
-                    .containsExactly(guest.getId(),guest2.getId());
+                    .containsExactly(guest.getId(), guest2.getId());
+        }
+
+        @DisplayName("성공 : guest2 > guest1 펫 그룹에 참여할 수 있다")
+        @Test
+        void participateSuccess() {
+            Pet savedPet = petGenerator.generateSaved();
+            Pet savedPet2 = petGenerator.generateSaved();
+            Member guest = memberGenerator.generateSaved("게스트");
+            Member guest2 = memberGenerator.generateSaved("게스트");
+            PetGroup petGroup1 = petGroupGenerator.generateSaved(savedPet);
+            PetGroup petGroup2 = petGroupGenerator.generateSaved(savedPet2);
+            crewGenerator.generateSaved(petGroup1, guest);
+            crewGenerator.generateSaved(petGroup2, guest2);
+            InviteCode inviteCode = inviteCodeGenerator.encrypt(petGroup1.getId());
+
+            assertThatCode(() ->
+                    groupService.participate(
+                            guest2,
+                            new PetGroupParticipateRequest(InviteCode.HTTP_INVITE_URL_PREFIX + inviteCode.getCode())
+                    )
+            ).doesNotThrowAnyException();
+        }
     }
 
-    @DisplayName("성공 : guest2 > guest1 펫 그룹에 참여할 수 있다")
+    @DisplayName("초대코드에 해당하는 펫 그룹을 찾을 수 있다.")
     @Test
-    void participateSuccess() {
+    void findFetchedPetGroup() {
         Pet savedPet = petGenerator.generateSaved();
-        Pet savedPet2 = petGenerator.generateSaved();
-        Member guest = memberGenerator.generateSaved("게스트");
-        Member guest2 = memberGenerator.generateSaved("게스트");
-        PetGroup petGroup1 = petGroupGenerator.generateSaved(savedPet);
-        PetGroup petGroup2 = petGroupGenerator.generateSaved(savedPet2);
-        crewGenerator.generateSaved(petGroup1, guest);
-        crewGenerator.generateSaved(petGroup2, guest2);
-        InviteCode inviteCode = inviteCodeGenerator.encrypt(petGroup1.getId());
+        PetGroup savedPetGroup = petGroupGenerator.generateSaved(savedPet);
+        InviteCode inviteCode = inviteCodeGenerator.encrypt(savedPetGroup.getId());
 
-        assertThatCode(() ->
-                groupService.participate(
-                        guest2,
-                        new PetGroupParticipateRequest(InviteCode.HTTP_INVITE_URL_PREFIX + inviteCode.getCode())
-                )
-        ).doesNotThrowAnyException();
+        PetGroup petGroup = groupService.findFetchedPetGroupByInviteUrl(
+                InviteCode.HTTP_INVITE_URL_PREFIX + inviteCode.getCode()
+        );
+
+        assertAll(
+                () -> assertThat(petGroup.getId()).isEqualTo(savedPetGroup.getId()),
+                () -> assertThat(petGroup.getPet().getId()).isEqualTo(savedPet.getId()),
+                () -> assertThat(petGroup.getPet().getName()).isEqualTo(savedPet.getName()),
+                () -> assertThat(petGroup.getPet().getBirthDate()).isEqualTo(savedPet.getBirthDate()),
+                () -> assertThat(petGroup.getPet().getBreed()).isEqualTo(savedPet.getBreed()),
+                () -> assertThat(petGroup.getPet().getGender()).isEqualTo(savedPet.getGender())
+        );
     }
-}
 }

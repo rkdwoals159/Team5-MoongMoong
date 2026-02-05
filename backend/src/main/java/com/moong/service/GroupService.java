@@ -77,4 +77,10 @@ public class GroupService {
                     throw new BusinessException(ErrorCode.ALREADY_ATTENDED_PET_GROUP);
                 });
     }
+
+    public PetGroup findFetchedPetGroupByInviteUrl(String inviteUrl) {
+        InviteCode inviteCode = InviteCode.parseFromUrl(inviteUrl);
+        long groupId = inviteCodeGenerator.decode(inviteCode);
+        return petGroupRepository.getFetchedPetByPetId(groupId);
+    }
 }

@@ -46,3 +46,8 @@ category-classification:
 openai:
   base-url: https://api.openai.com/v1
   secret-key: testKey
+
+jwt:
+  secret_key: bXlTdXBlclNlY3JldEtleUZvckpXVFRva2VuU2lnbmluZ1B1cnBvc2VzMTIzNDU2Nzg5MA==
+  access_token_expiration: 1h
+  refresh_token_expiration: 1d

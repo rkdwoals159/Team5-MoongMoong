@@ -1,14 +1,32 @@
 package com.moong.service;
 
+import static org.mockito.ArgumentMatchers.anyString;
+
 import com.moong.DataBaseCleaner;
-import com.moong.fixture.*;
+import com.moong.client.oauth.OAuthClient;
+import com.moong.domain.member.MemberInfo;
+import com.moong.fixture.BankGenerator;
+import com.moong.fixture.CoinGenerator;
+import com.moong.fixture.CrewGenerator;
+import com.moong.fixture.GroupExpenseGenerator;
+import com.moong.fixture.GroupMedicalAdviceGenerator;
+import com.moong.fixture.MemberExpenseGenerator;
+import com.moong.fixture.MemberGenerator;
+import com.moong.fixture.PetGenerator;
+import com.moong.fixture.PetGroupGenerator;
+import com.moong.fixture.PetMedicalGenerator;
+import com.moong.fixture.TreatmentGenerator;
+import com.moong.fixture.WorriedDiseaseGenerator;
+import java.security.SecureRandom;
+import java.util.List;
+import java.util.stream.IntStream;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.List;
-import java.util.stream.IntStream;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @ActiveProfiles("test")
 @ExtendWith(DataBaseCleaner.class)
@@ -49,8 +67,11 @@ public abstract class BaseServiceTest {
     protected BankGenerator bankGenerator;
 
     @Autowired
-    protected  CoinGenerator coinGenerator;
-  
+    protected CoinGenerator coinGenerator;
+
+    @MockitoBean
+    protected OAuthClient oAuthClient;
+
     protected void runAtSameTime(int count, Runnable task) throws InterruptedException {
         List<Thread> threads = IntStream.range(0, count)
                 .mapToObj(i -> new Thread(task))
@@ -60,5 +81,12 @@ public abstract class BaseServiceTest {
         for (Thread thread : threads) {
             thread.join();
         }
+    }
+
+    @BeforeEach
+    public void beforeEach() {
+        int randNum = new SecureRandom().nextInt(1000);
+        Mockito.when(oAuthClient.requestMemberInfo(anyString()))
+                .thenReturn(new MemberInfo("email" + randNum + "@email.com"));
     }
 }

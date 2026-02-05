@@ -89,3 +89,9 @@ category-classification:
 openai:
   base-url: https://api.openai.com/v1
   secret-key: ${OPEN_AI_KEY}
+
+jwt:
+  secret_key: ${JWT_SECRET_KEY}
+  access_token_expiration: ${JWT_ACCESS_EXPIRATION}
+  refresh_token_expiration: ${JWT_REFRESH_EXPIRATION}
+
