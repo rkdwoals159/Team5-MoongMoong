@@ -46,7 +46,7 @@ export const getCompareLastMonth = async (): Promise<SummaryData> => {
   const { data, error } = await client.GET("/api/expenses/compare/last-month");
 
   if (error || !data) {
-    console.error("getCompareLastMonth error:", error?.message ?? "no data");
+    console.error("getCompareLastMonth error:", error ?? "no data");
     // dashboard/error.tsx 페이지 띄우기
     throw new Error("지난달 비교 데이터를 불러오지 못했어요.");
   }

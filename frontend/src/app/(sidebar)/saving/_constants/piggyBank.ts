@@ -19,4 +19,4 @@ export const PIGGY_BANK = {
   COIN_TEXTURE_PATH: "/images/img_coin_texture.png",
 } as const;
 
-export const DROP_DELAY = 200;
+export const DROP_DELAY = 600;

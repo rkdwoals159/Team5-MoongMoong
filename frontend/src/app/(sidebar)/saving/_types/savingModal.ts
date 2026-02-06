@@ -11,3 +11,11 @@ export type SavingModalCardProps = {
   description: string;
   children: ReactNode;
 };
+
+export type SavingConfirmDialogProps = {
+  amount: number;
+  onConfirm: () => void;
+  onCancel: () => void;
+  onOverlayClick: () => void;
+  isLoading: boolean;
+};

@@ -28,7 +28,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/group/particiapte": {
+  "/api/group/participate": {
     parameters: {
       query?: never;
       header?: never;
@@ -95,18 +95,54 @@ export interface paths {
     get: operations["findCoins"];
     put?: never;
     /**
-     * 저금하기
-     * @description 원하는 금액만큼을 저금합니다.
+     * 결제 요청 전 정보 등록 및 검증
+     * @description 실제 결제 요청 전, 요청 금액의 유효성을 검증하고 고유 주문 번호(OrderId)를 생성하여 전달합니다.
      */
-    post: operations["createCoin"];
+    post: operations["createCoinPayment"];
     delete?: never;
     options?: never;
     head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/group/bank/coins/fail": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
     /**
-     * 저금통 목표 금액 변경
-     * @description 저금통 목표 금액을 변경하고, 변경된 금액을 반환합니다.
+     * 결제 실패/취소 처리
+     * @description 사용자가 결제를 중단하거나 프로세스 중 오류가 발생했을 때, 생성된 결제 대기 건을 실패 처리하고 락을 해제합니다.
      */
-    patch: operations["updateBank"];
+    post: operations["paymentFailure"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/group/bank/coins/confirm": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * 결제 성공 시 결제 확정을 위한 요청
+     * @description 결제 성공 시 결제 확정을 위해 서버에 요청합니다.
+     */
+    post: operations["paymentSuccess"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
     trace?: never;
   };
   "/api/expenses": {
@@ -122,7 +158,11 @@ export interface paths {
      */
     get: operations["getMemberExpensesByPeriod"];
     put?: never;
-    post?: never;
+    /**
+     * 자동 카테고리 분류
+     * @description 유저의 사용내역을 보고 대분류/소분류 카테고리를 자동 분류합니다
+     */
+    post: operations["categorizeMemberExpenses"];
     delete?: never;
     options?: never;
     head?: never;
@@ -131,26 +171,6 @@ export interface paths {
      * @description 개인 소비 내역을 생성하거나 수정하고, 삭제 대상 내역은 함께 제거합니다.
      */
     patch: operations["upsertMemberExpenses"];
-    trace?: never;
-  };
-  "/api/expenses/compare/last-month": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 지난달 대비 비교 데이터 조회
-     * @description 총지출/의료비 비율, 반려동물 이름·이미지 URL 반환
-     */
-    get: operations["getCompareLastMonth"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
     trace?: never;
   };
   "/api/member": {
@@ -243,26 +263,6 @@ export interface paths {
      *     그리고 치료비의 최소·최대·평균값을 조회합니다.
      */
     get: operations["getTreatment"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/group/bank/coins": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * 모임가계부 저금통 코인 내역 반환
-     * @description 저금통의 코인 내역의 정보들의 리스트를 반환합니다.
-     */
-    get: operations["findCoins"];
     put?: never;
     post?: never;
     delete?: never;
@@ -638,14 +638,59 @@ export interface components {
        */
       target?: number;
     };
-    /** @description 저금하기 요청 */
-    CoinCreateRequest: {
+    /** @description 결제 confirm 요청 */
+    CoinPaymentConfirmRequest: {
+      /**
+       * Format: uuid
+       * @description 결제 Id
+       * @example 8973f452-cabc-4098-bdd9-d32737c86a33
+       */
+      orderId?: string;
       /**
        * Format: int64
-       * @description 저금 금액
-       * @example 5000
+       * @description 결제 금액
+       * @example 10000
        */
       amount?: number;
+      /**
+       * @description 결제 키
+       * @example asdfew20260205134206Rsdd
+       */
+      paymentKey?: string;
+    };
+    /** @description 결제 신청 전 금액 저장 및 결제 Id 생성 요청 */
+    CoinPaymentCreateResponse: {
+      /**
+       * Format: uuid
+       * @description 결제 Id
+       * @example 8973f452-cabc-4098-bdd9-d32737c86a33
+       */
+      orderId?: string;
+      /**
+       * Format: int64
+       * @description 결제 금액
+       * @example 1000
+       */
+      amount?: number;
+    };
+    /** @description 결제 신청 실패 시 요청 */
+    CoinPaymentFailRequest: {
+      /**
+       * @description 토스 결제 에러 코드
+       * @example ALREADY_PROCESSED_PAYMENT
+       */
+      code?: string;
+      /**
+       * @description 토스 에러 메세지
+       * @example 이미 처리된 결제 입니다.
+       */
+      message?: string;
+      /**
+       * Format: uuid
+       * @description 결제 Id
+       * @example 8973f452-cabc-4098-bdd9-d32737c86a33
+       */
+      orderId?: string;
     };
     /** @description 저금하기 응답 */
     CoinCreateResponse: {
@@ -672,6 +717,37 @@ export interface components {
        * @example 민수
        */
       name?: string;
+    };
+    /** @description 자동 카테고리 분류 응답 */
+    CategorizeResponse: {
+      /**
+       * @description 요청했던 id 값
+       * @example 550e8400-e29b-41d4-a716-446655440000
+       */
+      requestId?: string;
+      /**
+       * @description 분류된 대분류
+       * @example 의료
+       */
+      mainCategory?: string;
+      /**
+       * @description 분류된 소분류
+       * @example 수술비
+       */
+      subCategory?: string;
+    };
+    /** @description 자동 카테고리 분류 요청 */
+    CategorizeRequest: {
+      /**
+       * @description 사용한 지출내역
+       * @example 뚱이 허리 수술
+       */
+      usage?: string;
+      /**
+       * @description 요청 id 값
+       * @example 550e8400-e29b-41d4-a716-446655440000
+       */
+      requestId?: string;
     };
     /** @description 저금통 목표 금액 변경 요청 */
     BankUpdateRequest: {
@@ -1099,17 +1175,6 @@ export interface components {
       total?: number;
       /** @description 조회한 소비 내역 목록 */
       expenses?: components["schemas"]["MemberExpenseResponse"][];
-    };
-    /** @description 지난달 대비 비교 API 응답 */
-    LastMonthCompareResponse: {
-      /** @description 총 지출 전월 대비 비율 (%) */
-      totalRatio?: number;
-      /** @description 의료비 전월 대비 비율 (%) */
-      medicalRatio?: number;
-      /** @description 반려동물 이름 */
-      petName?: string;
-      /** @description 반려동물 이미지 URL */
-      petImageUrl?: string;
     };
     GroupExpenseResponse: {
       /**
@@ -1664,26 +1729,27 @@ export interface operations {
       };
     };
   };
-  createCoin: {
+  createCoinPayment: {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
+    /** @description 결제 요청 전 검증을 위한 금액 데이터 저장 요청 */
     requestBody: {
       content: {
-        "application/json;charset=UTF-8": components["schemas"]["CoinCreateRequest"];
+        "application/json;charset=UTF-8": components["schemas"]["CoinPaymentConfirmRequest"];
       };
     };
     responses: {
-      /** @description 저금 성공 */
+      /** @description 실제 결제 전 금액 요청 성공 */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json;charset=UTF-8": components["schemas"]["CoinCreateResponse"];
+          "application/json;charset=UTF-8": components["schemas"]["CoinPaymentCreateResponse"];
         };
       };
       /**
@@ -1708,6 +1774,115 @@ export interface operations {
         };
       };
       /** @description 저금통이 아직 존재하지 않음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  paymentFailure: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description 결제 실패 시 요청 데이터 */
+    requestBody: {
+      content: {
+        "application/json;charset=UTF-8": components["schemas"]["CoinPaymentFailRequest"];
+      };
+    };
+    responses: {
+      /** @description 결제 실패 처리 완료 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /**
+       * @description - 요청 데이터(orderId, amount 등) 형식이 올바르지 않음
+       *     - 이미 처리 완료된 결제 건에 대한 실패 요청
+       */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 해당 주문 번호(orderId)로 저장된 결제 정보를 찾을 수 없음 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  paymentSuccess: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description 결제 성공 시 요청 데이터 */
+    requestBody: {
+      content: {
+        "application/json;charset=UTF-8": components["schemas"]["CoinPaymentConfirmRequest"];
+      };
+    };
+    responses: {
+      /** @description 결제 확정을 성공하여 저금에 성공합니다. */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["CoinCreateResponse"];
+        };
+      };
+      /**
+       * @description - 유효하지 않은 결제 요청
+       *     - 결제 확정 금액이 주문 금액과 일치하지 않는 경우
+       *     - 이미 처리 중이거나 완료된 결제 요청
+       */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 코인 결제 내역을 찾을 수 없음 */
       404: {
         headers: {
           [name: string]: unknown;
@@ -1758,46 +1933,43 @@ export interface operations {
       };
     };
   };
-  getCompareLastMonth: {
+  categorizeMemberExpenses: {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    requestBody?: never;
+    /** @description 자동카테고리 분류 요청 */
+    requestBody: {
+      content: {
+        "application/json;charset=UTF-8": components["schemas"]["CategorizeRequest"];
+      };
+    };
     responses: {
-      /** @description 지난달 대비 비교 데이터 반환 성공 */
+      /** @description 카테고리 분류 성공 */
       200: {
-        headers: { [name: string]: unknown };
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
-          "application/json;charset=UTF-8": components["schemas"]["LastMonthCompareResponse"];
+          "application/json;charset=UTF-8": components["schemas"]["CategorizeResponse"];
         };
       };
-      /** @description 실패 - MEMBER_ID_MISMATCH 등 */
-      400: {
-        headers: { [name: string]: unknown };
-        content: {
-          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
-        };
-      };
-      /** @description 인증되지 않은 사용자(유효하지 않은 memberId) */
+      /** @description 인증되지 않은 사용자 */
       401: {
-        headers: { [name: string]: unknown };
-        content: {
-          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        headers: {
+          [name: string]: unknown;
         };
-      };
-      /** @description 존재하지 않은 테이블 */
-      404: {
-        headers: { [name: string]: unknown };
         content: {
           "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
         };
       };
       /** @description 서버 오류 */
       500: {
-        headers: { [name: string]: unknown };
+        headers: {
+          [name: string]: unknown;
+        };
         content: {
           "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
         };
@@ -1999,44 +2171,6 @@ export interface operations {
       };
       /** @description 인증되지 않은 사용자 */
       401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
-        };
-      };
-      /** @description 서버 오류 */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
-        };
-      };
-    };
-  };
-  findCoins: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description 저금통 코인 내역 조회 성공 */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["CoinsResponse"];
-        };
-      };
-      /** @description 저금통이 아직 존재하지 않음 */
-      404: {
         headers: {
           [name: string]: unknown;
         };
