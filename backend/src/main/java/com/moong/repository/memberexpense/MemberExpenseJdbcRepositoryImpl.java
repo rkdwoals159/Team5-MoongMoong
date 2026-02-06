@@ -4,7 +4,6 @@ import com.moong.domain.entity.MemberExpense;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -22,7 +21,7 @@ public class MemberExpenseJdbcRepositoryImpl implements MemberExpenseJdbcReposit
     @Override
     @Transactional
     public void saveAllByBulkQuery(List<MemberExpense> memberExpenses) {
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime now = LocalDateTime.now();
 
         SqlParameterSource[] parameterSources = memberExpenses.stream()
                 .map((memberExpense) -> makeInsertParameterSource(memberExpense, now))
@@ -52,7 +51,7 @@ public class MemberExpenseJdbcRepositoryImpl implements MemberExpenseJdbcReposit
     @Override
     @Transactional
     public void updateAllByBulkQuery(List<MemberExpense> memberExpenses) {
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime now = LocalDateTime.now();
 
         SqlParameterSource[] parameterSources = memberExpenses.stream()
                 .map((memberExpense) -> makeUpdateParameterSource(memberExpense, now))

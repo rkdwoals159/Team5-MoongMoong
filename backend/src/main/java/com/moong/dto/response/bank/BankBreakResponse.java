@@ -5,8 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.time.ZoneId;
-import lombok.extern.slf4j.Slf4j;
 
 @Schema(description = "저금통 깨기 응답")
 public record BankBreakResponse(
@@ -21,7 +19,7 @@ public record BankBreakResponse(
         this(
                 Period.between(
                         bankCreatedAt.toLocalDate(),
-                                LocalDate.now(ZoneId.of("Asia/Seoul"))
+                                LocalDate.now()
                         )
                         .getDays(),
                 BankBreakMessage.getRandom().getMessage()

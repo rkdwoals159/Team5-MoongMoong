@@ -2,7 +2,6 @@ package com.moong.domain.pet;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.ZoneId;
 import lombok.Getter;
 
 @Getter
@@ -11,7 +10,7 @@ public class PetAge {
     private final int value;
 
     public PetAge(LocalDate birthDate) {
-        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        LocalDate today = LocalDate.now();
         this.value = Period.between(birthDate, today).getYears();
     }
 

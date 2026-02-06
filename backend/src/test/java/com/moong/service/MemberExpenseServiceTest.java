@@ -19,7 +19,6 @@ import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.memberexpense.MemberExpenseRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -99,7 +98,7 @@ class MemberExpenseServiceTest extends BaseServiceTest {
     @DisplayName("지난달 소비내역 통계를 모두 반환한다.")
     @Test
     void compareLastMonthExpense() {
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime now = LocalDateTime.now();
         LocalDateTime lastMonth = now.minusMonths(1);
 
         Member member = memberGenerator.generateSaved("멤버1");
@@ -161,7 +160,7 @@ class MemberExpenseServiceTest extends BaseServiceTest {
     @DisplayName("지난달 소비내역이 0원일 때는 ratio로 null을 반환한다.")
     @Test
     void compareLastMonthExpense_lastMonthZero() {
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime now = LocalDateTime.now();
 
         Member member = memberGenerator.generateSaved("멤버1");
         Pet savedPet = petGenerator.generateSaved();

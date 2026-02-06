@@ -11,10 +11,8 @@ import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
 import com.moong.dto.response.categorize.AiCategorizeResponse;
 import com.moong.dto.response.categorize.CategorizeResponse;
 import com.moong.domain.entity.Crew;
-import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.memberexpense.MonthlyExpenseStats;
-import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesUpsertResponse;
@@ -24,7 +22,6 @@ import com.moong.repository.CrewRepository;
 import com.moong.repository.memberexpense.MemberExpenseRepository;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
@@ -70,7 +67,7 @@ public class MemberExpenseService {
     }
 
     public LastMonthComparisonResponse compareLastMonthExpense(Member member) {
-        YearMonth currentMonth = YearMonth.now(ZoneId.of("Asia/Seoul"));
+        YearMonth currentMonth = YearMonth.now();
         YearMonth lastMonth = currentMonth.minusMonths(1);
 
         long previousTotal = getMonthlyTotal(member.getId(), lastMonth);

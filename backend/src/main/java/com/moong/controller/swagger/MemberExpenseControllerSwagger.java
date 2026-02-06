@@ -67,6 +67,8 @@ public interface MemberExpenseControllerSwagger {
                     ),
 
             })
+    @ErrorCode401
+    @ErrorCode500
     ResponseEntity<LastMonthComparisonResponse> compareLastMonthExpense(
             @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
             Member member

@@ -138,9 +138,7 @@ public class TestDataGenerator {
     }
 
     private List<GroupExpense> getExampleGroupExpense(List<MemberExpense> memberExpense, PetGroup petGroup) {
-        List<String> dogExpense = List.of("의료", "사료/간식", "미용", "물품구매비");
         return memberExpense.stream()
-                .filter(expense -> dogExpense.contains(expense.getMainCategory()))
                 .map(expense -> convertToGroupExpense(expense, petGroup))
                 .toList();
     }

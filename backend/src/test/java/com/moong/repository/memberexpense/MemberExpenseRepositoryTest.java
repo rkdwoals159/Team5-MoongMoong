@@ -8,7 +8,6 @@ import com.moong.domain.entity.MemberExpense;
 import com.moong.repository.BaseRepositoryTest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,7 +42,7 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
     @DisplayName("멤버의 소비 내역의 합을 기간 기준으로 반환한다.")
     @Test
     void sumCostByMemberIdAndPeriod() {
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime now = LocalDateTime.now();
         Member member = memberGenerator.generateSaved("멤버1");
 
         MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(
@@ -93,7 +92,7 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
     @DisplayName("멤버의 메인 카테고리의 소비 내역의 합을 기간 기준으로 반환한다.")
     @Test
     void sumCostByMainCategoryAndPeriod() {
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime now = LocalDateTime.now();
         Member member = memberGenerator.generateSaved("멤버1");
 
         MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(

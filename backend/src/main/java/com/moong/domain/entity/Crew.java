@@ -14,7 +14,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -53,7 +52,7 @@ public class Crew {
     private LocalDateTime createdAt;
 
     public Crew(PetGroup petGroup, Member member) {
-        this(null, petGroup, member, LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+        this(null, petGroup, member, LocalDateTime.now());
     }
 
     public boolean isSame(long memberId) {
