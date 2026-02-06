@@ -1,5 +1,6 @@
 package com.moong.controller.tool.jwt;
 
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.time.Duration;
 import javax.crypto.SecretKey;
@@ -13,6 +14,7 @@ public record JwtProperties(
 ) {
 
     public SecretKey getSecretKey() {
-        return Keys.hmacShaKeyFor(secretKey.getBytes());
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }
