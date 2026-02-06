@@ -1,15 +1,7 @@
 import FilterChip from "@/components/common/FilterChip/FilterChip";
 import Button from "@/components/common/Button/Button";
-import { DiseaseCode } from "@/app/(sidebar)/forecast/_types";
 import { DISEASE_CODE_FULL_NAMES } from "../../_constants";
-
-type AnnualDiseaseRiskSelectProps = {
-  selectedDiseases: DiseaseCode[];
-  unselectedDiseases: DiseaseCode[];
-  onReset: () => void;
-  onCancel: (code: DiseaseCode) => void;
-  onSelect: (code: DiseaseCode) => void;
-};
+import { AnnualDiseaseRiskSelectProps } from "@/app/(sidebar)/forecast/_types/annualDiseaseRisk";
 
 const AnnualDiseaseRiskSelect = ({
   selectedDiseases,

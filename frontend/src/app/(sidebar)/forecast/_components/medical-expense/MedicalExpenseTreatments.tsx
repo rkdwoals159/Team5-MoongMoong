@@ -1,16 +1,7 @@
 import PaginationButton from "@/components/common/PaginationButton/PaginationButton";
 import TreatmentCard from "@/app/(sidebar)/forecast/_components/medical-expense/TreatmentCard";
-import { DiseaseCode, DiseaseCostResponse } from "@/app/(sidebar)/forecast/_types";
 import Link from "next/link";
-
-type Treatment = DiseaseCostResponse["treatments"][number];
-
-type MedicalExpenseTreatmentsProps = {
-  visibleTreatments: Treatment[];
-  totalPages: number;
-  selectedDisease: DiseaseCode;
-  currentPage: number;
-};
+import { MedicalExpenseTreatmentsProps } from "@/app/(sidebar)/forecast/_types/medicalExpense";
 
 const MedicalExpenseTreatments = ({
   visibleTreatments,

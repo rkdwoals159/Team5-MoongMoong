@@ -1,6 +1,6 @@
-import { TreatmentCardProps } from "@/app/(sidebar)/forecast/_types";
+import { TreatmentResponse } from "@/app/(sidebar)/forecast/_types/medicalExpense";
 
-const TreatmentCard = ({ treatment }: TreatmentCardProps) => {
+const TreatmentCard = ({ treatment }: { treatment: TreatmentResponse }) => {
   const { name, description, minPrice, maxPrice, averagePrice } = treatment;
 
   return (
@@ -10,12 +10,18 @@ const TreatmentCard = ({ treatment }: TreatmentCardProps) => {
         <p className={descriptionClasses}>{description}</p>
       </div>
       <div className={priceContainerClasses}>
-        <span
-          className={priceLabelClasses}
-        >{`최소 ${minPrice.toLocaleString("ko-KR")}원~최대 ${maxPrice.toLocaleString("ko-KR")}원`}</span>
-        <span
-          className={averageLabelClasses}
-        >{`평균 ${averagePrice.toLocaleString("ko-KR")}원`}</span>
+        {minPrice === undefined || maxPrice === undefined || averagePrice === undefined ? (
+          <span className={priceLabelClasses}>치료비 데이터가 존재하지 않습니다</span>
+        ) : (
+          <>
+            <span
+              className={priceLabelClasses}
+            >{`최소 ${minPrice.toLocaleString("ko-KR")}원~최대 ${maxPrice.toLocaleString("ko-KR")}원`}</span>
+            <span
+              className={averageLabelClasses}
+            >{`평균 ${averagePrice.toLocaleString("ko-KR")}원`}</span>
+          </>
+        )}
       </div>
     </div>
   );

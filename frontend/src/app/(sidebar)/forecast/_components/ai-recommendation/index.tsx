@@ -4,6 +4,7 @@ import { TITLE_TEXT, TOOLTIP_DESCRIPTION } from "@/app/(sidebar)/forecast/_const
 import { Suspense } from "react";
 import AIRecommendationContent from "./AIRecommendationContent";
 import AIRecommendationSkeleton from "./AIRecommendationSkeleton";
+import ErrorBoundary from "@/components/ui/ErrorBoundary/ErrorBoundary";
 
 /**
  * AIRecommendation 컴포넌트
@@ -19,9 +20,11 @@ const AIRecommendation = () => {
             <span className={titleClasses}>{TITLE_TEXT}</span>
             <InfoTooltip description={TOOLTIP_DESCRIPTION} iconSize={20} />
           </div>
-          <Suspense fallback={<AIRecommendationSkeleton />}>
-            <AIRecommendationContent />
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={<AIRecommendationSkeleton />}>
+              <AIRecommendationContent />
+            </Suspense>
+          </ErrorBoundary>
         </div>
       </div>
     </section>

@@ -1,6 +1,7 @@
 "use client";
 
-import { AnnualDiseaseRiskProps, DiseaseCode } from "@/app/(sidebar)/forecast/_types";
+import { AnnualDiseaseRiskProps } from "@/app/(sidebar)/forecast/_types/annualDiseaseRisk";
+import { DiseaseCode } from "@/app/(sidebar)/forecast/_types/disease";
 import AnnualDiseaseRiskSelect from "./AnnualDiseaseRiskSelect";
 import AnnualDiseaseRiskChart from "./AnnualDiseaseRiskChart";
 import { toRiskLineData } from "@/app/(sidebar)/forecast/_utils";
@@ -16,7 +17,7 @@ const AnnualDiseaseRiskClient = ({ diseaseList, statisticsData }: AnnualDiseaseR
     <>
       {/* 차트 */}
       <AnnualDiseaseRiskChart
-        chartData={statisticsData ? toRiskLineData(statisticsData) : []}
+        chartData={toRiskLineData(statisticsData)}
         selectedDiseases={selectedDiseases}
       />
 

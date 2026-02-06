@@ -1,24 +1,20 @@
+import { Suspense } from "react";
 import InfoTooltip from "@/components/common/InfoTooltip/InfoTooltip";
+import ErrorBoundary from "@/components/ui/ErrorBoundary/ErrorBoundary";
 import {
   AI_RECOMMENDATION_DESCRIPTION,
-  DISEASE_TAB_ORDER,
+  ANNUAL_DISEASE_SUBTITLE,
+  ANNUAL_DISEASE_TITLE,
+  ANNUAL_DISEASE_UNIT,
 } from "@/app/(sidebar)/forecast/_constants";
-import AnnualDiseaseRiskClient from "./AnnualDiseaseRiskClient";
-import { getDiseaseRanking, getDiseaseStatistics } from "../../_api";
+import AnnualDiseaseRiskContent from "./AnnualDiseaseRiskContent";
+import AnnualDiseaseRiskSkeleton from "./AnnualDiseaseRiskSkeleton";
 
 /**
  * AnnualDiseaseRisk 컴포넌트
  * @returns AnnualDiseaseRisk 컴포넌트
  */
-const AnnualDiseaseRisk = async () => {
-  const [diseaseList, statisticsData] = await Promise.all([
-    getDiseaseRanking(),
-    getDiseaseStatistics(),
-  ]);
-
-  // API 실패 시 기존 상수 fallback
-  const resolvedDiseaseList = diseaseList.length > 0 ? diseaseList : DISEASE_TAB_ORDER;
-
+const AnnualDiseaseRisk = () => {
   return (
     <section>
       <div className={containerClasses}>
@@ -26,18 +22,19 @@ const AnnualDiseaseRisk = async () => {
         <div className={headerClasses}>
           <div className={titleGroupClasses}>
             <div className={titleRowClasses}>
-              <p className={subtitleClasses}>향후 7년간 위험도 상위 질병</p>
+              <p className={subtitleClasses}>{ANNUAL_DISEASE_SUBTITLE}</p>
               <InfoTooltip description={AI_RECOMMENDATION_DESCRIPTION} iconSize={20} />
             </div>
-            <h2 className={titleClasses}>연간 질병 위험도</h2>
+            <h2 className={titleClasses}>{ANNUAL_DISEASE_TITLE}</h2>
           </div>
-          <span className={unitClasses}>단위: %</span>
+          <span className={unitClasses}>{ANNUAL_DISEASE_UNIT}</span>
         </div>
 
-        <AnnualDiseaseRiskClient
-          diseaseList={resolvedDiseaseList}
-          statisticsData={statisticsData}
-        />
+        <ErrorBoundary>
+          <Suspense fallback={<AnnualDiseaseRiskSkeleton />}>
+            <AnnualDiseaseRiskContent />
+          </Suspense>
+        </ErrorBoundary>
       </div>
     </section>
   );

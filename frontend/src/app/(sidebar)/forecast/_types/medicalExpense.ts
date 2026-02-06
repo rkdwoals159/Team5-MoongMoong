@@ -1,29 +1,29 @@
+import { components } from "@/types/schema";
 import type { DiseaseCode } from "./disease";
-
-export type Treatment = {
-  name: string;
-  description: string;
-  minPrice: number;
-  maxPrice: number;
-  averagePrice: number;
-};
-
-export type DiseaseCostResponse = {
-  treatments: Treatment[];
-};
 
 export type MedicalExpenseProps = {
   diseaseList: DiseaseCode[];
   selectedDisease: DiseaseCode;
-  costData: DiseaseCostResponse;
+  costData: TreatmentsResponse;
   currentPage: number;
 };
 
-export type TreatmentCardProps = {
-  treatment: Treatment;
-};
+export type MedicalExpenseTabsProps = Pick<MedicalExpenseProps, "diseaseList" | "selectedDisease">;
 
 export type MedicalExpenseHeaderProps = {
   subtitle?: string;
   title?: string;
+};
+
+export type TreatmentsResponse = NonNullable<
+  components["schemas"]["TreatmentsResponse"]["treatments"]
+>;
+
+export type TreatmentResponse = NonNullable<components["schemas"]["TreatmentResponse"]>;
+
+export type MedicalExpenseTreatmentsProps = {
+  visibleTreatments: TreatmentsResponse;
+  totalPages: number;
+  selectedDisease: DiseaseCode;
+  currentPage: number;
 };

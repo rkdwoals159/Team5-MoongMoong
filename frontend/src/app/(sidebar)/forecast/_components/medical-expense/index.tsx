@@ -10,12 +10,8 @@ const MedicalExpense = ({
   costData,
   currentPage,
 }: MedicalExpenseProps) => {
-  const treatments = costData.treatments;
-  const totalPages = Math.ceil(treatments.length / PAGE_SIZE);
-  const visibleTreatments = treatments.slice(
-    currentPage * PAGE_SIZE,
-    (currentPage + 1) * PAGE_SIZE,
-  );
+  const totalPages = Math.ceil(costData.length / PAGE_SIZE);
+  const visibleTreatments = costData.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE);
 
   return (
     <section>

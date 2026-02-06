@@ -1,3 +1,5 @@
+import { components } from "@/types/schema";
+
 export type DiseaseCode =
   | "DER"
   | "MUS"
@@ -16,3 +18,7 @@ export type DiseaseLabel = {
   code: DiseaseCode;
   label: string;
 };
+
+export type DiseaseCodeResponse = NonNullable<
+  components["schemas"]["PetDiseaseRankingResponse"]["diseases"]
+>;
