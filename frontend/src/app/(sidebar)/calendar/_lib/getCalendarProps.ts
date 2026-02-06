@@ -14,7 +14,7 @@ import {
   CalendarGridProps,
   CalendarHeaderProps,
   CalendarSearchParams,
-  ExpenseMap,
+  GroupExpenseMap,
 } from "@/app/(sidebar)/calendar/_types";
 
 type CalendarViewContext = CalendarContext & {
@@ -26,7 +26,7 @@ type CalendarViewContext = CalendarContext & {
 //캘린더 페이지 전체 속성 반환
 export function getCalendarPageProps(
   resolvedSearchParams: CalendarSearchParams,
-  expenseMap: ExpenseMap,
+  expenseMap: GroupExpenseMap,
 ) {
   const context = resolveCalendarContext(resolvedSearchParams);
   const selectedDate = resolveSelectedDateParam(resolvedSearchParams, context);
@@ -104,7 +104,7 @@ const buildHeaderProps = (context: CalendarViewContext): CalendarHeaderProps => 
 
 const buildGridProps = (
   context: CalendarViewContext,
-  expenseMap: ExpenseMap,
+  expenseMap: GroupExpenseMap,
   selectedDate: string | null,
 ): CalendarGridProps => {
   const { days, weeks } = buildCalendarDays(context.viewYear, context.viewMonth, expenseMap);

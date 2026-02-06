@@ -1,4 +1,4 @@
-import { ExpenseItem } from "../_types";
+import { GroupExpenseItem } from "../_types";
 
 export const getDateTextColor = (
   isDisabled: boolean,
@@ -16,7 +16,7 @@ export const getDateTextColor = (
   return "text-(--color-text-base)";
 };
 
-export const getTopExpenses = (expenses: ExpenseItem[]) => {
+export const getTopExpenses = (expenses: GroupExpenseItem[]) => {
   return expenses
     .slice()
     .sort((a, b) => Number(b.cost ?? 0) - Number(a.cost ?? 0))

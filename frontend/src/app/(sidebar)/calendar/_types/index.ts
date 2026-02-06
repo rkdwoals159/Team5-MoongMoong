@@ -10,10 +10,10 @@ export type ExpenseCategory =
   | "장난감"
   | "기타";
 
-export type ExpenseItem = components["schemas"]["MemberExpenseResponse"];
+export type GroupExpenseItem = components["schemas"]["GroupExpenseResponse"];
 
 export type GroupDailyExpenseItem = components["schemas"]["GroupExpensesDailyResponse"];
-export type ExpenseMap = Record<string, ExpenseItem[]>;
+export type GroupExpenseMap = Record<string, GroupExpenseItem[]>;
 
 export type CalendarDay = {
   date: string;
@@ -21,7 +21,7 @@ export type CalendarDay = {
   inCurrentMonth: boolean;
   isToday: boolean;
   isWeekend: boolean;
-  expenses: ExpenseMap[string];
+  expenses: GroupExpenseMap[string];
 };
 
 export type CalendarDayCellProps = {

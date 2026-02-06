@@ -1,6 +1,5 @@
 import client from "@/lib/api";
-import type { ExpenseMap } from "@/app/(sidebar)/calendar/_types";
-import { MEMBER_ID } from "../_constants";
+import type { GroupExpenseMap } from "@/app/(sidebar)/calendar/_types";
 import { resolveMonthRange } from "@/utils/date";
 
 /**
@@ -8,15 +7,13 @@ import { resolveMonthRange } from "@/utils/date";
  * @param monthParam : 조회할 월 파라미터
  * @returns : 조회된 소비내역 맵
  */
-export async function getCalendarExpenses(monthParam?: string) {
+export async function getGroupExpenses(monthParam?: string) {
   const { startDate, endDate } = resolveMonthRange(monthParam);
-  const { data, error } = await client.GET("/api/expenses", {
+  const { data, error } = await client.GET("/api/expenses/group", {
     params: {
       query: {
-        memberId: MEMBER_ID,
         startDate,
         endDate,
-        // member: MEMBER_PROFILE,
       },
     },
   });
@@ -27,8 +24,8 @@ export async function getCalendarExpenses(monthParam?: string) {
   }
 
   const expenses = data.expenses ?? [];
-  return expenses.reduce<ExpenseMap>((acc, expense) => {
-    const dateKey = expense.spentAt;
+  return expenses.reduce<GroupExpenseMap>((acc, expense) => {
+    const dateKey = expense.spendAt;
     if (!dateKey) {
       return acc;
     }

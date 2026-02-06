@@ -3,12 +3,12 @@ import CalendarGrid from "./_components/CalendarGrid";
 import CalendarHeader from "./_components/CalendarHeader";
 import ExpenseModal from "./_components/modal/ExpenseModal";
 import { getCalendarPageProps } from "@/app/(sidebar)/calendar/_lib/getCalendarProps";
-import { getCalendarExpenses, getGroupDailyExpenses } from "./_api/expenses";
+import { getGroupExpenses, getGroupDailyExpenses } from "./_api/expenses";
 import PageHeader from "@/components/layout/Header/PageHeader";
 
 export default async function CalendarPage({ searchParams }: CalendarPageProps) {
   const resolvedSearchParams = (await searchParams) ?? {};
-  const expenseMap = await getCalendarExpenses(resolvedSearchParams.month);
+  const expenseMap = await getGroupExpenses(resolvedSearchParams.month);
   const { headerProps, gridProps, modalProps } = getCalendarPageProps(
     resolvedSearchParams,
     expenseMap,
