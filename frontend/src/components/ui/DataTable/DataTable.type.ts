@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
  * editor: 편집 모드에서만 사용 (mode="edit" && editor 존재 시 우선 적용)
  */
 export type DataTableColumn<T> = {
-  label: string;
+  label: string | ReactNode;
   accessor: keyof T;
   width?: string;
   render?: (value: T[keyof T], row: T, rowIndex: number) => ReactNode;

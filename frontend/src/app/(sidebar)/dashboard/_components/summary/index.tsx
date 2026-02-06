@@ -1,6 +1,6 @@
 import { getCompareLastMonth } from "@/app/(sidebar)/dashboard/_api";
 import PetProfileImage from "@/app/(sidebar)/dashboard/_components/summary/PetProfileImage";
-import SummaryCard from "./SummaryCard";
+import SummaryCard from "@/app/(sidebar)/dashboard/_components/summary/SummaryCard";
 
 const Summary = async () => {
   const { progressData, petImageUrl } = await getCompareLastMonth();

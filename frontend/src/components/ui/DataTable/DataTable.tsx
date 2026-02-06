@@ -20,8 +20,6 @@ const DataTable = <T,>({
     );
   };
 
-  const colWidth = `${100 / columns.length}%`;
-
   return (
     <div
       className={cn(
@@ -33,7 +31,7 @@ const DataTable = <T,>({
         <table {...rest} className="w-full border-separate border-spacing-0 text-left table-fixed">
           <colgroup>
             {columns.map((col) => (
-              <col key={String(col.accessor)} style={{ width: col.width ?? colWidth }} />
+              <col key={String(col.accessor)} style={{ width: col.width }} />
             ))}
           </colgroup>
           <thead className="bg-gray-50 sticky top-0 z-10">
@@ -42,6 +40,7 @@ const DataTable = <T,>({
                 <th
                   key={String(col.accessor)}
                   className="h-[48px] px-500 py-200 bg-gray-50 text-text-base typo-body-m-bold border-b border-gray-50"
+                  style={{ width: col.width }}
                 >
                   {col.label}
                 </th>
@@ -64,6 +63,7 @@ const DataTable = <T,>({
                         "h-[48px] bg-white-100 text-text-base typo-body-m-regular transition-all hover:bg-yellow-50 border-b border-gray-50",
                         isSelected ? "ring-2 ring-yellow-300 ring-inset" : "",
                       )}
+                      style={{ width: col.width }}
                     >
                       {renderCell(col, row, rowIndex)}
                     </td>

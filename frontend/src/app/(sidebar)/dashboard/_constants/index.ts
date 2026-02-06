@@ -1,12 +1,25 @@
-export { EXPENSE_COLUMNS, EDITABLE_TABLE_MIN_ROWS, CATEGORY_POPUP_HEIGHT } from "./expenseColumns";
+export {
+  EXPENSE_COLUMNS,
+  EDITABLE_TABLE_MIN_ROWS,
+  CATEGORY_POPUP_HEIGHT,
+  SYNC_FIELDS,
+} from "@/app/(sidebar)/dashboard/_constants/expenseColumns";
 
 export {
   MAIN_CATEGORIES,
   SUB_CATEGORIES,
   CATEGORY_COLOR_MAP,
   DEFAULT_CATEGORY_COLOR,
-} from "./categoryMap";
+} from "@/app/(sidebar)/dashboard/_constants/categoryMap";
 
-export { getLabelNoData, getLabelWithData, getSummaryValue, getSummaryIcon } from "./summaryLabels";
+export {
+  getLabelNoData,
+  getLabelWithData,
+  getSummaryValue,
+  getSummaryIcon,
+} from "@/app/(sidebar)/dashboard/_constants/summaryLabels";
 
-export { EXPENSES_ERROR_MESSAGE } from "./messages";
+export {
+  EXPENSES_ERROR_MESSAGE,
+  SAVE_ERROR_MESSAGE,
+} from "@/app/(sidebar)/dashboard/_constants/messages";

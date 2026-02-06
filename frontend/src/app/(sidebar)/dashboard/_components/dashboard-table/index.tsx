@@ -4,13 +4,11 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { ExpenseData } from "@/app/(sidebar)/dashboard/_types";
 import { getExpensesByPeriod } from "@/app/(sidebar)/dashboard/_api";
-import { resolveDashboardRange } from "@/app/(sidebar)/dashboard/_lib/dashboardRange";
+import { resolveDashboardRange } from "@/app/(sidebar)/dashboard/_lib";
 import { EXPENSES_ERROR_MESSAGE } from "@/app/(sidebar)/dashboard/_constants";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import EditableDataTable from "@/app/(sidebar)/dashboard/_components/dashboard-table/EditableDataTable";
-import ExpenseTableToolbar from "@/app/(sidebar)/dashboard/_components/dashboard-table/ExpenseTableToolbar";
 import DateRangePicker from "@/components/common/DateRangePicker/DateRangePicker";
-import cn from "@/utils/style";
 
 export type DashboardTableProps = {
   tableClassName?: string;
@@ -28,7 +26,6 @@ const DashboardTable = ({ tableClassName }: DashboardTableProps) => {
   });
 
   const [expenses, setExpenses] = useState<ExpenseData[]>([]);
-  const [totalExpense, setTotalExpense] = useState(0);
 
   const setRangeToUrl = (start: string, end: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -45,7 +42,6 @@ const DashboardTable = ({ tableClassName }: DashboardTableProps) => {
         const data = await getExpensesByPeriod(startDate, endDate);
         if (cancelled) return;
         setExpenses(data.expenses);
-        setTotalExpense(data.total);
       } catch (error) {
         if (cancelled) return;
         console.error("Failed to load expenses for period:", error);
@@ -72,16 +68,11 @@ const DashboardTable = ({ tableClassName }: DashboardTableProps) => {
         />
         <EditableDataTable
           initialData={expenses}
-          className={cn(tableClassName ?? "", "rounded-t-600 border border-b-0 border-gray-50")}
+          startDate={startDate}
+          endDate={endDate}
+          className={tableClassName ?? ""}
         />
       </div>
-      <ExpenseTableToolbar
-        className="-mx-8"
-        totalExpense={totalExpense}
-        // TODO: phase2에서 구현 필요 (selectedCount, hasUnsavedChanges)
-        selectedCount={2}
-        hasUnsavedChanges={true}
-      />
     </>
   );
 };

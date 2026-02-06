@@ -10,12 +10,12 @@ export const getLabelNoData = (petName: string) => ({
 });
 
 export const getLabelWithData = (petName: string) => ({
-  totalExpense: `지난달에 비해 ${petName}의 총 지출을`,
+  totalExpense: `지난달에 비해 ${petName}의 총 지출이`,
   medicalExpense: `지난달에 비해 ${petName}의 의료비 지출이`,
 });
 
 export const getSummaryValue = (data: number | null): string =>
-  data === null ? "-" : `${Math.abs(data)}% ${data < 0 ? "줄였어요" : "늘었어요"}`;
+  data === null ? "-" : `${Math.abs(data)}% ${data < 0 ? "줄엇어요" : "늘었어요"}`;
 
 export type SummaryDataState = "noData" | "decrease" | "increase";
 

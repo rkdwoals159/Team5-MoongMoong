@@ -8,6 +8,33 @@ import type {
 } from "@/app/(sidebar)/dashboard/_types";
 
 import { EXPENSES_ERROR_MESSAGE } from "@/app/(sidebar)/dashboard/_constants";
+import type { components } from "@schema";
+
+type MemberExpensesUpsertRequest = components["schemas"]["MemberExpensesUpsertRequest"];
+type MemberExpensesUpsertResponse = components["schemas"]["MemberExpensesUpsertResponse"];
+
+/**
+ * 소비내역 일괄 생성/수정/삭제 (Server Action)
+ * PATCH /api/expenses
+ *
+ * 성공 시 생성/수정된 내역 반환, 실패 시 throw.
+ */
+export const patchExpenses = async (
+  body: MemberExpensesUpsertRequest,
+): Promise<MemberExpensesUpsertResponse> => {
+  const { data, error, response } = await client.PATCH("/api/expenses", {
+    body,
+  });
+
+  if (!response.ok) {
+    console.error("patchExpenses error:", error?.message ?? "no data");
+    throw new Error(EXPENSES_ERROR_MESSAGE);
+  }
+
+  return {
+    expenses: data?.expenses ?? [],
+  };
+};
 
 /**
  * 기간별 개인 소비내역 조회 (Server Action)

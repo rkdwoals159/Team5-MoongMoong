@@ -14,19 +14,13 @@ export default function ExpenseTableToolbar({
   totalExpense = 0,
   selectedCount = 0,
   hasUnsavedChanges = false,
+  onSave,
+  onDeleteSelected,
+  onMergeSelected,
   className,
 }: ExpenseTableToolbarProps) {
   const canDelete = selectedCount >= 1;
   const canMerge = selectedCount >= 2;
-
-  // TODO: 선택된 행 삭제 로직 구현
-  const handleDeleteSelected = () => {};
-
-  // TODO: 선택된 행 합치기 로직 구현
-  const handleMergeSelected = () => {};
-
-  // TODO: 변경사항 저장 로직 구현
-  const handleSave = () => {};
 
   return (
     <div
@@ -44,7 +38,7 @@ export default function ExpenseTableToolbar({
           size="medium"
           isDisabled={!canDelete}
           className="typo-body-m-medium transition-colors"
-          onClick={handleDeleteSelected}
+          onClick={onDeleteSelected}
         >
           선택 삭제
         </Button>
@@ -53,7 +47,7 @@ export default function ExpenseTableToolbar({
           size="medium"
           isDisabled={!canMerge}
           className="typo-body-m-medium transition-colors"
-          onClick={handleMergeSelected}
+          onClick={onMergeSelected}
         >
           선택 합치기
         </Button>
@@ -71,7 +65,7 @@ export default function ExpenseTableToolbar({
             variant="primary"
             fullWidth={true}
             isDisabled={!hasUnsavedChanges}
-            onClick={handleSave}
+            onClick={onSave}
           >
             저장하기
           </Button>
