@@ -5,14 +5,11 @@
 - 간결하게 핵심만 짚어줄 것
 - 개선 제안 시 코드 예시 포함
 - 코드 내 변수명, 함수명은 영어 유지
+- bash 명령은 실행하지 말 것
+- 파일 읽기(View, GlobTool, GrepTool)만으로 리뷰할 것
+- 코드 리뷰 결과만 알려줄 것
 
 ## 프론트엔드 리뷰 기준
-
-### 필수 체크
-- [ ] TypeScript 타입 에러 없음 (`any` 사용 지양)
-- [ ] ESLint 규칙 준수 (`yarn lint` 통과)
-- [ ] Prettier 포맷팅 적용 (`yarn format:check` 통과)
-- [ ] 콘솔 에러/경고 없음
 
 ### Next.js Best Practice
 - [ ] 서버 컴포넌트 우선 사용 (클라이언트 컴포넌트는 필요시에만 `"use client"`)
@@ -64,11 +61,10 @@
 - Entity의 기본 생성자의 경우 Lombok`@NoArgsConstructor(access = AccessLevel.PROTECTED)`를 사용한다.
 - Entity가 아닌 객체의 경우, `@RequiresArgsConstructor` 허용
 - [**Lombok 주의점**](https://kwonnam.pe.kr/wiki/java/lombok/pitfall)
-    - **@AllArgsConstructor, @RequiredArgsConstructor 사용금지**
     - **무분별한 @EqualsAndHashCode 사용 자제**
     - **@Data 사용금지**
     - **@Value 사용금지**
-    - **@Builder 를 생성자나 static 객체 생성 메소드에**
+    - **@Builder 사용 금지**
     - **@Log 대신 @Slf4j**
 - 생성자의 매개변수가 한 줄이 넘어가는 경우, 각 매개변수에 개행을 적용한다.
 

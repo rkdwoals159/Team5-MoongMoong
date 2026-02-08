@@ -9,7 +9,7 @@ on:
     types: [opened, edited]
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
   issues: write
   id-token: write
@@ -28,25 +28,25 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: "frontend/ 디렉토리의 변경사항만 집중해서 프론트엔드 전문가 관점으로 코드 리뷰해주세요. 다른 디렉토리 변경사항은 무시해주세요."
-          claude_args: "--max-turns 5"
+          claude_args: "--max-turns 10 --allowedTools 'View' 'GlobTool' 'GrepTool'"
 
   claude-fe-comment:
     if: |
       (github.event_name == 'pull_request_review_comment' ||
        (github.event_name == 'issue_comment' && github.event.issue.pull_request != null)) &&
       contains(github.event.comment.body, '@claude-fe') &&
-      contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.user.author_association)
+      contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR", "CONTRIBUTOR"]'), github.event.comment.author_association)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha || github.event.issue.pull_request && format('refs/pull/{0}/head', github.event.issue.number) }}
+          ref: ${{ github.event.pull_request.head.sha || format('refs/pull/{0}/head', github.event.issue.number) }}
       - uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: "frontend/ 디렉토리의 변경사항만 집중해서 프론트엔드 전문가 관점으로 코드 리뷰해주세요. 다른 디렉토리 변경사항은 무시해주세요."
-          claude_args: "--max-turns 5"
+          claude_args: "--max-turns 10 --allowedTools 'View' 'GlobTool' 'GrepTool'"
 
   claude-be-pr-body:
     if: |
@@ -61,22 +61,22 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: "backend/ 디렉토리의 변경사항만 집중해서 백엔드 전문가 관점으로 코드 리뷰해주세요. 다른 디렉토리 변경사항은 무시해주세요."
-          claude_args: "--max-turns 5"
+          claude_args: "--max-turns 10 --allowedTools 'View' 'GlobTool' 'GrepTool'"
 
   claude-be-comment:
     if: |
       (github.event_name == 'pull_request_review_comment' ||
        (github.event_name == 'issue_comment' && github.event.issue.pull_request != null)) &&
       contains(github.event.comment.body, '@claude-be') &&
-      contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR", "CONTRIBUTOR"]'), github.event.comment.user.author_association)
+      contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR", "CONTRIBUTOR"]'), github.event.comment.author_association)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha || github.event.issue.pull_request && format('refs/pull/{0}/head', github.event.issue.number) }}
+          ref: ${{ github.event.pull_request.head.sha || format('refs/pull/{0}/head', github.event.issue.number) }}
       - uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: "backend/ 디렉토리의 변경사항만 집중해서 백엔드 전문가 관점으로 코드 리뷰해주세요. 다른 디렉토리 변경사항은 무시해주세요."
-          claude_args: "--max-turns 5"
+          claude_args: "--max-turns 10 --allowedTools 'View' 'GlobTool' 'GrepTool'"
