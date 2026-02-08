@@ -1,5 +1,45 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger
+    enabled: true
+    #검색
+    filter: true
+    deep-linking: true
+    #정렬
+    tags-sorter: alpha
+    operations-sorter: alpha
+    #UX
+    display-request-duration: true
+    disable-swagger-default-url: true
 invite:
-  key: yQ0PZ3V1+g8v5H2z2s5gPZpYxQqzZzJZ9f0uHn0x0K8=
+  key: ${INVITE_AES_KEY}
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_SERVER_IP}:3306/moong?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+    open-in-view: false
 
 logging:
   file:
@@ -9,14 +49,14 @@ logging:
   logback:
     rollingpolicy:
       max-file-size: 5MB #한 파일의 최대 크기
-      max-history: 30 #최대 보관 일자
+      max-history: 30 #최대 보관 일자(최근 30일간 기록까지만 저장)
       total-size-cap: 150MB #전체 차지가능한 디스크 용량
 
 slack:
-  webhook-url: test_url
+  webhook-url: ${ERROR_SLACK_WEBHOOK_URL:}
 
 category-classification:
-  system: |
+  system-prompt: |
     유저가 입력한 소비 내역의 카테고리를 다음 중에 분류해    
     
     조건:
@@ -26,7 +66,7 @@ category-classification:
     - mainCategory가 `의료비`일 경우 subCategory도 생성해줘     
     - mainCategory가 의료비인 경우 subCategory는 [진료비, 예방접종, 약/처방, 검사비, 수술/입원, 기타 의료비] 중 하나로 분류해줘
 
-  prompt: |
+  prompt-template: |
     반려동물 소비 카테고리 대분류 -> mainCategory
     소비 카테고리 소분류 -> subCategory
     
@@ -45,30 +85,10 @@ category-classification:
 
 openai:
   base-url: https://api.openai.com/v1
-  secret-key: testKey
+  secret-key: ${OPEN_AI_KEY}
 
 jwt:
-  secret_key: bXlTdXBlclNlY3JldEtleUZvckpXVFRva2VuU2lnbmluZ1B1cnBvc2VzMTIzNDU2Nzg5MA==
-  access_token_expiration: 1h
-  refresh_token_expiration: 1d
-
-spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:database
-    username: sa
-    password:
-  jpa:
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-    hibernate:
-      ddl-auto: create-drop
-    defer-datasource-initialization: true
-    open-in-view: false
+  secret_key: ${JWT_SECRET_KEY}
+  access_token_expiration: ${JWT_ACCESS_EXPIRATION}
+  refresh_token_expiration: ${JWT_REFRESH_EXPIRATION}
 

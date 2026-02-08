@@ -38,6 +38,7 @@ public class MemberExpense {
     private LocalDate spentAt;
 
     @NotNull
+    @Column(name = "expense_usage")
     private String usage;
 
     private long cost;

@@ -2,12 +2,15 @@ package com.moong.domain.entity;
 
 import com.moong.domain.enums.PaymentStatus;
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -33,6 +36,7 @@ public class CoinPayment {
     private long amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "crew_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Crew crew;
 
     @NotNull

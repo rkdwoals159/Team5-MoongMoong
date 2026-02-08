@@ -28,7 +28,7 @@ public class MemberExpenseJdbcRepositoryImpl implements MemberExpenseJdbcReposit
                 .toArray(SqlParameterSource[]::new);
 
         String insertSql = """
-                INSERT INTO member_expense (spent_at, usage, cost, main_category, sub_category, memo, modified_at, member_id)
+                INSERT INTO member_expense (spent_at, expense_usage, cost, main_category, sub_category, memo, modified_at, member_id)
                 VALUES (:spentAt, :usage, :cost, :mainCategory, :subCategory, :memo, :modifiedAt, :memberId)
                 """;
         entityManager.flush();
@@ -60,7 +60,7 @@ public class MemberExpenseJdbcRepositoryImpl implements MemberExpenseJdbcReposit
         String updateSql = """
                 UPDATE member_expense SET
                     spent_at = :spentAt,
-                    usage = :usage,
+                    expense_usage = :usage,
                     cost = :cost,
                     main_category = :mainCategory,
                     sub_category = :subCategory,

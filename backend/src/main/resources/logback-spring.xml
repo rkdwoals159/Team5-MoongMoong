@@ -109,6 +109,7 @@
     <!-- dev : 파일 + 에러 처리기 -->
     <springProfile name="dev">
         <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE"/>
             <appender-ref ref="ERROR_FILE"/>
             <appender-ref ref="ASYNC_SLACK"/>
