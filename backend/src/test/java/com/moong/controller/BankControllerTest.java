@@ -31,6 +31,7 @@ class BankControllerTest extends BaseControllerTest {
     @Test
     void createBankSuccess() {
         Member member = memberGenerator.generateSaved("softeer");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, member);
@@ -39,7 +40,7 @@ class BankControllerTest extends BaseControllerTest {
         given().log().all()
                 .contentType(ContentType.JSON)
                 .body(bankCreateRequest)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .post("/api/group/bank")
                 .then()
                 .statusCode(200);
@@ -49,6 +50,7 @@ class BankControllerTest extends BaseControllerTest {
     @Test
     void createCoinSuccess() {
         Member member = memberGenerator.generateSaved("member1");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         Pet savedPet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
         crewGenerator.generateSaved(petGroup, member);
@@ -59,7 +61,7 @@ class BankControllerTest extends BaseControllerTest {
         given().log().all()
                 .contentType(ContentType.JSON)
                 .body(coinCreateRequest)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .post("/api/group/bank/coins")
                 .then()
                 .statusCode(200);
@@ -69,6 +71,7 @@ class BankControllerTest extends BaseControllerTest {
     @Test
     void breakBankSuccess() {
         Member member = memberGenerator.generateSaved("softeer");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, member);
@@ -76,7 +79,7 @@ class BankControllerTest extends BaseControllerTest {
 
         given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .delete("/api/group/bank")
                 .then()
                 .statusCode(200);
@@ -86,6 +89,7 @@ class BankControllerTest extends BaseControllerTest {
     @Test
     void breakBankFailNotSucceedTargetAmount() {
         Member member = memberGenerator.generateSaved("softeer");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, member);
@@ -93,7 +97,7 @@ class BankControllerTest extends BaseControllerTest {
 
         given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .delete("/api/group/bank")
                 .then()
                 .statusCode(400);
@@ -103,13 +107,14 @@ class BankControllerTest extends BaseControllerTest {
     @Test
     void breakBankFail() {
         Member member = memberGenerator.generateSaved("softeer");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, member);
 
         given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .delete("/api/group/bank")
                 .then()
                 .statusCode(404);
@@ -120,6 +125,7 @@ class BankControllerTest extends BaseControllerTest {
     void findBankInfoSuccess() {
         Member member1 = memberGenerator.generateSaved("member1");
         Member member2 = memberGenerator.generateSaved("member2");
+        String memberOneAccessToken = jwtTokenGenerator.generateAccessToken(member1);
         Pet savedPet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
         Crew crew1 = crewGenerator.generateSaved(petGroup, member1);
@@ -130,7 +136,7 @@ class BankControllerTest extends BaseControllerTest {
 
         BankInfoResponse bankInfo = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, member1.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + memberOneAccessToken)
                 .get("/api/group/bank")
                 .then()
                 .statusCode(200)
@@ -153,13 +159,15 @@ class BankControllerTest extends BaseControllerTest {
     @Test
     void findBankInfoFail() {
         Member member1 = memberGenerator.generateSaved("member1");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member1);
+
         Pet savedPet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
         crewGenerator.generateSaved(petGroup, member1);
 
         given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, member1.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .get("/api/group/bank")
                 .then()
                 .statusCode(404);
@@ -169,6 +177,7 @@ class BankControllerTest extends BaseControllerTest {
     @Test
     void updateBankSuccess() {
         Member member = memberGenerator.generateSaved("member1");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         Pet savedPet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
         crewGenerator.generateSaved(petGroup, member);
@@ -179,7 +188,7 @@ class BankControllerTest extends BaseControllerTest {
         given().log().all()
                 .contentType(ContentType.JSON)
                 .body(bankUpdateRequest)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .patch("/api/group/bank")
                 .then()
                 .statusCode(200);
@@ -190,6 +199,8 @@ class BankControllerTest extends BaseControllerTest {
     void findCoins() {
         Member member1 = memberGenerator.generateSaved("member1");
         Member member2 = memberGenerator.generateSaved("member2");
+        String memberOneAccessToken = jwtTokenGenerator.generateAccessToken(member1);
+
         Pet savedPet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
         Crew crew1 = crewGenerator.generateSaved(petGroup, member1);
@@ -200,7 +211,7 @@ class BankControllerTest extends BaseControllerTest {
 
         CoinsResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, member1.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + memberOneAccessToken)
                 .get("/api/group/bank/coins")
                 .then()
                 .statusCode(200)

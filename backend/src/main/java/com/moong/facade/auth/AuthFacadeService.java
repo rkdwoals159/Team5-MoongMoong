@@ -1,7 +1,10 @@
 package com.moong.facade.auth;
 
+import com.moong.domain.entity.Member;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.auth.AuthLoginRequest;
+import com.moong.dto.request.auth.AuthTokenRefreshRequest;
+import com.moong.dto.response.auth.AuthTokenRefreshResponse;
 import com.moong.dto.response.auth.JwtTokenResponse;
 import com.moong.dto.response.auth.MemberInfoWithTokenResponse;
 import com.moong.dto.response.member.FacadeLoginResponse;
@@ -33,5 +36,11 @@ public class AuthFacadeService {
         return FacadeLoginResponse.nonInvitedMember(foundMemberResponse, jwtTokenResponse);
     }
 
+    public JwtTokenResponse refreshToken(AuthTokenRefreshRequest refreshRequest) {
+        return authService.refreshToken(refreshRequest.refreshToken());
+    }
 
+    public void logout(Member member, String refreshToken) {
+        authService.logout(member, refreshToken);
+    }
 }

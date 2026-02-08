@@ -1,23 +1,33 @@
 package com.moong.controller;
 
+import static org.mockito.ArgumentMatchers.anyString;
+
 import com.moong.DataBaseCleaner;
+import com.moong.client.oauth.OAuthClient;
+import com.moong.domain.member.MemberInfo;
 import com.moong.fixture.*;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
+import java.security.SecureRandom;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @ActiveProfiles("test")
 @ExtendWith(DataBaseCleaner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class BaseControllerTest {
+
+    protected static final String BEARER_PREFIX = "Bearer ";
 
     @Autowired
     protected PetGenerator petGenerator;
@@ -58,6 +68,12 @@ public abstract class BaseControllerTest {
     @Autowired
     protected CoinGenerator coinGenerator;
 
+    @Autowired
+    protected JwtTokenGenerator jwtTokenGenerator;
+
+    @MockitoBean
+    protected OAuthClient oAuthClient;
+
     @LocalServerPort
     private int port;
 
@@ -70,6 +86,10 @@ public abstract class BaseControllerTest {
                 .addFilter(new RequestLoggingFilter())
                 .addFilter(new ResponseLoggingFilter())
                 .build();
+
+        int randNum = new SecureRandom().nextInt(1000);
+        Mockito.when(oAuthClient.requestMemberInfo(anyString()))
+                .thenReturn(new MemberInfo("email" + randNum + "@email.com"));
     }
 
     protected RequestSpecification given() {

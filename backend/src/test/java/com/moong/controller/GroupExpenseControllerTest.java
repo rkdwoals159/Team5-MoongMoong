@@ -25,6 +25,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
     void findGroupExpenseByPeriod() {
         LocalDateTime now = LocalDateTime.now();
         Member coli = memberGenerator.generateSaved("coli");
+        String accessToken = jwtTokenGenerator.generateAccessToken(coli);
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, coli);
@@ -66,7 +67,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
 
         GroupExpensesResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, coli.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .queryParam("startDate", now.minusDays(2).toLocalDate().toString())
                 .queryParam("endDate", now.minusDays(1).toLocalDate().toString())
                 .get("/api/expenses/group")
@@ -86,6 +87,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
     void findGroupExpenseCategoryAnalysisByPeriod() {
         LocalDateTime now = LocalDateTime.now();
         Member coli = memberGenerator.generateSaved("coli");
+        String accessToken = jwtTokenGenerator.generateAccessToken(coli);
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, coli);
@@ -117,7 +119,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
 
         CategoryAnalysisResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, coli.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .queryParam("startDate", now.minusDays(2).toLocalDate().toString())
                 .queryParam("endDate", now.minusDays(1).toLocalDate().toString())
                 .get("/api/expenses/group/analysis/category")
@@ -145,6 +147,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
     void findMedicalCategoryAnalysis() {
         LocalDateTime now = LocalDateTime.now();
         Member coli = memberGenerator.generateSaved("coli");
+        String accessToken = jwtTokenGenerator.generateAccessToken(coli);
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, coli);
@@ -174,7 +177,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
 
         MedicalCategoryAnalysisResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, coli.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .queryParam("startDate", now.minusDays(2).toLocalDate().toString())
                 .queryParam("endDate", now.minusDays(1).toLocalDate().toString())
                 .get("/api/expenses/group/analysis/medical")
@@ -202,6 +205,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
     void findBySpentAt() {
         LocalDateTime now = LocalDateTime.now();
         Member member = memberGenerator.generateSaved("softeer");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, member);
@@ -230,7 +234,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
 
         GroupExpensesDailyResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .queryParam("spentAt", now.toLocalDate().toString())
                 .get("/api/expenses/group/date")
                 .then()

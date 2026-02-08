@@ -26,6 +26,7 @@ class PetControllerTest extends BaseControllerTest {
     @Test
     void savePetSuccess() {
         Member member = memberGenerator.generateSaved("softeer");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         List<Disease> diseases = List.of(Disease.CAR, Disease.DER);
         PetCreateRequest petCreateRequest = new PetCreateRequest(
                 "코코",
@@ -40,7 +41,7 @@ class PetControllerTest extends BaseControllerTest {
         given().log().all()
                 .contentType(ContentType.JSON)
                 .body(petCreateRequest)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .post("/api/pet")
                 .then()
                 .statusCode(200);
@@ -63,7 +64,6 @@ class PetControllerTest extends BaseControllerTest {
         given().log().all()
                 .contentType(ContentType.JSON)
                 .body(petCreateRequest)
-                .queryParam("memberId", 1L)
                 .post("/api/pet")
                 .then()
                 .statusCode(401);
@@ -73,6 +73,7 @@ class PetControllerTest extends BaseControllerTest {
     @Test
     void findPetInfoSuccess() {
         Member member = memberGenerator.generateSaved("softeer");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         List<Disease> diseases = List.of(Disease.CAR, Disease.DER);
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
@@ -81,7 +82,7 @@ class PetControllerTest extends BaseControllerTest {
 
         PetReadResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .get("/api/pet")
                 .then()
                 .statusCode(200)
@@ -113,7 +114,7 @@ class PetControllerTest extends BaseControllerTest {
 
         given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, 1L)
+                .header(HttpHeaders.AUTHORIZATION, "")
                 .get("/api/pet")
                 .then()
                 .statusCode(401);

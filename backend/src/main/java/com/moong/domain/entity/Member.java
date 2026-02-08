@@ -37,4 +37,8 @@ public class Member {
     public Member(String email, String name, String imageUrl) {
         this(null, email, name, imageUrl);
     }
+
+    public boolean isSame(String email) {
+        return this.email.equals(email);
+    }
 }

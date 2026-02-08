@@ -27,10 +27,11 @@ class MemberExpenseControllerTest extends BaseControllerTest {
         LocalDate startDate = LocalDate.of(2026, 1, 1);
         LocalDate endDate = LocalDate.of(2026, 1, 2);
         Member member = memberGenerator.generateSaved("멤버1");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
 
         given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .queryParam("startDate", startDate.toString())
                 .queryParam("endDate", endDate.toString())
                 .get("/api/expenses")
@@ -44,10 +45,11 @@ class MemberExpenseControllerTest extends BaseControllerTest {
         LocalDate startDate = LocalDate.of(2026, 1, 3);
         LocalDate endDate = LocalDate.of(2026, 1, 2);
         Member member = memberGenerator.generateSaved("멤버1");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
 
         given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .queryParam("startDate", startDate.toString())
                 .queryParam("endDate", endDate.toString())
                 .get("/api/expenses")
@@ -62,6 +64,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
         LocalDateTime lastMonth = now.minusMonths(1);
 
         Member member = memberGenerator.generateSaved("멤버1");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         Pet savedPet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
         crewGenerator.generateSaveCrews(petGroup, List.of(member));
@@ -108,7 +111,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
 
         LastMonthComparisonResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .get("/api/expenses/compare/last-month")
                 .then()
                 .statusCode(200)
@@ -128,6 +131,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
         LocalDateTime now = LocalDateTime.now();
 
         Member member = memberGenerator.generateSaved("멤버1");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         Pet savedPet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
         crewGenerator.generateSaveCrews(petGroup, List.of(member));
@@ -154,7 +158,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
 
         LastMonthComparisonResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .get("/api/expenses/compare/last-month")
                 .then()
                 .statusCode(200)
@@ -172,6 +176,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
     @Test
     void upsertMemberExpenses() {
         Member member = memberGenerator.generateSaved("멤버1");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         List<MemberExpense> memberExpenses = memberExpenseGenerator.generatedListSaved(member);
         MemberExpense updateTarget = memberExpenses.get(0);
         List<MemberExpense> deleteTargets = memberExpenses.subList(1, memberExpenses.size());
@@ -209,7 +214,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
 
         MemberExpensesUpsertResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .body(request)
                 .patch("/api/expenses")
                 .then()

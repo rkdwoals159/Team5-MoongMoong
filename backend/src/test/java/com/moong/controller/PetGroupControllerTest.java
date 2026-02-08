@@ -31,6 +31,7 @@ class PetGroupControllerTest extends BaseControllerTest {
         Member yeonjin = memberGenerator.generateSaved("주연진");
         PetGroup petGroup1 = petGroupGenerator.generateSaved(savedPet);
         PetGroup petGroup2 = petGroupGenerator.generateSaved(savedPet2);
+        String geonwooAccessToken = jwtTokenGenerator.generateAccessToken(geonwoo);
 
         //그룹1 - 건우, 현민  | 그룹2 - 연진
         crewGenerator.generateSaveCrews(petGroup1, List.of(geonwoo, hyeonmin));
@@ -43,7 +44,7 @@ class PetGroupControllerTest extends BaseControllerTest {
         given().log().all()
                 .contentType(ContentType.JSON)
                 .body(request)
-                .header(HttpHeaders.AUTHORIZATION, geonwoo.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + geonwooAccessToken)
                 .post("/api/group/participate")
                 .then()
                 .statusCode(400)
@@ -65,6 +66,7 @@ class PetGroupControllerTest extends BaseControllerTest {
         Member yong = memberGenerator.generateSaved("권용현");
         PetGroup petGroup1 = petGroupGenerator.generateSaved(savedPet);
         PetGroup petGroup2 = petGroupGenerator.generateSaved(savedPet2);
+        String guestAccessToken = jwtTokenGenerator.generateAccessToken(guest);
 
         //그룹1 - 6명  | 그룹2 - Guest
         crewGenerator.generateSaveCrews(petGroup1, List.of(geonwoo, hyeonmin, yeonjin, jaemin, bonsng, yong));
@@ -77,7 +79,7 @@ class PetGroupControllerTest extends BaseControllerTest {
         given().log().all()
                 .contentType(ContentType.JSON)
                 .body(request)
-                .header(HttpHeaders.AUTHORIZATION, guest.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + guestAccessToken)
                 .post("/api/group/participate")
                 .then()
                 .statusCode(400)
@@ -89,6 +91,7 @@ class PetGroupControllerTest extends BaseControllerTest {
     void participateFail_When_AlreadyAttended() {
         Pet savedPet = petGenerator.generateSaved();
         Member guest = memberGenerator.generateSaved("게스트");
+        String accessToken = jwtTokenGenerator.generateAccessToken(guest);
         PetGroup petGroup1 = petGroupGenerator.generateSaved(savedPet);
         crewGenerator.generateSaved(petGroup1, guest);
         InviteCode inviteCode = inviteCodeGenerator.encrypt(petGroup1.getId());
@@ -99,7 +102,7 @@ class PetGroupControllerTest extends BaseControllerTest {
         given().log().all()
                 .contentType(ContentType.JSON)
                 .body(request)
-                .header(HttpHeaders.AUTHORIZATION, guest.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .post("/api/group/participate")
                 .then()
                 .statusCode(400)
@@ -113,6 +116,7 @@ class PetGroupControllerTest extends BaseControllerTest {
         Pet savedPet2 = petGenerator.generateSaved();
         Member guest = memberGenerator.generateSaved("게스트");
         Member guest2 = memberGenerator.generateSaved("게스트");
+        String guestTwoAccessToken = jwtTokenGenerator.generateAccessToken(guest2);
         PetGroup petGroup1 = petGroupGenerator.generateSaved(savedPet);
         PetGroup petGroup2 = petGroupGenerator.generateSaved(savedPet2);
         crewGenerator.generateSaved(petGroup1, guest);
@@ -125,7 +129,7 @@ class PetGroupControllerTest extends BaseControllerTest {
         given().log().all()
                 .contentType(ContentType.JSON)
                 .body(request)
-                .header(HttpHeaders.AUTHORIZATION, guest2.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + guestTwoAccessToken)
                 .post("/api/group/participate")
                 .then()
                 .statusCode(200);

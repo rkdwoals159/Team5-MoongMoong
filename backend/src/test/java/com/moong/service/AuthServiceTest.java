@@ -1,12 +1,17 @@
 package com.moong.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.moong.controller.tool.jwt.JwtManager;
+import com.moong.domain.entity.Member;
 import com.moong.domain.member.MemberInfo;
 import com.moong.dto.response.auth.JwtTokenResponse;
 import com.moong.dto.response.auth.MemberInfoWithTokenResponse;
+import com.moong.exception.custom.BusinessException;
+import com.moong.exception.errorcode.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +35,43 @@ class AuthServiceTest extends BaseServiceTest {
                 () -> assertThat(memberInfo.email()).isEqualTo(jwtManager.resolveAccessToken(tokens.accessToken())),
                 () -> assertThat(memberInfo.email()).isEqualTo(jwtManager.resolveRefreshToken(tokens.refreshToken()))
         );
+    }
+
+    @DisplayName("토큰을 재발급할 수 있다")
+    @Test
+    void refreshTokenSuccess() {
+        Member member = memberGenerator.generateSaved("김콜리");
+        String refreshToken = jwtManager.createRefreshToken(new MemberInfo(member.getEmail()));
+
+        JwtTokenResponse tokenResponse = authService.refreshToken(refreshToken);
+
+        assertAll(
+                () -> assertThat(jwtManager.resolveAccessToken(tokenResponse.accessToken()))
+                        .isEqualTo(member.getEmail()),
+                () -> assertThat(jwtManager.resolveRefreshToken(tokenResponse.refreshToken()))
+                        .isEqualTo(member.getEmail())
+        );
+    }
+
+    @DisplayName("로그아웃할 수 있다")
+    @Test
+    void logoutSuccess() {
+        Member member = memberGenerator.generateSaved("김콜리");
+        String refreshToken = jwtManager.createRefreshToken(new MemberInfo(member.getEmail()));
+
+        assertThatCode(() -> authService.logout(member, refreshToken))
+                .doesNotThrowAnyException();
+    }
+
+    @DisplayName("같은 회원이 아니면 인증에러가 발생한다")
+    @Test
+    void logoutFail() {
+        Member geonwoo = memberGenerator.generateSaved("김건우");
+        Member hyeon = memberGenerator.generateSaved("전현민");
+        String geonwooRefreshToken = jwtManager.createRefreshToken(new MemberInfo(geonwoo.getEmail()));
+
+        assertThatThrownBy(() -> authService.logout(hyeon, geonwooRefreshToken))
+                .isInstanceOf(BusinessException.class)
+                .hasMessage(ErrorCode.UNAUTHORIZED_EXCEPTION.getMessage());
     }
 }

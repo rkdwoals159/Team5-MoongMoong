@@ -27,6 +27,7 @@ class GroupMedicalControllerTest extends BaseControllerTest {
     @Test
     void getGroupMedicalInfoSuccess() {
         Member member = memberGenerator.generateSaved("softeer");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, member);
@@ -34,7 +35,7 @@ class GroupMedicalControllerTest extends BaseControllerTest {
 
         given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .get("/api/group/medical/info")
                 .then()
                 .statusCode(200);
@@ -43,11 +44,9 @@ class GroupMedicalControllerTest extends BaseControllerTest {
     @DisplayName("그룹 의사 권장사항 반환 실패 : 인증에 실패하여 401을 반환")
     @Test
     void getMemberExpensesByPeriodFail() {
-        long memberId = 1L;
-
         given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, memberId)
+                .header(HttpHeaders.AUTHORIZATION, "")
                 .get("/api/group/medical/info")
                 .then()
                 .statusCode(401);
@@ -57,6 +56,7 @@ class GroupMedicalControllerTest extends BaseControllerTest {
     @Test
     void getTreatmentSuccess() {
         Member member = memberGenerator.generateSaved("softeer");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         Pet pet = petGenerator.generateSaved("서울시", "중구");
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, member);
@@ -65,7 +65,7 @@ class GroupMedicalControllerTest extends BaseControllerTest {
 
         given().log().all()
                 .contentType(ContentType.JSON)
-                .header(org.apache.http.HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .queryParam("disease", "DER")
                 .get("/api/group/medical/disease/cost")
                 .then()
@@ -76,6 +76,7 @@ class GroupMedicalControllerTest extends BaseControllerTest {
     @Test
     void findGroupMedicalStatistics() {
         Member member = memberGenerator.generateSaved("softeer");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         Pet pet = petGenerator.generateSaved(Breed.BEA, Gender.F, LocalDate.now().minusYears(3L));
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, member);
@@ -95,7 +96,7 @@ class GroupMedicalControllerTest extends BaseControllerTest {
 
         GroupMedicalStatisticsResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(org.apache.http.HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .queryParam("disease", "DER")
                 .get("/api/group/medical/statistics")
                 .then()
@@ -119,6 +120,7 @@ class GroupMedicalControllerTest extends BaseControllerTest {
     @Test
     void findPetDiseaseRanking() {
         Member member = memberGenerator.generateSaved("softeer");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         PetAge petAge = new PetAge(pet.getBirthDate());
@@ -135,7 +137,7 @@ class GroupMedicalControllerTest extends BaseControllerTest {
 
         PetDiseaseRankingResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(org.apache.http.HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .get("/api/group/medical/disease")
                 .then()
                 .statusCode(200)

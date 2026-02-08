@@ -16,10 +16,11 @@ class MemberControllerTest extends BaseControllerTest {
     @Test
     void findMemberInfoSuccess() {
         Member member = memberGenerator.generateSaved("멤버1");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
 
         MemberInfoResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, member.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .get("/api/member")
                 .then()
                 .statusCode(200)
@@ -38,7 +39,7 @@ class MemberControllerTest extends BaseControllerTest {
 
         given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION , 1L)
+                .header(HttpHeaders.AUTHORIZATION , "")
                 .get("/api/member")
                 .then()
                 .statusCode(401);

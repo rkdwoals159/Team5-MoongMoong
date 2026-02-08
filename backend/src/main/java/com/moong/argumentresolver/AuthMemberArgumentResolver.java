@@ -17,6 +17,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
+    private static final String BEARER_PREFIX = "Bearer ";
+
     private final AuthService authService;
 
     @Override
@@ -31,16 +33,20 @@ public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver
             NativeWebRequest webRequest,
             WebDataBinderFactory binderFactory
     ) {
-        long memberId = getMemberId(webRequest);
-        return authService.authorize(memberId);
-    }
+        String rawAccessToken = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
-    private long getMemberId(NativeWebRequest webRequest) {
-        try {
-            String memberId = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-            return Long.parseLong(memberId);
-        } catch (NumberFormatException exception) {
+        if(rawAccessToken == null || rawAccessToken.isBlank()) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED_EXCEPTION);
         }
+        //TODO 프론트 코드 전환 후 삭제
+        if (rawAccessToken.equals("1") || rawAccessToken.equals("2")) {
+            return authService.authorize(Long.parseLong(rawAccessToken));
+        }
+
+        if(rawAccessToken.length() < BEARER_PREFIX.length()) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED_EXCEPTION);
+        }
+        String accessToken = rawAccessToken.substring(BEARER_PREFIX.length());
+        return authService.authorizeByAccessToken(accessToken);
     }
 }

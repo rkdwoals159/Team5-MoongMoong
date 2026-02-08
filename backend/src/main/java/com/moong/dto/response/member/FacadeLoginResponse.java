@@ -3,6 +3,7 @@ package com.moong.dto.response.member;
 import com.moong.domain.entity.Pet;
 import com.moong.dto.response.auth.JwtTokenResponse;
 import com.moong.dto.response.pet.InvitedPetResponse;
+import java.time.Duration;
 
 public record FacadeLoginResponse(
         boolean isInvited,
@@ -43,5 +44,17 @@ public record FacadeLoginResponse(
                 InvitedPetResponse.noneInvited(),
                 jwtTokenResponse
         );
+    }
+
+    public String accessToken() {
+        return tokenResponse.accessToken();
+    }
+
+    public String refreshToken() {
+        return tokenResponse.refreshToken();
+    }
+
+    public Duration refreshTokenExpiration() {
+        return tokenResponse.refreshTokenExpiration();
     }
 }
