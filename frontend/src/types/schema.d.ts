@@ -48,6 +48,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/group/participate2": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["participate2"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/group/bank": {
     parameters: {
       query?: never;
@@ -173,6 +189,67 @@ export interface paths {
     patch: operations["upsertMemberExpenses"];
     trace?: never;
   };
+  "/api/auth/refresh": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * 토큰 재발급
+     * @description 만료된 Access Token을 Refresh Token을 사용하여 재발급합니다.
+     */
+    post: operations["refresh"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/auth/logout": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * 로그아웃
+     * @description 현재 로그인된 사용자를 로그아웃 처리하고 Refresh Token을 무효화합니다.
+     */
+    post: operations["logout"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/auth/login": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * 로그인
+     * @description 구글 OAuth 인증 후 로그인을 처리합니다.
+     *     Authorization 헤더로 Access Token, Set-Cookie로 Refresh Token을 반환합니다.
+     */
+    post: operations["login"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/member": {
     parameters: {
       query?: never;
@@ -180,6 +257,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
+    /**
+     * 회원 정보 반환
+     * @description 회원 닉네임과 이미지 url을 반환합니다.
+     */
     get: operations["findMember"];
     put?: never;
     post?: never;
@@ -378,6 +459,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/auth/validate": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 로그아웃
+     * @description 사용중인 토큰의 유효성을 판단합니다.
+     */
+    get: operations["validate"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -481,6 +582,12 @@ export interface components {
         | "END"
         | "INF"
       )[];
+    };
+    ErrorResponse: {
+      code?: string;
+      /** Format: int32 */
+      status?: number;
+      message?: string;
     };
     /** @description 반려동물 생성 응답 */
     PetCreateResponse: {
@@ -591,12 +698,6 @@ export interface components {
         | "INF"
       )[];
     };
-    ErrorResponse: {
-      code?: string;
-      /** Format: int32 */
-      status?: number;
-      message?: string;
-    };
     /** @description 그룹 초대 요청 */
     PetGroupParticipateRequest: {
       /**
@@ -613,6 +714,13 @@ export interface components {
        * @example 1
        */
       crewId?: number;
+    };
+    Member: {
+      /** Format: int64 */
+      id?: number;
+      email: string;
+      name: string;
+      imageUrl?: string;
     };
     /** @description 저금통 생성 요청 */
     BankCreateRequest: {
@@ -748,6 +856,149 @@ export interface components {
        * @example 550e8400-e29b-41d4-a716-446655440000
        */
       requestId?: string;
+    };
+    /** @description 토큰 재발급 요청 */
+    AuthTokenRefreshRequest: {
+      /**
+       * @description 만료된 Access Token
+       * @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+       */
+      accessToken?: string;
+      /**
+       * @description 유효한 Refresh Token
+       * @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.cThIIoDvwdueQB4NgjKBAI
+       */
+      refreshToken?: string;
+    };
+    /** @description 토큰 재발급 응답 */
+    AuthTokenRefreshResponse: {
+      /**
+       * @description 새로 발급된 Access Token
+       * @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+       */
+      accessToken?: string;
+      /**
+       * @description 새로 발급된 Refresh Token
+       * @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.cThIIoDvwdueQB4NgjKBAI
+       */
+      refreshToken?: string;
+      /**
+       * @description Refresh Token 만료까지 남은 시간 (ISO-8601 Duration 형식)
+       * @example PT168H
+       */
+      refreshTokenExpiration?: string;
+    };
+    /** @description 로그인 요청 */
+    AuthLoginRequest: {
+      /**
+       * @description Google OAuth 엑세스 토큰
+       * @example google access
+       */
+      accessToken?: string;
+      /**
+       * @description 초대 코드 url(없을 시 null)
+       * @example https://moong.site/invite/123
+       */
+      inviteUrl?: string;
+    };
+    /** @description 로그인 응답 */
+    AuthLoginResponse: {
+      /**
+       * @description 초대된 회원인지 여부
+       * @example true
+       */
+      isInvited?: boolean;
+      /**
+       * @description 신규회원 여부
+       * @example true
+       */
+      isNew?: boolean;
+      /**
+       * Format: int64
+       * @description 회원 ID
+       * @example 102345
+       */
+      memberId?: number;
+      /**
+       * @description 임의 생성된 회원 닉네임
+       * @example 행복한펭귄42
+       */
+      name?: string;
+      /**
+       * @description 회원 프로필 URL
+       * @example https://cdn.example.com/profile/default_01.png
+       */
+      imageUrl?: string;
+      /**
+       * @description 강아지 이름 (초대되지 않은 경우 null)
+       * @example 코코
+       */
+      petName?: string | null;
+      /**
+       * @description 견종 코드 (초대되지 않은 경우 null)
+       * @example BEA
+       * @enum {string|null}
+       */
+      breed?:
+        | "GRE"
+        | "DAL"
+        | "DAS"
+        | "DOB"
+        | "GOL"
+        | "LAB"
+        | "MAL"
+        | "BUL"
+        | "BEA"
+        | "BIC"
+        | "SHE"
+        | "SCH"
+        | "MIL"
+        | "MIS"
+        | "HUS"
+        | "HOU"
+        | "GER"
+        | "JIN"
+        | "CHS"
+        | "CHL"
+        | "COC"
+        | "TER"
+        | "POM"
+        | "POO"
+        | "SHI"
+        | "WEL"
+        | "ETC"
+        | null;
+      /**
+       * @description 강아지 성별 (M: 남아, F: 여아, 초대되지 않은 경우 null)
+       * @example M
+       * @enum {string|null}
+       */
+      gender?: "M" | "F" | null;
+      /**
+       * @description 생년월 YYYY-MM 형식 (초대되지 않은 경우 null)
+       * @example 2025-05
+       */
+      birthDate?: {
+        /** Format: int32 */
+        year?: number;
+        /** @enum {string} */
+        month?:
+          | "JANUARY"
+          | "FEBRUARY"
+          | "MARCH"
+          | "APRIL"
+          | "MAY"
+          | "JUNE"
+          | "JULY"
+          | "AUGUST"
+          | "SEPTEMBER"
+          | "OCTOBER"
+          | "NOVEMBER"
+          | "DECEMBER";
+        /** Format: int32 */
+        monthValue?: number;
+        leapYear?: boolean;
+      } | null;
     };
     /** @description 저금통 목표 금액 변경 요청 */
     BankUpdateRequest: {
@@ -978,15 +1229,17 @@ export interface components {
         | "INF"
       )[];
     };
-    Member: {
-      /** Format: int64 */
-      id?: number;
-      email: string;
-      name: string;
-      imageUrl?: string;
-    };
+    /** @description 회원 정보 응답 */
     MemberInfoResponse: {
+      /**
+       * @description 회원 닉네임
+       * @example 커피내기장인 콜리
+       */
       memberName?: string;
+      /**
+       * @description 회원 프로필 이미지 url
+       * @example S3 image Url
+       */
       memberImageUrl?: string;
     };
     /** @description 그룹 질병 통계 응답 */
@@ -1509,6 +1762,29 @@ export interface operations {
       };
     };
   };
+  participate2: {
+    parameters: {
+      query: {
+        member: components["schemas"]["Member"];
+        groupId: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["PetGroupParticipateResponse"];
+        };
+      };
+    };
+  };
   findBankInfo: {
     parameters: {
       query?: never;
@@ -2019,6 +2295,126 @@ export interface operations {
       };
     };
   };
+  refresh: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json;charset=UTF-8": components["schemas"]["AuthTokenRefreshRequest"];
+      };
+    };
+    responses: {
+      /** @description 토큰 재발급 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["AuthTokenRefreshResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  logout: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie: {
+        /** @description 무효화할 Refresh Token */
+        refreshToken: string;
+      };
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  login: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json;charset=UTF-8": components["schemas"]["AuthLoginRequest"];
+      };
+    };
+    responses: {
+      /** @description 로그인 성공 */
+      201: {
+        headers: {
+          /** @description Bearer {accessToken} */
+          Authorization?: string;
+          /** @description refreshToken={refreshToken}; */
+          "Set-Cookie"?: string;
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["AuthLoginResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
   findMember: {
     parameters: {
       query: {
@@ -2030,13 +2426,31 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description OK */
+      /** @description 회원정보 반환 성공 */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           "application/json;charset=UTF-8": components["schemas"]["MemberInfoResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
         };
       };
     };
@@ -2396,6 +2810,62 @@ export interface operations {
         };
         content: {
           "application/json;charset=UTF-8": components["schemas"]["LastMonthComparisonResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  validate: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 유효 토큰 */
+      200: {
+        headers: {
+          /** @description Bearer {accessToken} */
+          Authorization?: string;
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
         };
       };
     };
