@@ -40,6 +40,9 @@ jobs:
       - name: Format
         run: yarn format:check
 
+      # - name: Unit Test
+      #   run: yarn test
+
       # - name: E2E
       #   run: yarn test:e2e
 
