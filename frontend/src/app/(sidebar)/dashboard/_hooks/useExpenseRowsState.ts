@@ -1,18 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ExpenseData, EditableExpenseRow } from "@/app/(sidebar)/dashboard/_types";
-import { serverToEditableRow, mergeRows } from "@/app/(sidebar)/dashboard/_lib";
 import { createEmptyRow } from "@/app/(sidebar)/dashboard/_utils";
 import { SYNC_FIELDS } from "@/app/(sidebar)/dashboard/_constants";
-import { components } from "@schema";
+import {
+  serverToEditableRow,
+  mergeRows,
+  buildPatchPayload,
+  mergeSelectedRowsLogic,
+  calculateTotalExpense,
+  getExpenseRowKey,
+} from "@/app/(sidebar)/dashboard/_lib";
 
-type MemberExpensesUpsertRequest = components["schemas"]["MemberExpensesUpsertRequest"];
-
-type ExpenseTableApi = {
-  getExpensesByPeriod: (startDate: string, endDate: string) => Promise<{ expenses: ExpenseData[] }>;
-  patchExpenses: (body: MemberExpensesUpsertRequest) => Promise<{ expenses?: unknown[] }>;
-};
-
-export const useEditableRows = (initialData: ExpenseData[], api?: ExpenseTableApi) => {
+export const useExpenseRowsState = (initialData: ExpenseData[]) => {
   const [rows, setRows] = useState<EditableExpenseRow[]>(() =>
     initialData.map(serverToEditableRow),
   );
@@ -92,70 +91,13 @@ export const useEditableRows = (initialData: ExpenseData[], api?: ExpenseTableAp
   /** 선택된 셀 병합 핸들러 */
   const mergeSelectedRows = useCallback(() => {
     setRows((prev) => {
-      const selected = prev.filter((row) => row.selected && !row.isDeleted);
-      if (selected.length < 2) return prev;
-
-      const first = selected[0];
-      if (!first) return prev;
-
-      const costs = selected.map((row) => Number(row.cost)).reduce((a, b) => a + b, 0);
-      const dates = selected.map((row) => row.spentAt).filter(Boolean) as string[];
-      const merged: EditableExpenseRow = {
-        ...createEmptyRow(0),
-        expenseId: 0,
-        spentAt: dates.length ? dates.sort()[0]! : "", // dates.sort()는 undefined를 반환할 수 있으므로, ! 연산자 사용 필요        usage: first.usage ?? "",
-        cost: costs,
-        usage: selected.map((row) => row.usage).join(", "),
-        // TODO: 메인/서브 카테고리, 메모 병합 로직(자동 카테고리 분류) 적용 필요
-        mainCategory: first.mainCategory,
-        subCategory: first.subCategory,
-        memo: first.memo,
-        isNew: true,
-        isDirty: true,
-      };
-
-      const selectedSet = new Set(selected.map((row) => row.localId));
-      const next = prev.map((row) =>
-        selectedSet.has(row.localId) ? { ...row, isDeleted: true } : row,
-      );
-
-      return [...next, merged];
+      const result = mergeSelectedRowsLogic(prev);
+      return result ?? prev;
     });
   }, []);
 
   /** 패치 페이로드 생성 핸들러 */
-  const getPatchPayload = useCallback((): MemberExpensesUpsertRequest => {
-    const expenses: MemberExpensesUpsertRequest["expenses"] = [];
-    const deletedIds: number[] = [];
-
-    rows.forEach((row) => {
-      if (row.isDeleted && row.expenseId != null && row.expenseId > 0) {
-        deletedIds.push(row.expenseId);
-        return;
-      }
-
-      if (row.isNew || row.isDirty) {
-        const cost =
-          typeof row.cost === "number"
-            ? row.cost
-            : row.cost != null && row.cost !== ""
-              ? Number(row.cost)
-              : undefined;
-        expenses.push({
-          isNew: row.isNew,
-          expenseId: row.isNew ? undefined : row.expenseId,
-          spentAt: row.spentAt,
-          usage: row.usage,
-          cost,
-          mainCategory: row.mainCategory ?? undefined,
-          subCategory: row.subCategory,
-          memo: row.memo,
-        });
-      }
-    });
-
-    return { expenses, deletedIds };
-  }, [rows]);
+  const getPatchPayload = useCallback(() => buildPatchPayload(rows), [rows]);
 
   /** 변경 사항 존재 여부 체크 핸들러 */
   const hasUnsavedChanges = useMemo(
@@ -169,38 +111,21 @@ export const useEditableRows = (initialData: ExpenseData[], api?: ExpenseTableAp
     [rows],
   );
 
-  /** 저장 핸들러 */
-  const handleSave = useCallback(
-    async (startDate: string, endDate: string): Promise<void> => {
-      if (!api) return;
-      const payload = getPatchPayload();
-      if (!hasUnsavedChanges) return;
-
-      await api.patchExpenses(payload);
-      const { expenses } = await api.getExpensesByPeriod(startDate, endDate);
-      mergeRowsFromServer(expenses);
-    },
-    [api, getPatchPayload, mergeRowsFromServer, hasUnsavedChanges],
-  );
-
   /** 총 소비 금액 계산 */
-  const totalExpense = useMemo(
-    () =>
-      visibleRows.reduce((sum, row) => {
-        const c = row.cost;
-        const v = typeof c === "number" ? c : c != null && c !== "" ? Number(c) : 0;
-        return sum + (Number.isNaN(v) ? 0 : v);
-      }, 0),
-    [visibleRows],
-  );
+  const totalExpense = useMemo(() => calculateTotalExpense(visibleRows), [visibleRows]);
+
+  /** 행 식별 키 (DataTable rowKey prop) */
+  const rowKey = getExpenseRowKey;
 
   return {
     displayInitialRows,
+    rowKey,
     updateCellByLocalId,
     updateAllCells,
     deleteSelectedRows,
     mergeSelectedRows,
-    handleSave,
+    getPatchPayload,
+    mergeRowsFromServer,
     hasUnsavedChanges,
     selectedCount,
     totalExpense,

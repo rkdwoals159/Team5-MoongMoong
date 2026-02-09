@@ -1,5 +1,10 @@
 import { ExpenseData, EditableExpenseRow } from "@/app/(sidebar)/dashboard/_types";
 import { SYNC_FIELDS } from "@/app/(sidebar)/dashboard/_constants";
+import { createEmptyRow } from "@/app/(sidebar)/dashboard/_utils";
+import { joinNonEmpty } from "@/utils/string";
+import { components } from "@schema";
+
+type MemberExpensesUpsertRequest = components["schemas"]["MemberExpensesUpsertRequest"];
 
 /** ExpenseData → EditableExpenseRow 변환 */
 export const serverToEditableRow = (serverRow: ExpenseData): EditableExpenseRow => {
@@ -47,4 +52,99 @@ export const mergeRows = (
     // 3. 이전 데이터와 변경이 있는 경우
     return serverToEditableRow(row);
   });
+};
+
+/** rows에서 isDirty/isNew/isDeleted 기준으로 PATCH 페이로드 생성 */
+export const buildPatchPayload = (rows: EditableExpenseRow[]): MemberExpensesUpsertRequest => {
+  const expenses: MemberExpensesUpsertRequest["expenses"] = [];
+  const deletedIds: number[] = [];
+
+  rows.forEach((row) => {
+    if (row.isDeleted && row.expenseId != null && row.expenseId > 0) {
+      deletedIds.push(row.expenseId);
+      return;
+    }
+
+    if (row.isNew || row.isDirty) {
+      const cost =
+        typeof row.cost === "number"
+          ? row.cost
+          : row.cost != null && row.cost !== ""
+            ? Number(row.cost)
+            : undefined;
+      expenses.push({
+        isNew: row.isNew,
+        expenseId: row.isNew ? undefined : row.expenseId,
+        spentAt: row.spentAt,
+        usage: row.usage,
+        cost,
+        mainCategory: row.mainCategory ?? undefined,
+        subCategory: row.subCategory,
+        memo: row.memo,
+      });
+    }
+  });
+
+  return { expenses, deletedIds };
+};
+
+/** 선택된 행들을 하나의 merged row로 생성 */
+export const buildMergedRowFromSelected = (
+  selected: EditableExpenseRow[],
+): EditableExpenseRow | null => {
+  if (selected.length < 2) return null;
+
+  const first = selected[0];
+  if (!first) return null;
+
+  const costs = selected.map((row) => Number(row.cost)).reduce((a, b) => a + b, 0);
+  const dates = selected.map((row) => row.spentAt).filter(Boolean) as string[];
+  const merged: EditableExpenseRow = {
+    ...createEmptyRow(0),
+    expenseId: 0,
+    spentAt: dates.length ? dates.sort()[0]! : "",
+    cost: costs,
+    usage: joinNonEmpty(selected.map((row) => row.usage)),
+    mainCategory: first.mainCategory,
+    subCategory: first.subCategory,
+    memo: first.memo,
+    isNew: true,
+    isDirty: true,
+  };
+
+  return merged;
+};
+
+/** 선택된 행 병합 후 전체 rows 배열 반환 (병합 불가 시 null) */
+export const mergeSelectedRowsLogic = (rows: EditableExpenseRow[]): EditableExpenseRow[] | null => {
+  const selected = rows.filter((row) => row.selected && !row.isDeleted);
+  const merged = buildMergedRowFromSelected(selected);
+  if (!merged) return null;
+
+  const selectedSet = new Set(selected.map((row) => row.localId));
+  const next = rows.map((row) =>
+    selectedSet.has(row.localId) ? { ...row, isDeleted: true } : row,
+  );
+
+  return [...next, merged];
+};
+
+/** 표시 중인 행 기준 총 소비 금액 계산 */
+export const calculateTotalExpense = (visibleRows: EditableExpenseRow[]): number => {
+  return visibleRows.reduce((sum, row) => {
+    const c = row.cost;
+    const v = typeof c === "number" ? c : c != null && c !== "" ? Number(c) : 0;
+    return sum + (Number.isNaN(v) ? 0 : v);
+  }, 0);
+};
+
+/** DataTable rowKey용 키 계산 */
+export const getExpenseRowKey = (
+  row: ExpenseData | EditableExpenseRow,
+  rowIndex: number,
+): string | number => {
+  const rowData = row as EditableExpenseRow;
+  if (rowData.localId) return rowData.localId;
+  if (row.expenseId > 0) return row.expenseId;
+  return `empty-${rowIndex}`;
 };

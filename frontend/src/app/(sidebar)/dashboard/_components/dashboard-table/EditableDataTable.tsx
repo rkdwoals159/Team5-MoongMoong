@@ -1,13 +1,7 @@
 "use client";
 
-import {
-  EditableDataTableProps,
-  ExpenseData,
-  EditableExpenseRow,
-} from "@/app/(sidebar)/dashboard/_types";
-import { useEditableExpenseTable } from "@/app/(sidebar)/dashboard/_hooks/useEditableExpenseTable";
-import { SAVE_ERROR_MESSAGE } from "@/app/(sidebar)/dashboard/_constants";
-import { useToast } from "@/components/ui/Toast/ToastProvider";
+import { EditableDataTableProps, ExpenseData } from "@/app/(sidebar)/dashboard/_types";
+import { useExpenseTable } from "@/app/(sidebar)/dashboard/_hooks";
 import DataTable from "@/components/ui/DataTable/DataTable";
 import CategoryPopup from "@/app/(sidebar)/dashboard/_components/dashboard-table/CategoryPopup";
 import ExpenseTableToolbar from "@/app/(sidebar)/dashboard/_components/dashboard-table/ExpenseTableToolbar";
@@ -24,6 +18,7 @@ const EditableDataTable = ({
 }: EditableDataTableProps) => {
   const {
     displayInitialRows,
+    rowKey,
     columns,
     selectedCell,
     showCategoryPopup,
@@ -36,26 +31,7 @@ const EditableDataTable = ({
     hasUnsavedChanges,
     selectedCount,
     totalExpense,
-  } = useEditableExpenseTable(initialData);
-  const { showToast } = useToast();
-
-  const onSave = async () => {
-    try {
-      await handleSave(startDate, endDate);
-    } catch (error) {
-      showToast({
-        variant: "error",
-        message: error instanceof Error ? error.message : SAVE_ERROR_MESSAGE,
-      });
-    }
-  };
-
-  const rowKey = (row: ExpenseData | EditableExpenseRow, rowIndex: number) => {
-    const rowData = row as EditableExpenseRow;
-    if (rowData.localId) return rowData.localId;
-    if (row.expenseId > 0) return row.expenseId;
-    return `empty-${rowIndex}`;
-  };
+  } = useExpenseTable(initialData);
 
   return (
     <div className={cn("flex flex-col flex-1 min-h-0", className ?? "")}>
@@ -87,7 +63,7 @@ const EditableDataTable = ({
           totalExpense={totalExpense}
           selectedCount={selectedCount}
           hasUnsavedChanges={hasUnsavedChanges}
-          onSave={onSave}
+          onSave={() => handleSave(startDate, endDate)}
           onDeleteSelected={deleteSelectedRows}
           onMergeSelected={mergeSelectedRows}
         />

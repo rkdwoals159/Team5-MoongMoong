@@ -2,6 +2,7 @@ export {
   EXPENSE_COLUMNS,
   EDITABLE_TABLE_MIN_ROWS,
   CATEGORY_POPUP_HEIGHT,
+  CATEGORY_POPUP_GAP,
   SYNC_FIELDS,
 } from "@/app/(sidebar)/dashboard/_constants/expenseColumns";
 

@@ -27,3 +27,6 @@ export const EDITABLE_TABLE_MIN_ROWS = 1;
 
 /** CategoryPopup 높이 (팝업 위치 계산용) */
 export const CATEGORY_POPUP_HEIGHT = 336;
+
+/** CategoryPopup과 앵커 버튼 사이 간격 */
+export const CATEGORY_POPUP_GAP = 4;
