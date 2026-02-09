@@ -87,6 +87,11 @@ openai:
   base-url: https://api.openai.com/v1
   secret-key: ${OPEN_AI_KEY}
 
+toss:
+  secret-key: ${TOSS_SECRET_KEY}
+  base-url: https://api.tosspayments.com/v1/payments
+  password:
+
 jwt:
   secret_key: ${JWT_SECRET_KEY}
   access_token_expiration: ${JWT_ACCESS_EXPIRATION}
