@@ -20,7 +20,7 @@ const AIRecommendation = () => {
             <span className={titleClasses}>{TITLE_TEXT}</span>
             <InfoTooltip description={TOOLTIP_DESCRIPTION} iconSize={20} />
           </div>
-          <ErrorBoundary>
+          <ErrorBoundary refreshOnReset>
             <Suspense fallback={<AIRecommendationSkeleton />}>
               <AIRecommendationContent />
             </Suspense>

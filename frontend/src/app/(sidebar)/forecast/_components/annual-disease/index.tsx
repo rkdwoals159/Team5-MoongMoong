@@ -30,7 +30,7 @@ const AnnualDiseaseRisk = () => {
           <span className={unitClasses}>{ANNUAL_DISEASE_UNIT}</span>
         </div>
 
-        <ErrorBoundary>
+        <ErrorBoundary refreshOnReset>
           <Suspense fallback={<AnnualDiseaseRiskSkeleton />}>
             <AnnualDiseaseRiskContent />
           </Suspense>

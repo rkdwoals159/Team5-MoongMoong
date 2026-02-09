@@ -27,7 +27,7 @@ export async function getDiseaseRanking(): Promise<DiseaseCodeResponse> {
     throw new Error("질병 목록을 불러오는데 실패했습니다.");
   }
 
-  return data.diseases || [];
+  return data.diseases ?? [];
 }
 
 /**
@@ -55,9 +55,9 @@ export async function getDiseaseCost(disease: DiseaseCode): Promise<TreatmentsRe
     },
   });
 
-  if (error || !data.treatments) {
+  if (error || !data) {
     throw new Error("의료비 데이터를 불러오는데 실패했습니다.");
   }
 
-  return data.treatments;
+  return data.treatments ?? [];
 }

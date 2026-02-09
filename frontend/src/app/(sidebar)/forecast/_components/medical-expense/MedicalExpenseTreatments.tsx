@@ -12,9 +12,16 @@ const MedicalExpenseTreatments = ({
   return (
     <div className={cardsContainerClasses}>
       <div className={cardsGridClasses}>
-        {visibleTreatments.map((treatment) => (
-          <TreatmentCard key={`${treatment.name}-${treatment.description}`} treatment={treatment} />
-        ))}
+        {visibleTreatments.length === 0 ? (
+          <p className={emptyMessageClasses}>아직 정보가 없습니다.</p>
+        ) : (
+          visibleTreatments.map((treatment) => (
+            <TreatmentCard
+              key={`${treatment.name}-${treatment.description}`}
+              treatment={treatment}
+            />
+          ))
+        )}
       </div>
 
       {totalPages > 1 && (
@@ -48,3 +55,4 @@ export default MedicalExpenseTreatments;
 
 const cardsContainerClasses = "flex flex-col gap-500 relative";
 const cardsGridClasses = "grid grid-cols-3 gap-400";
+const emptyMessageClasses = "col-span-3 py-400 text-center typo-body-l-medium text-text-sub";

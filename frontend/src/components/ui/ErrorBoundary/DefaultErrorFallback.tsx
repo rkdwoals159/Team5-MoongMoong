@@ -6,13 +6,18 @@ import Button from "@/components/common/Button/Button";
 type DefaultErrorFallbackProps = {
   message?: string;
   onReset: () => void;
+  refreshOnReset?: boolean;
 };
 
-export default function DefaultErrorFallback({ message, onReset }: DefaultErrorFallbackProps) {
+export default function DefaultErrorFallback({
+  message,
+  onReset,
+  refreshOnReset,
+}: DefaultErrorFallbackProps) {
   const router = useRouter();
 
   const handleRetry = () => {
-    router.refresh();
+    if (refreshOnReset) router.refresh();
     onReset();
   };
 
