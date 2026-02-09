@@ -1,9 +1,8 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-
 import { defineConfig } from "vitest/config";
-
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
+import react from "@vitejs/plugin-react";
 
 import { playwright } from "@vitest/browser-playwright";
 
@@ -12,15 +11,13 @@ const dirname =
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
+  plugins: [react()],
   test: {
     projects: [
+      // Storybook 테스트 프로젝트
       {
         extends: true,
-        plugins: [
-          // The plugin will run tests for the stories defined in your Storybook config
-          // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-          storybookTest({ configDir: path.join(dirname, ".storybook") }),
-        ],
+        plugins: [storybookTest({ configDir: path.join(dirname, ".storybook") })],
         test: {
           name: "storybook",
           browser: {
@@ -32,6 +29,29 @@ export default defineConfig({
           setupFiles: [".storybook/vitest.setup.ts"],
         },
       },
+      // 유닛 테스트 프로젝트
+      {
+        test: {
+          name: "unit",
+          environment: "jsdom",
+          globals: true,
+          setupFiles: ["./src/test/setup.ts"],
+          include: ["src/**/*.test.{ts,tsx}"],
+          exclude: [
+            "**/node_modules/**",
+            "**/dist/**",
+            "**/.next/**",
+            "**/*.stories.tsx",
+            "**/.storybook/**",
+          ],
+        },
+      },
     ],
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(dirname, "src"),
+      "@schema": path.resolve(dirname, "src/types/schema.d.ts"),
+    },
   },
 });

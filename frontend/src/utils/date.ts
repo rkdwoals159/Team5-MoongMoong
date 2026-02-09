@@ -1,4 +1,4 @@
-import { DAY_LABELS } from "@/app/(sidebar)/calendar/_constants";
+import { DAY_LABELS } from "../constants";
 import { NavigationUnit } from "@/components/common/DateRangePicker/DateRangePicker.type";
 
 const monthLabelFormatter = new Intl.DateTimeFormat("ko-KR", {
@@ -11,6 +11,8 @@ const fullDateFormatter = new Intl.DateTimeFormat("ko-KR", {
   month: "numeric",
   day: "numeric",
 });
+
+export const getDayLabels = () => DAY_LABELS;
 
 /** Date를 YYYY-MM-DD 형식 문자열로 변환 */
 export const formatDateKey = (date: Date) => {

@@ -12,5 +12,4 @@ export const categoryColorMap: Record<ExpenseCategory, ChipMajorColor> = {
   기타: "gray",
 };
 
-export const DAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"] as const;
 export const SCROLL_THRESHOLD = 9;
