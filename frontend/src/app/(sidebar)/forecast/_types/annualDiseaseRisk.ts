@@ -10,8 +10,13 @@ export type AnnualDiseaseRiskProps = {
   statisticsData: AnnualDiseases;
 };
 
+export type SelectedDisease = {
+  code: DiseaseCode;
+  color: string;
+};
+
 export type AnnualDiseaseRiskSelectProps = {
-  selectedDiseases: DiseaseCode[];
+  selectedDiseases: SelectedDisease[];
   unselectedDiseases: DiseaseCode[];
   onReset: () => void;
   onCancel: (code: DiseaseCode) => void;

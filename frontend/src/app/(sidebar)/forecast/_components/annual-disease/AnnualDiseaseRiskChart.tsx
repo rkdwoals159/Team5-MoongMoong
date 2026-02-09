@@ -7,7 +7,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { DiseaseCode, RiskLineRow } from "@/app/(sidebar)/forecast/_types";
+import { DiseaseCode, RiskLineRow, SelectedDisease } from "@/app/(sidebar)/forecast/_types";
 import { DISEASE_CODE_FULL_NAMES } from "@/app/(sidebar)/forecast/_constants";
 const tooltipStyles = {
   backgroundColor: "var(--color-white-100)",
@@ -21,10 +21,10 @@ const AnnualDiseaseRiskChart = ({
   selectedDiseases,
 }: {
   chartData: RiskLineRow[];
-  selectedDiseases: DiseaseCode[];
+  selectedDiseases: SelectedDisease[];
 }) => {
   return (
-    <div className="h-[260px] w-full pt-600">
+    <div className="h-[300px] w-full pt-600">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={chartData} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
           <CartesianGrid stroke="var(--color-gray-100)" vertical={false} />
@@ -42,19 +42,22 @@ const AnnualDiseaseRiskChart = ({
           />
           <Tooltip
             contentStyle={tooltipStyles}
+            wrapperStyle={{ zIndex: 100 }}
             labelStyle={{ color: "var(--color-gray-600)", fontSize: 12 }}
             formatter={(value, code) => {
-              return [`${value}%`, `${DISEASE_CODE_FULL_NAMES[code as DiseaseCode]} 위험도`];
+              return [`${value}%`, DISEASE_CODE_FULL_NAMES[code as DiseaseCode]];
             }}
+            itemStyle={{ fontWeight: 500 }}
+            itemSorter={(item) => -(Number(item.value) || 0)}
           />
-          {selectedDiseases.map((code, index) => (
+          {selectedDiseases.map((disease) => (
             <Line
-              key={`${code}-${index}`}
+              key={disease.code}
               type="monotone"
-              dataKey={code}
-              stroke={resolveIndicatorColor(index + 1)}
+              dataKey={disease.code}
+              stroke={disease.color}
               strokeWidth={3}
-              dot={{ r: 3, fill: resolveIndicatorColor(index + 1) }}
+              dot={{ r: 3, fill: disease.color }}
               activeDot={{ r: 5 }}
             />
           ))}
@@ -65,27 +68,3 @@ const AnnualDiseaseRiskChart = ({
 };
 
 export default AnnualDiseaseRiskChart;
-
-// TODO: className 변수로 정의
-const indicatorPalette = [
-  "var(--color-red-500)",
-  "var(--color-yellow-500)",
-  "var(--color-blue-500)",
-  "var(--color-green-500)",
-  "var(--color-purple-500)",
-  "var(--color-pink-500)",
-  "var(--color-orange-500)",
-  "var(--color-lime-500)",
-  "var(--color-indigo-500)",
-  "var(--color-turquoise-500)",
-  "var(--color-fuchsia-500)",
-  "var(--color-lightblue-500)",
-];
-
-const resolveIndicatorColor = (rank?: number) => {
-  if (!rank || rank < 1) {
-    return "var(--color-gray-500)";
-  }
-  const index = Math.min(rank - 1, indicatorPalette.length - 1);
-  return indicatorPalette[index];
-};

@@ -57,6 +57,23 @@ export const AI_RECOMMENDATION_DESCRIPTION =
   "반려견 데이터를 학습한 AI 모델이 반려견의 정보를 기반으로 향후 특정 질병 발생 확률을 추정합니다.";
 
 export const DEFAULT_SELECT_COUNT = 3;
+
+export const DEFAULT_COLOR = "var(--color-gray-500)";
+export const INDICATOR_PALETTE: string[] = [
+  "var(--color-red-500)",
+  "var(--color-amber-500)",
+  "var(--color-blue-500)",
+  "var(--color-green-500)",
+  "var(--color-purple-500)",
+  "var(--color-pink-500)",
+  "var(--color-orange-500)",
+  "var(--color-lime-500)",
+  "var(--color-indigo-500)",
+  "var(--color-turquoise-500)",
+  "var(--color-fuchsia-500)",
+  "var(--color-lightblue-500)",
+  "var(--color-cyan-500)",
+];
 export const PAGE_SIZE = 3;
 
 export const ANNUAL_DISEASE_SUBTITLE = "향후 7년간 위험도 상위 질병";

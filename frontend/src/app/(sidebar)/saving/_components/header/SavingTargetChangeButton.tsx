@@ -3,8 +3,8 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/common/Button/Button";
+import ClientModal from "@/components/ui/Modal/ClientModal";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
-import { useOutsideClick } from "@/hooks/useOutsideClick";
 import SavingTargetModal from "@/app/(sidebar)/saving/_components/modals/SavingTargetModal";
 import { DISABLED_TOOLTIP_MESSAGE } from "@/app/(sidebar)/saving/_constants";
 import { updateSavingTarget } from "@/app/(sidebar)/saving/_api";
@@ -13,7 +13,6 @@ import { useToast } from "@/components/ui/Toast/ToastProvider";
 export default function SavingTargetChangeButton() {
   const { status, setStatus } = useSavingStatus();
   const [isOpen, setIsOpen] = useState(false);
-  const popoverRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
   const focusRef = useRef<HTMLInputElement | null>(null);
   const { showToast } = useToast();
@@ -48,12 +47,6 @@ export default function SavingTargetChangeButton() {
     router.refresh();
   };
 
-  useOutsideClick({
-    isActive: isOpen,
-    refs: [popoverRef, buttonRef],
-    onOutside: () => setIsOpen(false),
-  });
-
   return (
     <div className="relative flex items-end group" ref={buttonRef}>
       <Button
@@ -70,16 +63,22 @@ export default function SavingTargetChangeButton() {
         </div>
       )}
 
-      {isOpen && (
+      <ClientModal
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        variant="dropdown"
+        ariaLabel="목표 금액 수정"
+        outsideClickRefs={[buttonRef]}
+        contentClassName="absolute top-full right-0 mt-200 z-50 w-[380px] rounded-600 border border-gray-100 bg-white-100 shadow-[0px_4px_20px_0px_rgba(26,31,39,0.12)] px-700 pt-700 pb-700 flex flex-col"
+      >
         <SavingTargetModal
-          ref={popoverRef}
           initialTarget={status.target}
           currentAmount={status.current}
           onClose={() => setIsOpen(false)}
           onSubmit={handleSubmit}
           focusRef={focusRef}
         />
-      )}
+      </ClientModal>
     </div>
   );
 }

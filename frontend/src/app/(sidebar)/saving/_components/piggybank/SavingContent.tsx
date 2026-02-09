@@ -37,7 +37,7 @@ export default function SavingContent({ coins }: { coins: Coin[] }) {
       timers.push(timerId);
     });
     return () => timers.forEach(clearTimeout);
-  }, [ready, coinsKey, handleDrop]);
+  }, [ready, coinsKey, handleDrop, status.target]);
 
   return (
     <div className="flex flex-col items-center gap-700 flex-1 min-h-0">

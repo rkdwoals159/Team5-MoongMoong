@@ -9,11 +9,7 @@ export default function ProfileModal({
   onLogout,
 }: ProfileModalProps) {
   return (
-    <div
-      role="dialog"
-      aria-label="프로필 메뉴"
-      className="absolute top-full right-0 mt-200 z-50 w-[280px] rounded-600 border border-gray-100 bg-white-100 shadow-[0px_4px_20px_0px_rgba(26,31,39,0.12)] flex flex-col"
-    >
+    <>
       <div className="flex flex-col items-center pt-700 pb-600 px-700">
         <div className="w-[100px] h-[100px] rounded-300 overflow-hidden">
           <NextImage
@@ -39,6 +35,6 @@ export default function ProfileModal({
           로그아웃
         </Button>
       </div>
-    </div>
+    </>
   );
 }

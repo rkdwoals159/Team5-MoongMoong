@@ -205,6 +205,94 @@ body {
   }
 }
 
+/* Dropdown animation */
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.dropdown-in {
+  animation: dropdown-in 200ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes dropdown-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+}
+
+.dropdown-out {
+  animation: dropdown-out 150ms ease-in both;
+}
+
+/* Modal animation */
+@keyframes modal-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes modal-panel-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+}
+
+.modal-overlay-in {
+  animation: modal-overlay-in 200ms ease-out both;
+}
+
+.modal-overlay-out {
+  animation: modal-overlay-out 150ms ease-in both;
+}
+
+.modal-panel-in {
+  animation: modal-panel-in 200ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.modal-panel-out {
+  animation: modal-panel-out 150ms ease-in both;
+}
+
 /* 스크롤바 숨기기 */
 /* 스크롤은 되는데 스크롤바는 숨김 */
 .no-scrollbar::-webkit-scrollbar {
@@ -301,6 +389,27 @@ body {
   /* turquoise colors */
   --color-turquoise-100: #ebfeff;
   --color-turquoise-500: #107f7f;
+
+  /* amber colors */
+  --color-amber-500: #f59e0b;
+
+  /* cyan colors */
+  --color-cyan-500: #06b6d4;
+
+  /* pink colors */
+  --color-pink-500: #ec4899;
+
+  /* lime colors */
+  --color-lime-500: #84cc16;
+
+  /* indigo colors */
+  --color-indigo-500: #6366f1;
+
+  /* fuchsia colors */
+  --color-fuchsia-500: #d946ef;
+
+  /* lightblue colors */
+  --color-lightblue-500: #38bdf8;
 
   /* ----------------------------- */
   /* Semantic Colors (aliases)     */

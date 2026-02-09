@@ -3,18 +3,19 @@ import { FilterChipProps } from "./FilterChip.type";
 import cn from "@/utils/style";
 import CancelIcon from "@/assets/ic_out_small.svg";
 
+const DEFAULT_INDICATOR_COLOR = "var(--color-gray-100)";
+
 const FilterChip = ({
   label,
   colorIndicator = false,
-  number = 0,
+  color = DEFAULT_INDICATOR_COLOR,
   hasCancelIcon = false,
   onCancel,
   onSelect,
   className,
   ...rest
 }: FilterChipProps) => {
-  const isSelected = colorIndicator || hasCancelIcon || number > 0;
-  const indicatorColor = resolveIndicatorColor(number);
+  const isSelected = colorIndicator || hasCancelIcon;
 
   const classes = [
     baseClasses,
@@ -36,7 +37,7 @@ const FilterChip = ({
           {colorIndicator && (
             <span
               className={indicatorClasses}
-              style={{ backgroundColor: indicatorColor }}
+              style={{ backgroundColor: color }}
               aria-hidden="true"
             />
           )}
@@ -79,27 +80,4 @@ const labelClasses = "typo-body-m-medium";
 const indicatorClasses = "h-[14px] w-[14px] rounded-full";
 const cancelButtonClasses =
   "z-50 flex items-center justify-center p-[8px] text-[var(--color-gray-600)] cursor-pointer";
-
-const indicatorPalette = [
-  "var(--color-red-500)",
-  "var(--color-yellow-500)",
-  "var(--color-blue-500)",
-  "var(--color-green-500)",
-  "var(--color-purple-500)",
-  "var(--color-pink-500)",
-  "var(--color-orange-500)",
-  "var(--color-lime-500)",
-  "var(--color-indigo-500)",
-  "var(--color-turquoise-500)",
-  "var(--color-fuchsia-500)",
-  "var(--color-lightblue-500)",
-];
-
-const resolveIndicatorColor = (rank?: number) => {
-  if (!rank || rank < 1) {
-    return "var(--color-gray-500)";
-  }
-  const index = Math.min(rank - 1, indicatorPalette.length - 1);
-  return indicatorPalette[index];
-};
 //--------------------------------

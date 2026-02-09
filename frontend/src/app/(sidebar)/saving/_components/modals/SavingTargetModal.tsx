@@ -13,7 +13,6 @@ const SavingTargetModal = ({
   onClose,
   onSubmit,
   focusRef,
-  ref,
 }: SavingTargetModalProps) => {
   const { value, numericValue, handleChange } = useAmountInput({
     initialValue: initialTarget,
@@ -28,10 +27,7 @@ const SavingTargetModal = ({
   const isBelowTotal = value.length > 0 && numericValue > 0 && numericValue < currentAmount;
 
   return (
-    <div
-      ref={ref}
-      className="absolute top-full right-0 mt-200 z-50 w-[380px] rounded-600 border border-gray-100 bg-white-100 shadow-[0px_4px_20px_0px_rgba(26,31,39,0.12)] px-700 pt-700 pb-700 flex flex-col"
-    >
+    <>
       <button
         type="button"
         onClick={onClose}
@@ -70,7 +66,7 @@ const SavingTargetModal = ({
           저장
         </Button>
       </div>
-    </div>
+    </>
   );
 };
 

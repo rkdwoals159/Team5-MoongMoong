@@ -18,7 +18,6 @@ export type SavingClientProps = {
 
 // SavingTargetModal
 export type SavingTargetModalProps = {
-  ref: React.RefObject<HTMLDivElement | null>;
   initialTarget: number;
   currentAmount: number;
   onClose: () => void;

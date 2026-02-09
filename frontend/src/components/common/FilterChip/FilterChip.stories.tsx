@@ -19,23 +19,33 @@ export const Default: Story = {};
 export const Selected: Story = {
   args: {
     colorIndicator: true,
-    number: 1,
+    color: "var(--color-red-500)",
     hasCancelIcon: true,
   },
 };
 
 export const SelectedOrder: Story = {
-  render: () => (
-    <div className="flex flex-wrap gap-3">
-      {[1, 2, 3, 4, 5, 6].map((number) => (
-        <FilterChip
-          key={number}
-          label={`선택 ${number}`}
-          number={number}
-          colorIndicator
-          hasCancelIcon
-        />
-      ))}
-    </div>
-  ),
+  render: () => {
+    const colors = [
+      "var(--color-red-500)",
+      "var(--color-yellow-500)",
+      "var(--color-blue-500)",
+      "var(--color-green-500)",
+      "var(--color-purple-500)",
+      "var(--color-pink-500)",
+    ];
+    return (
+      <div className="flex flex-wrap gap-3">
+        {colors.map((color, index) => (
+          <FilterChip
+            key={index}
+            label={`선택 ${index + 1}`}
+            color={color}
+            colorIndicator
+            hasCancelIcon
+          />
+        ))}
+      </div>
+    );
+  },
 };

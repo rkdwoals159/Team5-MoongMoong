@@ -15,7 +15,7 @@ export const getLabelWithData = (petName: string) => ({
 });
 
 export const getSummaryValue = (data: number | null): string =>
-  data === null ? "-" : `${Math.abs(data)}% ${data < 0 ? "줄엇어요" : "늘었어요"}`;
+  data === null ? "-" : `${Math.abs(data)}% ${data < 0 ? "줄었어요" : "늘었어요"}`;
 
 export type SummaryDataState = "noData" | "decrease" | "increase";
 

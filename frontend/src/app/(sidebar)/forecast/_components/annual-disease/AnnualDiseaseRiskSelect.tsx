@@ -22,14 +22,14 @@ const AnnualDiseaseRiskSelect = ({
       </Button>
     </div>
     <div className="flex flex-wrap gap-300">
-      {selectedDiseases.map((code, index) => (
+      {selectedDiseases.map((disease) => (
         <FilterChip
-          key={code}
-          label={DISEASE_CODE_FULL_NAMES[code]}
-          number={index + 1}
+          key={disease.code}
+          label={DISEASE_CODE_FULL_NAMES[disease.code]}
+          color={disease.color}
           hasCancelIcon
           colorIndicator
-          onCancel={() => onCancel(code)}
+          onCancel={() => onCancel(disease.code)}
         />
       ))}
     </div>

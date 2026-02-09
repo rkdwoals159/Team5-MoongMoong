@@ -16,6 +16,5 @@ export type SavingConfirmDialogProps = {
   amount: number;
   onConfirm: () => void;
   onCancel: () => void;
-  onOverlayClick: () => void;
   isLoading: boolean;
 };
