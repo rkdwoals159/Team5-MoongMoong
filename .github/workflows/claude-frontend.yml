@@ -1,0 +1,149 @@
+name: Claude Frontend Review
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request:
+    types: [opened, edited]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  claude-fe-pr-body:
+    if: |
+      github.event_name == 'pull_request' &&
+      contains(github.event.pull_request.body, '@claude-fe')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: anthropics/claude-code-action@v1
+        id: claude-review
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: "frontend/ 디렉토리의 변경사항만 집중해서 프론트엔드 전문가 관점으로 코드 리뷰해주세요. 다른 디렉토리 변경사항은 무시해주세요."
+          claude_args: "--max-turns 10 --allowedTools 'View' 'GlobTool' 'GrepTool'"
+      - name: PR에 리뷰 결과 코멘트 작성
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const executionFile = '${{ steps.claude-review.outputs.execution_file }}';
+            const fullOutput = fs.readFileSync(executionFile, 'utf8');
+
+            let reviewResult;
+            try {
+              // JSON 형식 파싱 시도
+              const jsonData = JSON.parse(fullOutput);
+              const resultObj = jsonData.find(item => item.type === 'result');
+              reviewResult = resultObj?.result || fullOutput;
+            } catch {
+              // JSON이 아니면 정규식으로 추출
+              const finalResultMatch = fullOutput.match(/## ✅ Final Result\n\n([\s\S]*?)(?:\*\*Cost:|\n---\n|$)/);
+              reviewResult = finalResultMatch ? finalResultMatch[1].trim() : fullOutput;
+            }
+
+            const commentBody = `## 🤖 Claude Frontend Review\n\n> 💡 참고: AI 리뷰는 보조 도구입니다. 최종 판단은 팀원이 해주세요.\n\n<details>\n<summary>📋 리뷰 결과 보기 (클릭)</summary>\n\n${reviewResult}\n\n</details>`;
+
+            // 기존 코멘트 검색
+            const comments = await github.rest.issues.listComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+
+            const botComment = comments.data.find(c =>
+              c.user.type === 'Bot' && c.body.includes('🤖 Claude Frontend Review')
+            );
+
+            // 기존 코멘트가 있으면 업데이트, 없으면 생성
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                comment_id: botComment.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody
+              });
+            } else {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody
+              });
+            }
+
+  claude-fe-comment:
+    if: |
+      (github.event_name == 'pull_request_review_comment' ||
+       (github.event_name == 'issue_comment' && github.event.issue.pull_request != null)) &&
+      contains(github.event.comment.body, '@claude-fe') &&
+      contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR", "CONTRIBUTOR"]'), github.event.comment.author_association)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || format('refs/pull/{0}/head', github.event.issue.number) }}
+      - uses: anthropics/claude-code-action@v1
+        id: claude-review
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: "frontend/ 디렉토리의 변경사항만 집중해서 프론트엔드 전문가 관점으로 코드 리뷰해주세요. 다른 디렉토리 변경사항은 무시해주세요."
+          claude_args: "--max-turns 10 --allowedTools 'View' 'GlobTool' 'GrepTool'"
+      - name: PR에 리뷰 결과 코멘트 작성
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const executionFile = '${{ steps.claude-review.outputs.execution_file }}';
+            const fullOutput = fs.readFileSync(executionFile, 'utf8');
+
+            let reviewResult;
+            try {
+              // JSON 형식 파싱 시도
+              const jsonData = JSON.parse(fullOutput);
+              const resultObj = jsonData.find(item => item.type === 'result');
+              reviewResult = resultObj?.result || fullOutput;
+            } catch {
+              // JSON이 아니면 정규식으로 추출
+              const finalResultMatch = fullOutput.match(/## ✅ Final Result\n\n([\s\S]*?)(?:\*\*Cost:|\n---\n|$)/);
+              reviewResult = finalResultMatch ? finalResultMatch[1].trim() : fullOutput;
+            }
+
+            const commentBody = `## 🤖 Claude Frontend Review\n\n> 💡 참고: AI 리뷰는 보조 도구입니다. 최종 판단은 팀원이 해주세요.\n\n<details>\n<summary>📋 리뷰 결과 보기 (클릭)</summary>\n\n${reviewResult}\n\n</details>`;
+
+            // 기존 코멘트 검색
+            const comments = await github.rest.issues.listComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+
+            const botComment = comments.data.find(c =>
+              c.user.type === 'Bot' && c.body.includes('🤖 Claude Frontend Review')
+            );
+
+            // 기존 코멘트가 있으면 업데이트, 없으면 생성
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                comment_id: botComment.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody
+              });
+            } else {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody
+              });
+            }
