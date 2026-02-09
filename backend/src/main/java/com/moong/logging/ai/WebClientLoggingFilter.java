@@ -31,7 +31,7 @@ public class WebClientLoggingFilter {
                     .doOnNext(body -> {
                         log.info("[WebClient Response] Status={}", status);
                         loggingHeader(RESPONSE_HEADER_LOGGING_MESSAGE, headers);
-                        log.debug("[WebClient Response Body] {}", body);
+                        log.info("[WebClient Response Body] {}", body);
                     })
                     .map(body -> ClientResponse //바디 스트림 소모되면 다시 못읽으므로 복구
                             .create(status)

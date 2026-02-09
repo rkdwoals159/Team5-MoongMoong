@@ -44,7 +44,15 @@ public class CoinPayment {
     @Column(length = 20)
     private PaymentStatus paymentStatus;
 
-    public void updateStatus(PaymentStatus paymentStatus) {
-        this.paymentStatus = paymentStatus;
+    public boolean isReady() {
+        return this.paymentStatus == PaymentStatus.READY;
+    }
+
+    public boolean isConfirm() {
+        return this.paymentStatus == PaymentStatus.CONFIRMED;
+    }
+
+    public boolean hasSameAmount(long amount) {
+        return this.amount == amount;
     }
 }

@@ -4,20 +4,13 @@ import com.moong.annotation.auth.AuthMember;
 import com.moong.controller.swagger.BankControllerSwagger;
 import com.moong.domain.entity.Member;
 import com.moong.dto.request.bank.BankCreateRequest;
-import com.moong.dto.request.payment.CoinPaymentConfirmRequest;
-import com.moong.dto.request.payment.CoinPaymentFailRequest;
 import com.moong.dto.request.bank.BankUpdateRequest;
-import com.moong.dto.request.bank.CoinCreateRequest;
 import com.moong.dto.response.bank.BankBreakResponse;
 import com.moong.dto.response.bank.BankCreateResponse;
 import com.moong.dto.response.bank.BankInfoResponse;
 import com.moong.dto.response.bank.BankUpdateResponse;
-import com.moong.dto.response.bank.CoinCreateResponse;
-import com.moong.dto.response.bank.CoinPaymentCreateResponse;
 import com.moong.dto.response.bank.CoinsResponse;
 import com.moong.service.BankService;
-import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -79,38 +72,5 @@ public class BankController implements BankControllerSwagger {
     ) {
         BankUpdateResponse response = bankService.updateBank(member, request);
         return ResponseEntity.ok(response);
-    }
-
-    @Override
-    @PostMapping("/coins")
-    public ResponseEntity<CoinPaymentCreateResponse> createCoinPayment(
-            @AuthMember Member member,
-            @RequestBody CoinCreateRequest request
-    ) {
-//        CoinPaymentCreateResponse response = bankService.createCoin(member, request);
-        CoinPaymentCreateResponse response = new CoinPaymentCreateResponse(
-                UUID.fromString("8973f452-cabc-4098-bdd9-d32737c86a33"), 1000L);
-        return ResponseEntity.ok(response);
-    }
-
-    @Override
-    @PostMapping("/coins/confirm")
-    public ResponseEntity<CoinCreateResponse> paymentSuccess(
-            @AuthMember Member member,
-            @RequestBody CoinPaymentConfirmRequest request
-    ) {
-//        CoinCreateResponse response = bankService.paymentSuccess(member, request);
-        CoinCreateResponse response = new CoinCreateResponse(10L, LocalDateTime.now(), 1000L, "테스트");
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/coins/fail")
-    @Override
-    public ResponseEntity<Void> paymentFailure(
-            @AuthMember Member member,
-            @RequestBody CoinPaymentFailRequest request
-    ) {
-//        bankService.paymentFailure(member, request);
-        return ResponseEntity.noContent().build();
     }
 }

@@ -53,4 +53,13 @@ public class ClientConfig {
                 })
                 .build();
     }
+
+    @Bean
+    @Qualifier("paymentClientBuilder")
+    public WebClient.Builder paymentClientBuilder(ObjectMapper objectMapper) {
+        return WebClient.builder()
+                .exchangeStrategies(registerJacksonMapper(objectMapper))
+                .filter(WebClientLoggingFilter.logRequest())
+                .filter(WebClientLoggingFilter.logResponseWithBody());
+    }
 }

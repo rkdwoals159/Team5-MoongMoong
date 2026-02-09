@@ -8,32 +8,26 @@ import com.moong.ai.OpenAiProperties;
 import com.moong.ai.OpenAiResult;
 import com.moong.ai.prompt.CategorizePromptGenerator;
 import com.moong.ai.prompt.CategorizePromptProperties;
+import com.moong.client.BaseWebClientTest;
 import com.moong.dto.request.memberexpense.CategorizeRequest;
 import com.moong.dto.response.categorize.AiCategorizeResponse;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.ExchangeFunction;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
-class OpenAiCategorizeClientBindTest {
+class OpenAiCategorizeClientBindTest extends BaseWebClientTest {
 
     private ExpenseCategorizeClient expenseCategorizeClient;
-    private ExchangeFunction mockExchangeFunction;
 
     @BeforeEach
     void setUp() {
@@ -72,22 +66,6 @@ class OpenAiCategorizeClientBindTest {
                     () -> assertThat(response.getTokenUsage().inputToken()).isEqualTo(expectInputTokens),
                     () -> assertThat(response.getTokenUsage().outputToken()).isEqualTo(expectOutputTokens),
                     () -> assertThat(response.getTokenUsage().totalToken()).isEqualTo(expectTotalTokens)
-            );
-        }
-
-        private void mockClient(HttpStatus status, String responsePath) throws IOException {
-            String responseBody = makeResponseByPath(responsePath);
-            Mockito.when(mockExchangeFunction.exchange(Mockito.any()))
-                    .thenReturn(Mono.just(ClientResponse.create(status)
-                            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                            .body(responseBody)
-                            .build())
-                    );
-        }
-
-        private String makeResponseByPath(String path) throws IOException {
-            return new String(Files.readAllBytes(
-                    new ClassPathResource(path).getFile().toPath())
             );
         }
     }

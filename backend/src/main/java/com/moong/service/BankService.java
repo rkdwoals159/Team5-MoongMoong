@@ -9,7 +9,6 @@ import com.moong.domain.entity.Member;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.bank.BankCreateRequest;
 import com.moong.dto.request.bank.BankUpdateRequest;
-import com.moong.dto.request.bank.CoinCreateRequest;
 import com.moong.dto.response.bank.BankBreakResponse;
 import com.moong.dto.response.bank.BankCreateResponse;
 import com.moong.dto.response.bank.BankInfoResponse;
@@ -21,12 +20,12 @@ import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.BankRepository;
 import com.moong.repository.CoinRepository;
 import com.moong.repository.CrewRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -51,17 +50,13 @@ public class BankService {
     }
 
     @Transactional
-    public CoinCreateResponse createCoin(Member member,
-                                         CoinCreateRequest coinCreateRequest) {
-        long amount = coinCreateRequest.amount();
-        Crew crew = crewRepository.getByMemberId(member.getId());
+    public CoinCreateResponse createCoin(Member member, Crew crew, long amount) {
         PetGroup petGroup = crew.getPetGroup();
         Bank groupBank = bankRepository.getByPetGroupId(petGroup.getId());
 
         groupBank.updateCurrentAmount(amount);
-        Coin coin = coinCreateRequest.toCoin(groupBank, crew);
+        Coin coin = new Coin(groupBank, crew, amount);
         Coin savedCoin = coinRepository.save(coin);
-
         return new CoinCreateResponse(savedCoin, member);
     }
 

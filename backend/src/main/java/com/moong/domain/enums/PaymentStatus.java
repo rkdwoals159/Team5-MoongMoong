@@ -2,9 +2,8 @@ package com.moong.domain.enums;
 
 public enum PaymentStatus {
     READY,
-    IN_PROGRESS,
+    CONFIRMED,
     DONE,
     CANCELED,
-    FAILED,
-    CANCEL
+    FAILED
 }

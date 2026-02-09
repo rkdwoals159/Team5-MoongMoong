@@ -46,5 +46,5 @@ public abstract class BaseRepositoryTest {
     protected GroupMedicalAdviceGenerator groupMedicalAdviceGenerator;
 
     @Autowired
-    PetMedicalGenerator petMedicalGenerator;
+    protected PetMedicalGenerator petMedicalGenerator;
 }

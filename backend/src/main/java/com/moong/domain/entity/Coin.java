@@ -31,4 +31,8 @@ public class Coin extends BaseEntity {
     private Crew crew;
 
     private long amount;
+
+    public Coin(Bank bank, Crew crew, long amount) {
+        this(null, bank, crew, amount);
+    }
 }

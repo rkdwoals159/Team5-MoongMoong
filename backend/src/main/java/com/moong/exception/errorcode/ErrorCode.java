@@ -24,6 +24,9 @@ public enum ErrorCode {
     BANK_TARGET_LESS_THAN_CURRENT(400, "저금통 목표 금액은 현재 저금된 금액보다 적어질 수 없습니다."),
     ALREADY_SUCCEED_BANK_TARGET_AMOUNT(400, "이미 목표 금액을 달성하여 저금에 실패하였습니다."),
     BANK_SAVING_BELOW_ZERO(400, "저금 금액은 0원 이하일 수 없습니다."),
+    TOSS_PAYMENT_CLIENT_ERROR(400, "유효하지 않은 결제 요청입니다."),
+    INVALID_PAYMENT_AMOUNT(400, "결제 요청 금액이 주문 금액과 일치하지 않습니다."),
+    ALREADY_PROCESSED(400, "이미 처리 중이거나 완료된 결제 요청입니다."),
 
     //401
     UNAUTHORIZED_EXCEPTION(401, "잘못된 유저 접근입니다"),
@@ -39,6 +42,7 @@ public enum ErrorCode {
     NO_SUCH_PET_FOUND(404, "PET을 찾을 수 없습니다."),
     NO_SUCH_BANK_FOUND(404, "저금통을 찾을 수 없습니다."),
     DISEASE_CODE_NOT_FOUND(404, "존재하지 않는 질병 코드입니다."),
+    NO_SUCH_COIN_PAYMENT_FOUND(404, "코인 결제 내역을 찾을 수 없습니다"),
 
     //405
     METHOD_NOT_SUPPORTED(405, "허용되지 않은 메서드입니다."),
@@ -48,6 +52,7 @@ public enum ErrorCode {
     INCONSISTENT_DISEASE_DATA(500, "서버 내부 데이터 정합성 오류입니다."),
     INVALID_PET_BIRTH_DATA(500, "펫 생년월일 데이터가 유효하지 않습니다."),
     INVITE_CODE_ENCRYPT_ERROR(500, "초대코드 암호화 과정에서 문제가 생겼습니다"),
+    TOSS_PAYMENT_SERVER_ERROR(500, "결제 대행사 서버 오류입니다."),
     INVITE_CODE_DECRYPT_ERROR(500, "초대코드 해독 과정에서 문제가 생겼습니다"),
     INTERNAL_SERVER_ERROR(500, "서버 오류가 발생했습니다. 관리자에게 문의하세요.");
 
