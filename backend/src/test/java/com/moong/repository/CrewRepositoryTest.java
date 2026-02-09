@@ -1,12 +1,15 @@
 package com.moong.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
+import com.moong.exception.custom.BusinessException;
+import com.moong.exception.errorcode.ErrorCode;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceUnitUtil;
 import java.time.LocalDateTime;
@@ -45,6 +48,25 @@ class CrewRepositoryTest extends BaseRepositoryTest {
                 () -> assertThat(util.isLoaded(fetchedCrew.getPetGroup())).isTrue(),
                 () -> assertThat(util.isLoaded(fetchedCrew.getPetGroup().getPet())).isTrue()
         );
+    }
+
+    @DisplayName("해당하는 크루가 없으면 예외를 발생시킨다.")
+    @Test
+    void getFetchedByMemberIdFail() {
+        LocalDateTime now = LocalDateTime.now();
+        Member member = memberGenerator.generateSaved("member");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+
+        PersistenceUnitUtil util =
+                entityManager.getEntityManagerFactory().getPersistenceUnitUtil();
+
+        entityManager.flush();
+        entityManager.clear();
+
+        assertThatThrownBy(() -> crewRepository.getFetchedByMemberId(member.getId()))
+                .isInstanceOf(BusinessException.class)
+                .hasMessage(ErrorCode.CREW_NOT_FOUND.getMessage());
     }
 
 }

@@ -27,7 +27,12 @@ public interface CrewRepository extends Repository<Crew, Long> {
             join fetch pg.pet
             where c.member.id = :memberId
             """)
-    Crew getFetchedByMemberId(long memberId);
+    Optional<Crew> findFetchedByMemberId(long memberId);
+
+    default Crew getFetchedByMemberId(long memberId) {
+        return findFetchedByMemberId(memberId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.CREW_NOT_FOUND));
+    }
 
     long countByPetGroup_Id(long petGroupId);
 
