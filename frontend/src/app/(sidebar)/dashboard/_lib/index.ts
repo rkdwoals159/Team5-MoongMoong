@@ -6,8 +6,8 @@ import {
   calculateTotalExpense,
   getExpenseRowKey,
 } from "@/app/(sidebar)/dashboard/_lib/expenseRows";
+import { sortExpenseRows } from "@/app/(sidebar)/dashboard/_lib/sortExpenseRows";
 import { resolveDashboardRange } from "@/app/(sidebar)/dashboard/_lib/dashboardRange";
-import { useSetRangeToUrl } from "@/app/(sidebar)/dashboard/_lib/urlRange";
 
 export {
   serverToEditableRow,
@@ -16,6 +16,6 @@ export {
   mergeSelectedRowsLogic,
   calculateTotalExpense,
   getExpenseRowKey,
+  sortExpenseRows,
   resolveDashboardRange,
-  useSetRangeToUrl,
 };

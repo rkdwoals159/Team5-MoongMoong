@@ -1,13 +1,17 @@
-import { DataTableProps, DataTableColumn } from "./DataTable.type";
-import cn from "@/utils/style";
+import { DataTableProps, DataTableColumn, DataTableShellCol } from "./DataTable.type";
+import DataTableShell from "./DataTableShell";
+import { TH_BASE_CLASS } from "./DataTable.constants";
 
+/**
+ * 읽기 전용 DataTable (Server Component)
+ * 정렬·셀 클릭·키보드 네비게이션은 DataTableInteractive 사용
+ */
 const DataTable = <T,>({
   className,
   columns,
   data,
   mode = "read",
   rowKey,
-  selectedCell,
   ...rest
 }: DataTableProps<T>) => {
   const renderCell = (col: DataTableColumn<T>, row: T, rowIndex: number) => {
@@ -16,65 +20,49 @@ const DataTable = <T,>({
     ) : mode === "edit" && col.editor ? (
       col.editor(row[col.accessor], row, rowIndex)
     ) : (
-      <span>{row[col.accessor] == null ? "-" : String(row[col.accessor])}</span>
+      <span className="block px-500 py-200">
+        {row[col.accessor] == null ? "-" : String(row[col.accessor])}
+      </span>
     );
   };
 
+  const colgroupColumns: DataTableShellCol[] = columns.map((c) => ({
+    accessor: String(c.accessor),
+    width: c.width,
+  }));
+
   return (
-    <div
-      className={cn(
-        "flex flex-col w-full border border-gray-50 rounded-600 overflow-hidden min-h-0",
-        className ?? "",
-      )}
-    >
-      <div className="data-table-scroll flex-1 min-h-0 overflow-auto">
-        <table {...rest} className="w-full border-separate border-spacing-0 text-left table-fixed">
-          <colgroup>
+    <DataTableShell className={className} columns={colgroupColumns} {...rest}>
+      <thead className="bg-gray-50 sticky top-0 z-10">
+        <tr>
+          {columns.map((col) => (
+            <th key={String(col.accessor)} className={TH_BASE_CLASS} style={{ width: col.width }}>
+              {col.label}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((row, rowIndex) => (
+          <tr
+            key={rowKey ? rowKey(row, rowIndex) : rowIndex}
+            className="border-b border-gray-50 last:border-b-0"
+          >
             {columns.map((col) => (
-              <col key={String(col.accessor)} style={{ width: col.width }} />
-            ))}
-          </colgroup>
-          <thead className="bg-gray-50 sticky top-0 z-10">
-            <tr>
-              {columns.map((col) => (
-                <th
-                  key={String(col.accessor)}
-                  className="h-[48px] px-500 py-200 bg-gray-50 text-text-base typo-body-m-bold border-b border-gray-50"
-                  style={{ width: col.width }}
-                >
-                  {col.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row, rowIndex) => (
-              <tr
-                key={rowKey ? rowKey(row, rowIndex) : rowIndex}
-                className="border-b border-gray-50 last:border-b-0"
+              <td
+                key={`${rowIndex}-${String(col.accessor)}`}
+                className="h-[48px] bg-white-100 text-text-base typo-body-m-regular border-b border-gray-50 hover:bg-yellow-50"
+                style={{ width: col.width }}
               >
-                {columns.map((col) => {
-                  const isSelected =
-                    selectedCell?.rowIndex === rowIndex && selectedCell?.accessor === col.accessor;
-                  return (
-                    <td
-                      key={`${rowIndex}-${String(col.accessor)}`}
-                      className={cn(
-                        "h-[48px] bg-white-100 text-text-base typo-body-m-regular transition-all hover:bg-yellow-50 border-b border-gray-50",
-                        isSelected ? "ring-2 ring-yellow-300 ring-inset" : "",
-                      )}
-                      style={{ width: col.width }}
-                    >
-                      {renderCell(col, row, rowIndex)}
-                    </td>
-                  );
-                })}
-              </tr>
+                <div className="flex h-full min-h-[48px] items-center">
+                  {renderCell(col, row, rowIndex)}
+                </div>
+              </td>
             ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+          </tr>
+        ))}
+      </tbody>
+    </DataTableShell>
   );
 };
 

@@ -2,6 +2,7 @@ import type { MouseEvent } from "react";
 import type { DataTableColumn } from "@/components/ui/DataTable/DataTable.type";
 import type { components } from "@schema";
 import type { EditableExpenseRow, ExpenseData } from "./expense";
+import type { SortableExpenseAccessor } from "@/app/(sidebar)/dashboard/_types";
 
 type MemberExpensesUpsertRequest = components["schemas"]["MemberExpensesUpsertRequest"];
 
@@ -25,7 +26,7 @@ export type UpdateAllCells = (accessor: keyof EditableExpenseRow, value: string 
  * useExpenseTable 반환 타입
  */
 export type UseExpenseTableReturn = {
-  displayInitialRows: ExpenseData[];
+  sortedRows: ExpenseData[];
   rowKey: (row: ExpenseData, rowIndex: number) => string | number;
   columns: DataTableColumn<ExpenseData>[];
   selectedCell: SelectedCell;
@@ -39,6 +40,10 @@ export type UseExpenseTableReturn = {
   hasUnsavedChanges: boolean;
   selectedCount: number;
   totalExpense: number;
+  sortConfig: { sortBy: SortableExpenseAccessor; sortOrder: "asc" | "desc" };
+  handleSort: (accessor: SortableExpenseAccessor) => void;
+  onCellClick: (rowIndex: number, accessor: keyof ExpenseData) => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 };
 
 /**

@@ -109,6 +109,7 @@ export const useExpenseTableColumns = ({
           displayText={value ? formatDateKey(new Date(String(value))) : ""}
           ariaLabel="날짜 선택"
           onChange={(date: string) => handleDateChange(rowIndex, date)}
+          focusable={false}
         />
       );
     },
@@ -140,12 +141,13 @@ export const useExpenseTableColumns = ({
         accessor: "selected" as keyof ExpenseData,
         render: createRenderCheckBox,
         width: "48px",
+        sortable: false,
       },
-      { label: "날짜", accessor: "spentAt", render: createRenderDate },
-      { label: "사용내역", accessor: "usage", editor: createEditor("usage") },
-      { label: "비용", accessor: "cost", editor: createEditorCost },
-      { label: "항목", accessor: "mainCategory", render: createRenderCategory },
-      { label: "메모", accessor: "memo", editor: createEditor("memo") },
+      { label: "날짜", accessor: "spentAt", render: createRenderDate, sortable: true },
+      { label: "사용내역", accessor: "usage", editor: createEditor("usage"), sortable: true },
+      { label: "비용", accessor: "cost", editor: createEditorCost, sortable: true },
+      { label: "항목", accessor: "mainCategory", render: createRenderCategory, sortable: true },
+      { label: "메모", accessor: "memo", editor: createEditor("memo"), sortable: true },
     ],
     [
       isAllSelected,

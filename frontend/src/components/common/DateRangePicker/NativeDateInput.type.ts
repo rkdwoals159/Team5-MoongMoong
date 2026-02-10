@@ -6,4 +6,5 @@ export type NativeDateInputProps = {
   ariaLabel: string;
   onChange: (value: string) => void;
   className?: string;
+  focusable?: boolean;
 };
