@@ -10,6 +10,7 @@ import com.moong.dto.response.auth.MemberInfoWithTokenResponse;
 import com.moong.dto.response.member.FacadeLoginResponse;
 import com.moong.dto.response.member.MemberReadResponse;
 import com.moong.service.AuthService;
+import com.moong.service.CrewService;
 import com.moong.service.GroupService;
 import com.moong.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class AuthFacadeService {
     private final MemberService memberService;
     private final GroupService groupService;
     private final AuthService authService;
+    private final CrewService crewService;
 
     public FacadeLoginResponse login(AuthLoginRequest loginRequest) {
         boolean isInvited = loginRequest.hasInviteUrl();
@@ -29,11 +31,13 @@ public class AuthFacadeService {
                 loginRequest.accessToken());
         JwtTokenResponse jwtTokenResponse = memberInfoWithToken.jwtTokenResponse();
         MemberReadResponse foundMemberResponse = memberService.findExistsMemberOrSave(memberInfoWithToken.memberInfo());
+        boolean hasGroup = crewService.existsByMemberId(foundMemberResponse.member().getId());
+
         if (isInvited) {
             PetGroup petGroup = groupService.findFetchedPetGroupByInviteUrl(loginRequest.inviteUrl());
-            return FacadeLoginResponse.invitedMember(foundMemberResponse, petGroup.getPet(), jwtTokenResponse);
+            return FacadeLoginResponse.invitedMember(hasGroup, foundMemberResponse, petGroup.getPet(), jwtTokenResponse);
         }
-        return FacadeLoginResponse.nonInvitedMember(foundMemberResponse, jwtTokenResponse);
+        return FacadeLoginResponse.nonInvitedMember(hasGroup, foundMemberResponse, jwtTokenResponse);
     }
 
     public JwtTokenResponse refreshToken(AuthTokenRefreshRequest refreshRequest) {

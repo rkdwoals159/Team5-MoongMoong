@@ -17,7 +17,7 @@ public record InvitedPetResponse(
         @Schema(description = "성별", example = "M")
         Gender gender,
 
-        @Schema(description = "생년 월", example = "2026-02")
+        @Schema(implementation = String.class, example = "2026-02", pattern = "yyyy-MM")
         YearMonth birthDate
 ) {
     public static InvitedPetResponse noneInvited() {
