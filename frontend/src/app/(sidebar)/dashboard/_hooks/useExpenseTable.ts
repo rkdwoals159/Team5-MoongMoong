@@ -4,11 +4,10 @@ import { useExpenseRowsState } from "@/app/(sidebar)/dashboard/_hooks/useExpense
 import { useExpenseRowSave } from "@/app/(sidebar)/dashboard/_hooks/useExpenseRowSave";
 import { useExpenseCategoryPopup } from "@/app/(sidebar)/dashboard/_hooks/useExpenseCategoryPopup";
 import { useExpenseCategoryUpdate } from "@/app/(sidebar)/dashboard/_hooks/useExpenseCategoryUpdate";
-import { useExpenseTableColumns } from "@/app/(sidebar)/dashboard/_hooks/useExpenseTableColumns";
+import { useExpenseTableColumns } from "@/app/(sidebar)/dashboard/_hooks/UseExpenseTableColumns";
 import { useExpenseTableSelection } from "@/app/(sidebar)/dashboard/_hooks/useExpenseTableSelection";
 import { useExpenseTableSort } from "@/app/(sidebar)/dashboard/_hooks/useExpenseTableSort";
-import { ExpenseData, UseExpenseTableReturn } from "@/app/(sidebar)/dashboard/_types";
-
+import type { ExpenseData, UseExpenseTableReturn } from "@/app/(sidebar)/dashboard/_types";
 export const useExpenseTable = (initialData: ExpenseData[]): UseExpenseTableReturn => {
   const {
     displayInitialRows,

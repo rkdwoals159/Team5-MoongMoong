@@ -6,7 +6,7 @@ export const defaultHeaders = {
   Authorization: process.env.HEADER_AUTHORIZATION,
 };
 
-const client = createClient<paths>({
+export const client = createClient<paths>({
   baseUrl: process.env.BASE_API_URL,
   headers: defaultHeaders,
   fetch: (input: RequestInfo | URL, init?: RequestInit) => {
@@ -21,5 +21,3 @@ const client = createClient<paths>({
     });
   },
 });
-
-export default client;

@@ -6,7 +6,7 @@ import type {
 } from "@/app/api/auth/_types/postLogin";
 
 import { AUTH_DEFAULT_RETURN_TO } from "@/app/api/auth/_constants";
-import client from "@/lib/api";
+import { client } from "@/lib/api";
 
 function getAuthHeaders(authorization?: string) {
   return authorization ? { Authorization: authorization } : undefined;

@@ -1,6 +1,6 @@
 "use client";
 
-import { PetProfileImageProps } from "@/app/(sidebar)/dashboard/_types";
+import type { PetProfileImageProps } from "@/app/(sidebar)/dashboard/_types";
 import Image from "@/components/common/Image/Image";
 
 const PetProfileImage = ({ petImageUrl }: PetProfileImageProps) => {

@@ -1,9 +1,9 @@
 "use client";
 
 import { useRef } from "react";
-import cn from "@/utils/style";
+import { cn } from "@/utils/style";
 
-import type { FileInputProps } from "./Input.type";
+import type { FileInputProps } from "./input.type";
 import CloseIcon from "@/assets/icons/components/close.svg";
 
 const FileInput = ({

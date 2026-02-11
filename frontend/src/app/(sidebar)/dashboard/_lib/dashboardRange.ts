@@ -14,10 +14,10 @@ const getDefaultRange = () => {
  * URL searchParams에서 startDate, endDate 해석.
  * 없거나 유효하지 않으면 기본값(오늘 ~ 한 달 후) 반환.
  */
-export const resolveDashboardRange = (params: {
+export function resolveDashboardRange(params: {
   startDate?: string | null;
   endDate?: string | null;
-}) => {
+}) {
   const defaults = getDefaultRange();
   const startDate = isValidDateParam(params.startDate ?? undefined)
     ? params.startDate!
@@ -26,4 +26,4 @@ export const resolveDashboardRange = (params: {
     ? params.endDate!
     : defaults.endDate;
   return { startDate, endDate };
-};
+}

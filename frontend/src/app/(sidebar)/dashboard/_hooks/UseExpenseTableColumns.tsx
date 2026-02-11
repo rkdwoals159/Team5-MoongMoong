@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { DataTableColumn } from "@/components/ui/DataTable/DataTable.type";
-import {
+import type { DataTableColumn } from "@/components/ui/DataTable/dataTable.type";
+import type {
   EditableExpenseRow,
   ExpenseData,
   UseExpenseTableColumnsParams,

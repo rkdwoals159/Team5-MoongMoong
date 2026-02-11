@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { useRouter } from "next/navigation";
-import useCalendarNavigation from "@/app/(sidebar)/calendar/_hooks/useCalendarNavigation";
+import { useCalendarNavigation } from "@/app/(sidebar)/calendar/_hooks/useCalendarNavigation";
 
 // 테스트용 컴포넌트
 function TestComponent({

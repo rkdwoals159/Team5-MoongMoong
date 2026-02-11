@@ -1,13 +1,15 @@
 "use server";
 
-import client from "@/lib/api";
-import { components } from "@/types/schema";
-import { ConfirmPaymentResponse, OrderIdResponse } from "@/app/(sidebar)/saving/_types";
-
+import { client } from "@/lib/api";
+import type {
+  BankCreateResponse,
+  BankUpdateResponse,
+  BankBreakResponse,
+  ConfirmPaymentResponse,
+  OrderIdResponse,
+} from "@/api/types/savingApi.type";
 // 저금통 생성
-export async function createNewSaving(
-  target: number,
-): Promise<components["schemas"]["BankCreateResponse"] | null> {
+export async function createNewSaving(target: number): Promise<BankCreateResponse | null> {
   const { data, error } = await client.POST("/api/group/bank", {
     body: {
       target: target,
@@ -22,9 +24,7 @@ export async function createNewSaving(
 }
 
 // 저금통 목표 금액 수정
-export async function updateSavingTarget(
-  target: number,
-): Promise<components["schemas"]["BankUpdateResponse"] | null> {
+export async function updateSavingTarget(target: number): Promise<BankUpdateResponse | null> {
   const { data, error } = await client.PATCH("/api/group/bank", {
     body: {
       target: target,
@@ -39,7 +39,7 @@ export async function updateSavingTarget(
 }
 
 // 저금통 깨기
-export async function breakSaving(): Promise<components["schemas"]["BankBreakResponse"] | null> {
+export async function breakSaving(): Promise<BankBreakResponse | null> {
   const { data, error } = await client.DELETE("/api/group/bank");
   if (error || !data) {
     return null;

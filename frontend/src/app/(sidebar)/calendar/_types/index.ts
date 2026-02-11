@@ -1,5 +1,4 @@
-import { components } from "@/types/schema";
-
+import type { components } from "@/types/schema";
 export type ExpenseCategory =
   | "미용"
   | "의료비"

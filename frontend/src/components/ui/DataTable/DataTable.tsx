@@ -1,6 +1,6 @@
-import { DataTableProps, DataTableColumn, DataTableShellCol } from "./DataTable.type";
+import type { DataTableProps, DataTableColumn, DataTableShellCol } from "./dataTable.type";
 import DataTableShell from "./DataTableShell";
-import { TH_BASE_CLASS } from "./DataTable.constants";
+import { TH_BASE_CLASS } from "./dataTableConstants";
 
 /**
  * 읽기 전용 DataTable (Server Component)

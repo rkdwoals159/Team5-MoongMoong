@@ -1,5 +1,5 @@
-import client from "@/lib/api";
-import type { GroupExpenseMap } from "@/app/(sidebar)/calendar/_types";
+import { client } from "@/lib/api";
+import type { GroupExpenseMap, GroupDailyExpenseItem } from "@/api/types/calendarApi.type";
 import { resolveMonthRange } from "@/utils/date";
 
 /**
@@ -40,7 +40,9 @@ export async function getGroupExpenses(monthParam?: string) {
  * @returns : 조회된 소비내역 목록
  */
 
-export async function getGroupDailyExpenses(spentAt: string) {
+export async function getGroupDailyExpenses(
+  spentAt: string,
+): Promise<GroupDailyExpenseItem["expenses"]> {
   const { data, error } = await client.GET("/api/expenses/group/date", {
     params: {
       query: {

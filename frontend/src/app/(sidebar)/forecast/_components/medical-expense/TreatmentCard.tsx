@@ -1,5 +1,4 @@
-import { TreatmentResponse } from "@/app/(sidebar)/forecast/_types/medicalExpense";
-
+import type { TreatmentResponse } from "@/app/(sidebar)/forecast/_types/medicalExpense";
 const TreatmentCard = ({ treatment }: { treatment: TreatmentResponse }) => {
   const { name, description, minPrice, maxPrice, averagePrice } = treatment;
 

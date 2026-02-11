@@ -1,6 +1,6 @@
 import type { MouseEvent } from "react";
-import { FilterChipProps } from "./FilterChip.type";
-import cn from "@/utils/style";
+import type { FilterChipProps } from "./filterChip.type";
+import { cn } from "@/utils/style";
 import CancelIcon from "@/assets/ic_out_small.svg";
 
 const DEFAULT_INDICATOR_COLOR = "var(--color-gray-100)";

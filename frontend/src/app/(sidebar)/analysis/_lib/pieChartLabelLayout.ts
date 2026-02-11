@@ -4,18 +4,18 @@ import {
   CHART_LABEL_LINE_LENGTH,
   CHART_LABEL_RADIAN,
 } from "@/app/(sidebar)/analysis/_constants";
-import { PieChartLabelLayoutParams } from "../_types";
-import { formatRatio } from "../_utils";
+import type { PieChartLabelLayoutParams } from "@/app/(sidebar)/analysis/_types";
+import { formatRatio } from "@/app/(sidebar)/analysis/_utils";
 import { getChartLabelFromPayload } from "./getChartLabelFromPayload";
 
-export const getPieChartLabelLayout = ({
+export function getPieChartLabelLayout({
   cx,
   cy,
   midAngle,
   outerRadius,
   percent,
   payload,
-}: PieChartLabelLayoutParams) => {
+}: PieChartLabelLayoutParams) {
   const radius = typeof outerRadius === "number" ? outerRadius : Number(outerRadius ?? 0);
   const resolvedRadius = Number.isFinite(radius) && radius > 0 ? radius : 0;
 
@@ -41,4 +41,4 @@ export const getPieChartLabelLayout = ({
     textX,
     textAnchor,
   };
-};
+}

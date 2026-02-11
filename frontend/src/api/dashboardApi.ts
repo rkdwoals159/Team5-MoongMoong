@@ -1,17 +1,14 @@
 "use server";
 
-import client from "@/lib/api";
+import { client } from "@/lib/api";
 import type {
   ExpenseData,
   ExpensesByPeriodResponse,
+  MemberExpensesUpsertRequest,
+  MemberExpensesUpsertResponse,
   SummaryData,
-} from "@/app/(sidebar)/dashboard/_types";
-
-import { EXPENSES_ERROR_MESSAGE } from "@/app/(sidebar)/dashboard/_constants";
-import type { components } from "@schema";
-
-type MemberExpensesUpsertRequest = components["schemas"]["MemberExpensesUpsertRequest"];
-type MemberExpensesUpsertResponse = components["schemas"]["MemberExpensesUpsertResponse"];
+} from "@/api/types/dashboardApi.type";
+import { EXPENSES_ERROR_MESSAGE } from "@/api/constants";
 
 /**
  * 소비내역 일괄 생성/수정/삭제 (Server Action)

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { useRef } from "react";
-import { useOutsideClick } from "../useOutsideClick";
+import { useOutsideClick } from "@/hooks/useOutsideClick";
 
 function TestComponent({ onOutside, isActive }: { onOutside: () => void; isActive: boolean }) {
   const ref = useRef<HTMLDivElement>(null);

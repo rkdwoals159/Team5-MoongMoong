@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import client from "@/lib/api";
+import { client } from "@/lib/api";
 import { authCookies, clearAuthCookies } from "@/app/api/auth/_lib";
 
 export async function POST(request: NextRequest) {

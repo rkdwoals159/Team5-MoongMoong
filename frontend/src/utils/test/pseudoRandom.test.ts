@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { pseudoRandom } from "../pseudoRandom";
+import { pseudoRandom } from "@/utils/pseudoRandom";
 
 describe("pseudoRandom utils", () => {
   describe("기본 동작", () => {

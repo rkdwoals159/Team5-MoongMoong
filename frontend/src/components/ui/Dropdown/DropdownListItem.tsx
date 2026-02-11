@@ -1,6 +1,6 @@
-import { DropdownListItemProps } from "@/components/ui/Dropdown/Dropdown.type";
+import type { DropdownListItemProps } from "@/components/ui/Dropdown/dropdown.type";
 import CheckIcon from "@/assets/components/ic_check_medium.svg";
-import cn from "@/utils/style";
+import { cn } from "@/utils/style";
 
 const DropdownListItem = ({
   option,

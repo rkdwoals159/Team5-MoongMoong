@@ -1,15 +1,13 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
-import { confirmPayment, failPayment, requestOrderId } from "@/app/(sidebar)/saving/_api";
-import {
+import { confirmPayment, failPayment, requestOrderId } from "@/api/savingApiActions";
+import { isFailResponse, isConfirmResponse } from "@/app/(sidebar)/saving/_types";
+import type {
   PaymentInstance,
   TossPaymentConfirmResponse,
   TossPaymentFailResponse,
-  isFailResponse,
-  isConfirmResponse,
 } from "@/app/(sidebar)/saving/_types";
-
 export default function useTossPayments(customerKey: string) {
   const [payment, setPayment] = useState<PaymentInstance | null>(null);
   const [isReady, setIsReady] = useState(false);

@@ -1,4 +1,5 @@
-export const generateUniqueId = () =>
-  crypto?.randomUUID
+export function generateUniqueId() {
+  return crypto?.randomUUID
     ? crypto.randomUUID()
     : `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}

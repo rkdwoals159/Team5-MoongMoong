@@ -4,9 +4,9 @@ import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import SavingModal from "@/app/(sidebar)/saving/_components/modals/SavingModal";
 import SavingBreakSummaryModal from "@/app/(sidebar)/saving/_components/modals/SavingBreakSummaryModal";
-import { BreakSummary } from "@/app/(sidebar)/saving/_types/";
+import type { BreakSummary } from "@/app/(sidebar)/saving/_types/";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
-import { breakSaving } from "@/app/(sidebar)/saving/_api";
+import { breakSaving } from "@/api/savingApiActions";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 

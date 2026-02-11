@@ -1,11 +1,11 @@
-import { SummaryCardProps } from "@/app/(sidebar)/dashboard/_types";
+import type { SummaryCardProps } from "@/app/(sidebar)/dashboard/_types";
 import {
   getLabelNoData,
   getLabelWithData,
   getSummaryValue,
   getSummaryIcon,
 } from "@/app/(sidebar)/dashboard/_constants";
-import cn from "@/utils/style";
+import { cn } from "@/utils/style";
 
 const SummaryCard = ({ variant, data, petName, className }: SummaryCardProps) => {
   const hasData = data !== null;

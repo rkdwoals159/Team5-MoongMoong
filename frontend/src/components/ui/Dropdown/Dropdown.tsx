@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { DropdownProps } from "@/components/ui/Dropdown/Dropdown.type";
+import type { DropdownProps } from "@/components/ui/Dropdown/dropdown.type";
 import ChevronIcon from "@/components/ui/Dropdown/ChevronIcon";
 import WarningIcon from "@/assets/components/ic_warning.svg";
 import DropdownListBox from "@/components/ui/Dropdown/DropdownListBox";
-import cn from "@/utils/style";
+import { cn } from "@/utils/style";
 
 /**
  * Dropdown 컴포넌트

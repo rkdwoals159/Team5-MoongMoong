@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import type { UseCalendarNavigationParams } from "@/app/(sidebar)/calendar/_types";
 
-export default function useCalendarNavigation({
+export function useCalendarNavigation({
   isCurrentMonth,
   prevMonthParam,
   nextMonthParam,

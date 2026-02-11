@@ -1,7 +1,6 @@
 import NextImage from "next/image";
 import Button from "@/components/common/Button/Button";
-import { ProfileModalProps } from "./ProfileModal.type";
-
+import type { ProfileModalProps } from "./profileModal.type";
 export default function ProfileModal({
   profileImage,
   dogName,

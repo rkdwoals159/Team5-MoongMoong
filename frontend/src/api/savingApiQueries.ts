@@ -1,8 +1,7 @@
-import client from "@/lib/api";
-import { components } from "@/types/schema";
-
+import { client } from "@/lib/api";
+import type { BankInfoResponse, CoinsResponse } from "@/api/types/savingApi.type";
 // 저금통 정보 조회
-export async function getBankInfo(): Promise<components["schemas"]["BankInfoResponse"] | null> {
+export async function getBankInfo(): Promise<BankInfoResponse | null> {
   const { data, response, error } = await client.GET("/api/group/bank");
 
   if (response.status === 404) {
@@ -17,12 +16,12 @@ export async function getBankInfo(): Promise<components["schemas"]["BankInfoResp
 }
 
 // 저금통 코인 내역 조회
-export async function getBankCoins(): Promise<components["schemas"]["CoinsResponse"] | null> {
+export async function getBankCoins(): Promise<CoinsResponse | null> {
   const { data, error } = await client.GET("/api/group/bank/coins");
 
   if (error || !data) {
     return null;
   }
 
-  return data as components["schemas"]["CoinsResponse"];
+  return data as CoinsResponse;
 }

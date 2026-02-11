@@ -3,7 +3,7 @@ import type { Body } from "matter-js";
 import { PIGGY_BANK } from "@/app/(sidebar)/saving/_constants";
 import type { BallBody, ToolTipState } from "@/app/(sidebar)/saving/_types";
 import { formatAmount } from "@/utils/amount";
-import { clamp, formatCreatedAt } from "@/app/(sidebar)/saving/_utils/saving.util";
+import { clamp, formatCreatedAt } from "@/app/(sidebar)/saving/_utils/savingUtil";
 
 /** 바닥·좌·우 벽 Body 생성 */
 export const createWalls = (width: number, height: number): Body[] => [

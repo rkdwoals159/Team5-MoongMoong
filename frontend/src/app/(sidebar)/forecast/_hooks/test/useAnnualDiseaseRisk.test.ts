@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import useAnnualDiseaseRisk from "@/app/(sidebar)/forecast/_hooks/useAnnualDiseaseRisk";
+import { useAnnualDiseaseRisk } from "@/app/(sidebar)/forecast/_hooks/useAnnualDiseaseRisk";
 import type { DiseaseCode } from "@/app/(sidebar)/forecast/_types";
 import type { AnnualDiseaseRiskProps } from "@/app/(sidebar)/forecast/_types/annualDiseaseRisk";
 

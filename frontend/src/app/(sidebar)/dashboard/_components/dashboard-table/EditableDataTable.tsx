@@ -1,12 +1,12 @@
 "use client";
 
-import { EditableDataTableProps, ExpenseData } from "@/app/(sidebar)/dashboard/_types";
+import type { EditableDataTableProps, ExpenseData } from "@/app/(sidebar)/dashboard/_types";
 import { useExpenseTable } from "@/app/(sidebar)/dashboard/_hooks";
 import ClientDataTable from "@/components/ui/DataTable/ClientDataTable";
 import CategoryPopup from "@/app/(sidebar)/dashboard/_components/dashboard-table/CategoryPopup";
 import ExpenseTableToolbar from "@/app/(sidebar)/dashboard/_components/dashboard-table/ExpenseTableToolbar";
-import cn from "@/utils/style";
-import { SortableExpenseAccessor } from "@/app/(sidebar)/dashboard/_types";
+import { cn } from "@/utils/style";
+import type { SortableExpenseAccessor } from "@/app/(sidebar)/dashboard/_types";
 /**
  * 수정 가능한 DataTable 컴포넌트
  */

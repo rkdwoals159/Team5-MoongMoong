@@ -1,10 +1,10 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { DataTableProps, DataTableColumn, DataTableShellCol } from "./DataTable.type";
-import { TH_BASE_CLASS, TD_CELL_WRAPPER_BASE } from "./DataTable.constants";
+import type { DataTableProps, DataTableColumn, DataTableShellCol } from "./dataTable.type";
+import { TH_BASE_CLASS, TD_CELL_WRAPPER_BASE } from "./dataTableConstants";
 import DataTableShell from "./DataTableShell";
-import cn from "@/utils/style";
+import { cn } from "@/utils/style";
 import ArrowUpIcon from "@/assets/icons/components/arrow-up.svg";
 import ArrowDownIcon from "@/assets/icons/components/arrow-down.svg";
 

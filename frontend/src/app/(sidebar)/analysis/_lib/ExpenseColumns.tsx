@@ -1,10 +1,9 @@
 import Chip from "@/components/common/Chip/Chip";
-import { DataTableColumn } from "@/components/ui/DataTable/DataTable.type";
-import { CATEGORY_COLOR_MAP, DEFAULT_CATEGORY_COLOR } from "@/app/(sidebar)/dashboard/_constants";
+import type { DataTableColumn } from "@/components/ui/DataTable/dataTable.type";
+import { CATEGORY_COLOR_MAP, DEFAULT_CATEGORY_COLOR } from "@/constants/colorTables";
 import { formatAmountPlain } from "@/utils/amount";
 import { formatDateWithDots } from "@/utils/date";
-import { components } from "@/types/schema";
-
+import type { components } from "@/types/schema";
 //소비내역 컬럼 메타데이터 생성
 export const buildExpenseColumns = (): DataTableColumn<
   components["schemas"]["GroupExpenseResponse"]

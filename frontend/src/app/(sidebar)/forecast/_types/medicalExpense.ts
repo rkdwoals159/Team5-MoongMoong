@@ -1,4 +1,4 @@
-import { components } from "@/types/schema";
+import type { components } from "@/types/schema";
 import type { DiseaseCode } from "./disease";
 
 export type MedicalExpenseProps = {

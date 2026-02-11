@@ -1,7 +1,7 @@
-import cn from "@/utils/style";
+import { cn } from "@/utils/style";
 import ArrowLeftIcon from "@/assets/icons/components/arrow-left-medium.svg";
 import ArrowRightIcon from "@/assets/icons/components/arrow-right-medium.svg";
-import type { PaginationButtonProps, PaginationDirection } from "./PaginationButton.type";
+import type { PaginationButtonProps, PaginationDirection } from "./paginationButton.type";
 
 const labelByDirection: Record<PaginationDirection, string> = {
   left: "이전 페이지",

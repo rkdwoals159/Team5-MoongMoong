@@ -1,6 +1,6 @@
 "use client";
 
-import { SavingStatus } from "@/app/(sidebar)/saving/_types";
+import type { SavingStatus } from "@/app/(sidebar)/saving/_types";
 import { createContext, Dispatch, PropsWithChildren, SetStateAction } from "react";
 
 type SavingStatusContextType = {

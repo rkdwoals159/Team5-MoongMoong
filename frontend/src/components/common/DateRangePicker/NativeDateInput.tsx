@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import cn from "@/utils/style";
-import type { NativeDateInputProps } from "./NativeDateInput.type";
+import { cn } from "@/utils/style";
+import type { NativeDateInputProps } from "./nativeDateInput.type";
 
 export default function NativeDateInput({
   value,

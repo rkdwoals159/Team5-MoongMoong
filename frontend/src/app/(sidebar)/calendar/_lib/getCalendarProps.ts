@@ -9,14 +9,14 @@ import {
   parseMonthParam,
 } from "@/utils/date";
 import { buildCalendarDays } from "@/app/(sidebar)/calendar/_lib/buildCalendarDays";
-import {
+import type {
   CalendarContext,
   CalendarGridProps,
   CalendarHeaderProps,
   CalendarSearchParams,
   GroupExpenseMap,
 } from "@/app/(sidebar)/calendar/_types";
-import { CalendarViewContext } from "@/app/(sidebar)/calendar/_types";
+import type { CalendarViewContext } from "@/app/(sidebar)/calendar/_types";
 
 //캘린더 페이지 전체 속성 반환
 export function getCalendarPageProps(

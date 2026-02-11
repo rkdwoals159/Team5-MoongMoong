@@ -1,6 +1,6 @@
-import { DropdownListBoxProps } from "@/components/ui/Dropdown/Dropdown.type";
+import type { DropdownListBoxProps } from "@/components/ui/Dropdown/dropdown.type";
 import DropdownListItem from "@/components/ui/Dropdown/DropdownListItem";
-import cn from "@/utils/style";
+import { cn } from "@/utils/style";
 
 const DropdownListBox = ({
   options,

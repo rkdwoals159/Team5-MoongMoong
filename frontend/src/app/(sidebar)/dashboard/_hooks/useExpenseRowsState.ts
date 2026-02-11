@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ExpenseData, EditableExpenseRow } from "@/app/(sidebar)/dashboard/_types";
-import { createEmptyRow } from "@/app/(sidebar)/dashboard/_utils";
+import type { ExpenseData, EditableExpenseRow } from "@/app/(sidebar)/dashboard/_types";
 import { SYNC_FIELDS } from "@/app/(sidebar)/dashboard/_constants";
 import {
+  createEmptyRow,
   serverToEditableRow,
   mergeRows,
   buildPatchPayload,
@@ -11,7 +11,7 @@ import {
   getExpenseRowKey,
 } from "@/app/(sidebar)/dashboard/_lib";
 
-export const useExpenseRowsState = (initialData: ExpenseData[]) => {
+export function useExpenseRowsState(initialData: ExpenseData[]) {
   const [rows, setRows] = useState<EditableExpenseRow[]>(() =>
     initialData.map(serverToEditableRow),
   );
@@ -130,4 +130,4 @@ export const useExpenseRowsState = (initialData: ExpenseData[]) => {
     selectedCount,
     totalExpense,
   };
-};
+}

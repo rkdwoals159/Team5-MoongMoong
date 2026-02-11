@@ -6,7 +6,7 @@ import {
   GOOGLE_OAUTH_AUTHORIZE_URL,
   GOOGLE_OAUTH_PROMPT,
   GOOGLE_OAUTH_SCOPE,
-} from "../../_constants";
+} from "@/app/api/auth/_constants";
 import { encodeState, getInviteUrl, getReturnTo } from "@/app/api/auth/_lib";
 import { requireEnv } from "@/app/api/auth/_utils";
 

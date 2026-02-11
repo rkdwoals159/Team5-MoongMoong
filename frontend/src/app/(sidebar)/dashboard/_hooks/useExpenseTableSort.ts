@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { sortExpenseRows } from "@/app/(sidebar)/dashboard/_lib";
-import { SortableExpenseAccessor } from "@/app/(sidebar)/dashboard/_types";
+import type { SortableExpenseAccessor } from "@/app/(sidebar)/dashboard/_types";
 import type { ExpenseData } from "@/app/(sidebar)/dashboard/_types";
 
 const DEFAULT_SORT: { sortBy: SortableExpenseAccessor; sortOrder: "asc" | "desc" } = {

@@ -1,12 +1,11 @@
-import client from "@/lib/api";
+import { client } from "@/lib/api";
 import type {
   DiseaseCode,
   AnnualDiseases,
   DiseaseCodeResponse,
   TreatmentsResponse,
-} from "@/app/(sidebar)/forecast/_types";
-import { AIRecommendationResponse } from "@/app/(sidebar)/forecast/_types/aiRecommendation";
-
+  AIRecommendationResponse,
+} from "@/api/types/forecastApi.type";
 export async function getAIRecommendation(): Promise<AIRecommendationResponse> {
   const { data, error } = await client.GET("/api/group/medical/info");
 

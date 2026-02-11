@@ -1,5 +1,5 @@
 import type { MouseEvent } from "react";
-import type { DataTableColumn } from "@/components/ui/DataTable/DataTable.type";
+import type { DataTableColumn } from "@/components/ui/DataTable/dataTable.type";
 import type { components } from "@schema";
 import type { EditableExpenseRow, ExpenseData } from "./expense";
 import type { SortableExpenseAccessor } from "@/app/(sidebar)/dashboard/_types";

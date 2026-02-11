@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
-import { buildExpenseColumns } from "@/app/(sidebar)/analysis/_lib/expenseColumns";
+import { buildExpenseColumns } from "@/app/(sidebar)/analysis/_lib/ExpenseColumns";
 import { components } from "@/types/schema";
 import { formatDateWithDots } from "@/utils/date";
 import { formatAmountPlain } from "@/utils/amount";

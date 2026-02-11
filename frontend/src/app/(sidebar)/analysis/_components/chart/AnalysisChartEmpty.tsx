@@ -1,6 +1,5 @@
 import WarningIcon from "@/assets/icons/analysis/ic_warning.svg";
-import { AnalysisChartEmptyProps } from "@/app/(sidebar)/analysis/_types/componentPropsType.type";
-
+import type { AnalysisChartEmptyProps } from "@/app/(sidebar)/analysis/_types/componentPropsType.type";
 export default function AnalysisChartEmpty({
   message = "차트 데이터가 없습니다.",
 }: AnalysisChartEmptyProps) {

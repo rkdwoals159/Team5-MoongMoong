@@ -1,5 +1,5 @@
-import { DiseaseCode } from "@/app/(sidebar)/forecast/_types";
-import { getDiseaseCost, getDiseaseRanking } from "@/app/(sidebar)/forecast/_api";
+import type { DiseaseCode } from "@/app/(sidebar)/forecast/_types";
+import { getDiseaseCost, getDiseaseRanking } from "@/api/forecastApi";
 import { DISEASE_TAB_ORDER } from "@/app/(sidebar)/forecast/_constants";
 import MedicalExpense from "@/app/(sidebar)/forecast/_components/medical-expense";
 

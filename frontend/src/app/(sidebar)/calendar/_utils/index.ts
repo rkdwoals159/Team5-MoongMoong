@@ -1,4 +1,4 @@
-import { GroupExpenseItem } from "@/app/(sidebar)/calendar/_types";
+import type { GroupExpenseItem } from "@/app/(sidebar)/calendar/_types";
 
 export function getDateTextColor(
   isDisabled: boolean,

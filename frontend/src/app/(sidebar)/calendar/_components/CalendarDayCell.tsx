@@ -40,7 +40,7 @@ export default function CalendarDayCell({
         params.set("open", "1");
         router.push(`?${params.toString()}`);
       }}
-      className={`flex h-full w-full flex-col items-start border border-(--color-gray-50) bg-(--color-white-100) px-350 py-300 text-left ${
+      className={`flex h-full w-full flex-col items-start border border-gray-50 bg-white-100 px-350 py-300 text-left ${
         isClickable ? "cursor-pointer hover:bg-gray-30" : "cursor-default"
       } ${isBottomLeft ? "rounded-bl-600" : ""} ${isBottomRight ? "rounded-br-600" : ""}`}
     >

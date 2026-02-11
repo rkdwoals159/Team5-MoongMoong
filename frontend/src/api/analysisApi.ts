@@ -1,6 +1,10 @@
-import client from "@/lib/api";
-import { components } from "@/types/schema";
-
+import { client } from "@/lib/api";
+import type {
+  CategoryAnalysisResult,
+  GroupExpenseResponse,
+  MedicalAnalysisResult,
+  PetReadResponse,
+} from "@/api/types/analysisApi.type";
 /**
  * 그룹 소비내역 조회
  * @param startDate : 조회할 시작 날짜
@@ -10,7 +14,7 @@ import { components } from "@/types/schema";
 export async function getGroupExpenses(
   startDate: string,
   endDate: string,
-): Promise<components["schemas"]["GroupExpenseResponse"][]> {
+): Promise<GroupExpenseResponse[]> {
   const { data, error } = await client.GET("/api/expenses/group", {
     params: { query: { startDate, endDate } },
   });
@@ -31,7 +35,7 @@ export async function getGroupExpenses(
 export async function getCategoryAnalysis(
   startDate: string,
   endDate: string,
-): Promise<{ total: number; items: components["schemas"]["CategoryCostResponse"][] }> {
+): Promise<CategoryAnalysisResult> {
   const { data, error } = await client.GET("/api/expenses/group/analysis/category", {
     params: { query: { startDate, endDate } },
   });
@@ -54,7 +58,7 @@ export async function getCategoryAnalysis(
 export async function getMedicalAnalysis(
   startDate: string,
   endDate: string,
-): Promise<{ total: number; items: components["schemas"]["MedicalAnalysisResponse"][] }> {
+): Promise<MedicalAnalysisResult> {
   const { data, error } = await client.GET("/api/expenses/group/analysis/medical", {
     params: { query: { startDate, endDate } },
   });
@@ -70,7 +74,7 @@ export async function getMedicalAnalysis(
  * 반려동물 정보 조회
  * @returns : 반려동물 정보
  */
-export async function getPetInfo(): Promise<components["schemas"]["PetReadResponse"] | null> {
+export async function getPetInfo(): Promise<PetReadResponse | null> {
   const { data, error } = await client.GET("/api/pet");
 
   if (error || !data) {

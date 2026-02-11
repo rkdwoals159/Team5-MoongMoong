@@ -1,8 +1,7 @@
 import FilterChip from "@/components/common/FilterChip/FilterChip";
 import Button from "@/components/common/Button/Button";
-import { DISEASE_CODE_FULL_NAMES } from "../../_constants";
-import { AnnualDiseaseRiskSelectProps } from "@/app/(sidebar)/forecast/_types/annualDiseaseRisk";
-
+import { DISEASE_CODE_FULL_NAMES } from "@/app/(sidebar)/forecast/_constants";
+import type { AnnualDiseaseRiskSelectProps } from "@/app/(sidebar)/forecast/_types/annualDiseaseRisk";
 const AnnualDiseaseRiskSelect = ({
   selectedDiseases,
   unselectedDiseases,

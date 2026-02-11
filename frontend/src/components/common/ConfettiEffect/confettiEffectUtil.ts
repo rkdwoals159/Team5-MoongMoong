@@ -1,5 +1,5 @@
 import { pseudoRandom } from "@/utils/pseudoRandom";
-import { ConfettiPiece } from "./ConfettiEffect.type";
+import type { ConfettiPiece } from "./confettiEffect.type";
 import {
   CONFETTI_COLORS,
   CONFETTI_COUNT,
@@ -12,7 +12,7 @@ import {
   CONFETTI_DRIFT_RANGE,
   CONFETTI_ROTATE_MIN,
   CONFETTI_ROTATE_RANGE,
-} from "./ConfettiEffect.constants";
+} from "./confettiEffectConstants";
 
 export const createConfettiPieces = (seedBase: number): ConfettiPiece[] => {
   return Array.from({ length: CONFETTI_COUNT }, (_, index) => {

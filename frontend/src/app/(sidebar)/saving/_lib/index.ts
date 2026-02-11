@@ -1,4 +1,4 @@
-import { BankRanking } from "../_types";
+import type { BankRanking } from "@/app/(sidebar)/saving/_types";
 
 export const updateRankings = (
   rankings: BankRanking[],

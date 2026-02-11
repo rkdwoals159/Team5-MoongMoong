@@ -1,5 +1,5 @@
-import cn from "@/utils/style";
-import type { DataTableShellProps } from "./DataTable.type";
+import { cn } from "@/utils/style";
+import type { DataTableShellProps } from "./dataTable.type";
 /**
  * 테이블 공통 레이아웃 (wrapper, colgroup, table)
  * DataTable / DataTableInteractive에서 공유

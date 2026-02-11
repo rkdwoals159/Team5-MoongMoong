@@ -1,8 +1,7 @@
-import { CalendarDay, GroupExpenseMap } from "@/app/(sidebar)/calendar/_types";
+import type { CalendarDay, GroupExpenseMap } from "@/app/(sidebar)/calendar/_types";
 import { formatDateKey } from "@/utils/date";
 import { categoryColorMap } from "@/app/(sidebar)/calendar/_constants";
-import { ExpenseCategory } from "@/app/(sidebar)/calendar/_types";
-
+import type { ExpenseCategory } from "@/app/(sidebar)/calendar/_types";
 export function getChipColorForCategory(category: ExpenseCategory) {
   return categoryColorMap[category];
 }

@@ -4,9 +4,11 @@ import CategoryAnalysisChart from "./CategoryAnalysisChart";
 import MedicalAnalysisChart from "./MedicalAnalysisChart";
 import { formatRatio } from "@/app/(sidebar)/analysis/_utils";
 
-import { components } from "@/types/schema";
-import { CategoryAnalysisChartCardProps } from "../../_types/componentPropsType.type";
-import { MedicalAnalysisChartCardProps } from "../../_types/componentPropsType.type";
+import type { components } from "@/types/schema";
+import type {
+  CategoryAnalysisChartCardProps,
+  MedicalAnalysisChartCardProps,
+} from "@/app/(sidebar)/analysis/_types/componentPropsType.type";
 
 export async function CategoryAnalysisChartCard({
   categoryPromise,
