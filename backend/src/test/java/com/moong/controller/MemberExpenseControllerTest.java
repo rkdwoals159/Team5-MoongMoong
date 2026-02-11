@@ -10,7 +10,6 @@ import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.memberexpense.MemberExpenseUpsertRequest;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
-import com.moong.dto.response.memberexpense.MemberExpensesUpsertResponse;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -175,9 +174,43 @@ class MemberExpenseControllerTest extends BaseControllerTest {
     @DisplayName("소비내역 생성, 수정, 삭제 요청을 성공한다")
     @Test
     void upsertMemberExpenses() {
+        LocalDateTime now = LocalDateTime.now();
         Member member = memberGenerator.generateSaved("멤버1");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, member);
         String accessToken = jwtTokenGenerator.generateAccessToken(member);
-        List<MemberExpense> memberExpenses = memberExpenseGenerator.generatedListSaved(member);
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(
+                now.minusDays(2L).toLocalDate(),
+                "류몽민 닭갈비",
+                100,
+                "식비",
+                "소분류",
+                "메모",
+                now.minusDays(2L),
+                member
+        );
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(
+                now.minusDays(1L).toLocalDate(),
+                "항아리 수제비",
+                200,
+                "식비",
+                "소분류",
+                "메모",
+                now.minusDays(1L),
+                member
+        );
+        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(
+                now.toLocalDate(),
+                "우럭 회",
+                300,
+                "식비",
+                "소분류",
+                "메모",
+                now,
+                member
+        );
+        List<MemberExpense> memberExpenses = List.of(memberExpense1, memberExpense2, memberExpense3);
         MemberExpense updateTarget = memberExpenses.get(0);
         List<MemberExpense> deleteTargets = memberExpenses.subList(1, memberExpenses.size());
         List<Long> deletedIds = deleteTargets.stream()
@@ -212,15 +245,12 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 deletedIds
         );
 
-        MemberExpensesUpsertResponse response = given().log().all()
+        given().log().all()
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
                 .body(request)
                 .patch("/api/expenses")
                 .then()
-                .statusCode(200)
-                .extract().as(MemberExpensesUpsertResponse.class);
-
-        assertThat(response.expenses()).hasSize(upsertRequests.size());
+                .statusCode(204);
     }
 }

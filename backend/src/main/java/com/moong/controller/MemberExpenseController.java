@@ -8,7 +8,6 @@ import com.moong.dto.response.categorize.CategorizeResponse;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
 import com.moong.controller.swagger.MemberExpenseControllerSwagger;
-import com.moong.dto.response.memberexpense.MemberExpensesUpsertResponse;
 import com.moong.service.MemberExpenseService;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -53,16 +52,15 @@ public class MemberExpenseController implements MemberExpenseControllerSwagger {
 
     @Override
     @PatchMapping
-    public ResponseEntity<MemberExpensesUpsertResponse> upsertMemberExpenses(
+    public ResponseEntity<Void> upsertMemberExpenses(
             @AuthMember Member member,
             @RequestBody MemberExpensesUpsertRequest request
     ) {
-        MemberExpensesUpsertResponse response = memberExpenseService.upsertMemberExpenses(
+        memberExpenseService.upsertMemberExpenses(
                 member,
                 request
         );
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.noContent().build();
     }
 
     @Override

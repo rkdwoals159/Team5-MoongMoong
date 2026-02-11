@@ -11,7 +11,7 @@ import com.moong.dto.response.groupexpense.GroupExpensesDailyResponse;
 import com.moong.dto.response.groupexpense.GroupExpensesResponse;
 import com.moong.dto.response.groupexpense.MedicalCategoryAnalysisResponse;
 import com.moong.repository.CrewRepository;
-import com.moong.repository.GroupExpenseRepository;
+import com.moong.repository.groupexpense.GroupExpenseRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;

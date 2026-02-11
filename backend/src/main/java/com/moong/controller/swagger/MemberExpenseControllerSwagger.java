@@ -1,6 +1,5 @@
 package com.moong.controller.swagger;
 
-import com.moong.annotation.auth.AuthMember;
 import com.moong.annotation.swagger.ErrorCode400;
 import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode500;
@@ -9,7 +8,6 @@ import com.moong.dto.request.memberexpense.CategorizeRequest;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
 import com.moong.dto.response.categorize.CategorizeResponse;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
-import com.moong.dto.response.memberexpense.MemberExpensesUpsertResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -78,15 +76,14 @@ public interface MemberExpenseControllerSwagger {
             description = "개인 소비 내역을 생성하거나 수정하고, 삭제 대상 내역은 함께 제거합니다.",
             responses = {
                     @ApiResponse(
-                            responseCode = "200",
-                            description = "생성, 수정, 삭제 성공",
-                            content = @Content(schema = @Schema(implementation = MemberExpensesUpsertResponse.class))
+                            responseCode = "204",
+                            description = "생성, 수정, 삭제 성공"
                     )
             }
     )
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<MemberExpensesUpsertResponse> upsertMemberExpenses(
+    ResponseEntity<Void> upsertMemberExpenses(
             @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
             Member member,
             @RequestBody(

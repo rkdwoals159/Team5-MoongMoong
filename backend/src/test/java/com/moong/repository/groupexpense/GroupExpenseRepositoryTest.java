@@ -1,4 +1,4 @@
-package com.moong.repository;
+package com.moong.repository.groupexpense;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,6 +8,7 @@ import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.domain.groupexpense.GroupExpenseDetail;
+import com.moong.repository.BaseRepositoryTest;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceUnitUtil;
 import java.time.LocalDateTime;
@@ -253,5 +254,57 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                         expense1.getMemberExpense().getId(),
                         expense2.getMemberExpense().getId()
                 );
+    }
+
+    @DisplayName("그룹의 소비내역 대량 삭제를 확인한다.")
+    @Test
+    void deleteByMemberIdAndIds() {
+        LocalDateTime now = LocalDateTime.now();
+        Member member = memberGenerator.generateSaved("멤버1");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, member);
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(
+                now.minusDays(2L).toLocalDate(),
+                "류몽민 닭갈비",
+                100,
+                "식비",
+                "소분류",
+                "메모",
+                now.minusDays(2L),
+                member
+        );
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(
+                now.minusDays(1L).toLocalDate(),
+                "항아리 수제비",
+                200,
+                "식비",
+                "소분류",
+                "메모",
+                now.minusDays(1L),
+                member
+        );
+        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(
+                now.toLocalDate(),
+                "우럭 회",
+                300,
+                "식비",
+                "소분류",
+                "메모",
+                now,
+                member
+        );
+        List<MemberExpense> memberExpenses = List.of(memberExpense1, memberExpense2, memberExpense3);
+        List<Long> ids = memberExpenses.stream()
+                .map(MemberExpense::getId)
+                .toList();
+        groupExpenseGenerator.generateSaved(petGroup, memberExpense1, null);
+        groupExpenseGenerator.generateSaved(petGroup, memberExpense2, null);
+        groupExpenseGenerator.generateSaved(petGroup, memberExpense3, null);
+
+        groupExpenseRepository.deleteByGroupIdAndMemberExpenseIds(petGroup.getId(), ids);
+
+        List<GroupExpense> found = groupExpenseRepository.findAllByPetGroupId(petGroup.getId());
+        assertThat(found).isEmpty();
     }
 }

@@ -1,4 +1,4 @@
-package com.moong.repository;
+package com.moong.repository.groupexpense;
 
 import com.moong.domain.entity.GroupExpense;
 import com.moong.domain.entity.MemberExpense;
@@ -6,13 +6,16 @@ import com.moong.domain.groupexpense.GroupExpenseDetail;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
-public interface GroupExpenseRepository extends Repository<GroupExpense, Long> {
+public interface GroupExpenseRepository extends Repository<GroupExpense, Long>, GroupExpenseJdbcRepository {
 
     GroupExpense save(GroupExpense groupExpense);
+
+    List<GroupExpense> findAllByPetGroupId(Long groupId);
 
     @Query("""
             select ge
@@ -81,4 +84,12 @@ public interface GroupExpenseRepository extends Repository<GroupExpense, Long> {
                 })
                 .toList();
     }
+
+    @Query("""
+                delete from GroupExpense ge
+                where ge.petGroup.id = :groupId
+                    and ge.memberExpense.id in :memberExpenseIds
+            """)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    void deleteByGroupIdAndMemberExpenseIds(long groupId, List<Long> memberExpenseIds);
 }
