@@ -13,6 +13,10 @@ const dirname =
 export default defineConfig({
   plugins: [react()],
   test: {
+    reporters: process.env.CI ? ["default", "html"] : ["default"],
+    outputFile: {
+      html: "./html/index.html",
+    },
     projects: [
       // Storybook 테스트 프로젝트
       {
