@@ -19,7 +19,7 @@ export const getPieChartLabelLayout = ({
   const radius = typeof outerRadius === "number" ? outerRadius : Number(outerRadius ?? 0);
   const resolvedRadius = Number.isFinite(radius) && radius > 0 ? radius : 0;
 
-  const ratio = formatRatio(payload?.ratio ?? percent ?? 0);
+  const ratio = formatRatio(payload?.ratio ?? (percent != null ? percent * 100 : 0));
   const label = getChartLabelFromPayload(payload);
   const angle = -(midAngle ?? 0) * CHART_LABEL_RADIAN;
   const cos = Math.cos(angle);

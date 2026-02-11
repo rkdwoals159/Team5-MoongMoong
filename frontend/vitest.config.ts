@@ -35,6 +35,7 @@ export default defineConfig({
       },
       // 유닛 테스트 프로젝트
       {
+        extends: true,
         test: {
           name: "unit",
           environment: "jsdom",
