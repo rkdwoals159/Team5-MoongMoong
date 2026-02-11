@@ -77,3 +77,17 @@ export type CalendarContext = {
   viewYear: number;
   viewMonth: number;
 };
+
+export type UseCalendarNavigationParams = {
+  isCurrentMonth: boolean;
+  prevMonthParam: string;
+  nextMonthParam: string;
+  todayMonthParam: string;
+  todayDateParam: string;
+};
+
+export type CalendarViewContext = CalendarContext & {
+  todayKey: string;
+  monthParam: string;
+  isCurrentMonth: boolean;
+};

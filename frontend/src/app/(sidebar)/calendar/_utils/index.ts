@@ -1,11 +1,11 @@
-import { GroupExpenseItem } from "../_types";
+import { GroupExpenseItem } from "@/app/(sidebar)/calendar/_types";
 
-export const getDateTextColor = (
+export function getDateTextColor(
   isDisabled: boolean,
   isWeekend: boolean,
   isSelected: boolean,
   isToday: boolean,
-) => {
+) {
   if (isDisabled) {
     return "text-(--color-gray-200)";
   } else if (isWeekend) {
@@ -14,11 +14,11 @@ export const getDateTextColor = (
     return "text-(--color-text-inverse)";
   }
   return "text-(--color-text-base)";
-};
+}
 
-export const getTopExpenses = (expenses: GroupExpenseItem[]) => {
+export function getTopExpenses(expenses: GroupExpenseItem[]) {
   return expenses
     .slice()
     .sort((a, b) => Number(b.cost ?? 0) - Number(a.cost ?? 0))
     .slice(0, 2);
-};
+}

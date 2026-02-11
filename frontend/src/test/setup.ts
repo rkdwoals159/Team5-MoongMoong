@@ -9,13 +9,17 @@ afterEach(() => {
 });
 
 // Next.js 라우터 모킹 (useRouter를 사용하는 컴포넌트에 필요)
+// 모든 useRouter() 호출이 같은 mock 객체를 반환하도록 설정
+const mockRouter = {
+  push: vi.fn(),
+  replace: vi.fn(),
+  prefetch: vi.fn(),
+  back: vi.fn(),
+  refresh: vi.fn(),
+};
+
 vi.mock("next/navigation", () => ({
-  useRouter: vi.fn(() => ({
-    push: vi.fn(),
-    replace: vi.fn(),
-    prefetch: vi.fn(),
-    back: vi.fn(),
-  })),
+  useRouter: vi.fn(() => mockRouter),
   usePathname: vi.fn(() => "/"),
   useSearchParams: vi.fn(() => new URLSearchParams()),
 }));

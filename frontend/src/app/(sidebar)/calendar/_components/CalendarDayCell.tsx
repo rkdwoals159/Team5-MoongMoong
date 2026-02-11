@@ -5,7 +5,7 @@ import Chip from "@/components/common/Chip/Chip";
 import ExpenseCountChip from "./expense/ExpenseCountChip";
 import { getChipColorForCategory } from "@/app/(sidebar)/calendar/_lib/buildCalendarDays";
 import type { CalendarDayCellProps, ExpenseCategory } from "@/app/(sidebar)/calendar/_types";
-import { getDateTextColor, getTopExpenses } from "../_lib/conditionalStyles";
+import { getDateTextColor, getTopExpenses } from "@/app/(sidebar)/calendar/_utils";
 
 export default function CalendarDayCell({
   day,
