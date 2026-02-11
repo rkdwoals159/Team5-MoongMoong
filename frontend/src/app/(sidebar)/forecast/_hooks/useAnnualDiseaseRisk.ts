@@ -11,6 +11,9 @@ import {
 } from "@/app/(sidebar)/forecast/_utils";
 import { DEFAULT_SELECT_COUNT } from "@/app/(sidebar)/forecast/_constants";
 
+/**
+ * 연간 질병 위험률 선택/해제 훅
+ */
 const useAnnualDiseaseRisk = ({ diseaseList, statisticsData }: AnnualDiseaseRiskProps) => {
   const [selectedDiseases, setSelectedDiseases] = useState<SelectedDisease[]>(() =>
     assignColors(diseaseList.slice(0, DEFAULT_SELECT_COUNT)),
