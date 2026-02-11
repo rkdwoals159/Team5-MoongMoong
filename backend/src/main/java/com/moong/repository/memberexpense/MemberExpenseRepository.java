@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -40,6 +42,21 @@ public interface MemberExpenseRepository extends Repository<MemberExpense, Long>
             LocalDate startDate,
             LocalDate endDate,
             Sort sort
+    );
+
+    Slice<MemberExpense> findByMember_IdAndSpentAtBetween(
+            long memberId,
+            LocalDate startDate,
+            LocalDate endDate,
+            Pageable pageable
+    );
+
+    Slice<MemberExpense> findByMember_IdAndMainCategoryAndSpentAtBetween(
+            long memberId,
+            String mainCategory,
+            LocalDate startDate,
+            LocalDate endDate,
+            Pageable pageable
     );
 
     @Query("""

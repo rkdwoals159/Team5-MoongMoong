@@ -8,6 +8,7 @@ import com.moong.dto.request.memberexpense.CategorizeRequest;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
 import com.moong.dto.response.categorize.CategorizeResponse;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
+import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponseV2;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,8 +18,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import java.time.LocalDate;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "MemberExpense API")
 public interface MemberExpenseControllerSwagger {
@@ -53,6 +57,45 @@ public interface MemberExpenseControllerSwagger {
             Member member,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate
+    );
+
+    @Operation(summary = "기간 내의 개인 소비내역 반환 V2",
+            description = "시작일/종료일을 기준으로 기간 내 개인 소비내역을 페이징으로 조회합니다.",
+            parameters = {
+                    @Parameter(
+                            name = "startDate",
+                            description = "조회 시작일 (yyyy-MM-dd)",
+                            example = "2026-01-01",
+                            required = true
+                    ),
+                    @Parameter(
+                            name = "endDate",
+                            description = "조회 종료일 (yyyy-MM-dd)",
+                            example = "2026-01-31",
+                            required = true
+                    ),
+                    @Parameter(
+                            name = "mainCategory",
+                            description = "메인 카테고리 필터 (선택)",
+                            example = "사료/간식",
+                            required = false
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "개인 소비 내역 반환 성공",
+                            content = @Content(schema = @Schema(implementation = MemberExpensesPeriodResponseV2.class))
+                    )
+            })
+    @ErrorCode400(description = "시작일은 종료일보다 늦을 수 없습니다.")
+    ResponseEntity<MemberExpensesPeriodResponseV2> getMemberExpensesByPeriodV2(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+            @RequestParam(value = "mainCategory", required = false) String mainCategory,
+            @ParameterObject Pageable pageable
     );
 
     @Operation(summary = "지난달 소비 내역 통계",

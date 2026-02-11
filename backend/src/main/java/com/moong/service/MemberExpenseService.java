@@ -7,6 +7,7 @@ import com.moong.client.categorize.ExpenseCategorizeClient;
 import com.moong.domain.entity.GroupExpense;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
+import com.moong.dto.command.MemberExpenseReadCommand;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.memberexpense.CategorizeRequest;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
@@ -17,6 +18,7 @@ import com.moong.domain.entity.Pet;
 import com.moong.domain.memberexpense.MonthlyExpenseStats;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
+import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponseV2;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.CrewRepository;
@@ -30,6 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
@@ -69,6 +72,26 @@ public class MemberExpenseService {
         );
 
         return new MemberExpensesPeriodResponse(findMemberExpenses);
+    }
+
+    public MemberExpensesPeriodResponseV2 getMemberExpensesByPeriodV2(MemberExpenseReadCommand command) {
+        if(command.hasMainCategory()) {
+            Slice<MemberExpense> findCategoryMemberExpenses = memberExpenseRepository.findByMember_IdAndMainCategoryAndSpentAtBetween(
+                    command.getMember().getId(),
+                    command.getMainCategory(),
+                    command.getStartDate(),
+                    command.getEndDate(),
+                    command.getPageable()
+            );
+            return new MemberExpensesPeriodResponseV2(findCategoryMemberExpenses);
+        }
+        Slice<MemberExpense> findMemberExpenses = memberExpenseRepository.findByMember_IdAndSpentAtBetween(
+                command.getMember().getId(),
+                command.getStartDate(),
+                command.getEndDate(),
+                command.getPageable()
+        );
+        return new MemberExpensesPeriodResponseV2(findMemberExpenses);
     }
 
     public LastMonthComparisonResponse compareLastMonthExpense(Member member) {
