@@ -39,6 +39,8 @@ dependencies {
     //WebClient
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+    //Regression
+    implementation 'org.apache.commons:commons-math3:3.6.1'
 
     implementation 'org.ow2.asm:asm:9.7'
     implementation 'org.ow2.asm:asm-tree:9.7'
