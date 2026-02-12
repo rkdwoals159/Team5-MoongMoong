@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { joinNonEmpty } from "@/utils/string";
+import { joinNonEmpty } from "../string";
 
 describe("string utils", () => {
   describe("joinNonEmpty", () => {

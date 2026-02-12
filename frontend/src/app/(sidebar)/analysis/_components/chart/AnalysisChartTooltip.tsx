@@ -3,9 +3,9 @@ import type { TooltipContentProps } from "recharts";
 import Chip from "@/components/common/Chip/Chip";
 import { formatAmountPlain } from "@/utils/amount";
 import { formatRatio } from "@/app/(sidebar)/analysis/_utils";
-import type { ChartPayloadType } from "@/app/(sidebar)/analysis/_types";
-import { getChartLabelFromPayload } from "@/app/(sidebar)/analysis/_lib/getChartLabelFromPayload";
-import { CATEGORY_COLOR_MAP, DEFAULT_CATEGORY_COLOR } from "@/constants/colorTables";
+import { ChartPayloadType } from "../../_types";
+import { getChartLabelFromPayload } from "../../_lib/getChartLabelFromPayload";
+import { CATEGORY_COLOR_MAP, DEFAULT_CATEGORY_COLOR } from "@/app/(sidebar)/dashboard/_constants";
 export default function AnalysisChartTooltip({
   active,
   payload,

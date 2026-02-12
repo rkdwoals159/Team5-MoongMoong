@@ -1,9 +1,9 @@
 "use client";
 
-import type { AnnualDiseaseRiskProps } from "@/app/(sidebar)/forecast/_types/annualDiseaseRisk";
+import { AnnualDiseaseRiskProps } from "@/app/(sidebar)/forecast/_types/annualDiseaseRisk";
 import AnnualDiseaseRiskSelect from "./AnnualDiseaseRiskSelect";
 import AnnualDiseaseRiskChart from "./AnnualDiseaseRiskChart";
-import { useAnnualDiseaseRisk } from "@/app/(sidebar)/forecast/_hooks/useAnnualDiseaseRisk";
+import useAnnualDiseaseRisk from "@/app/(sidebar)/forecast/_hooks/useAnnualDiseaseRisk";
 
 const AnnualDiseaseRiskClient = (props: AnnualDiseaseRiskProps) => {
   const {

@@ -66,7 +66,7 @@ const ToastButtons = () => {
 export const WithProvider: Story = {
   render: () => (
     <ToastProvider>
-      <div className="p-500">
+      <div className="p-[var(--spacing-500)]">
         <ToastButtons />
       </div>
     </ToastProvider>

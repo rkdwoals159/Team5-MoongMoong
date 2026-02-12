@@ -1,4 +1,4 @@
-import type { components } from "@/types/schema";
+import { components } from "@/types/schema";
 import type { DiseaseCode } from "./disease";
 
 export type AnnualDiseases = NonNullable<components["schemas"]["GroupMedicalStatisticsResponse"]>;

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isDifferentArray } from "@/utils/isDifferentArray";
+import { isDifferentArray } from "../isDifferentArray";
 
 describe("isDifferentArray utils", () => {
   describe("배열 길이가 다른 경우", () => {

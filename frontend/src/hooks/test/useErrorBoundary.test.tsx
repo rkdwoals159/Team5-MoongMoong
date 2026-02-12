@@ -1,5 +1,5 @@
 import { renderHook, act, render, waitFor, fireEvent } from "@testing-library/react";
-import { useErrorBoundary } from "@/hooks/useErrorBoundary";
+import { useErrorBoundary } from "../useErrorBoundary";
 import { Component, type ReactNode } from "react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 

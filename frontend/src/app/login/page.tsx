@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import Logo from "@/components/ui/Logo/Logo";
 import ImgGoogleLogo from "@/assets/icons/login/img_google_logo.png";
 import OnboardingCarousel from "./_components/OnboardingCarousel";
@@ -23,15 +24,15 @@ export default function Home() {
               예상 진료명을 바로 확인할 수 있어요
             </p>
           </div>
-          <button
-            type="button"
+          <Link
+            href="/api/auth/google/start"
             className="flex h-[50px] w-full items-center justify-center gap-200 rounded-[8px] border border-gray-200 bg-white-100"
           >
             <span className="flex size-[36px] items-center justify-center">
               <Image src={ImgGoogleLogo} alt="Google" width={16} height={16} />
             </span>
             <span className="typo-body-m-bold text-gray-800">구글 계정으로 시작하기</span>
-          </button>
+          </Link>
           <p className="typo-body-m-medium text-gray-400">
             구글, 애플, 또는 이메일로 계속 진행하여, moongmoong&nbsp;
             {/* todo - 실제 링크로 변경 */}

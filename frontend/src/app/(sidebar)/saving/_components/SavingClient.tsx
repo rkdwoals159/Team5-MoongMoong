@@ -1,6 +1,6 @@
 "use client";
 
-import type { SavingClientProps, SavingStatus } from "@/app/(sidebar)/saving/_types";
+import { SavingClientProps, SavingStatus } from "@/app/(sidebar)/saving/_types";
 import { SavingStatusProvider } from "@/app/(sidebar)/saving/_contexts/SavingStatusContext";
 import SavingInfo from "@/app/(sidebar)/saving/_components/header/SavingInfo";
 import SavingContent from "@/app/(sidebar)/saving/_components/piggybank/SavingContent";

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { cn } from "@/utils/style";
+import cn from "@/utils/style";
 import WarningIcon from "@/assets/icons/components/warning.svg";
 import { formatAmountPlain } from "@/utils/amount";
-import type { AmountInputProps } from "./input.type";
+import type { AmountInputProps } from "./Input.type";
 
 const AmountInput = ({
   placeholder = "금액을 입력해주세요",

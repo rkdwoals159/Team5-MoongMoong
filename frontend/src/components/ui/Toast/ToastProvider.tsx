@@ -1,10 +1,10 @@
 "use client";
 import React, { createContext, useContext, useMemo } from "react";
-import { cn } from "@/utils/style";
+import cn from "@/utils/style";
 import Toast from "./Toast";
-import { ANIMATION_MS } from "./toastConstants";
-import { useToastStore } from "./toastStore";
-import type { ToastContextValue } from "./toast.type";
+import { ANIMATION_MS } from "./Toast.constants";
+import { useToastStore } from "./Toast.store";
+import type { ToastContextValue } from "./Toast.type";
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 
@@ -24,7 +24,7 @@ const ToastProvider = ({ children }: { children: React.ReactNode }) => {
       {children}
       <div
         className={cn(
-          "pointer-events-none fixed left-1/2 -translate-x-1/2 bottom-700 z-50 flex w-full max-w-[515px] flex-col gap-300 px-500",
+          "pointer-events-none fixed left-1/2 -translate-x-1/2 bottom-[var(--spacing-700)] z-50 flex w-full max-w-[515px] flex-col gap-[var(--spacing-300)] px-[var(--spacing-500)]",
         )}
       >
         {toasts.map((toast) => (

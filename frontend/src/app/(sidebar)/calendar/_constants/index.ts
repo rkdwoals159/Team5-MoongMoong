@@ -1,7 +1,15 @@
-import type { ChipMajorColor } from "@/components/common/Chip/chip.type";
+import type { ChipMajorColor } from "@/components/common/Chip/Chip.type";
 import type { ExpenseCategory } from "@/app/(sidebar)/calendar/_types";
-import { CATEGORY_COLOR_MAP } from "@/constants/colorTables";
 
-export const categoryColorMap: Record<ExpenseCategory, ChipMajorColor> = CATEGORY_COLOR_MAP;
+export const categoryColorMap: Record<ExpenseCategory, ChipMajorColor> = {
+  미용: "green",
+  의료비: "red",
+  사료: "orange",
+  의류: "purple",
+  간식: "yellow",
+  영양제: "turquoise",
+  장난감: "blue",
+  기타: "gray",
+};
 
 export const SCROLL_THRESHOLD = 9;

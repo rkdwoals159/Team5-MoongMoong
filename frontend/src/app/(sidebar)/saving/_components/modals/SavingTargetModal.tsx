@@ -4,7 +4,7 @@ import Button from "@/components/common/Button/Button";
 import AmountInput from "@/components/common/Input/AmountInput";
 import { formatAmountPlain } from "@/utils/amount";
 import CloseIcon from "@/assets/icons/components/close.svg";
-import type { SavingTargetModalProps } from "@/app/(sidebar)/saving/_types";
+import { SavingTargetModalProps } from "@/app/(sidebar)/saving/_types";
 import { useAmountInput } from "@/app/(sidebar)/saving/_hooks/useAmountInput";
 
 const SavingTargetModal = ({

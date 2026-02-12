@@ -1,7 +1,7 @@
 import DataTable from "@/components/ui/DataTable/DataTable";
 import { formatAmount } from "@/utils/amount";
-import { buildExpenseColumns } from "@/app/(sidebar)/analysis/_lib/ExpenseColumns";
-import type { AnalysisTableSectionProps } from "@/app/(sidebar)/analysis/_types/componentPropsType.type";
+import { buildExpenseColumns } from "@/app/(sidebar)/analysis/_lib/expenseColumns";
+import { AnalysisTableSectionProps } from "@/app/(sidebar)/analysis/_types/componentPropsType.type";
 import AnalysisTableEmpty from "./AnalysisTableEmpty";
 
 export default async function AnalysisTable({

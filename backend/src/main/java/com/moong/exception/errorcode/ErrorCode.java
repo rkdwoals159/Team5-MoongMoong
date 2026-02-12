@@ -49,7 +49,6 @@ public enum ErrorCode {
     MEDIA_TYPE_NOT_SUPPORTED(415, "허용되지 않은 미디어 타입입니다."),
 
     //5XX
-    YEAR_MONTH_DESERIALIZE_ERROR(500, "YearMonth 역직렬화에 실패했습니다"),
     INCONSISTENT_DISEASE_DATA(500, "서버 내부 데이터 정합성 오류입니다."),
     INVALID_PET_BIRTH_DATA(500, "펫 생년월일 데이터가 유효하지 않습니다."),
     INVITE_CODE_ENCRYPT_ERROR(500, "초대코드 암호화 과정에서 문제가 생겼습니다"),

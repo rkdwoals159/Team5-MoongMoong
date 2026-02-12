@@ -1,5 +1,6 @@
-import type { DataTableColumn } from "@/components/ui/DataTable/dataTable.type";
-import type { ExpenseData } from "@/app/(sidebar)/dashboard/_types";
+import { DataTableColumn } from "@/components/ui/DataTable/DataTable.type";
+import { ExpenseData } from "@/app/(sidebar)/dashboard/_types";
+
 /** 서버 동기화 필드 (isRowEqual 비교용) */
 export const SYNC_FIELDS = [
   "spentAt",

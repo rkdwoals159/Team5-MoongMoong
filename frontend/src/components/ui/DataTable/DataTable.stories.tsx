@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useState } from "react";
 import DataTable from "./DataTable";
-import type { DataTableColumn, DataTableProps } from "./dataTable.type";
+import { DataTableColumn, DataTableProps } from "./DataTable.type";
 import Chip from "@/components/common/Chip/Chip";
 
 /**

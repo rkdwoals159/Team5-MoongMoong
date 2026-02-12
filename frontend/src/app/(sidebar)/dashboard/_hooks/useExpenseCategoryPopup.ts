@@ -1,6 +1,6 @@
 import type { MouseEvent } from "react";
 import { useState, useCallback } from "react";
-import type {
+import {
   ExpenseData,
   SelectedCell,
   UseExpenseCategoryPopupReturn,

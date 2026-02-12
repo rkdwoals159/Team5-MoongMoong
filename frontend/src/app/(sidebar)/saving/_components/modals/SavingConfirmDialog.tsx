@@ -2,7 +2,8 @@
 
 import Button from "@/components/common/Button/Button";
 import { formatAmount } from "@/utils/amount";
-import type { SavingConfirmDialogProps } from "@/app/(sidebar)/saving/_types";
+import { SavingConfirmDialogProps } from "@/app/(sidebar)/saving/_types";
+
 export default function SavingConfirmDialog({
   amount,
   onConfirm,
@@ -11,10 +12,13 @@ export default function SavingConfirmDialog({
 }: SavingConfirmDialogProps) {
   return (
     <div role="alertdialog" aria-labelledby="confirm-title" aria-describedby="confirm-description">
-      <p id="confirm-title" className="typo-title-s-bold text-center text-text-base">
+      <p id="confirm-title" className="typo-title-s-bold text-center text-(--color-text-base)">
         {formatAmount(amount)}을 저금하시겠습니까?
       </p>
-      <p id="confirm-description" className="mt-500 typo-body-s text-center text-text-sub">
+      <p
+        id="confirm-description"
+        className="mt-500 typo-body-s text-center text-(--color-text-sub)"
+      >
         토스페이로 결제하면 모임통장으로 이체됩니다
       </p>
       <div className="mt-700 flex gap-300">

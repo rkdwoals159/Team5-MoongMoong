@@ -1,24 +1,10 @@
-import type {
-  AuthLoginResponse,
-  PetCreateRequest,
-  PostLoginParams,
-  PostLoginResult,
-} from "@/app/api/auth/_types/postLogin";
+import type { PostLoginParams, PostLoginResult } from "@/app/api/auth/_types/postLogin";
 
-import { AUTH_DEFAULT_RETURN_TO } from "@/app/api/auth/_constants";
+import { AUTH_DEFAULT_RETURN_TO, ONBOARDING_RETURN_TO } from "@/app/api/auth/_constants";
 import { client } from "@/lib/api";
 
 function getAuthHeaders(authorization?: string) {
   return authorization ? { Authorization: authorization } : undefined;
-}
-
-function getPetCreateBody(data: AuthLoginResponse | undefined): PetCreateRequest {
-  return {
-    petName: data?.petName ?? undefined,
-    breed: data?.breed ?? undefined,
-    gender: data?.gender ?? undefined,
-    birthDate: data?.birthDate ?? undefined,
-  };
 }
 
 export async function runPostLoginFlow({
@@ -27,8 +13,11 @@ export async function runPostLoginFlow({
   returnTo,
   authorization,
 }: PostLoginParams): Promise<PostLoginResult> {
-  const isNew = data?.isNew === true;
-  const isInvited = data?.isInvited === true;
+  if (!data) {
+    return { ok: false, reason: "login error: data is missing" };
+  }
+  const isNew = data.isNew === true;
+  const isInvited = data.isInvited === true;
   const headers = getAuthHeaders(authorization);
 
   if (isInvited) {
@@ -48,17 +37,8 @@ export async function runPostLoginFlow({
     return { ok: true, redirectTo: returnTo };
   }
 
-  if (isNew) {
-    const { error, response } = await client.POST("/api/pet", {
-      body: getPetCreateBody(data),
-      headers,
-    });
-
-    if (error || !response.ok) {
-      return { ok: false, reason: "pet create error", detail: error ?? response };
-    }
-
-    return { ok: true, redirectTo: returnTo };
+  if (isNew || !data.hasGroup) {
+    return { ok: true, redirectTo: ONBOARDING_RETURN_TO };
   }
 
   return { ok: true, redirectTo: AUTH_DEFAULT_RETURN_TO };

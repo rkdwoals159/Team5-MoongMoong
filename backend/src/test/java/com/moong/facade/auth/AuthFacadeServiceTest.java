@@ -142,22 +142,5 @@ class AuthFacadeServiceTest extends BaseServiceTest {
                     () -> assertThat(jwtManager.resolveRefreshToken(tokens.refreshToken())).isEqualTo(member.getEmail())
             );
         }
-
-        @DisplayName("기존유저 + 그룹 미소속 인원")
-        @Test
-        void existsMember_NotGroupMember() {
-            Member member = memberGenerator.generateSaved("김건우");
-            Pet pet = petGenerator.generateSaved();
-            PetGroup petGroup = petGroupGenerator.generateSaved(pet);
-            //기존 회원의 정보를 반환하도록 모킹
-            Mockito.when(oAuthClient.requestMemberInfo(anyString()))
-                    .thenReturn(new MemberInfo(member.getEmail()));
-            AuthLoginRequest request = new AuthLoginRequest("accessToken", null);
-
-            FacadeLoginResponse loginResponse = authFacadeService.login(request);
-            JwtTokenResponse tokens = loginResponse.tokenResponse();
-
-            assertThat(loginResponse.hasGroup()).isFalse();
-        }
     }
 }

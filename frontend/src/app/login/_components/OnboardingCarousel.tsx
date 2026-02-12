@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { slides } from "@/app/login/_constants/ImgSlideData";
-import { ONBOARDING_CAROUSEL_INTERVAL } from "@/app/login/_constants";
+import { slides } from "../_constants/ImgSlideData";
+import { ONBOARDING_CAROUSEL_INTERVAL } from "../_constants";
 export default function OnboardingCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "center" });

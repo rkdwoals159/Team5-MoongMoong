@@ -1,8 +1,9 @@
-import type { ExpenseData, EditableExpenseRow } from "@/app/(sidebar)/dashboard/_types";
+import { ExpenseData, EditableExpenseRow } from "@/app/(sidebar)/dashboard/_types";
 import { SYNC_FIELDS } from "@/app/(sidebar)/dashboard/_constants";
-import { createEmptyRow } from "@/app/(sidebar)/dashboard/_lib/createEmptyRow";
+import { createEmptyRow } from "@/app/(sidebar)/dashboard/_utils";
 import { joinNonEmpty } from "@/utils/string";
-import type { components } from "@schema";
+import { components } from "@schema";
+
 type MemberExpensesUpsertRequest = components["schemas"]["MemberExpensesUpsertRequest"];
 
 /** ExpenseData → EditableExpenseRow 변환 */

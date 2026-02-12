@@ -14,9 +14,6 @@ public record AuthLoginResponse(
         @Schema(description = "신규회원 여부", example = "true")
         boolean isNew,
 
-        @Schema(description = "그룹 소속 여부", example = "true")
-        boolean hasGroup,
-
         @Schema(description = "회원 ID", example = "102345")
         long memberId,
 
@@ -35,7 +32,7 @@ public record AuthLoginResponse(
         @Schema(description = "강아지 성별 (M: 남아, F: 여아, 초대되지 않은 경우 null)", example = "M", nullable = true)
         Gender gender,
 
-        @Schema(implementation = String.class, example = "2026-02", pattern = "yyyy-MM")
+        @Schema(description = "생년월 YYYY-MM 형식 (초대되지 않은 경우 null)", example = "2025-05", nullable = true)
         YearMonth birthDate
 ) {
 
@@ -43,7 +40,6 @@ public record AuthLoginResponse(
         this(
                 loginResponse.isInvited(),
                 loginResponse.isNew(),
-                loginResponse.hasGroup(),
                 loginResponse.memberId(),
                 loginResponse.name(),
                 loginResponse.imageUrl(),

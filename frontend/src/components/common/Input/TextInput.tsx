@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@/utils/style";
+import cn from "@/utils/style";
 import WarningIcon from "@/assets/icons/components/warning.svg";
-import type { TextInputProps } from "./input.type";
+import type { TextInputProps } from "./Input.type";
 import { useState } from "react";
 
 type TextInputInternalProps = TextInputProps & {};
@@ -63,7 +63,7 @@ const TextInput = ({
   };
 
   return (
-    <div className="flex flex-col gap-200">
+    <div className="flex flex-col gap-[var(--spacing-200)]">
       <div className={wrapperClasses} data-error={shouldShowError ? "true" : "false"}>
         <input
           {...inputProps}
@@ -75,10 +75,10 @@ const TextInput = ({
           disabled={isDisabled}
           onChange={handleChange}
           onBlur={handleBlur}
-          className="flex-1 bg-transparent outline-none typo-body-m-medium placeholder:text-gray-300"
+          className="flex-1 bg-transparent outline-none typo-body-m-medium placeholder:text-[var(--color-gray-300)]"
         />
         {showCounter && stringValue.length > 0 ? (
-          <span className="typo-body-m-medium text-gray-300">
+          <span className="typo-body-m-medium text-[var(--color-gray-300)]">
             {stringValue.length}/{maxLength}자
           </span>
         ) : null}
@@ -87,7 +87,7 @@ const TextInput = ({
         renderError ? (
           renderError(errorMessage ?? "")
         ) : (
-          <div className="flex items-center gap-200 px-300 typo-body-s-medium text-red-500">
+          <div className="flex items-center gap-[var(--spacing-200)] px-[var(--spacing-300)] typo-body-s-medium text-[var(--color-red-500)]">
             <WarningIcon className="w-4 h-4" aria-hidden="true" />
             <span>{errorMessage}</span>
           </div>

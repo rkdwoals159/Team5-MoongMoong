@@ -56,7 +56,9 @@ export const OnSelect: Story = {
             />
           ))}
         </div>
-        <p className="typo-body-m-medium text-gray-700">선택된 코드: {selectedCode ?? "없음"}</p>
+        <p className="typo-body-m-medium text-[var(--color-gray-700)]">
+          선택된 코드: {selectedCode ?? "없음"}
+        </p>
       </div>
     );
   },

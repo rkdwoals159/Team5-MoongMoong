@@ -14,7 +14,7 @@
  * @param seed - 랜덤 시드 값
  * @returns 0과 1 사이의 의사 난수 (0 <= return < 1)
  */
-export function pseudoRandom(seed: number) {
+export const pseudoRandom = (seed: number) => {
   const value = Math.sin(seed * 12.9898) * 43758.5453;
   return value - Math.floor(value);
-}
+};

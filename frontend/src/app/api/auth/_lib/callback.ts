@@ -5,7 +5,7 @@ import { redirectToLogin } from "./redirect";
 import { redirectWithAuthCookies } from "./response";
 import { runPostLoginFlow } from "./postLogin";
 import { requestGoogleAccessToken, requestGoogleUserEmail, resolveCallbackEnv } from "./oauth";
-import { client } from "@/lib/api";
+import client from "@/lib/api";
 
 function buildLoginFailureHandler(request: NextRequest, returnTo: string) {
   return (reason: string, detail?: unknown) => {

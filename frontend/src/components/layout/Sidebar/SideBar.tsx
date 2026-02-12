@@ -14,7 +14,7 @@ import MedicHeavyIcon from "@/assets/icons/sidebar/ic_medic_heavy.svg";
 import SettingsIcon from "@/assets/icons/sidebar/ic_settings.svg";
 import SettingsHeavyIcon from "@/assets/icons/sidebar/ic_settings_heavy.svg";
 import SideBarNav from "@/components/ui/Nav/SidebarNav";
-import { cn } from "@/utils/style";
+import cn from "@/utils/style";
 
 const primaryNav = [
   {

@@ -1,16 +1,16 @@
 "use client";
 
 import { useCallback } from "react";
-import type { UseExpenseRowSaveParams } from "@/app/(sidebar)/dashboard/_types";
+import { UseExpenseRowSaveParams } from "@/app/(sidebar)/dashboard/_types";
 import { SAVE_ERROR_MESSAGE } from "@/app/(sidebar)/dashboard/_constants";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
-import { patchExpenses, getExpensesByPeriod } from "@/api/dashboardApi";
+import { patchExpenses, getExpensesByPeriod } from "@/app/(sidebar)/dashboard/_api";
 
-export function useExpenseRowSave({
+export const useExpenseRowSave = ({
   getPatchPayload,
   mergeRowsFromServer,
   hasUnsavedChanges,
-}: UseExpenseRowSaveParams) {
+}: UseExpenseRowSaveParams) => {
   const { showToast } = useToast();
 
   const handleSave = useCallback(
@@ -34,4 +34,4 @@ export function useExpenseRowSave({
   );
 
   return { handleSave };
-}
+};

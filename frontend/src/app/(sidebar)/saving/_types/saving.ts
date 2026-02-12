@@ -1,4 +1,5 @@
-import type { components } from "@/types/schema";
+import { components } from "@/types/schema";
+
 export type BankInfo = components["schemas"]["BankInfoResponse"];
 export type Coin = components["schemas"]["CoinResponse"];
 export type BankRanking = components["schemas"]["BankRankingResponse"];

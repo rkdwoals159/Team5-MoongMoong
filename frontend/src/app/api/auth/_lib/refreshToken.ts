@@ -1,9 +1,9 @@
 import { authCookies, redirectToLogin } from "@/app/api/auth/_lib";
 import { requireBaseUrl } from "@/app/api/auth/_utils";
-import { client } from "@/lib/api";
-import type { NextRequest } from "next/server";
+import client from "@/lib/api";
+import { NextRequest } from "next/server";
 
-export async function refreshTokens(request: NextRequest) {
+export default async function refreshTokens(request: NextRequest) {
   const baseEnv = requireBaseUrl();
   if (!baseEnv.ok) {
     return { ok: false, response: baseEnv.response } as const;
@@ -11,7 +11,7 @@ export async function refreshTokens(request: NextRequest) {
 
   const refreshToken = request.cookies.get(authCookies.refresh)?.value;
   if (!refreshToken) {
-    return { ok: false, response: redirectToLogin(request) };
+    return { ok: false, response: redirectToLogin(request), reason: "refresh token is missing" };
   }
 
   const { response: refreshResponse } = await client.POST("/api/auth/refresh", {
@@ -21,7 +21,7 @@ export async function refreshTokens(request: NextRequest) {
   });
 
   if (!refreshResponse.ok) {
-    return { ok: false, response: redirectToLogin(request) };
+    return { ok: false, response: redirectToLogin(request), reason: "refresh token is invalid" };
   }
 
   return { ok: true, headers: refreshResponse.headers } as const;

@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import type { ExpenseData } from "@/app/(sidebar)/dashboard/_types";
+import { ExpenseData } from "@/app/(sidebar)/dashboard/_types";
 import { useExpensePeriodQuery } from "@/app/(sidebar)/dashboard/_hooks";
-import { useSetRangeToUrl } from "@/app/(sidebar)/dashboard/_hooks";
+import { useSetRangeToUrl } from "@/app/(sidebar)/dashboard/_lib";
 import EditableDataTable from "@/app/(sidebar)/dashboard/_components/dashboard-table/EditableDataTable";
 import DateRangePicker from "@/components/common/DateRangePicker/DateRangePicker";
 

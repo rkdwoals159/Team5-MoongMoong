@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { cn } from "@/utils/style";
-import type { NativeDateInputProps } from "./nativeDateInput.type";
+import cn from "@/utils/style";
+import type { NativeDateInputProps } from "./NativeDateInput.type";
 
 export default function NativeDateInput({
   value,
@@ -12,7 +12,6 @@ export default function NativeDateInput({
   ariaLabel,
   onChange,
   className,
-  focusable = true,
 }: NativeDateInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -32,7 +31,7 @@ export default function NativeDateInput({
   return (
     <div
       role="button"
-      tabIndex={focusable ? 0 : -1}
+      tabIndex={0}
       onClick={handleClick}
       className={cn(
         "relative inline-flex min-h-10 min-w-[8rem] cursor-pointer select-none",

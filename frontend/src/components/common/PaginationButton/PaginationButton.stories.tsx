@@ -36,7 +36,7 @@ export const PaginationState: Story = {
           isDisabled={isFirst}
           onClick={() => setPage((prev) => Math.max(1, prev - 1))}
         />
-        <span className="typo-body-m-medium text-text-sub">
+        <span className="typo-body-m-medium text-[var(--color-text-sub)]">
           {page} / {totalPages}
         </span>
         <PaginationButton

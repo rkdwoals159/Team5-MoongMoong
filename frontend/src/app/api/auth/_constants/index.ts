@@ -9,6 +9,7 @@ export const authCookies = {
 };
 
 export const AUTH_DEFAULT_RETURN_TO = "/dashboard";
+export const ONBOARDING_RETURN_TO = "/onBoarding";
 export const AUTH_LOGIN_PATH = "/login";
 export const AUTH_REFRESH_PATH = "/api/auth/refresh";
 export const AUTH_CALLBACK_PATH = "/api/auth/callback";

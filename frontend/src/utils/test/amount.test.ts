@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatAmount, formatAmountPlain, parseAmountPlain } from "@/utils/amount";
+import { formatAmount, formatAmountPlain, parseAmountPlain } from "../amount";
 
 describe("amount utils", () => {
   describe("formatAmount", () => {

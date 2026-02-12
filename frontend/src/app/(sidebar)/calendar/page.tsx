@@ -1,9 +1,9 @@
-import type { CalendarPageProps } from "@/app/(sidebar)/calendar/_types";
+import { CalendarPageProps } from "@/app/(sidebar)/calendar/_types";
 import CalendarGrid from "./_components/CalendarGrid";
 import CalendarHeader from "./_components/CalendarHeader";
 import ExpenseModal from "./_components/modal/ExpenseModal";
 import { getCalendarPageProps } from "@/app/(sidebar)/calendar/_lib/getCalendarProps";
-import { getGroupExpenses, getGroupDailyExpenses } from "@/api/calendarApi";
+import { getGroupExpenses, getGroupDailyExpenses } from "./_api/expenses";
 import PageHeader from "@/components/layout/Header/PageHeader";
 
 export default async function CalendarPage({ searchParams }: CalendarPageProps) {

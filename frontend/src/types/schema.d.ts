@@ -48,22 +48,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/group/participate2": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post: operations["participate2"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/api/group/bank": {
     parameters: {
       query?: never;
@@ -131,7 +115,7 @@ export interface paths {
     get?: never;
     put?: never;
     /**
-     * 결제 실패/취소 처리
+     * 결제 실패 처리
      * @description 사용자가 결제를 중단하거나 프로세스 중 오류가 발생했을 때, 생성된 결제 대기 건을 실패 처리하고 락을 해제합니다.
      */
     post: operations["paymentFailure"];
@@ -244,6 +228,26 @@ export interface paths {
      *     Authorization 헤더로 Access Token, Set-Cookie로 Refresh Token을 반환합니다.
      */
     post: operations["login"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v2/expenses": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 기간 내의 개인 소비내역 반환 V2
+     * @description 시작일/종료일을 기준으로 기간 내 개인 소비내역을 페이징으로 조회합니다.
+     */
+    get: operations["getMemberExpensesByPeriodV2"];
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -529,31 +533,8 @@ export interface components {
        * @enum {string}
        */
       gender?: "M" | "F";
-      /**
-       * @description 생년 월
-       * @example 2026-02
-       */
-      birthDate?: {
-        /** Format: int32 */
-        year?: number;
-        /** @enum {string} */
-        month?:
-          | "JANUARY"
-          | "FEBRUARY"
-          | "MARCH"
-          | "APRIL"
-          | "MAY"
-          | "JUNE"
-          | "JULY"
-          | "AUGUST"
-          | "SEPTEMBER"
-          | "OCTOBER"
-          | "NOVEMBER"
-          | "DECEMBER";
-        /** Format: int32 */
-        monthValue?: number;
-        leapYear?: boolean;
-      };
+      /** @example 2026-02 */
+      birthDate?: string;
       /**
        * @description 거주 시
        * @example 서울시
@@ -582,12 +563,6 @@ export interface components {
         | "END"
         | "INF"
       )[];
-    };
-    ErrorResponse: {
-      code?: string;
-      /** Format: int32 */
-      status?: number;
-      message?: string;
     };
     /** @description 반려동물 생성 응답 */
     PetCreateResponse: {
@@ -641,31 +616,8 @@ export interface components {
        * @enum {string}
        */
       gender?: "M" | "F";
-      /**
-       * @description 생년 월
-       * @example 2026-02
-       */
-      birthDate?: {
-        /** Format: int32 */
-        year?: number;
-        /** @enum {string} */
-        month?:
-          | "JANUARY"
-          | "FEBRUARY"
-          | "MARCH"
-          | "APRIL"
-          | "MAY"
-          | "JUNE"
-          | "JULY"
-          | "AUGUST"
-          | "SEPTEMBER"
-          | "OCTOBER"
-          | "NOVEMBER"
-          | "DECEMBER";
-        /** Format: int32 */
-        monthValue?: number;
-        leapYear?: boolean;
-      };
+      /** @example 2026-02 */
+      birthDate?: string;
       /**
        * @description 거주 시
        * @example 서울시
@@ -698,6 +650,12 @@ export interface components {
         | "INF"
       )[];
     };
+    ErrorResponse: {
+      code?: string;
+      /** Format: int32 */
+      status?: number;
+      message?: string;
+    };
     /** @description 그룹 초대 요청 */
     PetGroupParticipateRequest: {
       /**
@@ -714,13 +672,6 @@ export interface components {
        * @example 1
        */
       crewId?: number;
-    };
-    Member: {
-      /** Format: int64 */
-      id?: number;
-      email: string;
-      name: string;
-      imageUrl?: string;
     };
     /** @description 저금통 생성 요청 */
     BankCreateRequest: {
@@ -914,6 +865,11 @@ export interface components {
        */
       isNew?: boolean;
       /**
+       * @description 그룹 소속 여부
+       * @example true
+       */
+      hasGroup?: boolean;
+      /**
        * Format: int64
        * @description 회원 ID
        * @example 102345
@@ -974,31 +930,8 @@ export interface components {
        * @enum {string|null}
        */
       gender?: "M" | "F" | null;
-      /**
-       * @description 생년월 YYYY-MM 형식 (초대되지 않은 경우 null)
-       * @example 2025-05
-       */
-      birthDate?: {
-        /** Format: int32 */
-        year?: number;
-        /** @enum {string} */
-        month?:
-          | "JANUARY"
-          | "FEBRUARY"
-          | "MARCH"
-          | "APRIL"
-          | "MAY"
-          | "JUNE"
-          | "JULY"
-          | "AUGUST"
-          | "SEPTEMBER"
-          | "OCTOBER"
-          | "NOVEMBER"
-          | "DECEMBER";
-        /** Format: int32 */
-        monthValue?: number;
-        leapYear?: boolean;
-      } | null;
+      /** @example 2026-02 */
+      birthDate?: string;
     };
     /** @description 저금통 목표 금액 변경 요청 */
     BankUpdateRequest: {
@@ -1017,57 +950,6 @@ export interface components {
        * @example 1500000
        */
       target?: number;
-    };
-    /** @description 소비내역 단건 응답 DTO */
-    MemberExpenseResponse: {
-      /**
-       * Format: int64
-       * @description 소비내역 ID
-       * @example 1
-       */
-      expenseId?: number;
-      /**
-       * Format: date
-       * @description 소비 날짜
-       * @example 2026-01-20
-       */
-      spentAt?: string;
-      /**
-       * @description 사용 내역
-       * @example 감기약 및 처방약 구매
-       */
-      usage?: string;
-      /**
-       * Format: int64
-       * @description 소비 금액
-       * @example 15000
-       */
-      cost?: number;
-      /**
-       * @description 대분류 카테고리
-       * @example 병원비
-       */
-      mainCategory?: string;
-      /**
-       * @description 소분류 카테고리
-       * @example 약/처방
-       */
-      subCategory?: string;
-      /**
-       * @description 메모
-       * @example 정기 구매
-       */
-      memo?: string;
-      /**
-       * Format: date-time
-       * @description 수정일자
-       * @example 2026-01-20T14:32:15.123+09:00
-       */
-      modifiedAt?: string;
-    };
-    MemberExpensesUpsertResponse: {
-      /** @description 생성, 수정된 소비 내역 목록 */
-      expenses?: components["schemas"]["MemberExpenseResponse"][];
     };
     MemberExpenseUpsertRequest: {
       /**
@@ -1119,6 +1001,81 @@ export interface components {
       expenses?: components["schemas"]["MemberExpenseUpsertRequest"][];
       /** @description 삭제할 소비내역 ID 목록 */
       deletedIds?: number[];
+    };
+    /** @description 소비내역 단건 응답 DTO */
+    MemberExpenseResponse: {
+      /**
+       * Format: int64
+       * @description 소비내역 ID
+       * @example 1
+       */
+      expenseId?: number;
+      /**
+       * Format: date
+       * @description 소비 날짜
+       * @example 2026-01-20
+       */
+      spentAt?: string;
+      /**
+       * @description 사용 내역
+       * @example 감기약 및 처방약 구매
+       */
+      usage?: string;
+      /**
+       * Format: int64
+       * @description 소비 금액
+       * @example 15000
+       */
+      cost?: number;
+      /**
+       * @description 대분류 카테고리
+       * @example 병원비
+       */
+      mainCategory?: string;
+      /**
+       * @description 소분류 카테고리
+       * @example 약/처방
+       */
+      subCategory?: string;
+      /**
+       * @description 메모
+       * @example 정기 구매
+       */
+      memo?: string;
+      /**
+       * Format: date-time
+       * @description 수정일자
+       * @example 2026-01-20T14:32:15.123+09:00
+       */
+      modifiedAt?: string;
+    };
+    /** @description 멤버 소비내역 기간 조회 응답 V2 */
+    MemberExpensesPeriodResponseV2: {
+      /**
+       * Format: int64
+       * @description 조회된 소비내역 총 금액
+       * @example 45000
+       */
+      total?: number;
+      /**
+       * Format: int64
+       * @description 페이지 번호
+       * @example 1
+       */
+      page?: number;
+      /**
+       * Format: int64
+       * @description 페이지 사이즈
+       * @example 10
+       */
+      size?: number;
+      /**
+       * @description 다음 페이지 존재 유무
+       * @example true
+       */
+      hasNext?: boolean;
+      /** @description 조회한 소비 내역 목록 */
+      expenses?: components["schemas"]["MemberExpenseResponse"][];
     };
     /** @description 반려동물 정보 응답 */
     PetReadResponse: {
@@ -1172,31 +1129,8 @@ export interface components {
        * @enum {string}
        */
       gender?: "M" | "F";
-      /**
-       * @description 생년 월
-       * @example 2026-02
-       */
-      birthDate?: {
-        /** Format: int32 */
-        year?: number;
-        /** @enum {string} */
-        month?:
-          | "JANUARY"
-          | "FEBRUARY"
-          | "MARCH"
-          | "APRIL"
-          | "MAY"
-          | "JUNE"
-          | "JULY"
-          | "AUGUST"
-          | "SEPTEMBER"
-          | "OCTOBER"
-          | "NOVEMBER"
-          | "DECEMBER";
-        /** Format: int32 */
-        monthValue?: number;
-        leapYear?: boolean;
-      };
+      /** @example 2026-02 */
+      birthDate?: string;
       /**
        * @description 거주 시
        * @example 서울시
@@ -1228,6 +1162,13 @@ export interface components {
         | "END"
         | "INF"
       )[];
+    };
+    Member: {
+      /** Format: int64 */
+      id?: number;
+      email: string;
+      name: string;
+      imageUrl?: string;
     };
     /** @description 회원 정보 응답 */
     MemberInfoResponse: {
@@ -1762,29 +1703,6 @@ export interface operations {
       };
     };
   };
-  participate2: {
-    parameters: {
-      query: {
-        member: components["schemas"]["Member"];
-        groupId: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json;charset=UTF-8": components["schemas"]["PetGroupParticipateResponse"];
-        };
-      };
-    };
-  };
   findBankInfo: {
     parameters: {
       query?: never;
@@ -2081,10 +1999,7 @@ export interface operations {
         };
         content?: never;
       };
-      /**
-       * @description - 요청 데이터(orderId, amount 등) 형식이 올바르지 않음
-       *     - 이미 처리 완료된 결제 건에 대한 실패 요청
-       */
+      /** @description - 요청 데이터(orderId, amount 등) 형식이 올바르지 않음 */
       400: {
         headers: {
           [name: string]: unknown;
@@ -2267,13 +2182,11 @@ export interface operations {
     };
     responses: {
       /** @description 생성, 수정, 삭제 성공 */
-      200: {
+      204: {
         headers: {
           [name: string]: unknown;
         };
-        content: {
-          "application/json;charset=UTF-8": components["schemas"]["MemberExpensesUpsertResponse"];
-        };
+        content?: never;
       };
       /** @description 인증되지 않은 사용자 */
       401: {
@@ -2406,6 +2319,57 @@ export interface operations {
       };
       /** @description 서버 오류 */
       500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  getMemberExpensesByPeriodV2: {
+    parameters: {
+      query: {
+        /**
+         * @description 조회 시작일 (yyyy-MM-dd)
+         * @example 2026-01-01
+         */
+        startDate: string;
+        /**
+         * @description 조회 종료일 (yyyy-MM-dd)
+         * @example 2026-01-31
+         */
+        endDate: string;
+        /**
+         * @description 메인 카테고리 필터 (선택)
+         * @example 사료/간식
+         */
+        mainCategory?: string;
+        /** @description Zero-based page index (0..N) */
+        page?: number;
+        /** @description The size of the page to be returned */
+        size?: number;
+        /** @description Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
+        sort?: string[];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 개인 소비 내역 반환 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["MemberExpensesPeriodResponseV2"];
+        };
+      };
+      /** @description 시작일은 종료일보다 늦을 수 없습니다. */
+      400: {
         headers: {
           [name: string]: unknown;
         };

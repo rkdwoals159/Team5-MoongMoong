@@ -5,14 +5,15 @@ import {
   DEFAULT_OFFSET_Y,
   DEFAULT_STYLE,
 } from "@/app/(sidebar)/saving/_constants";
-import type { UseTooltipStyleParams, TooltipStyle } from "@/app/(sidebar)/saving/_types";
-export function useTooltipStyle({
+import { UseTooltipStyleParams, TooltipStyle } from "@/app/(sidebar)/saving/_types";
+
+export const useTooltipStyle = ({
   sceneRef,
   toolTip,
   offsetX = DEFAULT_OFFSET_X,
   padding = DEFAULT_PADDING,
   offsetY = DEFAULT_OFFSET_Y,
-}: UseTooltipStyleParams) {
+}: UseTooltipStyleParams) => {
   const [tooltipStyle, setTooltipStyle] = useState<TooltipStyle>(DEFAULT_STYLE);
 
   useEffect(() => {
@@ -29,4 +30,4 @@ export function useTooltipStyle({
   }, [offsetX, offsetY, padding, sceneRef, toolTip.visible, toolTip.x, toolTip.y]);
 
   return tooltipStyle;
-}
+};

@@ -11,11 +11,11 @@ export default function CalendarGrid({ days, weeks, selectedDate, monthParam }: 
         {labels.map((label, index) => (
           <div
             key={label}
-            className={`${"flex h-[48px] items-center border border-gray-50 bg-gray-50 px-350 py-300"} ${
+            className={`${"flex h-[48px] items-center border border-(--color-gray-50) bg-(--color-gray-50) px-350 py-300"} ${
               index === 0 ? "rounded-tl-600" : ""
             } ${index === labels.length - 1 ? "rounded-tr-600" : ""}`}
           >
-            <span className="typo-body-m-bold text-text-base">{label}</span>
+            <span className="typo-body-m-bold text-(--color-text-base)">{label}</span>
           </div>
         ))}
       </div>

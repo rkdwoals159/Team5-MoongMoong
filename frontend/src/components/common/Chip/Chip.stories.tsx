@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 import Chip from "./Chip";
-import type { ChipMajorColor } from "./chip.type";
+import type { ChipMajorColor } from "./Chip.type";
 
 const meta = {
   title: "Common/Chip",

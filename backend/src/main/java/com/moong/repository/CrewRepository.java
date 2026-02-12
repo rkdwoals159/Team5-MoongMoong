@@ -21,8 +21,6 @@ public interface CrewRepository extends Repository<Crew, Long> {
                 .orElseThrow(() -> new BusinessException(ErrorCode.CREW_NOT_FOUND));
     }
 
-    boolean existsByMember_Id(long memberId);
-
     @Query("""
             select c from Crew c
             join fetch c.petGroup pg
@@ -39,5 +37,4 @@ public interface CrewRepository extends Repository<Crew, Long> {
     long countByPetGroup_Id(long petGroupId);
 
     void deleteById(long id);
-
 }

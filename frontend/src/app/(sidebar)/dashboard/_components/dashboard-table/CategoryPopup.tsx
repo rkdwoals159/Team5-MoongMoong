@@ -6,7 +6,8 @@ import {
   MAIN_CATEGORIES,
   SUB_CATEGORIES,
 } from "@/app/(sidebar)/dashboard/_constants";
-import type { CategoryPopupProps } from "@/app/(sidebar)/dashboard/_types";
+import { CategoryPopupProps } from "@/app/(sidebar)/dashboard/_types";
+
 /**
  * 카테고리 선택 팝업
  * @param position - 팝업의 위치 (top, left)

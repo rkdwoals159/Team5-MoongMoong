@@ -1,4 +1,4 @@
-import type { ConfirmPaymentResponse, OrderIdResponse } from "@/api/types/savingApi.type";
+import { components } from "@/types/schema";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 
 type TossPaymentsInstance = Awaited<ReturnType<typeof loadTossPayments>>;
@@ -20,4 +20,5 @@ export type TossPaymentFailResponse = {
   orderId: string;
 };
 
-export type { OrderIdResponse, ConfirmPaymentResponse };
+export type OrderIdResponse = Required<components["schemas"]["CoinPaymentCreateResponse"]>;
+export type ConfirmPaymentResponse = Required<components["schemas"]["CoinCreateResponse"]>;

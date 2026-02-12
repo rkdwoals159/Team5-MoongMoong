@@ -15,8 +15,7 @@ export function toRiskLineData(input: AnnualDiseases): RiskLineRow[] {
   const { startYear = new Date().getFullYear(), statistics } = input;
   if (!statistics || statistics.length === 0) return [];
   // 기준 길이(모든 disease가 동일 길이라는 가정. 다르면 최소 길이로 맞춤)
-  const lengths = statistics.map((s) => s.ratios?.length ?? 0).filter((l) => l > 0);
-  const len = lengths.length > 0 ? Math.min(...lengths) : 0;
+  const len = Math.min(...statistics.map((s) => s.ratios?.length ?? 0));
 
   const rows: RiskLineRow[] = Array.from({ length: len }, (_, i) => {
     const year = startYear + i;

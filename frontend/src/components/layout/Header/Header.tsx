@@ -1,6 +1,6 @@
-import type { HeaderProps } from "./header.type";
+import { HeaderProps } from "./Header.type";
 import HeaderUserActions from "./HeaderUserActions";
-import { cn } from "@/utils/style";
+import cn from "@/utils/style";
 
 const Header = ({ className, ...rest }: HeaderProps) => {
   return (

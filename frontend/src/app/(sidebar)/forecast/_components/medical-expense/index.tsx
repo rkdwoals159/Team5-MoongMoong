@@ -1,4 +1,4 @@
-import type { MedicalExpenseProps } from "@/app/(sidebar)/forecast/_types";
+import { MedicalExpenseProps } from "@/app/(sidebar)/forecast/_types";
 import MedicalExpenseHeader from "./MedicalExpenseHeader";
 import MedicalExpenseTabs from "./MedicalExpenseTabs";
 import MedicalExpenseTreatments from "./MedicalExpenseTreatments";

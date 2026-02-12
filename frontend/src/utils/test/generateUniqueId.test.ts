@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { generateUniqueId } from "@/utils/generateUniqueId";
+import { generateUniqueId } from "../generateUniqueId";
 
 describe("generateUniqueId utils", () => {
   describe("crypto.randomUUID가 사용 가능할 때", () => {

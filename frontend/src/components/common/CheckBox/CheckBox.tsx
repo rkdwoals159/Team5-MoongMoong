@@ -1,5 +1,5 @@
-import { cn } from "@/utils/style";
-import type { CheckboxProps } from "./checkBox.type";
+import cn from "@/utils/style";
+import type { CheckboxProps } from "./CheckBox.type";
 
 const Checkbox = ({ isChecked = false, className, disabled, ...rest }: CheckboxProps) => {
   return (

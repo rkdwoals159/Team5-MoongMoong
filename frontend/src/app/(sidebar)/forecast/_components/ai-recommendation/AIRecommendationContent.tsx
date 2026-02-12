@@ -1,4 +1,4 @@
-import { getAIRecommendation } from "@/api/forecastApi";
+import { getAIRecommendation } from "@/app/(sidebar)/forecast/_api";
 
 /**
  * AI 의사 권장사항 컴포넌트

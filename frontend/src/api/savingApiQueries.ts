@@ -1,4 +1,4 @@
-import { client } from "@/lib/api";
+import client from "@/lib/api";
 import type { BankInfoResponse, CoinsResponse } from "@/api/types/savingApi.type";
 // 저금통 정보 조회
 export async function getBankInfo(): Promise<BankInfoResponse | null> {

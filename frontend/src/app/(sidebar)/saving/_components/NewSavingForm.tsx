@@ -3,7 +3,8 @@ import AmountInput from "@/components/common/Input/AmountInput";
 import { TEXT } from "@/app/(sidebar)/saving/_constants";
 import SavingModalCard from "@/app/(sidebar)/saving/_components/modals/SavingModalCard";
 import { useAmountInput } from "@/app/(sidebar)/saving/_hooks/useAmountInput";
-import type { NewSavingFormProps } from "@/app/(sidebar)/saving/_types";
+import { NewSavingFormProps } from "@/app/(sidebar)/saving/_types";
+
 export default function NewSavingForm({ onSubmit, onCancel, isSubmitting }: NewSavingFormProps) {
   const { value, numericValue, handleChange } = useAmountInput();
   const isValid = numericValue > 0;

@@ -1,7 +1,8 @@
 import { DISEASE_CODE_SHORT_NAMES } from "@/app/(sidebar)/forecast/_constants";
 import Link from "next/link";
-import { cn } from "@/utils/style";
-import type { MedicalExpenseTabsProps } from "@/app/(sidebar)/forecast/_types/medicalExpense";
+import cn from "@/utils/style";
+import { MedicalExpenseTabsProps } from "@/app/(sidebar)/forecast/_types/medicalExpense";
+
 const MedicalExpenseTabs = ({ diseaseList, selectedDisease }: MedicalExpenseTabsProps) => {
   return (
     <div className={tabScrollContainerClasses}>

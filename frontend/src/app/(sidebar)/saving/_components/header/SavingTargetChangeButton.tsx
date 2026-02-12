@@ -7,7 +7,7 @@ import ClientModal from "@/components/ui/Modal/ClientModal";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
 import SavingTargetModal from "@/app/(sidebar)/saving/_components/modals/SavingTargetModal";
 import { DISABLED_TOOLTIP_MESSAGE } from "@/app/(sidebar)/saving/_constants";
-import { updateSavingTarget } from "@/api/savingApiActions";
+import { updateSavingTarget } from "@/app/(sidebar)/saving/_api";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 
 export default function SavingTargetChangeButton() {

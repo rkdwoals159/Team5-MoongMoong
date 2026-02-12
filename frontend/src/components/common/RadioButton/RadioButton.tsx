@@ -1,5 +1,5 @@
-import { cn } from "@/utils/style";
-import type { RadioButtonProps } from "./radioButton.type";
+import cn from "@/utils/style";
+import type { RadioButtonProps } from "./RadioButton.type";
 
 const RadioButton = ({ isChecked = false, className, ...rest }: RadioButtonProps) => {
   const checked = rest.checked ?? isChecked;
@@ -30,8 +30,8 @@ const outerClasses = "inline-flex items-center justify-center w-6 h-6";
 
 const ringClasses = "inline-flex items-center justify-center w-4 h-4 rounded-full border";
 
-const ringUncheckedClasses = "border-gray-500";
+const ringUncheckedClasses = "border-[var(--color-gray-500)]";
 
-const ringCheckedClasses = "border-yellow-500";
+const ringCheckedClasses = "border-[var(--color-yellow-500)]";
 
-const dotClasses = "w-1.5 h-1.5 rounded-full bg-yellow-500";
+const dotClasses = "w-1.5 h-1.5 rounded-full bg-[var(--color-yellow-500)]";

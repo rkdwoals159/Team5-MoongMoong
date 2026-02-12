@@ -1,18 +1,27 @@
+import { cookies } from "next/headers";
+
 import createClient from "openapi-fetch";
 import type { paths } from "@schema";
+import { ACCESS_COOKIE } from "@/app/api/auth/_constants";
 
-export const defaultHeaders = {
+const defaultHeaders = {
   "Content-Type": "application/json",
-  Authorization: process.env.HEADER_AUTHORIZATION,
 };
 
-export const client = createClient<paths>({
+const client = createClient<paths>({
   baseUrl: process.env.BASE_API_URL,
   headers: defaultHeaders,
-  fetch: (input: RequestInfo | URL, init?: RequestInit) => {
+  fetch: async (input: RequestInfo | URL, init?: RequestInit) => {
     const hasCache = init?.cache;
+    const mergedHeaders = new Headers(input instanceof Request ? input.headers : undefined);
+    const cookieStore = await cookies();
+    const token = cookieStore.get(ACCESS_COOKIE)?.value;
+    if (token && !mergedHeaders.has("Authorization")) {
+      mergedHeaders.set("Authorization", `Bearer ${token}`);
+    }
     return fetch(input, {
       ...init,
+      headers: mergedHeaders,
 
       // 기본은 auto no cache(개발환경에서는 캐싱 안되고
       // 프로덕션경에서는 정적 프리렌더로 판단되면 next build 시 1회만 fetch)
@@ -21,3 +30,5 @@ export const client = createClient<paths>({
     });
   },
 });
+
+export default client;

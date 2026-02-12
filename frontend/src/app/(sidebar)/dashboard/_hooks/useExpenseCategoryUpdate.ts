@@ -1,16 +1,17 @@
 import { useCallback } from "react";
-import type {
+import {
   EditableExpenseRow,
   UseExpenseCategoryUpdateParams,
 } from "@/app/(sidebar)/dashboard/_types";
+
 /**
  * 카테고리 팝업에서 선택된 항목을 행 데이터에 반영하는 훅
  */
-export function useExpenseCategoryUpdate({
+export const useExpenseCategoryUpdate = ({
   selectedCell,
   displayInitialRows,
   updateCellByLocalId,
-}: UseExpenseCategoryUpdateParams) {
+}: UseExpenseCategoryUpdateParams) => {
   const handleCategorySelect = useCallback(
     (mainCategory: string, subCategory?: string) => {
       if (!selectedCell) return;
@@ -22,4 +23,4 @@ export function useExpenseCategoryUpdate({
   );
 
   return { handleCategorySelect };
-}
+};

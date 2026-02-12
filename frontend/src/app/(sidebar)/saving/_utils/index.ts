@@ -1,2 +1,2 @@
-export * from "./savingUtil";
-export * from "./piggyBankUtil";
+export * from "./saving.util";
+export * from "./piggyBank.util";

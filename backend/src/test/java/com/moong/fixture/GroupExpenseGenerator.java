@@ -3,7 +3,7 @@ package com.moong.fixture;
 import com.moong.domain.entity.GroupExpense;
 import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.entity.PetGroup;
-import com.moong.repository.groupexpense.GroupExpenseRepository;
+import com.moong.repository.GroupExpenseRepository;
 import org.springframework.stereotype.Component;
 
 @Component

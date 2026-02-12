@@ -1,6 +1,7 @@
 import LoadingIcon from "@/assets/components/loading_icon.svg";
 import { useMemo } from "react";
-import type { LoadingProps } from "./loading.type";
+import { LoadingProps } from "./Loading.type";
+
 /**
  * Loading 컴포넌트의 props 타입
  * @type {LoadingProps}

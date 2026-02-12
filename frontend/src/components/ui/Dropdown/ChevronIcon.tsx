@@ -1,5 +1,5 @@
 import ChevronDownIcon from "@/assets/components/ic_arrow_down.svg";
-import { cn } from "@/utils/style";
+import cn from "@/utils/style";
 
 type ChevronIconProps = {
   isOpen: boolean;

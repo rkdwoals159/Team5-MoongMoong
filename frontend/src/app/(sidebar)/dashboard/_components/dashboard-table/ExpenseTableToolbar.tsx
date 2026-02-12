@@ -1,9 +1,9 @@
 "use client";
 
-import type { ExpenseTableToolbarProps } from "@/app/(sidebar)/dashboard/_types";
+import { ExpenseTableToolbarProps } from "@/app/(sidebar)/dashboard/_types";
 import { formatAmount } from "@/utils/amount";
 import Button from "@/components/common/Button/Button";
-import { cn } from "@/utils/style";
+import cn from "@/utils/style";
 
 /**
  * 지출 테이블 하단 툴바

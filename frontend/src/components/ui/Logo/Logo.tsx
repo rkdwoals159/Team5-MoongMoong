@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import LogoImage from "@/assets/icons/sidebar/logo_home.svg";
-import { cn } from "@/utils/style";
+import cn from "@/utils/style";
 
 interface LogoProps {
   href?: string;
@@ -29,7 +29,7 @@ const Logo = ({
       href={href}
       aria-label={ariaLabel}
       className={cn(
-        "inline-flex items-center rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500",
+        "inline-flex items-center rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-blue-500)]",
         className,
       )}
     >

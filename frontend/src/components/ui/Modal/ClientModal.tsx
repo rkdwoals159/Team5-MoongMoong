@@ -2,8 +2,8 @@
 
 import { useState, useRef, useCallback } from "react";
 import { useOutsideClick } from "@/hooks/useOutsideClick";
-import { cn } from "@/utils/style";
-import type { ClientModalProps } from "./clientModal.type";
+import cn from "@/utils/style";
+import type { ClientModalProps } from "./ClientModal.type";
 
 export default function ClientModal({
   open,

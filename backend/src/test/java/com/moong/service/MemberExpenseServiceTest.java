@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.moong.domain.entity.GroupExpense;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.entity.Pet;
@@ -14,9 +13,9 @@ import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpenseResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
+import com.moong.dto.response.memberexpense.MemberExpensesUpsertResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
-import com.moong.repository.groupexpense.GroupExpenseRepository;
 import com.moong.repository.memberexpense.MemberExpenseRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,9 +32,6 @@ class MemberExpenseServiceTest extends BaseServiceTest {
 
     @Autowired
     private MemberExpenseRepository memberExpenseRepository;
-
-    @Autowired
-    private GroupExpenseRepository groupExpenseRepository;
 
     @DisplayName("기간 조회: 최신 소비일 우선, 동일 소비일이면 수정일 최신순으로 정렬된다")
     @Test
@@ -201,90 +197,74 @@ class MemberExpenseServiceTest extends BaseServiceTest {
         );
     }
 
-    @DisplayName("소비 내역 생성, 수정, 삭제 요청 시 GroupExpense도 함께 반영한다.")
+    @DisplayName("소비 내역 생성, 수정, 삭제 요청을 모두 반영한다.")
     @Test
     void upsertMemberExpenses() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         Member member = memberGenerator.generateSaved("멤버1");
-        Pet pet = petGenerator.generateSaved();
-        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
-        crewGenerator.generateSaved(petGroup, member);
-        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(
-                now.minusDays(2L).toLocalDate(),
-                "류몽민 닭갈비",
-                100,
-                "식비",
-                "소분류",
-                "메모",
-                now.minusDays(2L),
-                member
-        );
-        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(
-                now.minusDays(1L).toLocalDate(),
-                "항아리 수제비",
-                200,
-                "식비",
-                "소분류",
-                "메모",
-                now.minusDays(1L),
-                member
-        );
-        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(
-                now.toLocalDate(),
-                "우럭 회",
-                300,
-                "식비",
-                "소분류",
-                "메모",
-                now,
-                member
-        );
-        List<MemberExpense> memberExpenses = List.of(memberExpense1, memberExpense2, memberExpense3);
+        List<MemberExpense> memberExpenses = memberExpenseGenerator.generatedListSaved(member);
         MemberExpense updateTarget = memberExpenses.get(0);
         List<MemberExpense> deleteTargets = memberExpenses.subList(1, memberExpenses.size());
-        List<Long> deleteTargetIds = deleteTargets.stream().map(MemberExpense::getId).toList();
-        memberExpenses.forEach(me -> groupExpenseGenerator.generateSaved(petGroup, me, null));
-        MemberExpenseUpsertRequest newRequest = new MemberExpenseUpsertRequest(
-                true,
-                null,
-                now.toLocalDate(),
-                "신규 약값",
-                15000,
-                "병원비",
-                "약",
-                "정기"
-        );
-        MemberExpenseUpsertRequest updateRequest = new MemberExpenseUpsertRequest(
-                false,
-                updateTarget.getId(),
-                now.toLocalDate(),
-                "수정 사료",
-                45000,
-                "식비",
-                "사료",
-                "할인"
-        );
-        MemberExpensesUpsertRequest totalRequest = new MemberExpensesUpsertRequest(
-                List.of(newRequest, updateRequest),
-                deleteTargetIds
-        );
+        int expectedNewExpenseCount = 1;
+        MemberExpenseUpsertRequest newExpenseRequest =
+                new MemberExpenseUpsertRequest(
+                        true,
+                        null,
+                        now,
+                        "감기약 및 처방약 구매",
+                        15000,
+                        "병원비",
+                        "약/처방",
+                        "정기 구매"
+                );
+        MemberExpenseUpsertRequest updateExpenseRequest =
+                new MemberExpenseUpsertRequest(
+                        false,
+                        updateTarget.getId(),
+                        now,
+                        "사료 대용량 구매",
+                        4500000,
+                        "식비",
+                        "사료",
+                        "대용량 할인"
+                );
+        List<MemberExpenseUpsertRequest> upsertRequests = List.of(newExpenseRequest, updateExpenseRequest);
 
-        memberExpenseService.upsertMemberExpenses(member, totalRequest);
-
-        List<MemberExpense> afterMemberExpenses = memberExpenseRepository.findAllByMemberId(member.getId());
-        List<GroupExpense> afterGroupExpenses = groupExpenseRepository.findAllByPetGroupId(petGroup.getId());
-        List<Long> afterMemberExpenseIds = afterMemberExpenses.stream().map(MemberExpense::getId).toList();
-        List<Long> afterGroupExpenseMemberIds = afterGroupExpenses.stream()
-                .map(ge -> ge.getMemberExpense().getId())
+        List<Long> deletedIds = deleteTargets.stream()
+                .map(MemberExpense::getId)
                 .toList();
+        MemberExpensesUpsertRequest request = new MemberExpensesUpsertRequest(
+                upsertRequests,
+                deletedIds
+        );
+        List<Long> beforeIds = memberExpenses.stream()
+                .map(MemberExpense::getId)
+                .toList();
+
+        MemberExpensesUpsertResponse response = memberExpenseService.upsertMemberExpenses(
+                member,
+                request
+        );
+
+        List<MemberExpense> after = memberExpenseRepository.findAllByMemberId(member.getId());
+        List<Long> afterIds = after.stream()
+                .map(MemberExpense::getId)
+                .toList();
+        List<Long> newIds = afterIds.stream()
+                .filter(id -> !beforeIds.contains(id))
+                .toList();
+
         assertAll(
-                () -> assertThat(afterMemberExpenseIds).hasSize(2),
-                () -> assertThat(afterMemberExpenseIds).doesNotContainAnyElementsOf(deleteTargetIds),
-                () -> assertThat(afterGroupExpenses).hasSize(2),
-                () -> assertThat(afterGroupExpenseMemberIds)
-                        .containsAll(afterMemberExpenseIds),
-                () -> assertThat(afterGroupExpenseMemberIds)
-                        .doesNotContainAnyElementsOf(deleteTargetIds)
+                () -> assertThat(response.expenses()).hasSize(upsertRequests.size()),
+                () -> assertThat(after.stream().map(MemberExpense::getId).toList())
+                        .doesNotContainAnyElementsOf(deletedIds),
+                () -> assertThat(response.expenses())
+                        .anySatisfy(e -> {
+                            assertThat(e.expenseId()).isEqualTo(updateExpenseRequest.expenseId());
+                            assertThat(e.cost()).isEqualTo(updateExpenseRequest.cost());
+                        }),
+                () -> assertThat(newIds.size()).isEqualTo(expectedNewExpenseCount)
         );
     }
+
 }

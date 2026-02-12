@@ -2,7 +2,7 @@
 
 import { Component, ErrorInfo } from "react";
 import DefaultErrorFallback from "./DefaultErrorFallback";
-import type { ErrorBoundaryProps, ErrorBoundaryState, FallbackProps } from "./errorBoundary.type";
+import { ErrorBoundaryProps, ErrorBoundaryState, FallbackProps } from "./ErrorBoundary.type";
 import { isDifferentArray } from "@/utils/isDifferentArray";
 
 const initialState: ErrorBoundaryState = { error: null };

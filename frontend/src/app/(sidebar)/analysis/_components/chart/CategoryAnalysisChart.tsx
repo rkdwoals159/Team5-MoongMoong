@@ -5,8 +5,8 @@ import { Pie, PieChart, ResponsiveContainer, Tooltip as RechartsTooltip } from "
 import AnalysisChartEmpty from "./AnalysisChartEmpty";
 import AnalysisChartTooltip from "./AnalysisChartTooltip";
 import renderPieChartLabel from "./PieChartLabel";
-import { CHART_COLORS_MAP } from "@/app/(sidebar)/analysis/_constants";
-import type { CategoryAnalysisChartProps } from "@/app/(sidebar)/analysis/_types/componentPropsType.type";
+import { CHART_COLORS_MAP } from "../../_constants";
+import { CategoryAnalysisChartProps } from "../../_types/componentPropsType.type";
 
 export default function CategoryAnalysisChart({ data }: CategoryAnalysisChartProps) {
   if (!data.length) {

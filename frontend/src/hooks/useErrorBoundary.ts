@@ -8,7 +8,7 @@ import { useState, useCallback } from "react";
  * 이 훅은 에러를 state에 저장 → 리렌더 → 렌더링 중 throw 하여
  * ErrorBoundary가 잡을 수 있게 한다.
  */
-export function useErrorBoundary() {
+export const useErrorBoundary = () => {
   const [error, setError] = useState<Error | null>(null);
 
   if (error != null) {
@@ -20,4 +20,4 @@ export function useErrorBoundary() {
   }, []);
 
   return { showErrorBoundary };
-}
+};

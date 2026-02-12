@@ -5,7 +5,7 @@ import Button from "@/components/common/Button/Button";
 import ClientModal from "@/components/ui/Modal/ClientModal";
 import { formatAmountPlain } from "@/utils/amount";
 import { AMOUNT_PRESETS } from "@/app/(sidebar)/saving/_constants";
-import type { SavingModalProps } from "@/app/(sidebar)/saving/_types";
+import { SavingModalProps } from "@/app/(sidebar)/saving/_types";
 import { updateRankings } from "@/app/(sidebar)/saving/_lib";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
 import { ANONYMOUS } from "@tosspayments/tosspayments-sdk";

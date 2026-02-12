@@ -7,7 +7,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import type { DiseaseCode, RiskLineRow, SelectedDisease } from "@/app/(sidebar)/forecast/_types";
+import { DiseaseCode, RiskLineRow, SelectedDisease } from "@/app/(sidebar)/forecast/_types";
 import { DISEASE_CODE_FULL_NAMES } from "@/app/(sidebar)/forecast/_constants";
 const tooltipStyles = {
   backgroundColor: "var(--color-white-100)",

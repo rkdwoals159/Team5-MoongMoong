@@ -14,8 +14,4 @@ public class CrewService {
     public Crew getByMemberId(long memberId) {
         return crewRepository.getByMemberId(memberId);
     }
-
-    public boolean existsByMemberId(long memberId) {
-        return crewRepository.existsByMember_Id(memberId);
-    }
 }

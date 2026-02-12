@@ -1,14 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { useExpenseRowsState } from "@/app/(sidebar)/dashboard/_hooks/useExpenseRowsState";
 import { useExpenseRowSave } from "@/app/(sidebar)/dashboard/_hooks/useExpenseRowSave";
 import { useExpenseCategoryPopup } from "@/app/(sidebar)/dashboard/_hooks/useExpenseCategoryPopup";
 import { useExpenseCategoryUpdate } from "@/app/(sidebar)/dashboard/_hooks/useExpenseCategoryUpdate";
-import { useExpenseTableColumns } from "@/app/(sidebar)/dashboard/_hooks/UseExpenseTableColumns";
-import { useExpenseTableSelection } from "@/app/(sidebar)/dashboard/_hooks/useExpenseTableSelection";
-import { useExpenseTableSort } from "@/app/(sidebar)/dashboard/_hooks/useExpenseTableSort";
-import type { ExpenseData, UseExpenseTableReturn } from "@/app/(sidebar)/dashboard/_types";
+import { useExpenseTableColumns } from "@/app/(sidebar)/dashboard/_hooks/useExpenseTableColumns";
+import { ExpenseData, SelectedCell, UseExpenseTableReturn } from "@/app/(sidebar)/dashboard/_types";
+
 export const useExpenseTable = (initialData: ExpenseData[]): UseExpenseTableReturn => {
+  const [selectedCell, setSelectedCell] = useState<SelectedCell>(null);
+
   const {
     displayInitialRows,
     rowKey,
@@ -23,12 +25,6 @@ export const useExpenseTable = (initialData: ExpenseData[]): UseExpenseTableRetu
     totalExpense,
   } = useExpenseRowsState(initialData);
 
-  const { sortedRows, sortConfig, handleSort } = useExpenseTableSort(displayInitialRows);
-
-  const { selectedCell, setSelectedCell, onCellClick, handleKeyDown } = useExpenseTableSelection(
-    sortedRows.length,
-  );
-
   const { handleSave } = useExpenseRowSave({
     getPatchPayload,
     mergeRowsFromServer,
@@ -39,7 +35,7 @@ export const useExpenseTable = (initialData: ExpenseData[]): UseExpenseTableRetu
     useExpenseCategoryPopup(setSelectedCell);
 
   const columns = useExpenseTableColumns({
-    displayInitialRows: sortedRows,
+    displayInitialRows,
     updateCellByLocalId,
     updateAllCells,
     selectedCount,
@@ -48,12 +44,12 @@ export const useExpenseTable = (initialData: ExpenseData[]): UseExpenseTableRetu
 
   const { handleCategorySelect } = useExpenseCategoryUpdate({
     selectedCell,
-    displayInitialRows: sortedRows,
+    displayInitialRows,
     updateCellByLocalId,
   });
 
   return {
-    sortedRows,
+    displayInitialRows,
     rowKey,
     columns,
     selectedCell,
@@ -67,9 +63,5 @@ export const useExpenseTable = (initialData: ExpenseData[]): UseExpenseTableRetu
     hasUnsavedChanges,
     selectedCount,
     totalExpense,
-    sortConfig,
-    handleSort,
-    onCellClick,
-    onKeyDown: handleKeyDown,
   };
 };

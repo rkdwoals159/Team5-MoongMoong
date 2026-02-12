@@ -1,8 +1,8 @@
 "use client";
-import type { ImageProps } from "./image.type";
+import { ImageProps } from "./Image.type";
 import { useCallback, useState } from "react";
 import NextImage from "next/image";
-import { cn } from "@/utils/style";
+import cn from "@/utils/style";
 
 const Image = ({
   src,
@@ -40,16 +40,16 @@ const Image = ({
         alt={alt}
         width={width}
         height={height}
-        className={cn("block size-full rounded-600 object-cover", className ?? "")}
+        className={cn("block size-full rounded-[var(--radius-600)] object-cover", className ?? "")}
         {...rest}
       />
       {canInteract && isHovered && (
-        <div className="absolute inset-0 flex items-center justify-center rounded-600 bg-black-60">
+        <div className="absolute inset-0 flex items-center justify-center rounded-[var(--radius-600)] bg-[var(--color-black-60)]">
           <button
             type="button"
             aria-label={overlayText}
             onClick={onImageChange}
-            className="h-10 rounded-300 border border-gray-200 bg-white-100 px-400 py-250 text-gray-800 typo-body-m-bold cursor-pointer"
+            className="h-10 rounded-[var(--radius-300)] border border-[var(--color-gray-200)] bg-[var(--color-white-100)] px-[var(--spacing-400)] py-[var(--spacing-250)] text-[var(--color-gray-800)] typo-body-m-bold cursor-pointer"
           >
             {overlayText}
           </button>

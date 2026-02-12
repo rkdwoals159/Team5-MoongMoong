@@ -9,14 +9,19 @@ import {
   parseMonthParam,
 } from "@/utils/date";
 import { buildCalendarDays } from "@/app/(sidebar)/calendar/_lib/buildCalendarDays";
-import type {
+import {
   CalendarContext,
   CalendarGridProps,
   CalendarHeaderProps,
   CalendarSearchParams,
   GroupExpenseMap,
 } from "@/app/(sidebar)/calendar/_types";
-import type { CalendarViewContext } from "@/app/(sidebar)/calendar/_types";
+
+type CalendarViewContext = CalendarContext & {
+  todayKey: string;
+  monthParam: string;
+  isCurrentMonth: boolean;
+};
 
 //캘린더 페이지 전체 속성 반환
 export function getCalendarPageProps(
@@ -42,7 +47,7 @@ export function getCalendarPageProps(
  * @param today - 오늘 날짜
  * @returns 월 내비게이션 파라미터
  */
-function buildMonthNavParams({ viewYear, viewMonth, today }: CalendarContext) {
+const buildMonthNavParams = ({ viewYear, viewMonth, today }: CalendarContext) => {
   const prevMonthDate = new Date(viewYear, viewMonth - 1, 1);
   const nextMonthDate = new Date(viewYear, viewMonth + 1, 1);
 
@@ -51,9 +56,11 @@ function buildMonthNavParams({ viewYear, viewMonth, today }: CalendarContext) {
     nextMonthParam: formatMonthParam(nextMonthDate.getFullYear(), nextMonthDate.getMonth()),
     todayMonthParam: formatMonthParam(today.getFullYear(), today.getMonth()),
   };
-}
+};
 
-function resolveCalendarContext(resolvedSearchParams: CalendarSearchParams): CalendarViewContext {
+const resolveCalendarContext = (
+  resolvedSearchParams: CalendarSearchParams,
+): CalendarViewContext => {
   const today = new Date();
   const todayKey = formatDateKey(today);
   const parsedMonth = parseMonthParam(resolvedSearchParams.month);
@@ -69,20 +76,20 @@ function resolveCalendarContext(resolvedSearchParams: CalendarSearchParams): Cal
     monthParam,
     isCurrentMonth: isSameMonth(viewYear, viewMonth, today),
   };
-}
+};
 
-function resolveSelectedDateParam(
+const resolveSelectedDateParam = (
   resolvedSearchParams: CalendarSearchParams,
   context: CalendarViewContext,
-) {
+) => {
   const selectedValue = resolvedSearchParams.selected ?? null;
   const selectedParam = isValidDateParam(selectedValue ?? undefined) ? selectedValue : null;
   return selectedParam && isDateInMonth(selectedParam, context.viewYear, context.viewMonth)
     ? selectedParam
     : null;
-}
+};
 
-function buildHeaderProps(context: CalendarViewContext): CalendarHeaderProps {
+const buildHeaderProps = (context: CalendarViewContext): CalendarHeaderProps => {
   const { prevMonthParam, nextMonthParam, todayMonthParam } = buildMonthNavParams(context);
 
   return {
@@ -93,29 +100,29 @@ function buildHeaderProps(context: CalendarViewContext): CalendarHeaderProps {
     todayMonthParam,
     todayDateParam: context.todayKey,
   };
-}
+};
 
-function buildGridProps(
+const buildGridProps = (
   context: CalendarViewContext,
   expenseMap: GroupExpenseMap,
   selectedDate: string | null,
-): CalendarGridProps {
+): CalendarGridProps => {
   const { days, weeks } = buildCalendarDays(context.viewYear, context.viewMonth, expenseMap);
   return { days, weeks, selectedDate, monthParam: context.monthParam };
-}
+};
 
-function buildModalProps(
+const buildModalProps = (
   resolvedSearchParams: CalendarSearchParams,
   monthParam: string,
   selectedDate: string | null,
-) {
+) => {
   return {
     isModalOpen: resolvedSearchParams.open === "1",
     selectedDate,
     modalTitle: selectedDate ? formatFullDateLabel(selectedDate) : "",
     closeHref: buildCloseHref(monthParam, selectedDate),
   };
-}
+};
 
 /**
  * 닫기 링크 빌드
@@ -123,7 +130,7 @@ function buildModalProps(
  * @param selectedDate - 선택된 날짜
  * @returns 닫기 링크
  */
-function buildCloseHref(monthParam: string, selectedDate: string | null) {
+const buildCloseHref = (monthParam: string, selectedDate: string | null) => {
   const closeParams = new URLSearchParams();
   closeParams.set("month", monthParam);
 
@@ -132,4 +139,4 @@ function buildCloseHref(monthParam: string, selectedDate: string | null) {
   }
 
   return `?${closeParams.toString()}`;
-}
+};

@@ -2,7 +2,7 @@
 
 import { useId, useState } from "react";
 import InfoIcon from "@/assets/icons/forecast/ic_info.svg";
-import type { InfoTooltipProps } from "./infoTooltip.type";
+import type { InfoTooltipProps } from "./InfoTooltip.type";
 const InfoTooltip = ({ description, iconSize = 20 }: InfoTooltipProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const tooltipId = useId();

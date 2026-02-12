@@ -2,8 +2,9 @@
 
 import ArrowLeftIcon from "@/assets/icons/components/arrow-left-medium.svg";
 import ArrowRightIcon from "@/assets/icons/components/arrow-right-medium.svg";
-import { useCalendarNavigation } from "@/app/(sidebar)/calendar/_hooks/useCalendarNavigation";
-import type { CalendarHeaderProps } from "@/app/(sidebar)/calendar/_types";
+import useCalendarNavigation from "@/app/(sidebar)/calendar/_hooks/useCalendarNavigation";
+import { CalendarHeaderProps } from "@/app/(sidebar)/calendar/_types";
+
 export default function CalendarHeader({
   label,
   isCurrentMonth,
@@ -26,30 +27,30 @@ export default function CalendarHeader({
         <button
           type="button"
           className={
-            "flex size-[40px] items-center justify-center rounded-300 border border-border-normal bg-white-100 cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-gray-300 focus-visible:outline-offset-2"
+            "flex size-[40px] items-center justify-center rounded-300 border border-(--color-border-normal) bg-(--color-white-100) cursor-pointer transition-colors focus-visible:outline-2 focus-visible:outline-(--color-gray-300) focus-visible:outline-offset-2"
           }
           aria-label="이전 달"
           onClick={handlePrev}
         >
-          <ArrowLeftIcon className="h-5 w-5 text-text-base" aria-hidden />
+          <ArrowLeftIcon className="h-5 w-5 text-(--color-text-base)" aria-hidden />
         </button>
-        <span className="typo-title-l-bold text-text-base">{label}</span>
+        <span className="typo-title-l-bold text-(--color-text-base)">{label}</span>
         <button
           type="button"
           className={
-            "flex size-[40px] items-center justify-center rounded-300 border border-border-normal bg-white-100 pointer-events-auto transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-gray-300 focus-visible:outline-offset-2"
+            "flex size-[40px] items-center justify-center rounded-300 border border-(--color-border-normal) bg-(--color-white-100) pointer-events-auto transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-(--color-gray-300) focus-visible:outline-offset-2"
           }
           aria-label="다음 달"
           onClick={handleNext}
         >
-          <ArrowRightIcon className="h-5 w-5 text-text-base" aria-hidden />
+          <ArrowRightIcon className="h-5 w-5 text-(--color-text-base)" aria-hidden />
         </button>
       </div>
       <button
         type="button"
         onClick={handleToday}
         disabled={isCurrentMonth}
-        className="rounded-250 border border-border-normal bg-white-100 px-300 py-200 text-text-base transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-gray-300 focus-visible:outline-offset-2 disabled:cursor-default disabled:text-text-sub"
+        className="rounded-250 border border-(--color-border-normal) bg-(--color-white-100) px-300 py-200 text-(--color-text-base) transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-(--color-gray-300) focus-visible:outline-offset-2 disabled:cursor-default disabled:text-(--color-text-sub)"
       >
         <span className="typo-body-m-medium">이번 달</span>
       </button>

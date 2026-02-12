@@ -3,9 +3,9 @@
 import ArrowLeftIcon from "@/assets/icons/components/arrow-left-medium.svg";
 import ArrowRightIcon from "@/assets/icons/components/arrow-right-medium.svg";
 import { formatDateWithWeekday, shiftByUnit, clampDate } from "@/utils/date";
-import { cn } from "@/utils/style";
+import cn from "@/utils/style";
 import NativeDateInput from "./NativeDateInput";
-import type { DateRangePickerProps } from "./dateRangePicker.type";
+import type { DateRangePickerProps } from "./DateRangePicker.type";
 
 export default function DateRangePicker({
   startDate,

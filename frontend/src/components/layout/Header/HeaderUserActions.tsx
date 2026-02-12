@@ -3,15 +3,20 @@ import NotificationIcon from "@/assets/components/ic_notification.svg";
 import ChevronIcon from "@/components/ui/Dropdown/ChevronIcon";
 import { useState, useRef } from "react";
 import ClientModal from "@/components/ui/Modal/ClientModal";
+import { useRouter } from "next/navigation";
 import ProfileModal from "./ProfileModal";
 
 const HeaderUserActions = () => {
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLDivElement>(null);
-
-  const handleLogout = () => {
-    // TODO: 실제 로그아웃 로직 구현
-    console.log("로그아웃");
+  const router = useRouter();
+  const handleLogout = async () => {
+    setIsOpen(false);
+    const response = await fetch("/api/auth/logout", { method: "POST" });
+    if (response.ok) {
+      router.replace("/login");
+      router.refresh();
+    }
   };
 
   return (
