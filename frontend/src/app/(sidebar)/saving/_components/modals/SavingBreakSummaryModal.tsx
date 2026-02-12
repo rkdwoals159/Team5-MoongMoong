@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Button from "@/components/common/Button/Button";
-import { SavingBreakSummaryModalProps } from "@/app/(sidebar)/saving/_types";
+import type { SavingBreakSummaryModalProps } from "@/app/(sidebar)/saving/_types";
 import { useCountUp } from "@/app/(sidebar)/saving/_hooks/useCountUp";
 import { ANIMATION_DELAY } from "@/app/(sidebar)/saving/_constants";
 import ConfettiEffect from "@/components/common/ConfettiEffect/ConfettiEffect";

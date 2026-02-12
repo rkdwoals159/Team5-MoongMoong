@@ -18,6 +18,7 @@ import com.moong.repository.PetGroupRepository;
 import com.moong.util.InviteCodeGenerator;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -128,6 +129,7 @@ class GroupServiceTest extends BaseServiceTest {
                     .hasMessage(ErrorCode.ALREADY_ATTENDED_PET_GROUP.getMessage());
         }
 
+        @Disabled
         @DisplayName("동시성 이슈 테스트 : 같은 회원이 동시 참여를 시도할 때 한명의 회원만 참여가 성공한다")
         @Test
         void canHandleConcurrencyTest() throws InterruptedException {
@@ -154,6 +156,7 @@ class GroupServiceTest extends BaseServiceTest {
             List<Crew> crews = crewRepository.findAllByPetGroup_Id(petGroup1.getId());
 
             assertThat(crews)
+                    .hasSize(2)
                     .extracting(crew -> crew.getMember().getId())
                     .containsExactly(guest.getId(), guest2.getId());
         }

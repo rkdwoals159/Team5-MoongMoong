@@ -1,9 +1,9 @@
 import { useState, useMemo, useCallback } from "react";
-import {
+import type {
   AnnualDiseaseRiskProps,
   SelectedDisease,
 } from "@/app/(sidebar)/forecast/_types/annualDiseaseRisk";
-import { DiseaseCode } from "@/app/(sidebar)/forecast/_types/disease";
+import type { DiseaseCode } from "@/app/(sidebar)/forecast/_types/disease";
 import {
   toRiskLineData,
   assignColors,
@@ -11,7 +11,10 @@ import {
 } from "@/app/(sidebar)/forecast/_utils";
 import { DEFAULT_SELECT_COUNT } from "@/app/(sidebar)/forecast/_constants";
 
-const useAnnualDiseaseRisk = ({ diseaseList, statisticsData }: AnnualDiseaseRiskProps) => {
+/**
+ * 연간 질병 위험률 선택/해제 훅
+ */
+export function useAnnualDiseaseRisk({ diseaseList, statisticsData }: AnnualDiseaseRiskProps) {
   const [selectedDiseases, setSelectedDiseases] = useState<SelectedDisease[]>(() =>
     assignColors(diseaseList.slice(0, DEFAULT_SELECT_COUNT)),
   );
@@ -47,6 +50,4 @@ const useAnnualDiseaseRisk = ({ diseaseList, statisticsData }: AnnualDiseaseRisk
     handleCancel,
     handleSelect,
   };
-};
-
-export default useAnnualDiseaseRisk;
+}

@@ -35,3 +35,6 @@ export type UseExpenseCategoryPopupReturn = {
   ) => void;
   handleClosePopup: () => void;
 };
+
+/** 정렬 가능한 컬럼 (selected 제외) */
+export type SortableExpenseAccessor = "spentAt" | "usage" | "cost" | "mainCategory" | "memo";

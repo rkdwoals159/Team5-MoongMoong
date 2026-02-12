@@ -4,18 +4,23 @@ import GraphDegradeIcon from "@/assets/icons/dashboard/img_graph_degrade.svg";
 import GraphRisingIcon from "@/assets/icons/dashboard/img_graph_rising.svg";
 import GraphStraightIcon from "@/assets/icons/dashboard/img_graph_straight.svg";
 
-export const getLabelNoData = (petName: string) => ({
-  totalExpense: `${petName}의 총 지출을 지난달과 비교해 보여드려요`,
-  medicalExpense: `${petName}의 의료비 지출을 지난달과 비교해 보여드려요`,
-});
+export function getLabelNoData(petName: string) {
+  return {
+    totalExpense: `${petName}의 총 지출을 지난달과 비교해 보여드려요`,
+    medicalExpense: `${petName}의 의료비 지출을 지난달과 비교해 보여드려요`,
+  };
+}
 
-export const getLabelWithData = (petName: string) => ({
-  totalExpense: `지난달에 비해 ${petName}의 총 지출이`,
-  medicalExpense: `지난달에 비해 ${petName}의 의료비 지출이`,
-});
+export function getLabelWithData(petName: string) {
+  return {
+    totalExpense: `지난달에 비해 ${petName}의 총 지출이`,
+    medicalExpense: `지난달에 비해 ${petName}의 의료비 지출이`,
+  };
+}
 
-export const getSummaryValue = (data: number | null): string =>
-  data === null ? "-" : `${Math.abs(data)}% ${data < 0 ? "줄었어요" : "늘었어요"}`;
+export function getSummaryValue(data: number | null): string {
+  return data === null ? "-" : `${Math.abs(data)}% ${data < 0 ? "줄었어요" : "늘었어요"}`;
+}
 
 export type SummaryDataState = "noData" | "decrease" | "increase";
 
@@ -38,5 +43,6 @@ const SUMMARY_ICON_MAP: Record<
   },
 };
 
-export const getSummaryIcon = (variant: "totalExpense" | "medicalExpense", data: number | null) =>
-  createElement(SUMMARY_ICON_MAP[variant][getSummaryDataState(data)]);
+export function getSummaryIcon(variant: "totalExpense" | "medicalExpense", data: number | null) {
+  return createElement(SUMMARY_ICON_MAP[variant][getSummaryDataState(data)]);
+}

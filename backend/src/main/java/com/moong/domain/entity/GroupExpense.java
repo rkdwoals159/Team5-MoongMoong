@@ -46,4 +46,8 @@ public class GroupExpense extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private PetGroup petGroup;
+
+    public GroupExpense(MemberExpense memberExpense, PetGroup petGroup) {
+        this(null, memberExpense, petGroup);
+    }
 }

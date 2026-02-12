@@ -1,7 +1,7 @@
 "use client";
 
 import { CSSProperties } from "react";
-import { createConfettiPieces } from "./ConfettiEffect.util";
+import { createConfettiPieces } from "./confettiEffectUtil";
 
 type ConfettiEffectProps = {
   count: number;

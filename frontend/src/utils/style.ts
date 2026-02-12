@@ -1,4 +1,4 @@
-export default function cn(...classes: (string | boolean | null | undefined)[]) {
+export function cn(...classes: (string | boolean | null | undefined)[]) {
   return classes
     .filter(Boolean)
     .map((c) => String(c).trim())

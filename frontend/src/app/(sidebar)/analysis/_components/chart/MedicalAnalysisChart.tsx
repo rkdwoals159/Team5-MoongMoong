@@ -6,8 +6,8 @@ import type { PieSectorShapeProps } from "recharts";
 import AnalysisChartEmpty from "@/app/(sidebar)/analysis/_components/chart/AnalysisChartEmpty";
 import AnalysisChartTooltip from "@/app/(sidebar)/analysis/_components/chart/AnalysisChartTooltip";
 import renderPieChartLabel from "@/app/(sidebar)/analysis/_components/chart/PieChartLabel";
-import { CHART_COLORS_MAP } from "../../_constants";
-import { MedicalAnalysisChartProps } from "../../_types/componentPropsType.type";
+import { CHART_COLORS_MAP } from "@/app/(sidebar)/analysis/_constants";
+import type { MedicalAnalysisChartProps } from "@/app/(sidebar)/analysis/_types/componentPropsType.type";
 
 export default function MedicalAnalysisChart({ data }: MedicalAnalysisChartProps) {
   if (!data.length) {

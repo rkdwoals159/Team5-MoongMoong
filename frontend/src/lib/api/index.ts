@@ -8,7 +8,7 @@ const defaultHeaders = {
   "Content-Type": "application/json",
 };
 
-const client = createClient<paths>({
+export const client = createClient<paths>({
   baseUrl: process.env.BASE_API_URL,
   headers: defaultHeaders,
   fetch: async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -30,5 +30,3 @@ const client = createClient<paths>({
     });
   },
 });
-
-export default client;

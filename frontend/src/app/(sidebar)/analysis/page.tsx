@@ -2,7 +2,12 @@ import { Suspense } from "react";
 import AnalysisHeader from "./_components/AnalysisHeader";
 import AnalysisChartsSkeleton from "./_components/skeleton/AnalysisChartsSkeleton";
 import AnalysisTableSkeleton from "./_components/skeleton/AnalysisTableSkeleton";
-import { getCategoryAnalysis, getGroupExpenses, getMedicalAnalysis, getPetInfo } from "./_api";
+import {
+  getCategoryAnalysis,
+  getGroupExpenses,
+  getMedicalAnalysis,
+  getPetInfo,
+} from "@/api/analysisApi";
 import { resolveAnalysisRange } from "./_lib/analysisRange";
 import AnalysisTable from "./_components/table/AnalysisTable";
 import {

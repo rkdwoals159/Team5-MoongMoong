@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { DrawerProps } from "./Drawer.type";
-import cn from "@/utils/style";
+import type { DrawerProps } from "./drawer.type";
+import { cn } from "@/utils/style";
 
 const Drawer = ({
   href,

@@ -1,4 +1,4 @@
-import { Coin } from "@/app/(sidebar)/saving/_types";
+import type { Coin } from "@/app/(sidebar)/saving/_types";
 import usePiggyBank from "@/app/(sidebar)/saving/_hooks/usePiggyBank";
 import { useEffect, useRef, useMemo } from "react";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";

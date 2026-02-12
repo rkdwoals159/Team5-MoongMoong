@@ -1,9 +1,9 @@
 import { authCookies, redirectToLogin } from "@/app/api/auth/_lib";
 import { requireBaseUrl } from "@/app/api/auth/_utils";
-import client from "@/lib/api";
-import { NextRequest } from "next/server";
+import { client } from "@/lib/api";
+import type { NextRequest } from "next/server";
 
-export default async function refreshTokens(request: NextRequest) {
+export async function refreshTokens(request: NextRequest) {
   const baseEnv = requireBaseUrl();
   if (!baseEnv.ok) {
     return { ok: false, response: baseEnv.response } as const;

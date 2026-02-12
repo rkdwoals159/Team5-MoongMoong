@@ -2,7 +2,7 @@ import CloseIcon from "@/assets/icons/components/close.svg";
 import Chip from "@/components/common/Chip/Chip";
 import Modal from "@/components/ui/Modal/Modal";
 import DataTable from "@/components/ui/DataTable/DataTable";
-import type { DataTableColumn } from "@/components/ui/DataTable/DataTable.type";
+import type { DataTableColumn } from "@/components/ui/DataTable/dataTable.type";
 import { getChipColorForCategory } from "@/app/(sidebar)/calendar/_lib/buildCalendarDays";
 import { formatAmount, formatAmountPlain } from "@/utils/amount";
 import type {
@@ -70,17 +70,17 @@ export default function ExpenseModal({ open, title, items, closeHref }: ExpenseM
           href={closeHref}
           draggable={false}
           aria-label="닫기"
-          className="flex size-[40px] items-center justify-center rounded-300 transition-colors hover:bg-(--color-gray-50) focus-visible:outline-2 focus-visible:outline-(--color-gray-300) focus-visible:outline-offset-2"
+          className="flex size-[40px] items-center justify-center rounded-300 transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-gray-300 focus-visible:outline-offset-2"
         >
           <CloseIcon className="h-[18px] w-[18px] text-gray-500" aria-hidden />
         </Link>
       </div>
       <div className="flex flex-col gap-900 px-850">
-        <h2 className="typo-headline-s-bold text-(--color-text-base)">{title}</h2>
+        <h2 className="typo-headline-s-bold text-text-base">{title}</h2>
         <div className="flex flex-col gap-600">
           <div className={`min-h-[364px] ${isScrollable ? "max-h-[364px] overflow-y-auto" : ""}`}>
             <DataTable
-              className="border-(--color-gray-50) rounded-600"
+              className="border-gray-50 rounded-600"
               columns={columns}
               data={items}
               rowKey={(row) =>

@@ -2,8 +2,7 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
 import DateRangePicker from "./DateRangePicker";
-import { DateRangePickerProps } from "./DateRangePicker.type";
-
+import type { DateRangePickerProps } from "./dateRangePicker.type";
 const meta = {
   title: "Common/DateRangePicker",
   component: DateRangePicker,

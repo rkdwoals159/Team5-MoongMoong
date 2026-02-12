@@ -1,6 +1,6 @@
 import SavingClient from "./_components/SavingClient";
 import MakeNewSaving from "./_components/MakeNewSaving";
-import { getBankInfo, getBankCoins } from "./_api";
+import { getBankInfo, getBankCoins } from "@/api/savingApiQueries";
 
 const SavingPage = async () => {
   const bankInfo = await getBankInfo();

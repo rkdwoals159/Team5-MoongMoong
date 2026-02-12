@@ -1,4 +1,4 @@
-import { ChartPayloadType } from "../_types";
+import type { ChartPayloadType } from "@/app/(sidebar)/analysis/_types";
 
 export function getChartLabelFromPayload(payload: ChartPayloadType | undefined) {
   if (!payload) {

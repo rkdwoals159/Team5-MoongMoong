@@ -3,8 +3,7 @@
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/Header/PageHeader";
 import DateRangePicker from "@/components/common/DateRangePicker/DateRangePicker";
-import { AnalysisHeaderProps } from "@/app/(sidebar)/analysis/_types/componentPropsType.type";
-
+import type { AnalysisHeaderProps } from "@/app/(sidebar)/analysis/_types/componentPropsType.type";
 export default function AnalysisHeader({ startDate, endDate }: AnalysisHeaderProps) {
   const router = useRouter();
 

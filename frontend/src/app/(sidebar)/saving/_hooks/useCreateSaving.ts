@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createNewSaving } from "@/app/(sidebar)/saving/_api";
+import { createNewSaving } from "@/api/savingApiActions";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 
-export const useCreateSaving = () => {
+export function useCreateSaving() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showToast } = useToast();
@@ -41,4 +41,4 @@ export const useCreateSaving = () => {
     createSaving,
     isSubmitting,
   };
-};
+}

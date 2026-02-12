@@ -1,5 +1,7 @@
-import { ChipMajorColor } from "@/components/common/Chip/Chip.type";
-
+import {
+  CATEGORY_COLOR_MAP as SHARED_CATEGORY_COLOR_MAP,
+  DEFAULT_CATEGORY_COLOR as SHARED_DEFAULT_CATEGORY_COLOR,
+} from "@/constants/colorTables";
 /**
  * 메인 카테고리 목록
  */
@@ -24,15 +26,6 @@ export const SUB_CATEGORIES: Record<string, string[]> = {
 /**
  * 카테고리별 Chip 색상 매핑
  */
-export const CATEGORY_COLOR_MAP: Record<string, ChipMajorColor> = {
-  미용: "green",
-  의류: "purple",
-  장난감: "blue",
-  의료비: "red",
-  영양제: "turquoise",
-  사료: "orange",
-  간식: "yellow",
-  기타: "gray",
-};
+export const CATEGORY_COLOR_MAP = SHARED_CATEGORY_COLOR_MAP;
 
-export const DEFAULT_CATEGORY_COLOR = "gray";
+export const DEFAULT_CATEGORY_COLOR = SHARED_DEFAULT_CATEGORY_COLOR;

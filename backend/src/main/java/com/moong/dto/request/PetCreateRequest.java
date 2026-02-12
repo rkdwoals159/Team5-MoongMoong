@@ -20,7 +20,7 @@ public record PetCreateRequest(
         @Schema(description = "성별", example = "M")
         Gender gender,
 
-        @Schema(description = "생년 월", example = "2026-02")
+        @Schema(implementation = String.class, example = "2026-02", pattern = "yyyy-MM")
         YearMonth birthDate,
 
         @Schema(description = "거주 시", example = "서울시")

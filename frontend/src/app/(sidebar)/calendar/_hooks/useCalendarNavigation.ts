@@ -1,25 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import type { UseCalendarNavigationParams } from "@/app/(sidebar)/calendar/_types";
 
-type UseCalendarNavigationParams = {
-  isCurrentMonth: boolean;
-  prevMonthParam: string;
-  nextMonthParam: string;
-  todayMonthParam: string;
-  todayDateParam: string;
-};
-
-const buildQuery = (monthParam: string, selected?: string) => {
-  const params = new URLSearchParams();
-  params.set("month", monthParam);
-  if (selected) {
-    params.set("selected", selected);
-  }
-  return `?${params.toString()}`;
-};
-
-export default function useCalendarNavigation({
+export function useCalendarNavigation({
   isCurrentMonth,
   prevMonthParam,
   nextMonthParam,
@@ -28,23 +12,36 @@ export default function useCalendarNavigation({
 }: UseCalendarNavigationParams) {
   const router = useRouter();
 
-  const handleNavigate = (monthParam: string) => {
+  function handleNavigate(monthParam: string) {
     router.push(buildQuery(monthParam));
-  };
+  }
 
-  const handlePrev = () => handleNavigate(prevMonthParam);
-  const handleNext = () => handleNavigate(nextMonthParam);
+  function handlePrev() {
+    handleNavigate(prevMonthParam);
+  }
+  function handleNext() {
+    handleNavigate(nextMonthParam);
+  }
 
-  const handleToday = () => {
+  function handleToday() {
     if (isCurrentMonth) {
       return;
     }
     router.push(buildQuery(todayMonthParam, todayDateParam));
-  };
+  }
 
   return {
     handlePrev,
     handleNext,
     handleToday,
   };
+}
+
+function buildQuery(monthParam: string, selected?: string) {
+  const params = new URLSearchParams();
+  params.set("month", monthParam);
+  if (selected) {
+    params.set("selected", selected);
+  }
+  return `?${params.toString()}`;
 }

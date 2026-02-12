@@ -1,5 +1,4 @@
-import { components } from "@/types/schema";
-
+import type { components } from "@/types/schema";
 export type DiseaseCode =
   | "DER"
   | "MUS"

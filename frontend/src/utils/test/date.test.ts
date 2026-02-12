@@ -12,7 +12,7 @@ import {
   shiftDateByDays,
   shiftDateByMonths,
   clampDate,
-} from "../date";
+} from "@/utils/date";
 
 describe("date utils", () => {
   describe("formatDateKey", () => {

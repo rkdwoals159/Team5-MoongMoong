@@ -8,6 +8,7 @@ import java.time.Duration;
 public record FacadeLoginResponse(
         boolean isInvited,
         boolean isNew,
+        boolean hasGroup,
         long memberId,
         String name,
         String imageUrl,
@@ -16,6 +17,7 @@ public record FacadeLoginResponse(
 ) {
 
     public static FacadeLoginResponse invitedMember(
+            boolean hasGroup,
             MemberReadResponse memberReadResponse,
             Pet invitedPet,
             JwtTokenResponse jwtTokenResponse
@@ -23,6 +25,7 @@ public record FacadeLoginResponse(
         return new FacadeLoginResponse(
                 true,
                 memberReadResponse.isNew(),
+                hasGroup,
                 memberReadResponse.member().getId(),
                 memberReadResponse.member().getName(),
                 memberReadResponse.member().getImageUrl(),
@@ -32,12 +35,14 @@ public record FacadeLoginResponse(
     }
 
     public static FacadeLoginResponse nonInvitedMember(
+            boolean hasGroup,
             MemberReadResponse memberReadResponse,
             JwtTokenResponse jwtTokenResponse
     ) {
         return new FacadeLoginResponse(
                 false,
                 memberReadResponse.isNew(),
+                hasGroup,
                 memberReadResponse.member().getId(),
                 memberReadResponse.member().getName(),
                 memberReadResponse.member().getImageUrl(),

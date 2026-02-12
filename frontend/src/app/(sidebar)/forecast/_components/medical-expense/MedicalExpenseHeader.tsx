@@ -1,5 +1,4 @@
-import { MedicalExpenseHeaderProps } from "@/app/(sidebar)/forecast/_types";
-
+import type { MedicalExpenseHeaderProps } from "@/app/(sidebar)/forecast/_types";
 const MedicalExpenseHeader = ({
   subtitle = "2026년 기준, 주의가 필요한 질병 안내",
   title = "올해 주의 질병과 평균 의료비",

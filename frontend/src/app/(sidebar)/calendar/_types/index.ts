@@ -1,5 +1,4 @@
-import { components } from "@/types/schema";
-
+import type { components } from "@/types/schema";
 export type ExpenseCategory =
   | "미용"
   | "의료비"
@@ -76,4 +75,18 @@ export type CalendarContext = {
   today: Date;
   viewYear: number;
   viewMonth: number;
+};
+
+export type UseCalendarNavigationParams = {
+  isCurrentMonth: boolean;
+  prevMonthParam: string;
+  nextMonthParam: string;
+  todayMonthParam: string;
+  todayDateParam: string;
+};
+
+export type CalendarViewContext = CalendarContext & {
+  todayKey: string;
+  monthParam: string;
+  isCurrentMonth: boolean;
 };

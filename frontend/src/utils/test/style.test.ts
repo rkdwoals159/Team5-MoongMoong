@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import cn from "../style";
+import { cn } from "@/utils/style";
 
 describe("style utils", () => {
   describe("cn 함수", () => {

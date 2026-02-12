@@ -1,5 +1,5 @@
-import { SelectChipProps } from "./SelectChip.type";
-import cn from "@/utils/style";
+import type { SelectChipProps } from "./selectChip.type";
+import { cn } from "@/utils/style";
 
 const SelectChip = ({ label, code, onSelect, className, ...rest }: SelectChipProps) => {
   const classes = [baseClasses, className ?? ""];

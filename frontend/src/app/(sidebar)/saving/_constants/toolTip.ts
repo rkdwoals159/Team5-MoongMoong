@@ -1,4 +1,4 @@
-import { TooltipStyle } from "../_types";
+import type { TooltipStyle } from "@/app/(sidebar)/saving/_types";
 
 export const DEFAULT_STYLE: TooltipStyle = {
   left: 0,

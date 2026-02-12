@@ -1,8 +1,7 @@
 import PaginationButton from "@/components/common/PaginationButton/PaginationButton";
 import TreatmentCard from "@/app/(sidebar)/forecast/_components/medical-expense/TreatmentCard";
 import Link from "next/link";
-import { MedicalExpenseTreatmentsProps } from "@/app/(sidebar)/forecast/_types/medicalExpense";
-
+import type { MedicalExpenseTreatmentsProps } from "@/app/(sidebar)/forecast/_types/medicalExpense";
 const MedicalExpenseTreatments = ({
   visibleTreatments,
   totalPages,

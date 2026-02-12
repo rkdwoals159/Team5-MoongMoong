@@ -5,6 +5,7 @@ import com.moong.domain.entity.MemberExpense;
 import com.moong.repository.memberexpense.MemberExpenseRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -101,5 +102,13 @@ public class MemberExpenseGenerator {
         );
 
         return List.of(memberExpense1, memberExpense2, memberExpense3);
+    }
+
+    public List<MemberExpense> generatedListSaved(List<MemberExpense> memberExpenses) {
+        List<MemberExpense> generatedMemberExpenses = new ArrayList<>();
+        for (MemberExpense memberExpense : memberExpenses) {
+            generatedMemberExpenses.add(memberExpenseRepository.save(memberExpense));
+        }
+        return generatedMemberExpenses;
     }
 }

@@ -17,7 +17,7 @@ import com.moong.domain.enums.Gender;
 import com.moong.repository.BankRepository;
 import com.moong.repository.CoinRepository;
 import com.moong.repository.CrewRepository;
-import com.moong.repository.GroupExpenseRepository;
+import com.moong.repository.groupexpense.GroupExpenseRepository;
 import com.moong.repository.GroupMedicalAdviceRepository;
 import com.moong.repository.MemberRepository;
 import com.moong.repository.PetGroupRepository;

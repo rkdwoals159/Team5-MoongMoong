@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { ExpenseData, UseExpensePeriodQueryReturn } from "@/app/(sidebar)/dashboard/_types";
-import { getExpensesByPeriod } from "@/app/(sidebar)/dashboard/_api";
+import type { ExpenseData, UseExpensePeriodQueryReturn } from "@/app/(sidebar)/dashboard/_types";
+import { getExpensesByPeriod } from "@/api/dashboardApi";
 import { resolveDashboardRange } from "@/app/(sidebar)/dashboard/_lib";
 import { EXPENSES_ERROR_MESSAGE } from "@/app/(sidebar)/dashboard/_constants";
 import { useToast } from "@/components/ui/Toast/ToastProvider";

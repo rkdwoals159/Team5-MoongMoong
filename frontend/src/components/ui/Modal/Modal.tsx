@@ -1,6 +1,6 @@
 import Link from "next/link";
-import type { ModalProps } from "./Modal.type";
-import cn from "@/utils/style";
+import type { ModalProps } from "./modal.type";
+import { cn } from "@/utils/style";
 
 export default function Modal({
   open,

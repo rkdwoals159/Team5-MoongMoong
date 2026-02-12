@@ -1,4 +1,4 @@
-import { getDiseaseRanking, getDiseaseStatistics } from "@/app/(sidebar)/forecast/_api";
+import { getDiseaseRanking, getDiseaseStatistics } from "@/api/forecastApi";
 import AnnualDiseaseRiskClient from "./AnnualDiseaseRiskClient";
 
 const AnnualDiseaseRiskContent = async () => {
