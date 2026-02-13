@@ -7,6 +7,8 @@ import com.moong.client.categorize.ExpenseCategorizeClient;
 import com.moong.domain.entity.GroupExpense;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.enums.MainCategoryType;
+import com.moong.domain.enums.SubCategoryType;
 import com.moong.dto.command.MemberExpenseReadCommand;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.memberexpense.CategorizeRequest;
@@ -41,9 +43,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class MemberExpenseService {
-
-    //TODO: ENUM 타입으로 분리
-    private static final String MEDICAL_CATEGORY_NAME = "의료";
 
     private final ExpenseCategorizeClient expenseCategorizeClient;
     private final MemberExpenseRepository memberExpenseRepository;
@@ -102,12 +101,12 @@ public class MemberExpenseService {
         long currentTotal = getMonthlyTotal(member.getId(), currentMonth);
         long previousMedicalTotal = getMainCategoryMonthlyTotal(
                 member.getId(),
-                MEDICAL_CATEGORY_NAME,
+                MainCategoryType.MEDICAL_EXPENSES,
                 lastMonth
         );
         long currentMedicalTotal = getMainCategoryMonthlyTotal(
                 member.getId(),
-                MEDICAL_CATEGORY_NAME,
+                MainCategoryType.MEDICAL_EXPENSES,
                 currentMonth
         );
 
@@ -132,7 +131,7 @@ public class MemberExpenseService {
         );
     }
 
-    private long getMainCategoryMonthlyTotal(long memberId, String mainCategory, YearMonth month) {
+    private long getMainCategoryMonthlyTotal(long memberId, MainCategoryType mainCategory, YearMonth month) {
         return memberExpenseRepository.sumCostByMemberIdAndMainCategoryAndPeriod(
                 memberId,
                 mainCategory,
@@ -181,10 +180,12 @@ public class MemberExpenseService {
                 ).exceptionally(exception -> fallBackResponse)
                 .join();
 
+        MainCategoryType mainCategory = MainCategoryType.fromDescription(result.getResult().mainCategory());
+        SubCategoryType subCategory = SubCategoryType.fromDescription(result.getResult().subCategory());
         return new CategorizeResponse(
                 request.requestId(),
-                result.getResult().mainCategory(),
-                result.getResult().subCategory()
+                mainCategory,
+                subCategory
         );
     }
 }

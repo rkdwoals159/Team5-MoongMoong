@@ -26,7 +26,7 @@ public record CategoryAnalysisResponse(
                 categoryAnalysis.getTotal(),
                 categoryAnalysis.getMainCategoryCosts().entrySet().stream()
                         .map(entry -> new CategoryCostResponse(
-                                entry.getKey(),
+                                entry.getKey().getDescription(),
                                 entry.getValue(),
                                 getRatio(categoryAnalysis.getTotal(), entry.getValue())
                         ))

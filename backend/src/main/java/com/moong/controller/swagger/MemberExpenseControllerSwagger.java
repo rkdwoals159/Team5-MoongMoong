@@ -4,6 +4,7 @@ import com.moong.annotation.swagger.ErrorCode400;
 import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
+import com.moong.domain.enums.MainCategoryType;
 import com.moong.dto.request.memberexpense.CategorizeRequest;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
 import com.moong.dto.response.categorize.CategorizeResponse;
@@ -94,7 +95,7 @@ public interface MemberExpenseControllerSwagger {
             Member member,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
-            @RequestParam(value = "mainCategory", required = false) String mainCategory,
+            @RequestParam(value = "mainCategory", required = false) MainCategoryType mainCategory,
             @ParameterObject Pageable pageable
     );
 

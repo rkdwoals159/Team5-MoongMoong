@@ -1,5 +1,7 @@
 package com.moong.dto.response.groupexpense;
 
+import com.moong.domain.enums.MainCategoryType;
+import com.moong.domain.enums.SubCategoryType;
 import com.moong.domain.groupexpense.GroupExpenseDetail;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
@@ -22,11 +24,11 @@ public record GroupExpenseResponse(
         @Schema(description = "소비 금액", example = "18500")
         long cost,
 
-        @Schema(description = "대분류 카테고리", example = "병원비")
-        String mainCategory,
+        @Schema(type = "string", description = "대분류 카테고리", example = "병원비")
+        MainCategoryType mainCategory,
 
-        @Schema(description = "소분류 카테고리", example = "약/처방", nullable = true)
-        String subCategory,
+        @Schema(type = "string", description = "소분류 카테고리", example = "약/처방", nullable = true)
+        SubCategoryType subCategory,
 
         @Schema(description = "메모 (입력하지 않은 경우 null)", example = "내과 진료 후 약국", nullable = true)
         String memo,

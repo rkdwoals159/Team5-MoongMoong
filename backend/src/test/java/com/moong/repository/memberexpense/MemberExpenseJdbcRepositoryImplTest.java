@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.enums.MainCategoryType;
 import com.moong.repository.BaseRepositoryTest;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,8 +30,8 @@ class MemberExpenseJdbcRepositoryImplTest extends BaseRepositoryTest {
                 now.toLocalDate(),
                 "류몽민 닭갈비",
                 15000,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 null,
                 now,
                 member
@@ -40,8 +41,8 @@ class MemberExpenseJdbcRepositoryImplTest extends BaseRepositoryTest {
                 now.toLocalDate(),
                 "항아리 수제비",
                 10000,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 null,
                 now,
                 member

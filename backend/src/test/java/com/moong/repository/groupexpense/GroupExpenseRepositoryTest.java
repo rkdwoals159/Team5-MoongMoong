@@ -7,6 +7,7 @@ import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
+import com.moong.domain.enums.MainCategoryType;
 import com.moong.domain.groupexpense.GroupExpenseDetail;
 import com.moong.repository.BaseRepositoryTest;
 import jakarta.persistence.EntityManager;
@@ -39,8 +40,8 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 now.minusDays(1L).toLocalDate(),
                 "류몽민 닭갈비",
                 100,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(1L).plusSeconds(1L),
                 coli
@@ -90,8 +91,8 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 now.minusDays(1L).toLocalDate(),
                 "류몽민 닭갈비",
                 100,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(1L).plusSeconds(1L),
                 coli
@@ -108,7 +109,7 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
 
         List<GroupExpense> actual = groupExpenseRepository.findFetchedByPetGroupIdAndMainCategoryAndPeriod(
                 petGroup.getId(),
-                "식비",
+                MainCategoryType.FOOD_AND_TREATS,
                 now.minusDays(1L).toLocalDate(),
                 now.toLocalDate(),
                 expenseSort
@@ -142,8 +143,8 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 now.minusDays(1L).toLocalDate(),
                 "류몽민 닭갈비",
                 100,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(1L).plusSeconds(1L),
                 coli
@@ -152,8 +153,8 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 now.minusDays(1L).toLocalDate(),
                 "항아리 수제비",
                 200,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(1L),
                 coli
@@ -162,8 +163,8 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 now.toLocalDate(),
                 "우럭 회",
                 300,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now,
                 coli
@@ -206,8 +207,8 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 now.minusDays(1L).toLocalDate(),
                 "류몽민 닭갈비",
                 100,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(1L).plusSeconds(1L),
                 coli
@@ -216,8 +217,8 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 now.minusDays(1L).toLocalDate(),
                 "항아리 수제비",
                 200,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(1L),
                 coli
@@ -226,8 +227,8 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 now.toLocalDate(),
                 "수건 구입",
                 300,
-                "생활비",
-                "생필품",
+                MainCategoryType.SUPPLIES,
+                null,
                 "메모",
                 now,
                 coli
@@ -242,7 +243,7 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
 
         List<GroupExpenseDetail> actual = groupExpenseRepository.getFetchedByPetGroupIdAndMainCategoryAndPeriod(
                 petGroup.getId(),
-                "식비",
+                MainCategoryType.FOOD_AND_TREATS,
                 now.minusDays(1L).toLocalDate(),
                 now.toLocalDate(),
                 expenseSort
@@ -268,8 +269,8 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 now.minusDays(2L).toLocalDate(),
                 "류몽민 닭갈비",
                 100,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(2L),
                 member
@@ -278,8 +279,8 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 now.minusDays(1L).toLocalDate(),
                 "항아리 수제비",
                 200,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(1L),
                 member
@@ -288,8 +289,8 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 now.toLocalDate(),
                 "우럭 회",
                 300,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now,
                 member

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.enums.MainCategoryType;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import java.time.LocalDate;
@@ -25,7 +26,7 @@ class MemberExpenseReadCommandTest {
                 new Member("email@email.com", "name", "imageUrl"),
                 LocalDate.now().minusDays(1L),
                 LocalDate.now(),
-                "mainCateogry",
+                MainCategoryType.FOOD_AND_TREATS,
                 PageRequest.of(1, 10)
         );
 

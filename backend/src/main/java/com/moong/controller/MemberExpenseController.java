@@ -3,6 +3,7 @@ package com.moong.controller;
 import com.moong.annotation.auth.AuthMember;
 import com.moong.controller.swagger.MemberExpenseControllerSwagger;
 import com.moong.domain.entity.Member;
+import com.moong.domain.enums.MainCategoryType;
 import com.moong.dto.command.MemberExpenseReadCommand;
 import com.moong.dto.request.memberexpense.CategorizeRequest;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
@@ -47,7 +48,7 @@ public class MemberExpenseController implements MemberExpenseControllerSwagger {
             @AuthMember Member member,
             @RequestParam(value = "startDate") LocalDate startDate,
             @RequestParam(value = "endDate") LocalDate endDate,
-            @RequestParam(value = "mainCategory", required = false) String mainCategory,
+            @RequestParam(value = "mainCategory", required = false) MainCategoryType mainCategory,
             Pageable pageable
     ) {
         MemberExpenseReadCommand command = new MemberExpenseReadCommand(member, startDate, endDate, mainCategory,

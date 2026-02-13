@@ -41,8 +41,8 @@ public class MemberExpenseJdbcRepositoryImpl implements MemberExpenseJdbcReposit
                 .addValue("spentAt", memberExpense.getSpentAt())
                 .addValue("usage", memberExpense.getUsage())
                 .addValue("cost", memberExpense.getCost())
-                .addValue("mainCategory", memberExpense.getMainCategory())
-                .addValue("subCategory", memberExpense.getSubCategory())
+                .addValue("mainCategory", memberExpense.getMainCategory().name())
+                .addValue("subCategory", memberExpense.getSubCategoryName())
                 .addValue("memo", memberExpense.getMemo())
                 .addValue("modifiedAt", now)
                 .addValue("memberId", memberExpense.getMember().getId());
@@ -79,8 +79,8 @@ public class MemberExpenseJdbcRepositoryImpl implements MemberExpenseJdbcReposit
                 .addValue("spentAt", memberExpense.getSpentAt())
                 .addValue("usage", memberExpense.getUsage())
                 .addValue("cost", memberExpense.getCost())
-                .addValue("mainCategory", memberExpense.getMainCategory())
-                .addValue("subCategory", memberExpense.getSubCategory())
+                .addValue("mainCategory", memberExpense.getMainCategory().name())
+                .addValue("subCategory", memberExpense.getSubCategoryName())
                 .addValue("memo", memberExpense.getMemo())
                 .addValue("modifiedAt", now)
                 .addValue("id", memberExpense.getId());

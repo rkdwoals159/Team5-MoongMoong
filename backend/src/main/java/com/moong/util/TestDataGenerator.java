@@ -14,6 +14,8 @@ import com.moong.domain.entity.Treatment;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.Gender;
+import com.moong.domain.enums.MainCategoryType;
+import com.moong.domain.enums.SubCategoryType;
 import com.moong.repository.BankRepository;
 import com.moong.repository.CoinRepository;
 import com.moong.repository.CrewRepository;
@@ -158,8 +160,8 @@ public class TestDataGenerator {
                 now.minusDays(1L).toLocalDate(),
                 "급여",
                 3000000,
-                "급여",
-                "",
+                MainCategoryType.OTHER,
+                null,
                 null,
                 now,
                 member1
@@ -170,8 +172,8 @@ public class TestDataGenerator {
                 now.minusDays(2L).toLocalDate(),
                 "마트 장보기",
                 150000,
-                "식비",
-                "",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 null,
                 now,
                 member1
@@ -182,8 +184,8 @@ public class TestDataGenerator {
                 now.minusDays(3L).toLocalDate(),
                 "강아지 진료비",
                 80000,
-                "의료",
-                "진료비",
+                MainCategoryType.MEDICAL_EXPENSES,
+                SubCategoryType.CONSULTATION,
                 null,
                 now,
                 member1
@@ -194,8 +196,8 @@ public class TestDataGenerator {
                 now.minusDays(4L).toLocalDate(),
                 "월세",
                 800000,
-                "주거/통신",
-                "",
+                MainCategoryType.OTHER,
+                null,
                 null,
                 now,
                 member1
@@ -206,8 +208,8 @@ public class TestDataGenerator {
                 now.minusDays(5L).toLocalDate(),
                 "강아지 사료 구매",
                 45000,
-                "사료/간식",
-                "",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 null,
                 now,
                 member1
@@ -218,8 +220,8 @@ public class TestDataGenerator {
                 now.minusDays(6L).toLocalDate(),
                 "예방접종",
                 70000,
-                "의료",
-                "예방접종",
+                MainCategoryType.MEDICAL_EXPENSES,
+                SubCategoryType.VACCINATION,
                 null,
                 now,
                 member1
@@ -230,8 +232,8 @@ public class TestDataGenerator {
                 now.minusDays(7L).toLocalDate(),
                 "영화 관람",
                 30000,
-                "여가/취미",
-                "",
+                MainCategoryType.OTHER,
+                null,
                 null,
                 now,
                 member1
@@ -242,8 +244,8 @@ public class TestDataGenerator {
                 now.minusDays(8L).toLocalDate(),
                 "애견 미용",
                 50000,
-                "미용",
-                "",
+                MainCategoryType.GROOMING,
+                null,
                 null,
                 now,
                 member1
@@ -254,8 +256,8 @@ public class TestDataGenerator {
                 now.minusDays(9L).toLocalDate(),
                 "부수입",
                 500000,
-                "투자",
-                "",
+                MainCategoryType.OTHER,
+                null,
                 null,
                 now,
                 member1
@@ -266,8 +268,8 @@ public class TestDataGenerator {
                 now.minusDays(10L).toLocalDate(),
                 "강아지 장난감",
                 25000,
-                "물품구매비",
-                "",
+                MainCategoryType.SUPPLIES,
+                null,
                 null,
                 now,
                 member1
@@ -278,8 +280,8 @@ public class TestDataGenerator {
                 now.minusDays(11L).toLocalDate(),
                 "엑스레이 검사",
                 120000,
-                "의료",
-                "검사비",
+                MainCategoryType.MEDICAL_EXPENSES,
+                SubCategoryType.EXAMINATION,
                 null,
                 now,
                 member1
@@ -290,8 +292,8 @@ public class TestDataGenerator {
                 now.minusDays(12L).toLocalDate(),
                 "교통사고 수순",
                 3000,
-                "의료",
-                "수술비",
+                MainCategoryType.MEDICAL_EXPENSES,
+                SubCategoryType.SURGERY_HOSPITALIZATION,
                 null,
                 now,
                 member1

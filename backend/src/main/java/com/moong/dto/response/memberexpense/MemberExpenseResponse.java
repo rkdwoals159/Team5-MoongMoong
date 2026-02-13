@@ -1,6 +1,8 @@
 package com.moong.dto.response.memberexpense;
 
 import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.enums.MainCategoryType;
+import com.moong.domain.enums.SubCategoryType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -21,11 +23,11 @@ public record MemberExpenseResponse(
         @Schema(description = "소비 금액", example = "15000")
         long cost,
 
-        @Schema(description = "대분류 카테고리", example = "병원비")
-        String mainCategory,
+        @Schema(type = "string", description = "대분류 카테고리", example = "병원비")
+        MainCategoryType mainCategory,
 
-        @Schema(description = "소분류 카테고리", example = "약/처방")
-        String subCategory,
+        @Schema(type = "string", description = "소분류 카테고리", example = "약/처방")
+        SubCategoryType subCategory,
 
         @Schema(description = "메모", example = "정기 구매")
         String memo,

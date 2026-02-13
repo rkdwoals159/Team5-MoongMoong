@@ -1,5 +1,7 @@
 package com.moong.domain.groupexpense;
 
+import com.moong.domain.enums.MainCategoryType;
+import com.moong.domain.enums.SubCategoryType;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,14 +14,14 @@ public class CategoryCosts {
 
     private final List<CategoryCost> values;
 
-    public long getCategoryCosts(String mainCategory) {
+    public long getCategoryCosts(MainCategoryType mainCategory) {
         return values.stream()
                 .filter(categoryCost -> categoryCost.isSameMainCategory(mainCategory))
                 .mapToLong(CategoryCost::getCost)
                 .sum();
     }
 
-    public Map<String, Long> getMainCategoryCosts() {
+    public Map<MainCategoryType, Long> getMainCategoryCosts() {
         return values.stream()
                 .collect(Collectors.groupingBy(
                                 CategoryCost::getMainCategory,
@@ -28,7 +30,7 @@ public class CategoryCosts {
                 );
     }
 
-    public Map<String, Long> getSubCategoryCosts(String mainCategory) {
+    public Map<SubCategoryType, Long> getSubCategoryCosts(MainCategoryType mainCategory) {
         return values.stream()
                 .filter(categoryCost -> categoryCost.isSameMainCategory(mainCategory))
                 .collect(Collectors.groupingBy(

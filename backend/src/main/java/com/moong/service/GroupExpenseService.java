@@ -4,6 +4,8 @@ import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.GroupExpense;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.enums.MainCategoryType;
+import com.moong.domain.enums.SubCategoryType;
 import com.moong.domain.groupexpense.CategoryAnalysis;
 import com.moong.domain.groupexpense.GroupExpenseDetail;
 import com.moong.dto.response.groupexpense.CategoryAnalysisResponse;
@@ -23,7 +25,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GroupExpenseService {
 
-    private static final String MEDICAL_CATEGORY_NAME = "의료";
 
     private final GroupExpenseRepository groupExpenseRepository;
     private final CrewRepository crewRepository;
@@ -56,14 +57,14 @@ public class GroupExpenseService {
         Sort expenseSort = getSortBySpentAtAndModifiedAt();
         List<GroupExpenseDetail> medicalExpenses = groupExpenseRepository.getFetchedByPetGroupIdAndMainCategoryAndPeriod(
                 crew.getPetGroup().getId(),
-                MEDICAL_CATEGORY_NAME,
+                MainCategoryType.MEDICAL_EXPENSES,
                 startDate,
                 endDate,
                 expenseSort
         );
         CategoryAnalysis categoryAnalysis = new CategoryAnalysis(medicalExpenses);
-        long totalMedical = categoryAnalysis.getCategoryTotalCosts(MEDICAL_CATEGORY_NAME);
-        Map<String, Long> medicalStatics = categoryAnalysis.getSubCategoryCosts(MEDICAL_CATEGORY_NAME);
+        long totalMedical = categoryAnalysis.getCategoryTotalCosts(MainCategoryType.MEDICAL_EXPENSES);
+        Map<SubCategoryType, Long> medicalStatics = categoryAnalysis.getSubCategoryCosts(MainCategoryType.MEDICAL_EXPENSES);
         return new MedicalCategoryAnalysisResponse(totalMedical, medicalStatics);
     }
 

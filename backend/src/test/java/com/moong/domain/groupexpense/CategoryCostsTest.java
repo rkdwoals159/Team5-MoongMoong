@@ -3,7 +3,8 @@ package com.moong.domain.groupexpense;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
+import com.moong.domain.enums.MainCategoryType;
+import com.moong.domain.enums.SubCategoryType;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -16,19 +17,19 @@ class CategoryCostsTest {
     @Test
     void getMainCategoryTest() {
         List<CategoryCost> values = List.of(
-                new CategoryCost("식비", "카페", 300L),
-                new CategoryCost("식비", "카페", 200L),
-                new CategoryCost("생활비", "월세", 500L),
-                new CategoryCost("생활비", "칫솔", 100L)
+                new CategoryCost(MainCategoryType.FOOD_AND_TREATS, null, 300L),
+                new CategoryCost(MainCategoryType.FOOD_AND_TREATS, null, 200L),
+                new CategoryCost(MainCategoryType.OTHER, null, 500L),
+                new CategoryCost(MainCategoryType.OTHER, null, 100L)
         );
         CategoryCosts categoryCosts = new CategoryCosts(values);
 
-        Map<String, Long> mainCategoryStatics = categoryCosts.getMainCategoryCosts();
+        Map<MainCategoryType, Long> mainCategoryStatics = categoryCosts.getMainCategoryCosts();
 
         assertAll(
                 () -> assertThat(mainCategoryStatics.entrySet()).hasSize(2),
-                () -> assertThat(mainCategoryStatics).containsEntry("식비", 500L),
-                () -> assertThat(mainCategoryStatics).containsEntry("생활비", 600L)
+                () -> assertThat(mainCategoryStatics).containsEntry(MainCategoryType.FOOD_AND_TREATS, 500L),
+                () -> assertThat(mainCategoryStatics).containsEntry(MainCategoryType.OTHER, 600L)
         );
     }
 
@@ -36,14 +37,14 @@ class CategoryCostsTest {
     @Test
     void getCategoryCostsTest() {
         List<CategoryCost> values = List.of(
-                new CategoryCost("식비", "카페", 300L),
-                new CategoryCost("식비", "카페", 200L),
-                new CategoryCost("생활비", "월세", 500L),
-                new CategoryCost("생활비", "칫솔", 100L)
+                new CategoryCost(MainCategoryType.FOOD_AND_TREATS, null, 300L),
+                new CategoryCost(MainCategoryType.FOOD_AND_TREATS, null, 200L),
+                new CategoryCost(MainCategoryType.OTHER, null, 500L),
+                new CategoryCost(MainCategoryType.OTHER, null, 100L)
         );
         CategoryCosts categoryCosts = new CategoryCosts(values);
 
-        long actual = categoryCosts.getCategoryCosts("식비");
+        long actual = categoryCosts.getCategoryCosts(MainCategoryType.FOOD_AND_TREATS);
 
         assertThat(actual).isEqualTo(500L);
     }
@@ -52,17 +53,17 @@ class CategoryCostsTest {
     @Test
     void getSubCategoryTest() {
         List<CategoryCost> values = List.of(
-                new CategoryCost("생활비", "월세", 500L),
-                new CategoryCost("생활비", "칫솔", 100L)
+                new CategoryCost(MainCategoryType.MEDICAL_EXPENSES, SubCategoryType.MEDICATION, 500L),
+                new CategoryCost(MainCategoryType.MEDICAL_EXPENSES, SubCategoryType.CONSULTATION, 100L)
         );
         CategoryCosts categoryCosts = new CategoryCosts(values);
 
-        Map<String, Long> mainCategoryStatics = categoryCosts.getSubCategoryCosts("생활비");
+        Map<SubCategoryType, Long> mainCategoryStatics = categoryCosts.getSubCategoryCosts(MainCategoryType.MEDICAL_EXPENSES);
 
         assertAll(
                 () -> assertThat(mainCategoryStatics.entrySet()).hasSize(2),
-                () -> assertThat(mainCategoryStatics).containsEntry("월세", 500L),
-                () -> assertThat(mainCategoryStatics).containsEntry("칫솔", 100L)
+                () -> assertThat(mainCategoryStatics).containsEntry(SubCategoryType.MEDICATION, 500L),
+                () -> assertThat(mainCategoryStatics).containsEntry(SubCategoryType.CONSULTATION, 100L)
         );
     }
 }

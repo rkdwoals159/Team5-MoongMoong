@@ -9,6 +9,8 @@ import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
+import com.moong.domain.enums.MainCategoryType;
+import com.moong.domain.enums.SubCategoryType;
 import com.moong.dto.request.memberexpense.MemberExpenseUpsertRequest;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
@@ -53,8 +55,8 @@ class MemberExpenseServiceTest extends BaseServiceTest {
                 tomorrow,
                 "류몽민 닭갈비",
                 10000,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 null,
                 tomorrow.atTime(9, 0),
                 member
@@ -114,8 +116,8 @@ class MemberExpenseServiceTest extends BaseServiceTest {
                 lastMonth.toLocalDate(),
                 "코코 과자",
                 5000,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 null,
                 now,
                 member
@@ -124,8 +126,8 @@ class MemberExpenseServiceTest extends BaseServiceTest {
                 lastMonth.toLocalDate(),
                 "코코 약",
                 5000,
-                "의료",
-                "소분류",
+                MainCategoryType.MEDICAL_EXPENSES,
+                null,
                 null,
                 now,
                 member
@@ -134,8 +136,8 @@ class MemberExpenseServiceTest extends BaseServiceTest {
                 now.toLocalDate(),
                 "코코 진료비",
                 10000,
-                "의료",
-                "소분류",
+                MainCategoryType.MEDICAL_EXPENSES,
+                null,
                 null,
                 now,
                 member
@@ -144,8 +146,8 @@ class MemberExpenseServiceTest extends BaseServiceTest {
                 now.toLocalDate(),
                 "코코 옷",
                 20000,
-                "물품구매",
-                "소분류",
+                MainCategoryType.SUPPLIES,
+                null,
                 null,
                 now,
                 member
@@ -174,8 +176,8 @@ class MemberExpenseServiceTest extends BaseServiceTest {
                 now.toLocalDate(),
                 "코코 진료비",
                 15000,
-                "의료",
-                "소분류",
+                MainCategoryType.MEDICAL_EXPENSES,
+                null,
                 null,
                 now,
                 member
@@ -184,8 +186,8 @@ class MemberExpenseServiceTest extends BaseServiceTest {
                 now.toLocalDate(),
                 "코코 옷",
                 20000,
-                "물품구매",
-                "소분류",
+                MainCategoryType.SUPPLIES,
+                null,
                 null,
                 now,
                 member
@@ -213,8 +215,8 @@ class MemberExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(2L).toLocalDate(),
                 "류몽민 닭갈비",
                 100,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(2L),
                 member
@@ -223,8 +225,8 @@ class MemberExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(1L).toLocalDate(),
                 "항아리 수제비",
                 200,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(1L),
                 member
@@ -233,8 +235,8 @@ class MemberExpenseServiceTest extends BaseServiceTest {
                 now.toLocalDate(),
                 "우럭 회",
                 300,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now,
                 member
@@ -250,8 +252,8 @@ class MemberExpenseServiceTest extends BaseServiceTest {
                 now.toLocalDate(),
                 "신규 약값",
                 15000,
-                "병원비",
-                "약",
+                MainCategoryType.MEDICAL_EXPENSES,
+                SubCategoryType.MEDICATION,
                 "정기"
         );
         MemberExpenseUpsertRequest updateRequest = new MemberExpenseUpsertRequest(
@@ -260,8 +262,8 @@ class MemberExpenseServiceTest extends BaseServiceTest {
                 now.toLocalDate(),
                 "수정 사료",
                 45000,
-                "식비",
-                "사료",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "할인"
         );
         MemberExpensesUpsertRequest totalRequest = new MemberExpensesUpsertRequest(

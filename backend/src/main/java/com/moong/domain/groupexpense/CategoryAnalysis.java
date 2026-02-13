@@ -1,7 +1,7 @@
 package com.moong.domain.groupexpense;
 
-import com.moong.domain.entity.GroupExpense;
-import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.enums.MainCategoryType;
+import com.moong.domain.enums.SubCategoryType;
 import java.util.List;
 import java.util.Map;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class CategoryAnalysis {
         );
     }
 
-    public long getCategoryTotalCosts(String mainCategory) {
+    public long getCategoryTotalCosts(MainCategoryType mainCategory) {
         return categoryCosts.getCategoryCosts(mainCategory);
     }
 
@@ -31,11 +31,11 @@ public class CategoryAnalysis {
                 .sum();
     }
 
-    public Map<String, Long> getMainCategoryCosts() {
+    public Map<MainCategoryType, Long> getMainCategoryCosts() {
         return categoryCosts.getMainCategoryCosts();
     }
 
-    public Map<String, Long> getSubCategoryCosts(String mainCategory) {
+    public Map<SubCategoryType, Long> getSubCategoryCosts(MainCategoryType mainCategory) {
         return categoryCosts.getSubCategoryCosts(mainCategory);
     }
 }

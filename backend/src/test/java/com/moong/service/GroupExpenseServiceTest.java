@@ -8,6 +8,8 @@ import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
+import com.moong.domain.enums.MainCategoryType;
+import com.moong.domain.enums.SubCategoryType;
 import com.moong.dto.response.groupexpense.CategoryAnalysisResponse;
 import com.moong.dto.response.groupexpense.GroupExpensesDailyResponse;
 import com.moong.dto.response.groupexpense.GroupExpensesResponse;
@@ -36,8 +38,8 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(2L).toLocalDate(),
                 "류몽민 닭갈비",
                 100,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(2L),
                 coli
@@ -46,8 +48,8 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(1L).toLocalDate(),
                 "항아리 수제비",
                 200,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(1L),
                 coli
@@ -56,8 +58,8 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.toLocalDate(),
                 "우럭 회",
                 300,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now,
                 coli
@@ -90,8 +92,8 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(2L).toLocalDate(),
                 "류몽민 닭갈비",
                 100,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(2L),
                 coli
@@ -100,8 +102,8 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(1L).toLocalDate(),
                 "수건 구입",
                 200,
-                "생필품",
-                "소분류",
+                MainCategoryType.SUPPLIES,
+                null,
                 "메모",
                 now.minusDays(1L),
                 coli
@@ -120,11 +122,11 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 () -> assertThat(response.total()).isEqualTo(300),
                 () -> assertThat(response.categoryAnalysis()).hasSize(2),
                 () -> assertThat(response.categoryAnalysis().get(0).category()).isEqualTo(
-                        groupExpense2.getMemberExpense().getMainCategory()),
+                        groupExpense2.getMemberExpense().getMainCategory().getDescription()),
                 () -> assertThat(response.categoryAnalysis().get(0).cost()).isEqualTo(
                         groupExpense2.getMemberExpense().getCost()),
                 () -> assertThat(response.categoryAnalysis().get(1).category()).isEqualTo(
-                        groupExpense1.getMemberExpense().getMainCategory()),
+                        groupExpense1.getMemberExpense().getMainCategory().getDescription()),
                 () -> assertThat(response.categoryAnalysis().get(1).cost()).isEqualTo(
                         groupExpense1.getMemberExpense().getCost())
         );
@@ -142,8 +144,8 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.toLocalDate(),
                 "류몽민 닭갈비",
                 100,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(2L),
                 member
@@ -152,8 +154,8 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.toLocalDate(),
                 "수건 구입",
                 200,
-                "생필품",
-                "소분류",
+                MainCategoryType.SUPPLIES,
+                null,
                 "메모",
                 now.minusDays(1L),
                 member
@@ -192,8 +194,8 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(2L).toLocalDate(),
                 "뚱이 수술",
                 100,
-                "의료",
-                "수술비",
+                MainCategoryType.MEDICAL_EXPENSES,
+                SubCategoryType.SURGERY_HOSPITALIZATION,
                 "메모",
                 now.minusDays(2L),
                 coli
@@ -202,8 +204,8 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(1L).toLocalDate(),
                 "뚱이 약",
                 200,
-                "의료",
-                "약/처방",
+                MainCategoryType.MEDICAL_EXPENSES,
+                SubCategoryType.MEDICATION,
                 "메모",
                 now.minusDays(1L),
                 coli

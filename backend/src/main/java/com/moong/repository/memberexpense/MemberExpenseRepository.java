@@ -1,6 +1,7 @@
 package com.moong.repository.memberexpense;
 
 import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.enums.MainCategoryType;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import java.time.LocalDate;
@@ -53,7 +54,7 @@ public interface MemberExpenseRepository extends Repository<MemberExpense, Long>
 
     Slice<MemberExpense> findByMember_IdAndMainCategoryAndSpentAtBetween(
             long memberId,
-            String mainCategory,
+            MainCategoryType mainCategory,
             LocalDate startDate,
             LocalDate endDate,
             Pageable pageable
@@ -80,7 +81,7 @@ public interface MemberExpenseRepository extends Repository<MemberExpense, Long>
             """)
     long sumCostByMemberIdAndMainCategoryAndPeriod(
             long memberId,
-            String mainCategory,
+            MainCategoryType mainCategory,
             LocalDate startDate,
             LocalDate endDate
     );

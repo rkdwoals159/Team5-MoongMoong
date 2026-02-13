@@ -18,11 +18,14 @@ public class YearMonthDeserializer extends JsonDeserializer<YearMonth> {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
 
     @Override
-    public YearMonth deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        JsonToken token = p.currentToken();
+    public YearMonth deserialize(
+            JsonParser jsonParser,
+            DeserializationContext deserializationContext
+    ) throws IOException {
+        JsonToken token = jsonParser.currentToken();
 
         if (token == JsonToken.VALUE_STRING) {
-            String value = p.getText();
+            String value = jsonParser.getText();
             if (value == null || value.isEmpty()) {
                 return null;
             }
@@ -30,7 +33,7 @@ public class YearMonthDeserializer extends JsonDeserializer<YearMonth> {
         }
 
         if (token == JsonToken.START_OBJECT || token == JsonToken.START_ARRAY) {
-            JsonNode node = p.getCodec().readTree(p);
+            JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
             //배열 형식: [2025, 1]
             if (node.isArray()) {

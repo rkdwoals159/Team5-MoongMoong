@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.enums.MainCategoryType;
+import com.moong.domain.enums.SubCategoryType;
 import com.moong.repository.BaseRepositoryTest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,10 +49,10 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);
 
-        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(today, "사용처1", 100, "카테고리1", null, null, null, member);
-        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(today, "사용처2", 100, "카테고리2", null, null, null, member);
-        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(today, "사용처3", 100, "카테고리3", null, null, null, member);
-        MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(today, "사용처4", 100, "카테고리4", null, null, null, member);
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(today, "사용처1", 100, MainCategoryType.FOOD_AND_TREATS, null, null, null, member);
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(today, "사용처2", 100, MainCategoryType.FOOD_AND_TREATS, null, null, null, member);
+        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(today, "사용처3", 100, MainCategoryType.FOOD_AND_TREATS, null, null, null, member);
+        MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(today, "사용처4", 100, MainCategoryType.FOOD_AND_TREATS, null, null, null, member);
 
         List<MemberExpense> result = memberExpenseRepository.findByMember_IdAndSpentAtBetween(
                 member.getId(),
@@ -70,14 +72,14 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
         Member member = memberGenerator.generateSaved("멤버1");
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);
-        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(today, "사용처1", 100, "카테고리1", null, null, null, member);
-        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(today, "사용처2", 100, "카테고리2", null, null, null, member);
-        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(today, "사용처3", 100, "카테고리2", null, null, null, member);
-        MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(today, "사용처4", 100, "카테고리2", null, null, null, member);
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(today, "사용처1", 100, MainCategoryType.SUPPLIES, null, null, null, member);
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(today, "사용처2", 100, MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
+        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(today, "사용처3", 100, MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
+        MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(today, "사용처4", 100, MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
 
         List<MemberExpense> result = memberExpenseRepository.findByMember_IdAndMainCategoryAndSpentAtBetween(
                 member.getId(),
-                "카테고리2",
+                MainCategoryType.MEDICAL_EXPENSES,
                 yesterday,
                 today,
                 PageRequest.of(1, 2)
@@ -98,8 +100,8 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
                 now.toLocalDate(),
                 "코코 과자",
                 1000,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 null,
                 now,
                 member
@@ -108,8 +110,8 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
                 now.toLocalDate(),
                 "코코 약",
                 10000,
-                "의료",
-                "소분류",
+                MainCategoryType.MEDICAL_EXPENSES,
+                SubCategoryType.MEDICATION,
                 null,
                 now,
                 member
@@ -118,8 +120,8 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
                 now.toLocalDate().minusDays(2),
                 "코코 진료비",
                 15000,
-                "의료",
-                "소분류",
+                MainCategoryType.MEDICAL_EXPENSES,
+                SubCategoryType.CONSULTATION,
                 null,
                 now,
                 member
@@ -148,8 +150,8 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
                 now.toLocalDate(),
                 "코코 약1",
                 1000,
-                "의료",
-                "소분류",
+                MainCategoryType.MEDICAL_EXPENSES,
+                SubCategoryType.OTHER_MEDICAL,
                 null,
                 now,
                 member
@@ -158,8 +160,8 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
                 now.toLocalDate(),
                 "코코 약2",
                 10000,
-                "의료",
-                "소분류",
+                MainCategoryType.MEDICAL_EXPENSES,
+                SubCategoryType.OTHER_MEDICAL,
                 null,
                 now,
                 member
@@ -168,8 +170,8 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
                 now.toLocalDate(),
                 "코코 과자",
                 15000,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 null,
                 now,
                 member
@@ -178,8 +180,8 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
                 now.toLocalDate().minusDays(2),
                 "코코 진료비",
                 15000,
-                "의료",
-                "소분류",
+                MainCategoryType.MEDICAL_EXPENSES,
+                SubCategoryType.OTHER_MEDICAL,
                 null,
                 now,
                 member
@@ -191,7 +193,7 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
 
         long result = memberExpenseRepository.sumCostByMemberIdAndMainCategoryAndPeriod(
                 member.getId(),
-                "의료",
+                MainCategoryType.MEDICAL_EXPENSES,
                 now.toLocalDate().minusDays(1),
                 now.toLocalDate().plusDays(1)
         );

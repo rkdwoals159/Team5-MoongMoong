@@ -8,6 +8,7 @@ import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
+import com.moong.domain.enums.MainCategoryType;
 import com.moong.repository.BaseRepositoryTest;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,8 +33,8 @@ public class GroupExpenseJdbcRepositoryTest extends BaseRepositoryTest {
                 now.minusDays(2L).toLocalDate(),
                 "류몽민 닭갈비",
                 100,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(2L),
                 member
@@ -42,8 +43,8 @@ public class GroupExpenseJdbcRepositoryTest extends BaseRepositoryTest {
                 now.minusDays(1L).toLocalDate(),
                 "항아리 수제비",
                 200,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(1L),
                 member
@@ -52,8 +53,8 @@ public class GroupExpenseJdbcRepositoryTest extends BaseRepositoryTest {
                 now.toLocalDate(),
                 "우럭 회",
                 300,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now,
                 member

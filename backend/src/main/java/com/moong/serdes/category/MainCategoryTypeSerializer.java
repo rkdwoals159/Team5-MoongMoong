@@ -1,26 +1,26 @@
-package com.moong.serdes;
+package com.moong.serdes.category;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.moong.domain.enums.MainCategoryType;
 import java.io.IOException;
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import org.springframework.boot.jackson.JsonComponent;
 
 @JsonComponent
-public class YearMonthSerializer extends JsonSerializer<YearMonth> {
-
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
+public class MainCategoryTypeSerializer extends JsonSerializer<MainCategoryType> {
 
     @Override
     public void serialize(
-            YearMonth value,
+            MainCategoryType value,
             JsonGenerator jsonGenerator,
             SerializerProvider serializers
     ) throws IOException {
-        if (value != null) {
-            jsonGenerator.writeString(value.format(FORMATTER));
+        if (value == null) {
+            jsonGenerator.writeString(MainCategoryType.OTHER.getDescription());
+            return;
         }
+        jsonGenerator.writeString(value.getDescription());
     }
 }
+

@@ -2,6 +2,7 @@ package com.moong.repository.groupexpense;
 
 import com.moong.domain.entity.GroupExpense;
 import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.enums.MainCategoryType;
 import com.moong.domain.groupexpense.GroupExpenseDetail;
 import java.time.LocalDate;
 import java.util.List;
@@ -43,7 +44,7 @@ public interface GroupExpenseRepository extends Repository<GroupExpense, Long>, 
             """)
     List<GroupExpense> findFetchedByPetGroupIdAndMainCategoryAndPeriod(
             @Param(value = "groupId") long petGroupId,
-            @Param(value = "mainCategory") String mainCategory,
+            @Param(value = "mainCategory") MainCategoryType mainCategory,
             @Param(value = "startDate") LocalDate startDate,
             @Param(value = "endDate") LocalDate endDate,
             Sort sort
@@ -60,7 +61,7 @@ public interface GroupExpenseRepository extends Repository<GroupExpense, Long>, 
 
     default List<GroupExpenseDetail> getFetchedByPetGroupIdAndMainCategoryAndPeriod(
             long groupId,
-            String category,
+            MainCategoryType category,
             LocalDate start,
             LocalDate end,
             Sort sort

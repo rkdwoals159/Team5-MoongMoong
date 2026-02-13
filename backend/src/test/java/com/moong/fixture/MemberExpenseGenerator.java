@@ -2,6 +2,8 @@ package com.moong.fixture;
 
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.enums.MainCategoryType;
+import com.moong.domain.enums.SubCategoryType;
 import com.moong.repository.memberexpense.MemberExpenseRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,8 +24,8 @@ public class MemberExpenseGenerator {
             LocalDate spentAt,
             String usage,
             long cost,
-            String mainCategory,
-            String subCategory,
+            MainCategoryType mainCategory,
+            SubCategoryType subCategory,
             String memo,
             LocalDateTime modifiedDate,
             Member member
@@ -47,8 +49,8 @@ public class MemberExpenseGenerator {
             LocalDate spentAt,
             String usage,
             long cost,
-            String mainCategory,
-            String subCategory,
+            MainCategoryType mainCategory,
+            SubCategoryType subCategory,
             String memo,
             LocalDateTime modifiedDate,
             Member member
@@ -74,8 +76,8 @@ public class MemberExpenseGenerator {
                 yesterday,
                 "감기약 및 처방약 구매",
                 1000,
-                "병원비",
-                "약/처방",
+                MainCategoryType.MEDICAL_EXPENSES,
+                SubCategoryType.MEDICATION,
                 "내과 진료 후 약국",
                 yesterday.atTime(10, 0),
                 member
@@ -84,7 +86,7 @@ public class MemberExpenseGenerator {
                 yesterday,
                 "러닝화 구매",
                 129000,
-                "의류",
+                MainCategoryType.GROOMING,
                 null,
                 null,
                 yesterday.atTime(12, 0),
@@ -94,8 +96,8 @@ public class MemberExpenseGenerator {
                 today,
                 "영화 관람",
                 15000,
-                "여가",
-                "취미",
+                MainCategoryType.OTHER,
+                null,
                 "주말 혼영",
                 yesterday.atTime(9, 0),
                 member

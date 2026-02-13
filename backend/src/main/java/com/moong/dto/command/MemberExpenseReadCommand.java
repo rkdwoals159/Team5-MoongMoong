@@ -2,6 +2,7 @@ package com.moong.dto.command;
 
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.enums.MainCategoryType;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import java.time.LocalDate;
@@ -18,14 +19,14 @@ public class MemberExpenseReadCommand {
     private final Member member;
     private final LocalDate startDate;
     private final LocalDate endDate;
-    private final String mainCategory;
+    private final MainCategoryType mainCategory;
     private final Pageable pageable;
 
     public MemberExpenseReadCommand(
             Member member,
             LocalDate startDate,
             LocalDate endDate,
-            String mainCategory,
+            MainCategoryType mainCategory,
             Pageable pageable
     ) {
         validatePeriod(startDate, endDate);

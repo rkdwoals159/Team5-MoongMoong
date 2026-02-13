@@ -1,5 +1,6 @@
 package com.moong.dto.response.groupexpense;
 
+import com.moong.domain.enums.SubCategoryType;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,7 @@ public record MedicalCategoryAnalysisResponse(
     private static final Comparator<MedicalAnalysisResponse> MEDICAL_ANALYSIS_COMPARATOR = Comparator.comparingLong(
             MedicalAnalysisResponse::cost).reversed();
 
-    public MedicalCategoryAnalysisResponse(long totalMedical, Map<String, Long> medicalStatics) {
+    public MedicalCategoryAnalysisResponse(long totalMedical, Map<SubCategoryType, Long> medicalStatics) {
         this(
                 totalMedical,
                 medicalStatics.entrySet().stream()

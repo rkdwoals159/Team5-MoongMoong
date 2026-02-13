@@ -2,12 +2,15 @@ package com.moong.controller;
 
 import static org.mockito.ArgumentMatchers.anyString;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moong.DataBaseCleaner;
 import com.moong.client.oauth.OAuthClient;
 import com.moong.domain.member.MemberInfo;
 import com.moong.fixture.*;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.config.ObjectMapperConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
@@ -17,7 +20,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -71,6 +73,9 @@ public abstract class BaseControllerTest {
     @Autowired
     protected JwtTokenGenerator jwtTokenGenerator;
 
+    @Autowired
+    protected ObjectMapper objectMapper;
+
     @MockitoBean
     protected OAuthClient oAuthClient;
 
@@ -81,6 +86,10 @@ public abstract class BaseControllerTest {
 
     @BeforeEach
     void setEnvironment() {
+        RestAssured.config = RestAssuredConfig.config()
+                .objectMapperConfig(ObjectMapperConfig.objectMapperConfig()
+                        .jackson2ObjectMapperFactory((cls, charset) -> objectMapper));
+
         RestAssured.port = port;
         spec = new RequestSpecBuilder()
                 .addFilter(new RequestLoggingFilter())

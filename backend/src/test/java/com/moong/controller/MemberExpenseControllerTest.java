@@ -7,6 +7,7 @@ import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
+import com.moong.domain.enums.MainCategoryType;
 import com.moong.dto.request.memberexpense.MemberExpenseUpsertRequest;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
@@ -48,10 +49,10 @@ class MemberExpenseControllerTest extends BaseControllerTest {
         int pageSize = 2;
         int pageNo = 0;
         Member member = memberGenerator.generateSaved("멤버1");
-        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(startDate, "사용처1", 100, "카테고리1", null, null, null, member);
-        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(startDate, "사용처2", 200, "카테고리2", null, null, null, member);
-        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(endDate, "사용처3", 300, "카테고리3", null, null, null, member);
-        MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(endDate, "사용처4", 400, "카테고리4", null, null, null, member);
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(startDate, "사용처1", 100, MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(startDate, "사용처2", 200, MainCategoryType.FOOD_AND_TREATS, null, null, null, member);
+        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(endDate, "사용처3", 300, MainCategoryType.GROOMING, null, null, null, member);
+        MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(endDate, "사용처4", 400, MainCategoryType.OTHER, null, null, null, member);
         String accessToken = jwtTokenGenerator.generateAccessToken(member);
 
         MemberExpensesPeriodResponseV2 response = given().log().all()
@@ -88,12 +89,12 @@ class MemberExpenseControllerTest extends BaseControllerTest {
         int pageSize = 4;
         int pageNo = 0;
         Member member = memberGenerator.generateSaved("멤버1");
-        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(startDate, "사용처1", 100, "카테고리1", null, null, null, member);
-        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(startDate, "사용처2", 200, "카테고리2", null, null, null, member);
-        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(endDate, "사용처3", 300, "카테고리3", null, null, null, member);
-        MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(endDate, "사용처4", 400, "카테고리4", null, null, null, member);
-        MemberExpense memberExpense5 = memberExpenseGenerator.generateSaved(endDate, "사용처5", 500, "카테고리5", null, null, null, member);
-        MemberExpense memberExpense6 = memberExpenseGenerator.generateSaved(endDate, "사용처6", 600, "카테고리5", null, null, null, member);
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(startDate, "사용처1", 100, MainCategoryType.FOOD_AND_TREATS, null, null, null, member);
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(startDate, "사용처2", 200, MainCategoryType.GROOMING, null, null, null, member);
+        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(endDate, "사용처3", 300, MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
+        MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(endDate, "사용처4", 400, MainCategoryType.OTHER, null, null, null, member);
+        MemberExpense memberExpense5 = memberExpenseGenerator.generateSaved(endDate, "사용처5", 500, MainCategoryType.SUPPLIES, null, null, null, member);
+        MemberExpense memberExpense6 = memberExpenseGenerator.generateSaved(endDate, "사용처6", 600, MainCategoryType.SUPPLIES, null, null, null, member);
         String accessToken = jwtTokenGenerator.generateAccessToken(member);
 
         MemberExpensesPeriodResponseV2 response = given().log().all()
@@ -130,15 +131,15 @@ class MemberExpenseControllerTest extends BaseControllerTest {
         LocalDate endDate = LocalDate.of(2026, 1, 2);
         int pageSize = 3;
         int pageNo = 0;
-        String filteredMainCategory = "카테고리1";
+        MainCategoryType filteredMainCategory = MainCategoryType.MEDICAL_EXPENSES;
         Member member = memberGenerator.generateSaved("멤버1");
-        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(startDate, "사용처1", 100, "카테고리1", null, null, null, member);
-        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(startDate, "사용처2", 200, "카테고리2", null, null, null, member);
-        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(startDate, "사용처3", 300, "카테고리1", null, null, null, member);
-        MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(endDate, "사용처4", 400, "카테고리2", null, null, null, member);
-        MemberExpense memberExpense5 = memberExpenseGenerator.generateSaved(endDate, "사용처5", 500, "카테고리1", null, null, null, member);
-        MemberExpense memberExpense6 = memberExpenseGenerator.generateSaved(endDate, "사용처6", 600, "카테고리2", null, null, null, member);
-        MemberExpense memberExpense7 = memberExpenseGenerator.generateSaved(endDate, "사용처7", 700, "카테고리1", null, null, null, member);
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(startDate, "사용처1", 100, MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(startDate, "사용처2", 200, MainCategoryType.OTHER, null, null, null, member);
+        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(startDate, "사용처3", 300, MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
+        MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(endDate, "사용처4", 400, MainCategoryType.OTHER, null, null, null, member);
+        MemberExpense memberExpense5 = memberExpenseGenerator.generateSaved(endDate, "사용처5", 500, MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
+        MemberExpense memberExpense6 = memberExpenseGenerator.generateSaved(endDate, "사용처6", 600, MainCategoryType.OTHER, null, null, null, member);
+        MemberExpense memberExpense7 = memberExpenseGenerator.generateSaved(endDate, "사용처7", 700, MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
         String accessToken = jwtTokenGenerator.generateAccessToken(member);
 
         MemberExpensesPeriodResponseV2 response = given().log().all()
@@ -202,8 +203,8 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 lastMonth.toLocalDate(),
                 "코코 과자",
                 5000,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 null,
                 now,
                 member
@@ -212,8 +213,8 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 lastMonth.toLocalDate(),
                 "코코 약",
                 5000,
-                "의료",
-                "소분류",
+                MainCategoryType.MEDICAL_EXPENSES,
+                null,
                 null,
                 now,
                 member
@@ -222,8 +223,8 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 now.toLocalDate(),
                 "코코 진료비",
                 10000,
-                "의료",
-                "소분류",
+                MainCategoryType.MEDICAL_EXPENSES,
+                null,
                 null,
                 now,
                 member
@@ -232,8 +233,8 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 now.toLocalDate(),
                 "코코 옷",
                 20000,
-                "물품구매",
-                "소분류",
+                MainCategoryType.SUPPLIES,
+                null,
                 null,
                 now,
                 member
@@ -269,8 +270,8 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 now.toLocalDate(),
                 "코코 진료비",
                 15000,
-                "의료",
-                "소분류",
+                MainCategoryType.MEDICAL_EXPENSES,
+                null,
                 null,
                 now,
                 member
@@ -279,8 +280,8 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 now.toLocalDate(),
                 "코코 옷",
                 20000,
-                "물품구매",
-                "소분류",
+                MainCategoryType.SUPPLIES,
+                null,
                 null,
                 now,
                 member
@@ -315,8 +316,8 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 now.minusDays(2L).toLocalDate(),
                 "류몽민 닭갈비",
                 100,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(2L),
                 member
@@ -325,8 +326,8 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 now.minusDays(1L).toLocalDate(),
                 "항아리 수제비",
                 200,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now.minusDays(1L),
                 member
@@ -335,8 +336,8 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 now.toLocalDate(),
                 "우럭 회",
                 300,
-                "식비",
-                "소분류",
+                MainCategoryType.FOOD_AND_TREATS,
+                null,
                 "메모",
                 now,
                 member
@@ -355,8 +356,8 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                         LocalDate.of(2026, 1, 10),
                         "사료(대용량)",
                         45000,
-                        "식비",
-                        "사료",
+                        MainCategoryType.FOOD_AND_TREATS,
+                        null,
                         "10kg 대용량 구매"
                 ),
                 new MemberExpenseUpsertRequest(
@@ -365,8 +366,8 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                         LocalDate.of(2026, 1, 5),
                         "미용",
                         70000,
-                        "미용비",
-                        "미용",
+                        MainCategoryType.GROOMING,
+                        null,
                         "털 정리"
                 )
         );

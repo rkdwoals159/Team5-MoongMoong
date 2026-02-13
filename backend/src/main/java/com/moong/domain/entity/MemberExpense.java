@@ -1,8 +1,12 @@
 package com.moong.domain.entity;
 
+import com.moong.domain.enums.MainCategoryType;
+import com.moong.domain.enums.SubCategoryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
@@ -44,11 +48,13 @@ public class MemberExpense {
     private long cost;
 
     @NotNull
-    @Column(name = "main_category", length = 50)
-    private String mainCategory;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private MainCategoryType mainCategory;
 
-    @Column(name = "sub_category", length = 50)
-    private String subCategory;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private SubCategoryType subCategory;
 
     private String memo;
 
@@ -60,4 +66,11 @@ public class MemberExpense {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
+
+    public String getSubCategoryName() {
+        if (this.subCategory != null) {
+            return this.subCategory.name();
+        }
+        return null;
+    }
 }
