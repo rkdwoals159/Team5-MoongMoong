@@ -564,6 +564,12 @@ export interface components {
         | "INF"
       )[];
     };
+    ErrorResponse: {
+      code?: string;
+      /** Format: int32 */
+      status?: number;
+      message?: string;
+    };
     /** @description 반려동물 생성 응답 */
     PetCreateResponse: {
       /**
@@ -649,12 +655,6 @@ export interface components {
         | "END"
         | "INF"
       )[];
-    };
-    ErrorResponse: {
-      code?: string;
-      /** Format: int32 */
-      status?: number;
-      message?: string;
     };
     /** @description 그룹 초대 요청 */
     PetGroupParticipateRequest: {

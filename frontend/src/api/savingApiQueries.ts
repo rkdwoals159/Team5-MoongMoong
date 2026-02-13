@@ -1,5 +1,5 @@
 "use server";
-import client from "@/lib/api";
+import { client } from "@/lib/api";
 import { components } from "@/types/schema";
 // 저금통 정보 조회
 export async function getBankInfo(): Promise<components["schemas"]["BankInfoResponse"] | null> {

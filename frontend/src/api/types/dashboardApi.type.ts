@@ -1,7 +1,6 @@
 import type { components } from "@schema";
 
 export type MemberExpensesUpsertRequest = components["schemas"]["MemberExpensesUpsertRequest"];
-export type MemberExpensesUpsertResponse = components["schemas"]["MemberExpensesUpsertResponse"];
 export type LastMonthComparisonResponse = components["schemas"]["LastMonthComparisonResponse"];
 
 export type ExpenseData = {

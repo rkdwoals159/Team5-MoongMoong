@@ -5,7 +5,6 @@ import type {
   ExpenseData,
   ExpensesByPeriodResponse,
   MemberExpensesUpsertRequest,
-  MemberExpensesUpsertResponse,
   SummaryData,
 } from "@/api/types/dashboardApi.type";
 import { EXPENSES_ERROR_MESSAGE } from "@/api/constants";
@@ -16,10 +15,8 @@ import { EXPENSES_ERROR_MESSAGE } from "@/api/constants";
  *
  * 성공 시 생성/수정된 내역 반환, 실패 시 throw.
  */
-export const patchExpenses = async (
-  body: MemberExpensesUpsertRequest,
-): Promise<MemberExpensesUpsertResponse> => {
-  const { data, error, response } = await client.PATCH("/api/expenses", {
+export const patchExpenses = async (body: MemberExpensesUpsertRequest) => {
+  const { error, response } = await client.PATCH("/api/expenses", {
     body,
   });
 
@@ -28,9 +25,7 @@ export const patchExpenses = async (
     throw new Error(EXPENSES_ERROR_MESSAGE);
   }
 
-  return {
-    expenses: data?.expenses ?? [],
-  };
+  return;
 };
 
 /**

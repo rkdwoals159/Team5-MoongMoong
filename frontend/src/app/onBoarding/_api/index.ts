@@ -1,4 +1,4 @@
-import client from "@/lib/api";
+import { client } from "@/lib/api";
 import type { components } from "@schema";
 
 export async function createPet() {
