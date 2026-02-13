@@ -6,7 +6,6 @@ import type { TokenPayload } from "@/app/api/auth/_types/cookies";
 export function setAuthCookies(res: NextResponse, payload: TokenPayload) {
   const { accessToken, refreshToken, accessMaxAge, refreshMaxAge } = resolveTokens(payload);
   const IS_PRODUCTION = process.env.NODE_ENV === "production";
-
   if (accessToken) {
     res.cookies.set(ACCESS_COOKIE, accessToken, {
       httpOnly: true,
@@ -48,14 +47,17 @@ export function setAuthCookiesFromHeaders(res: NextResponse, headers: Headers) {
 }
 
 export function clearAuthCookies(res: NextResponse) {
+  const IS_PRODUCTION = process.env.NODE_ENV === "production";
   res.cookies.set(ACCESS_COOKIE, "", {
     httpOnly: true,
+    secure: IS_PRODUCTION,
     sameSite: "lax",
     path: "/",
     maxAge: 0,
   });
   res.cookies.set(REFRESH_COOKIE, "", {
     httpOnly: true,
+    secure: IS_PRODUCTION,
     sameSite: "strict",
     path: AUTH_REFRESH_PATH,
     maxAge: 0,

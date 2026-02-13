@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import {
-  AUTH_CALLBACK_PATH,
   GOOGLE_OAUTH_ACCESS_TYPE,
   GOOGLE_OAUTH_AUTHORIZE_URL,
   GOOGLE_OAUTH_PROMPT,
   GOOGLE_OAUTH_SCOPE,
 } from "@/app/api/auth/_constants";
 import { encodeState, getInviteUrl, getReturnTo } from "@/app/api/auth/_lib";
+import { resolveGoogleRedirectUri } from "@/app/api/auth/_lib/oauth";
 import { requireEnv } from "@/app/api/auth/_utils";
 
 export async function GET(request: NextRequest) {
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   if (!clientEnv.ok) return clientEnv.response;
 
   const clientId = clientEnv.value;
-  const redirectUri = `${request.nextUrl.origin}${AUTH_CALLBACK_PATH}`;
+  const redirectUri = resolveGoogleRedirectUri(request);
   const returnTo = getReturnTo(request);
   const inviteUrl = getInviteUrl(request);
   const state = encodeState(returnTo, inviteUrl);

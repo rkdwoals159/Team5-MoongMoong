@@ -1,7 +1,7 @@
 export const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
 export const ACCESS_COOKIE = IS_PRODUCTION ? "__Host-access" : "dev_access";
-export const REFRESH_COOKIE = IS_PRODUCTION ? "__Host-refresh" : "dev_refresh";
+export const REFRESH_COOKIE = IS_PRODUCTION ? "__Secure-refresh" : "dev_refresh";
 
 export const authCookies = {
   access: ACCESS_COOKIE,
