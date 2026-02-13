@@ -10,7 +10,7 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   prettier,
-  // Override default ignores of eslint-config-next. (node_modules, 빌드 산출물 포함)
+  // Override default ignores of eslint-config-next.
   globalIgnores([".next/**", "out/**", "build/**", "html/**", "next-env.d.ts"]),
   ...storybook.configs["flat/recommended"],
 ]);

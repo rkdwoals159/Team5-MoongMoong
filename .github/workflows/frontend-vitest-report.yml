@@ -30,7 +30,7 @@ jobs:
         run: yarn install --no-lockfile
 
       - name: Run tests with HTML report
-        run: yarn vitest run --project=unit --reporter=html
+        run: yarn vitest run --project=unit
         env:
           CI: true
 

@@ -9,7 +9,7 @@ export type ExpenseData = {
   cost?: number | null;
   mainCategory?: string | null;
   subCategory?: string;
-  memo: string;
+  memo: string | null;
   modifiedAt?: string;
 };
 
