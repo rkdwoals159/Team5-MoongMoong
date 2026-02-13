@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import NewSavingEmptyState from "@/app/(sidebar)/saving/_components/NewSavingEmptyState";
-import NewSavingForm from "@/app/(sidebar)/saving/_components/NewSavingForm";
+import NewSavingEmptyState from "@/app/(sidebar)/saving/_components/piggybank/NewSavingEmptyState";
+import NewSavingForm from "@/app/(sidebar)/saving/_components/piggybank/NewSavingForm";
 import { useCreateSaving } from "@/app/(sidebar)/saving/_hooks/useCreateSaving";
 
 export default function MakeNewSaving() {

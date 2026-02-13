@@ -1,7 +1,7 @@
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
 import { calcProgress } from "@/app/(sidebar)/saving/_utils";
 
-const SavingStatus = () => {
+export default function SavingStatus() {
   const { status } = useSavingStatus();
   const progress = calcProgress(status.current, status.target);
 
@@ -20,6 +20,4 @@ const SavingStatus = () => {
       </div>
     </div>
   );
-};
-
-export default SavingStatus;
+}

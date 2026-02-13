@@ -7,13 +7,13 @@ import CloseIcon from "@/assets/icons/components/close.svg";
 import type { SavingTargetModalProps } from "@/app/(sidebar)/saving/_types";
 import { useAmountInput } from "@/app/(sidebar)/saving/_hooks/useAmountInput";
 
-const SavingTargetModal = ({
+export default function SavingTargetModal({
   initialTarget,
   currentAmount,
   onClose,
   onSubmit,
   focusRef,
-}: SavingTargetModalProps) => {
+}: SavingTargetModalProps) {
   const { value, numericValue, handleChange } = useAmountInput({
     initialValue: initialTarget,
   });
@@ -68,6 +68,4 @@ const SavingTargetModal = ({
       </div>
     </>
   );
-};
-
-export default SavingTargetModal;
+}

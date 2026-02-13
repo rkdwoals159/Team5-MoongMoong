@@ -1,11 +1,11 @@
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
 
-const SavingRanking = () => {
+export default function SavingRanking() {
   const { status } = useSavingStatus();
   return (
     <>
       <h2 className="typo-title-l-bold">우리 가족 저금 랭킹</h2>
-      <p className="typo-body-l-medium text-gray-400">누가 또리를 가장 사랑할까?</p>
+      <p className="typo-body-l-medium text-gray-400">누가 {status.petName}를 가장 사랑할까?</p>
       <div className="flex flex-col gap-300 mt-700 overflow-y-auto flex-1 min-h-0">
         {status.rankings.map((ranking, index) => (
           <div key={ranking.userName} className="flex gap-500 mt-500">
@@ -23,6 +23,4 @@ const SavingRanking = () => {
       </div>
     </>
   );
-};
-
-export default SavingRanking;
+}

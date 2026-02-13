@@ -29,7 +29,7 @@ vi.mock("matter-js", () => {
 });
 
 import { Bodies, Query } from "matter-js";
-import { createWalls, createCoinBody, findTooltipTarget } from "../piggyBank.util";
+import { createWalls, createCoinBody, findTooltipTarget } from "../piggyBankUtil";
 import type { Engine } from "matter-js";
 
 beforeEach(() => {

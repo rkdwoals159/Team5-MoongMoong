@@ -10,14 +10,14 @@ type SavingStatusContextType = {
 
 export const SavingStatusContext = createContext<SavingStatusContextType | null>(null);
 
-export const SavingStatusProvider = ({
+export function SavingStatusProvider({
   status,
   setStatus,
   children,
-}: SavingStatusContextType & PropsWithChildren) => {
+}: SavingStatusContextType & PropsWithChildren) {
   return (
     <SavingStatusContext.Provider value={{ status, setStatus }}>
       {children}
     </SavingStatusContext.Provider>
   );
-};
+}

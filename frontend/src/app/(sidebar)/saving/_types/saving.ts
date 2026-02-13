@@ -4,15 +4,18 @@ export type Coin = components["schemas"]["CoinResponse"];
 export type BankRanking = components["schemas"]["BankRankingResponse"];
 
 export type SavingStatus = {
+  petName: string;
   bankId: number;
   target: number;
   current: number;
   rankings: BankRanking[];
+  coins: Coin[];
 };
 
 export type SavingClientProps = {
   bankInfo: BankInfo;
   coins: Coin[];
+  petName: string;
 };
 
 // SavingTargetModal

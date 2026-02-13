@@ -6,13 +6,14 @@ import ClientModal from "@/components/ui/Modal/ClientModal";
 import { formatAmountPlain } from "@/utils/amount";
 import { AMOUNT_PRESETS } from "@/app/(sidebar)/saving/_constants";
 import type { SavingModalProps } from "@/app/(sidebar)/saving/_types";
-import { updateRankings } from "@/app/(sidebar)/saving/_lib";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
 import { ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { useAmountInput } from "@/app/(sidebar)/saving/_hooks/useAmountInput";
 import useTossPayments from "@/app/(sidebar)/saving/_hooks/useTossPayments";
 import SavingConfirmDialog from "./SavingConfirmDialog";
+import { getBankInfo } from "@/app/(sidebar)/saving/_api";
+import type { BankInfoResponse } from "@/api/types/savingApi.type";
 
 export default function SavingModal({ open, onClose, handleDrop }: SavingModalProps) {
   const { status, setStatus } = useSavingStatus();
@@ -20,6 +21,7 @@ export default function SavingModal({ open, onClose, handleDrop }: SavingModalPr
   const { value, numericValue, handleChange, reset, addAmount } = useAmountInput();
   const { showToast } = useToast();
   const { isReady, isLoading, error, clearError, requestPayment } = useTossPayments(ANONYMOUS);
+  const isValid = numericValue > 0;
 
   useEffect(() => {
     if (error) {
@@ -31,8 +33,6 @@ export default function SavingModal({ open, onClose, handleDrop }: SavingModalPr
     }
   }, [error, showToast, clearError]);
 
-  const isValid = numericValue > 0;
-
   const handleSubmitClick = () => {
     if (!isValid || !isReady) return;
     setShowConfirm(true);
@@ -42,14 +42,34 @@ export default function SavingModal({ open, onClose, handleDrop }: SavingModalPr
     const response = await requestPayment(numericValue);
 
     if (!response) {
+      setShowConfirm(false);
       return;
     }
+
+    let bankInfo: BankInfoResponse | null = null;
+    try {
+      bankInfo = await getBankInfo();
+    } catch {
+      showToast({
+        variant: "error",
+        message: "랭킹 정보를 불러오지 못했습니다.",
+      });
+    }
+
+    showToast({
+      variant: "success",
+      message: `${response.amount}원을 저금했습니다.`,
+    });
 
     handleDrop(response.name, response.amount, response.createdAt, status.target);
     setStatus((prev) => ({
       ...prev,
-      current: prev.current + numericValue,
-      rankings: updateRankings(prev.rankings, response.name, numericValue),
+      current: prev.current + response.amount,
+      rankings: bankInfo?.rankings || prev.rankings,
+      coins: [
+        ...prev.coins,
+        { name: response.name, amount: response.amount, createdAt: response.createdAt },
+      ],
     }));
 
     setShowConfirm(false);

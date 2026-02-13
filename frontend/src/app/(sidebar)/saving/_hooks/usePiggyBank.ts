@@ -10,7 +10,7 @@ import {
   findTooltipTarget,
 } from "@/app/(sidebar)/saving/_utils";
 
-const usePiggyBank = () => {
+export default function usePiggyBank() {
   const sceneRef = useRef<HTMLDivElement | null>(null);
   const engineRef = useRef<Engine | null>(null);
   const renderRef = useRef<Render | null>(null);
@@ -112,9 +112,14 @@ const usePiggyBank = () => {
     render.canvas.addEventListener("mouseleave", handleMouseLeave);
     Events.on(render, "afterRender", handleAfterRender);
 
-    queueMicrotask(() => setReady(true));
+    const textureImg = new Image();
+    textureImg.src = PIGGY_BANK.COIN_TEXTURE_PATH;
+    textureImg.onload = () => setReady(true);
+    textureImg.onerror = () => setReady(true);
 
     cleanup = () => {
+      textureImg.onload = null;
+      textureImg.onerror = null;
       if (rafId !== null) {
         cancelAnimationFrame(rafId);
       }
@@ -157,6 +162,4 @@ const usePiggyBank = () => {
     handleDrop,
     clearCoins,
   };
-};
-
-export default usePiggyBank;
+}

@@ -31,6 +31,7 @@ export default function useTossPayments(customerKey: string) {
         setError(new Error("결제가 불가능한 상태입니다."));
       });
     // customerKey 는 로그아웃 하지 않는 이상 변경되지 않으므로, 초기화 시점에만 로드하면 된다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 결제 플로우
@@ -38,7 +39,10 @@ export default function useTossPayments(customerKey: string) {
     async (requestAmount: number) => {
       // 이미 진행 중이면 중복 요청 방지
       if (isLoading) return null;
-      if (!payment) throw new Error("결제 모듈이 준비되지 않았습니다.");
+      if (!payment) {
+        setError(new Error("결제 모듈이 준비되지 않았습니다."));
+        return null;
+      }
       setError(null);
       setIsLoading(true);
 
@@ -111,6 +115,7 @@ export default function useTossPayments(customerKey: string) {
         setIsLoading(false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [payment],
   );
 
