@@ -2,7 +2,10 @@
 
 import { useCallback } from "react";
 import type { UseExpenseRowSaveParams } from "@/app/(sidebar)/dashboard/_types";
-import { SAVE_ERROR_MESSAGE } from "@/app/(sidebar)/dashboard/_constants";
+import {
+  SAVE_ERROR_MESSAGE,
+  SAVE_VALIDATION_ERROR_MESSAGE,
+} from "@/app/(sidebar)/dashboard/_constants";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { patchExpenses, getExpensesByPeriod } from "@/api/dashboardApi";
 
@@ -17,8 +20,16 @@ export function useExpenseRowSave({
     async (startDate: string, endDate: string): Promise<void> => {
       if (!hasUnsavedChanges) return;
 
+      const { payload, invalidCount } = getPatchPayload();
+      if (invalidCount > 0) {
+        showToast({
+          variant: "error",
+          message: SAVE_VALIDATION_ERROR_MESSAGE,
+        });
+        return;
+      }
+
       try {
-        const payload = getPatchPayload();
         await patchExpenses(payload);
         const { expenses } = await getExpensesByPeriod(startDate, endDate);
         mergeRowsFromServer(expenses);

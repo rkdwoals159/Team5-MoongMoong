@@ -65,7 +65,7 @@ export type UseExpenseTableColumnsParams = {
  * useExpenseRowSave 파라미터 타입
  */
 export type UseExpenseRowSaveParams = {
-  getPatchPayload: () => MemberExpensesUpsertRequest;
+  getPatchPayload: () => { payload: MemberExpensesUpsertRequest; invalidCount: number };
   mergeRowsFromServer: (newRows: ExpenseData[]) => void;
   hasUnsavedChanges: boolean;
 };

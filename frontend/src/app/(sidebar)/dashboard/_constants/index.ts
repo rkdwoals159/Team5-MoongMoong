@@ -23,4 +23,5 @@ export {
 export {
   EXPENSES_ERROR_MESSAGE,
   SAVE_ERROR_MESSAGE,
+  SAVE_VALIDATION_ERROR_MESSAGE,
 } from "@/app/(sidebar)/dashboard/_constants/messages";

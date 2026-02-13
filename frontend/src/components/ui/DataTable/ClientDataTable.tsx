@@ -130,7 +130,9 @@ const ClientDataTable = <T,>({
     ) : mode === "edit" && col.editor ? (
       col.editor(row[col.accessor], row, rowIndex)
     ) : (
-      <span>{row[col.accessor] == null ? "-" : String(row[col.accessor])}</span>
+      <span>
+        {row[col.accessor] == null || row[col.accessor] === "" ? "-" : String(row[col.accessor])}
+      </span>
     );
   };
 

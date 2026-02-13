@@ -33,6 +33,9 @@ export function useExpenseTableSelection(rowCount: number) {
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
+      // 한글 등 IME 조합 중에는 키 처리하지 않음 (두 번 이동 방지)
+      if (e.nativeEvent.isComposing) return;
+
       switch (e.key) {
         case "Tab": {
           const next = getNextTabCell(selectedCell, rowCount);

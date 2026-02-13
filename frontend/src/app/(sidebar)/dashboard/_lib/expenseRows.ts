@@ -4,6 +4,7 @@ import { createEmptyRow } from "@/app/(sidebar)/dashboard/_lib/createEmptyRow";
 import { joinNonEmpty } from "@/utils/string";
 import type { components } from "@schema";
 type MemberExpensesUpsertRequest = components["schemas"]["MemberExpensesUpsertRequest"];
+type MemberExpenseUpsertRequest = components["schemas"]["MemberExpenseUpsertRequest"];
 
 /** ExpenseData → EditableExpenseRow 변환 */
 export const serverToEditableRow = (serverRow: ExpenseData): EditableExpenseRow => {
@@ -53,10 +54,45 @@ export const mergeRows = (
   });
 };
 
-/** rows에서 isDirty/isNew/isDeleted 기준으로 PATCH 페이로드 생성 */
-export const buildPatchPayload = (rows: EditableExpenseRow[]): MemberExpensesUpsertRequest => {
+/**
+ * API 전송 가능 여부: subCategory, memo만 null 허용. 새 행이면 expenseId도 null 허용.
+ * 그 외 spentAt, usage, cost, mainCategory는 필수.
+ */
+function isRowValidForPatch(row: EditableExpenseRow): boolean {
+  const spentAt = row.spentAt;
+  if (spentAt == null || String(spentAt).trim() === "") return false;
+
+  const usage = row.usage;
+  if (usage == null || String(usage).trim() === "") return false;
+
+  const cost =
+    typeof row.cost === "number"
+      ? row.cost
+      : row.cost != null && row.cost !== ""
+        ? Number(row.cost)
+        : null;
+  if (cost == null || Number.isNaN(cost)) return false;
+
+  const mainCategory = row.mainCategory;
+  if (mainCategory == null || String(mainCategory).trim() === "") return false;
+
+  if (!row.isNew) {
+    if (row.expenseId == null || row.expenseId <= 0) return false;
+  }
+
+  return true;
+}
+
+export type BuildPatchPayloadResult = {
+  payload: MemberExpensesUpsertRequest;
+  invalidCount: number;
+};
+
+/** rows에서 isDirty/isNew 기준으로 PATCH 페이로드 생성. 필수 필드가 비어 있는 행은 제외하고 invalidCount에 반영. */
+export const buildPatchPayload = (rows: EditableExpenseRow[]): BuildPatchPayloadResult => {
   const expenses: MemberExpensesUpsertRequest["expenses"] = [];
   const deletedIds: number[] = [];
+  let invalidCount = 0;
 
   rows.forEach((row) => {
     if (row.isDeleted && row.expenseId != null && row.expenseId > 0) {
@@ -65,26 +101,38 @@ export const buildPatchPayload = (rows: EditableExpenseRow[]): MemberExpensesUps
     }
 
     if (row.isNew || row.isDirty) {
+      if (!isRowValidForPatch(row)) {
+        invalidCount += 1;
+        return;
+      }
+
       const cost =
         typeof row.cost === "number"
           ? row.cost
           : row.cost != null && row.cost !== ""
             ? Number(row.cost)
-            : undefined;
+            : null;
+      const spentAt = String(row.spentAt ?? "").trim();
+      const usage = String(row.usage ?? "").trim();
+      const mainCategory = String(row.mainCategory ?? "").trim();
+      const subCategory =
+        row.subCategory != null && row.subCategory !== "" ? row.subCategory : null;
+      const memo = row.memo != null && row.memo !== "" ? row.memo : null;
+
       expenses.push({
         isNew: row.isNew,
-        expenseId: row.isNew ? undefined : row.expenseId,
-        spentAt: row.spentAt,
-        usage: row.usage,
-        cost,
-        mainCategory: row.mainCategory ?? undefined,
-        subCategory: row.subCategory,
-        memo: row.memo,
-      });
+        expenseId: row.isNew ? null : row.expenseId,
+        spentAt,
+        usage,
+        cost: cost as number,
+        mainCategory,
+        subCategory,
+        memo,
+      } as MemberExpenseUpsertRequest);
     }
   });
 
-  return { expenses, deletedIds };
+  return { payload: { expenses, deletedIds }, invalidCount };
 };
 
 /** 선택된 행들을 하나의 merged row로 생성 */
