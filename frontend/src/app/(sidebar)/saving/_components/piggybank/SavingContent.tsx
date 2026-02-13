@@ -30,8 +30,9 @@ export default function SavingContent() {
 
   // 초기 코인 드랍
   useEffect(() => {
-    if (!ready || !status.coins.length || hasDroppedRef.current) return;
+    if (!ready || hasDroppedRef.current) return;
     hasDroppedRef.current = true;
+    if (!status.coins.length) return;
     const timers: ReturnType<typeof setTimeout>[] = [];
     status.coins.forEach((coin, index) => {
       const timerId = setTimeout(() => {

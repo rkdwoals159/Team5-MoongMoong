@@ -4,7 +4,7 @@ import ToastProvider from "@/components/ui/Toast/ToastProvider";
 import { useCreateSaving } from "../useCreateSaving";
 
 const mockCreateNewSaving = vi.fn();
-vi.mock("@/app/(sidebar)/saving/_api", () => ({
+vi.mock("@/api/savingApiActions", () => ({
   createNewSaving: (...args: unknown[]) => mockCreateNewSaving(...args),
 }));
 
