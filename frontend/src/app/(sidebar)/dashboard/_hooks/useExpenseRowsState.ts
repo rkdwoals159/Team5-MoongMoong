@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import type { ExpenseData, EditableExpenseRow } from "@/app/(sidebar)/dashboard/_types";
 import { SYNC_FIELDS } from "@/app/(sidebar)/dashboard/_constants";
 import {
@@ -15,6 +15,10 @@ export function useExpenseRowsState(initialData: ExpenseData[]) {
   const [rows, setRows] = useState<EditableExpenseRow[]>(() =>
     initialData.map(serverToEditableRow),
   );
+
+  useEffect(() => {
+    setRows(initialData.map(serverToEditableRow));
+  }, [initialData]);
 
   const visibleRows = useMemo(() => rows.filter((row) => !row.isDeleted), [rows]);
   const displayInitialRows = useMemo(() => [...visibleRows, createEmptyRow(0)], [visibleRows]);

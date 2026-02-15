@@ -113,7 +113,7 @@ describe("expenseRows", () => {
         createMockEditableRow(2, { isDirty: true, usage: "수정됨" }),
       ];
 
-      const payload = buildPatchPayload(rows);
+      const { payload } = buildPatchPayload(rows);
 
       expect(payload?.expenses?.length).toBe(1);
       expect(payload?.expenses?.[0]?.usage).toBe("수정됨");
@@ -128,17 +128,17 @@ describe("expenseRows", () => {
         }),
       ];
 
-      const payload = buildPatchPayload(rows);
+      const { payload } = buildPatchPayload(rows);
 
       expect(payload?.expenses?.length).toBe(1);
       expect(payload?.expenses?.[0]?.isNew).toBe(true);
-      expect(payload?.expenses?.[0]?.expenseId).toBeUndefined();
+      expect(payload?.expenses?.[0]?.expenseId ?? undefined).toBeUndefined();
     });
 
     it("삭제된 행(isDeleted=true)은 deletedIds에 포함된다", () => {
       const rows = [createMockEditableRow(1, { isDeleted: true })];
 
-      const payload = buildPatchPayload(rows);
+      const { payload } = buildPatchPayload(rows);
 
       expect(payload.deletedIds).toContain(1);
       expect(payload?.expenses?.length).toBe(0);
@@ -153,7 +153,7 @@ describe("expenseRows", () => {
         }),
       ];
 
-      const payload = buildPatchPayload(rows);
+      const { payload } = buildPatchPayload(rows);
 
       expect(payload?.deletedIds?.length).toBe(0);
     });

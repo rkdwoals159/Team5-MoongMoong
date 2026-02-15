@@ -31,6 +31,7 @@ function createKeyboardEvent(key: "Tab" | "Enter") {
   return {
     key,
     preventDefault: vi.fn(),
+    nativeEvent: { isComposing: false },
   } as unknown as React.KeyboardEvent<HTMLDivElement>;
 }
 

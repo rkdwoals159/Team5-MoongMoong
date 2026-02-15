@@ -234,7 +234,7 @@ describe("useExpenseRowsState", () => {
         result.current.deleteSelectedRows();
       });
 
-      const payload = result.current.getPatchPayload();
+      const { payload } = result.current.getPatchPayload();
 
       expect(payload.expenses).toHaveLength(1);
       expect(payload?.expenses?.[0]?.usage).toBe("수정된 항목");
@@ -248,7 +248,7 @@ describe("useExpenseRowsState", () => {
       const serverData = [createMockServerRow(1)];
       const { result } = renderHook(() => useExpenseRowsState(serverData));
 
-      const payload = result.current.getPatchPayload();
+      const { payload } = result.current.getPatchPayload();
 
       expect(payload.expenses).toHaveLength(0);
       expect(payload.deletedIds).toHaveLength(0);

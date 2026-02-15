@@ -22,7 +22,10 @@ vi.mock("@/components/ui/Toast/ToastProvider", () => ({
 
 describe("useExpenseRowSave", () => {
   const defaultParams = {
-    getPatchPayload: vi.fn(() => ({ expenses: [] })),
+    getPatchPayload: vi.fn(() => ({
+      payload: { expenses: [], deletedIds: [] },
+      invalidCount: 0,
+    })),
     mergeRowsFromServer: vi.fn(),
     hasUnsavedChanges: true,
   };
@@ -52,7 +55,7 @@ describe("useExpenseRowSave", () => {
 
   describe("시나리오: 저장 성공 플로우", () => {
     it("patch 후 같은 기간으로 재조회하고, 결과를 mergeRowsFromServer에 넘긴다", async () => {
-      const payload = { expenses: [{ expenseId: 1, usage: "점심" }] };
+      const payload = { expenses: [{ expenseId: 1, usage: "점심" }], deletedIds: [] };
       const refreshed: ExpenseData[] = [
         {
           expenseId: 1,
@@ -64,8 +67,11 @@ describe("useExpenseRowSave", () => {
           memo: "",
         },
       ];
-      defaultParams.getPatchPayload.mockReturnValue(payload as never);
-      mockPatchExpenses.mockResolvedValue({ expenses: [] });
+      defaultParams.getPatchPayload.mockReturnValue({
+        payload,
+        invalidCount: 0,
+      } as never);
+      mockPatchExpenses.mockResolvedValue(undefined);
       mockGetExpensesByPeriod.mockResolvedValue({
         expenses: refreshed,
         total: 1,
@@ -104,7 +110,7 @@ describe("useExpenseRowSave", () => {
 
   describe("시나리오: patch 성공 후 재조회 API 실패", () => {
     it("토스트를 띄우고 mergeRowsFromServer는 호출하지 않는다", async () => {
-      mockPatchExpenses.mockResolvedValue({ expenses: [] });
+      mockPatchExpenses.mockResolvedValue(undefined);
       mockGetExpensesByPeriod.mockRejectedValue(new Error("조회 실패"));
 
       const { result } = renderHook(() => useExpenseRowSave(defaultParams));
