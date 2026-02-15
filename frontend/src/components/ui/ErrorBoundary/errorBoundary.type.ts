@@ -19,4 +19,15 @@ export type ErrorBoundaryProps = {
 
 export type ErrorBoundaryState = {
   error: Error | null;
+  /** children remount를 위한 단조 증가 키 */
+  retryKey: number;
+  /** 연속 재시도 횟수 (복구 시 초기화) */
+  retryAttempts: number;
+};
+
+export type DefaultErrorFallbackProps = {
+  message?: string;
+  onReset: () => void;
+  refreshOnReset?: boolean;
+  retryAttempts: number;
 };
