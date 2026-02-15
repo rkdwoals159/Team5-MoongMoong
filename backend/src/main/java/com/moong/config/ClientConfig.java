@@ -20,6 +20,11 @@ public class ClientConfig {
 
     private static final int CATEGORY_CLIENT_CONNECTION_TIMEOUT_MILLIS = 2000;
     private static final int CATEGORY_CLIENT_READ_TIMEOUT_MILLIS = 3000;
+    private static final int LLM_ANALYZER_CONNECTION_TIMEOUT = 10000;
+    private static final int LLM_ANALYZER_READ_TIMEOUT = 60000;
+    private static final int SLACK_SENDER_CONNECTION_TIMEOUT = 5000;
+    private static final int SLACK_SENDER_READ_TIMEOUT = 10000;
+
 
     @Bean
     public RestClient.Builder clientBuilder() {
@@ -27,19 +32,45 @@ public class ClientConfig {
     }
 
     @Bean
-    @Qualifier("categorizeClientBuilder")
-    public WebClient.Builder categorizeClientBuilder(ObjectMapper objectMapper) {
+    @Qualifier("llmAnalyzerClientBuilder")
+    public WebClient.Builder llmAnalayzeClientBuilder(ObjectMapper objectMapper) {
+        HttpClient llmAnalyzeHttpClient = HttpClient.create()
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, LLM_ANALYZER_CONNECTION_TIMEOUT)
+                .responseTimeout(Duration.ofMillis(LLM_ANALYZER_READ_TIMEOUT));
+
         return WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(httpClient()))
+                .clientConnector(new ReactorClientHttpConnector(llmAnalyzeHttpClient))
                 .exchangeStrategies(registerJacksonMapper(objectMapper))
                 .filter(WebClientLoggingFilter.logRequest())
                 .filter(WebClientLoggingFilter.logResponseWithBody());
     }
 
-    private HttpClient httpClient() {
-        return HttpClient.create()
+    @Bean
+    @Qualifier("slackClientBuilder")
+    public WebClient.Builder slackClientBuilder(ObjectMapper objectMapper) {
+        HttpClient slackHttpClient = HttpClient.create()
+                .responseTimeout(Duration.ofMillis(SLACK_SENDER_READ_TIMEOUT))
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, SLACK_SENDER_CONNECTION_TIMEOUT);
+
+        return WebClient.builder()
+                .clientConnector(new ReactorClientHttpConnector(slackHttpClient))
+                .exchangeStrategies(registerJacksonMapper(objectMapper))
+                .filter(WebClientLoggingFilter.logRequest())
+                .filter(WebClientLoggingFilter.logResponseWithBody());
+    }
+
+    @Bean
+    @Qualifier("categorizeClientBuilder")
+    public WebClient.Builder categorizeClientBuilder(ObjectMapper objectMapper) {
+        HttpClient categorizeHttpClient = HttpClient.create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, CATEGORY_CLIENT_CONNECTION_TIMEOUT_MILLIS)
                 .responseTimeout(Duration.ofMillis(CATEGORY_CLIENT_READ_TIMEOUT_MILLIS));
+
+        return WebClient.builder()
+                .clientConnector(new ReactorClientHttpConnector(categorizeHttpClient))
+                .exchangeStrategies(registerJacksonMapper(objectMapper))
+                .filter(WebClientLoggingFilter.logRequest())
+                .filter(WebClientLoggingFilter.logResponseWithBody());
     }
 
     private ExchangeStrategies registerJacksonMapper(ObjectMapper objectMapper) {

@@ -1,7 +1,6 @@
 package com.moong.exception.errorcode;
 
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
@@ -64,5 +63,9 @@ public enum ErrorCode {
     ErrorCode(int statusCode, String message) {
         this.statusCode = statusCode;
         this.message = message;
+    }
+
+    public boolean isClientException() {
+        return statusCode / 100 == 4;
     }
 }

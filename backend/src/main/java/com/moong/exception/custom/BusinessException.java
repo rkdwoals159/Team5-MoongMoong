@@ -12,4 +12,8 @@ public class BusinessException extends RuntimeException{
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
+
+    public boolean isClientError() {
+        return errorCode.isClientException();
+    }
 }

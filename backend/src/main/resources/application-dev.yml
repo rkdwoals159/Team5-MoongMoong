@@ -54,6 +54,7 @@ logging:
 
 slack:
   webhook-url: ${ERROR_SLACK_WEBHOOK_URL:}
+  client-error-webhook-url: ${CLIENT_ERROR_SLACK_WEBHOOK_URL:}
 
 category-classification:
   system-prompt: |
@@ -97,3 +98,7 @@ jwt:
   access_token_expiration: ${JWT_ACCESS_EXPIRATION}
   refresh_token_expiration: ${JWT_REFRESH_EXPIRATION}
 
+flowise:
+  base-url: ${FLOWISE_URL:}
+  id: ${FLOWISE_ID:}
+  key: ${FLOWISE_KEY:}

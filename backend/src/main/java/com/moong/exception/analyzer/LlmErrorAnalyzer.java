@@ -13,32 +13,36 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.concurrent.CompletableFuture;
+import lombok.extern.slf4j.Slf4j;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClient;
+import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.web.reactive.function.client.WebClient;
 
-@Component
-@EnableConfigurationProperties(LlmProperties.class)
-public class LlmErrorAnalyzer {
+@Slf4j
+public class LlmErrorAnalyzer implements ErrorAnalyzer {
 
-    private final RestClient restClient;
+    private final WebClient webClient;
     private final LlmProperties llmProperties;
 
-    public LlmErrorAnalyzer(RestClient.Builder restClientBuilder, LlmProperties llmProperties) {
-        this.restClient = restClientBuilder.build();
+    public LlmErrorAnalyzer(
+            WebClient.Builder webClientBuilder,
+            LlmProperties llmProperties
+    ) {
+        this.webClient = webClientBuilder.build();
         this.llmProperties = llmProperties;
     }
 
-    public AnalyzeErrorResponse analyze(AnalyzeErrorRequest request) {
-        List<StackTraceElement> stackTraceElements = Arrays.stream(request.exception()
-                        .getStackTrace())
-                        .toList();
+    @Async
+    public CompletableFuture<AnalyzeErrorResponse> analyze(AnalyzeErrorRequest request) {
+        List<StackTraceElement> stackTraceElements = Arrays.stream(request.exception().getStackTrace())
+                .toList();
 
         StringJoiner joiner = new StringJoiner(System.lineSeparator());
         joiner.add("httpMethod: " + request.httpMethod().toLowerCase());
@@ -47,13 +51,16 @@ public class LlmErrorAnalyzer {
         joiner.add("methodSignatures : " + getMethodSignatures(stackTraceElements));
         Map<String, String> requestBody = Map.of("question", joiner.toString().trim());
 
-        //인증 헤더 설정 필요
-        return restClient.post()
-                .uri("/api/v1/prediction/" + llmProperties.id())
-                .body(requestBody)
+        log.info("LLM Analyzer request body: {}", requestBody);
+
+        return webClient.post()
+                .uri(llmProperties.baseUrl() + llmProperties.id())
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(httpHeaders -> httpHeaders.setBearerAuth(llmProperties.key()))
+                .bodyValue(requestBody)
                 .retrieve()
-                .toEntity(AnalyzeErrorResponse.class)
-                .getBody();
+                .bodyToMono(AnalyzeErrorResponse.class)
+                .toFuture();
     }
 
     private String getStackTraceAsString(String message, List<StackTraceElement> stackTrace) {
@@ -88,7 +95,6 @@ public class LlmErrorAnalyzer {
         }
 
         for (MethodNode method : classNode.methods) {
-
             if (method.instructions == null) {
                 continue;
             }

@@ -23,6 +23,8 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 @Component
 public class LoggingFilter extends OncePerRequestFilter {
 
+    public static final String HTTP_METHOD_KEY = "httpMethod";
+    public static final String HTTP_PATH_KEY = "httpPath";
     private static final String MDC_REQUEST_ID_KEY = "requestId";
     private static final String SENSITIVE_HEADER_VALUE = "****";
     private static final String EMPTY_STRING = "";
@@ -35,6 +37,8 @@ public class LoggingFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
         MDC.put(MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+        MDC.put(HTTP_METHOD_KEY, request.getMethod());
+        MDC.put(HTTP_PATH_KEY, request.getRequestURI());
 
         ContentCachingRequestWrapper cachingRequest = new ContentCachingRequestWrapper(request);
         ContentCachingResponseWrapper cachingResponse = new ContentCachingResponseWrapper(response);
