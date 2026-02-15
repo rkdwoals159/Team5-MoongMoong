@@ -57,3 +57,7 @@ opencode.json
 AGENTS.md
 logs
 CLAUDE.md
+
+# lighthouse ci
+lhci_reports
+.lighthouseci

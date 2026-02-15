@@ -14,10 +14,13 @@ export const client = createClient<paths>({
   fetch: async (input: RequestInfo | URL, init?: RequestInit) => {
     const hasCache = init?.cache;
     const mergedHeaders = new Headers(input instanceof Request ? input.headers : undefined);
-    const cookieStore = await cookies();
-    const token = cookieStore.get(ACCESS_COOKIE)?.value;
-    if (token && !mergedHeaders.has("Authorization")) {
-      mergedHeaders.set("Authorization", `Bearer ${token}`);
+    if (process.env.LHCI === "true" && process.env.LHCI_TEST_AUTH) {
+      mergedHeaders.set("Authorization", process.env.LHCI_TEST_AUTH);
+    } else {
+      const token = (await cookies()).get(ACCESS_COOKIE)?.value;
+      if (token && !mergedHeaders.has("Authorization")) {
+        mergedHeaders.set("Authorization", `Bearer ${token}`);
+      }
     }
     return fetch(input, {
       ...init,

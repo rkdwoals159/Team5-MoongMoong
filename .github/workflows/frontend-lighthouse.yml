@@ -1,0 +1,236 @@
+name: Frontend Lighthouse CI
+
+on:
+  pull_request:
+    branches: [develop]
+    types: [opened, synchronize]
+    paths:
+      - 'frontend/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lhci:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 25.2.1
+
+      - name: Install dependencies
+        run: yarn install --no-lockfile
+
+      - name: Build
+        run: yarn build
+        env:
+          LHCI: 'true'
+          LHCI_TEST_AUTH: ${{ secrets.LHCI_TEST_AUTH }}
+          BASE_API_URL: ${{ secrets.BASE_API_URL }}
+
+      - name: Run Lighthouse CI (Desktop)
+        run: |
+          npx @lhci/cli collect --config=lighthouserc-desktop.js || echo 'Fail to Run Lighthouse CI (Desktop)'
+          npx @lhci/cli upload --config=lighthouserc-desktop.js || echo 'Fail to Upload Lighthouse CI (Desktop)'
+        env:
+          LHCI: 'true'
+          LHCI_TEST_AUTH: ${{ secrets.LHCI_TEST_AUTH }}
+          BASE_API_URL: ${{ secrets.BASE_API_URL }}
+
+      - name: Format Lighthouse Score
+        id: format_lighthouse_score
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const {
+              getLhciPageNameFromUrl,
+              LHCI_GREEN_MIN_SCORE,
+              LHCI_ORANGE_MIN_SCORE,
+            } = require('./frontend/src/configs/lighthouse/Lighthouse.js');
+
+            const getColor = (score) => {
+              if (score >= LHCI_GREEN_MIN_SCORE) return '🟢';
+              if (score >= LHCI_ORANGE_MIN_SCORE) return '🟠';
+              return '🔴';
+            };
+
+            const getAuditColorAndScore = (score) => `${getColor(score)}${score}`;
+            const getMetricColorAndScore = (audit) => `${getColor(audit.score * 100)}${audit.displayValue}`;
+            const formatResult = (res) => Math.round(res * 100);
+
+            const desktopResults = JSON.parse(fs.readFileSync('./frontend/lhci_reports/desktop/manifest.json'));
+
+            // 페이지별로 그룹화 후 Performance 중앙값 run만 선택
+            const grouped = {};
+            desktopResults.forEach((result) => {
+              const pageUrl = result.url.replace('http://localhost:3000', '');
+              if (!grouped[pageUrl]) grouped[pageUrl] = [];
+              grouped[pageUrl].push(result);
+            });
+
+            const medianResults = Object.values(grouped).map((runs) => {
+              runs.sort((a, b) => a.summary.performance - b.summary.performance);
+              return runs[Math.floor(runs.length / 2)];
+            });
+
+            const monitoringTime = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
+            const scoreDescription = `> 🟢: ${LHCI_GREEN_MIN_SCORE} - 100 / 🟠: ${LHCI_ORANGE_MIN_SCORE} - ${LHCI_GREEN_MIN_SCORE - 1} / 🔴: 0 - ${LHCI_ORANGE_MIN_SCORE - 1}`;
+
+            let comments = '';
+            comments += `### Lighthouse report ✨\n`;
+            comments += `> [Moong 성능측정](https://docs.google.com/spreadsheets/d/1Q6cmwDpTvwskdYi6x3gMSxvp_i3OF729vHrLYSf91ZA/)\n\n`;
+            comments += `${scoreDescription}\n\n`;
+
+            const scores = {};
+
+            medianResults.forEach((result) => {
+              const { url, summary, jsonPath } = result;
+              const { audits } = JSON.parse(fs.readFileSync(jsonPath));
+
+              const pageUrl = url.replace('http://localhost:3000', '');
+              const pageName = getLhciPageNameFromUrl(pageUrl);
+
+              Object.keys(summary).forEach((key) => (summary[key] = formatResult(summary[key])));
+
+              const { performance, accessibility, 'best-practices': bestPractices, seo } = summary;
+              const fcp = audits['first-contentful-paint'];
+              const lcp = audits['largest-contentful-paint'];
+              const si = audits['speed-index'];
+              const tbt = audits['total-blocking-time'];
+              const cls = audits['cumulative-layout-shift'];
+
+              const formattedScoreTable = [
+                `| Category | Score |`,
+                `| --- | --- |`,
+                `| ${getColor(performance)} Performance | ${performance} |`,
+                `| ${getColor(accessibility)} Accessibility | ${accessibility} |`,
+                `| ${getColor(bestPractices)} Best Practices | ${bestPractices} |`,
+                `| ${getColor(seo)} SEO | ${seo} |`,
+                `| ${getColor(fcp.score * 100)} First Contentful Paint | ${fcp.displayValue} |`,
+                `| ${getColor(lcp.score * 100)} Largest Contentful Paint | ${lcp.displayValue} |`,
+                `| ${getColor(si.score * 100)} Speed Index | ${si.displayValue} |`,
+                `| ${getColor(tbt.score * 100)} Total Blocking Time | ${tbt.displayValue} |`,
+                `| ${getColor(cls.score * 100)} Cumulative Layout Shift | ${cls.displayValue} |`,
+                `\n`,
+              ].join('\n');
+
+              const score = {
+                Performance: getAuditColorAndScore(performance),
+                Accessibility: getAuditColorAndScore(accessibility),
+                'Best Practices': getAuditColorAndScore(bestPractices),
+                SEO: getAuditColorAndScore(seo),
+                FCP: getMetricColorAndScore(fcp),
+                LCP: getMetricColorAndScore(lcp),
+                'Speed Index': getMetricColorAndScore(si),
+                TBT: getMetricColorAndScore(tbt),
+                CLS: getMetricColorAndScore(cls),
+              };
+
+              scores[pageName] = score;
+              comments += `<details>\n<summary>${pageName}</summary>\n\n> ${pageUrl}\n\n${formattedScoreTable}\n</details>\n\n`;
+            });
+
+            core.setOutput('comments', comments);
+            core.setOutput('monitoringTime', monitoringTime);
+            core.setOutput('scores', JSON.stringify(scores));
+
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { repo, payload } = context;
+
+            const { data: previousComments } = await github.rest.issues.listComments({
+              owner: repo.owner,
+              repo: repo.repo,
+              issue_number: payload.pull_request.number,
+            });
+
+            const marker = '### Lighthouse report ✨';
+            const previousLhciComment = previousComments.find((comment) => comment.body.startsWith(marker));
+            const newComment = `${{ steps.format_lighthouse_score.outputs.comments }}`;
+
+            if (previousLhciComment) {
+              await github.rest.issues.updateComment({
+                owner: repo.owner,
+                repo: repo.repo,
+                comment_id: previousLhciComment.id,
+                body: newComment,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: repo.owner,
+                repo: repo.repo,
+                issue_number: payload.pull_request.number,
+                body: newComment,
+              });
+            }
+
+      - name: Update Google Spreadsheet
+        uses: actions/github-script@v7
+        env:
+          LHCI_GOOGLE_CLIENT_EMAIL: ${{ secrets.LHCI_GOOGLE_CLIENT_EMAIL }}
+          LHCI_GOOGLE_PRIVATE_KEY: ${{ secrets.LHCI_GOOGLE_PRIVATE_KEY }}
+        with:
+          script: |
+            const { GoogleSpreadsheet } = require('./frontend/node_modules/google-spreadsheet');
+            const { JWT } = require('./frontend/node_modules/google-auth-library');
+            const {
+              LHCI_GOOGLE_SPREAD_SHEET_ID,
+              getLhciSheetIdFromPageName,
+            } = require('./frontend/src/configs/lighthouse/Lighthouse.js');
+
+            const scores = JSON.parse(`${{ steps.format_lighthouse_score.outputs.scores }}`);
+            const monitoringTime = `${{ steps.format_lighthouse_score.outputs.monitoringTime }}`;
+            const { repo, payload } = context;
+
+            const auth = new JWT({
+              email: process.env.LHCI_GOOGLE_CLIENT_EMAIL,
+              key: process.env.LHCI_GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+              scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+            });
+
+            const doc = new GoogleSpreadsheet(LHCI_GOOGLE_SPREAD_SHEET_ID, auth, {
+              timeout: 30000,
+              retry: { limit: 2 },
+            });
+            await doc.loadInfo();
+
+            const prUrl = `https://github.com/${repo.owner}/${repo.repo}/pull/${payload.pull_request.number}`;
+            const prHyperlink = `=HYPERLINK("${prUrl}", "#${payload.pull_request.number}")`;
+
+            for (const pageName in scores) {
+              const sheetId = getLhciSheetIdFromPageName(pageName);
+              const score = scores[pageName];
+
+              const sheet = doc.sheetsById[sheetId];
+              await sheet.loadHeaderRow();
+
+              const newRow = {
+                'PR': prHyperlink,
+                'Time': monitoringTime,
+                'Performance': score.Performance,
+                'Accessibility': score.Accessibility,
+                'Best Practices': score['Best Practices'],
+                'SEO': score.SEO,
+                'FCP': score.FCP,
+                'LCP': score.LCP,
+                'Speed Index': score['Speed Index'],
+                'TBT': score.TBT,
+                'CLS': score.CLS,
+              };
+
+              await sheet.addRow(newRow);
+            }

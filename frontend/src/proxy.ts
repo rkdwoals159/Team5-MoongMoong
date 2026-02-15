@@ -7,6 +7,10 @@ import {
 } from "./app/api/auth/_constants";
 
 export async function proxy(request: NextRequest) {
+  if (process.env.LHCI === "true") {
+    return NextResponse.next();
+  }
+
   const { pathname, search } = request.nextUrl;
   const returnTo = `${pathname}${search}`;
   const token = request.cookies.get(ACCESS_COOKIE)?.value;

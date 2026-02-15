@@ -11,7 +11,15 @@ const eslintConfig = defineConfig([
   ...nextTs,
   prettier,
   // Override default ignores of eslint-config-next.
-  globalIgnores([".next/**", "out/**", "build/**", "html/**", "next-env.d.ts"]),
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "build/**",
+    "html/**",
+    "next-env.d.ts",
+    "lighthouserc-*.js",
+    "src/configs/lighthouse/**",
+  ]),
   ...storybook.configs["flat/recommended"],
 ]);
 
