@@ -52,7 +52,7 @@ public class ErrorAnalyzeConfig {
         }
     }
 
-    @Profile({"test", "local"})
+    @Profile({"test", "local", "flyway"})
     @Configuration
     public static class ConsoleAnalyzeConfig {
 

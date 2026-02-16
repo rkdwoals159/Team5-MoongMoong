@@ -71,4 +71,6 @@ spring:
       ddl-auto: create-drop
     defer-datasource-initialization: true
     open-in-view: false
+  flyway:
+    enabled: false
 
