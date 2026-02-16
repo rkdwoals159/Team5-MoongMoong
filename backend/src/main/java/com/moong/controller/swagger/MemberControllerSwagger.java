@@ -5,6 +5,7 @@ import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
 import com.moong.dto.response.member.MemberInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,5 +28,8 @@ public interface MemberControllerSwagger {
     )
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<MemberInfoResponse> findMember(Member member);
+    ResponseEntity<MemberInfoResponse> findMember(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member
+    );
 }
