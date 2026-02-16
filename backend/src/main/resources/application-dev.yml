@@ -38,7 +38,7 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: validate
-    defer-datasource-initialization: true
+    defer-datasource-initialization: false
     open-in-view: false
   flyway:
     enabled: true
@@ -47,6 +47,7 @@ spring:
     sql-migration-prefix: V
     sql-migration-separator: __
     sql-migration-suffixes: .sql
+    validate-on-migrate: true
 
 logging:
   file:
