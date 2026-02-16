@@ -92,7 +92,12 @@ public class GlobalExceptionHandler {
                 exception
         );
         errorAnalyzer.analyze(request)
-                .thenAcceptAsync(errorAnalyzeMessageSender::send);
+                .thenAcceptAsync(errorAnalyzeMessageSender::send)
+                .whenComplete((r, e) -> {
+                    if (e != null) {
+                        log.warn("error analyze async failed", e);
+                    }
+                });
     }
 
     @ExceptionHandler(Exception.class)
