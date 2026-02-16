@@ -1,6 +1,8 @@
 package com.moong.domain.entity;
 
 import com.moong.domain.enums.PaymentStatus;
+import com.moong.exception.custom.BusinessException;
+import com.moong.exception.errorcode.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -16,7 +18,6 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
@@ -24,9 +25,11 @@ import org.hibernate.annotations.UuidGenerator;
 @Entity
 @Table(name = "coin_payment")
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CoinPayment {
+
+    public static final long MIN_PAYMENT_AMOUNT = 100;
+    public static final long MAX_PAYMENT_AMOUNT = 1_000_000;
 
     @Id
     @GeneratedValue
@@ -43,6 +46,20 @@ public class CoinPayment {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private PaymentStatus paymentStatus;
+
+    public CoinPayment(UUID id, long amount, Crew crew, PaymentStatus paymentStatus) {
+        validateAmount(amount);
+        this.id = id;
+        this.amount = amount;
+        this.crew = crew;
+        this.paymentStatus = paymentStatus;
+    }
+
+    private void validateAmount(long amount) {
+        if(amount < MIN_PAYMENT_AMOUNT || amount > MAX_PAYMENT_AMOUNT) {
+            throw new BusinessException(ErrorCode.INVALID_PAYMENT_AMOUNT);
+        }
+    }
 
     public boolean isReady() {
         return this.paymentStatus == PaymentStatus.READY;

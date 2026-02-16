@@ -37,7 +37,7 @@ public class PaymentService {
             throw new BusinessException(ErrorCode.ALREADY_PROCESSED);
         }
         if (!coinPayment.hasSameAmount(amount)) {
-            throw new BusinessException(ErrorCode.INVALID_PAYMENT_AMOUNT);
+            throw new BusinessException(ErrorCode.MISMATCH_PAYMENT_AMOUNT);
         }
     }
 }

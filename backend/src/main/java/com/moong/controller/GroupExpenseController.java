@@ -21,7 +21,6 @@ public class GroupExpenseController implements GroupExpenseControllerSwagger {
 
     private final GroupExpenseService groupExpenseService;
 
-
     @Override
     @GetMapping(value = "/api/expenses/group")
     public ResponseEntity<GroupExpensesResponse> findGroupExpenses(

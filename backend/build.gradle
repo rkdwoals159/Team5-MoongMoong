@@ -39,6 +39,9 @@ dependencies {
     //WebClient
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+    //Validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     //Regression
     implementation 'org.apache.commons:commons-math3:3.6.1'
 
@@ -62,6 +65,7 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-gson:0.11.5'
 
     //Test
+    testImplementation("com.navercorp.fixturemonkey:fixture-monkey-starter:1.1.11")
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:5.5.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

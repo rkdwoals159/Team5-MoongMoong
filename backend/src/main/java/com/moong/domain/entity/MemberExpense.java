@@ -2,6 +2,8 @@ package com.moong.domain.entity;
 
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.domain.enums.SubCategoryType;
+import com.moong.exception.custom.BusinessException;
+import com.moong.exception.errorcode.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -19,7 +21,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -27,10 +28,11 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Entity
 @Table(name = "member_expense")
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberExpense {
 
+    public static final long MIN_PAYMENT_AMOUNT = 0;
+    public static final long MAX_PAYMENT_AMOUNT = 99_999_999;
     public static final String SPENT_AT_COLUMN_NAME = "spentAt";
     public static final String MODIFIED_AT_COLUMN_NAME = "modifiedAt";
 
@@ -66,6 +68,35 @@ public class MemberExpense {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
+
+    public MemberExpense(
+            Long id,
+            LocalDate spentAt,
+            String usage,
+            long cost,
+            MainCategoryType mainCategory,
+            SubCategoryType subCategory,
+            String memo,
+            LocalDateTime modifiedAt,
+            Member member
+    ) {
+        validateAmount(cost);
+        this.id = id;
+        this.spentAt = spentAt;
+        this.usage = usage;
+        this.cost = cost;
+        this.mainCategory = mainCategory;
+        this.subCategory = subCategory;
+        this.memo = memo;
+        this.modifiedAt = modifiedAt;
+        this.member = member;
+    }
+
+    private void validateAmount(long amount) {
+        if (amount > MAX_PAYMENT_AMOUNT || amount < MIN_PAYMENT_AMOUNT) {
+            throw new BusinessException(ErrorCode.INVALID_EXPENSE_COST_AMOUNT);
+        }
+    }
 
     public String getSubCategoryName() {
         if (this.subCategory != null) {

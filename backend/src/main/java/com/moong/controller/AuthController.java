@@ -11,6 +11,7 @@ import com.moong.dto.response.auth.AuthTokenRefreshResponse;
 import com.moong.dto.response.auth.JwtTokenResponse;
 import com.moong.dto.response.member.FacadeLoginResponse;
 import com.moong.facade.auth.AuthFacadeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class AuthController implements AuthControllerSwagger {
 
     @Override
     @PostMapping("/api/auth/login")
-    public ResponseEntity<AuthLoginResponse> login(@RequestBody AuthLoginRequest loginRequest) {
+    public ResponseEntity<AuthLoginResponse> login(@RequestBody @Valid AuthLoginRequest loginRequest) {
         FacadeLoginResponse loginResponse = authFacadeService.login(loginRequest);
         AuthLoginResponse response = new AuthLoginResponse(loginResponse);
 
@@ -51,7 +52,7 @@ public class AuthController implements AuthControllerSwagger {
 
     @Override
     @PostMapping("/api/auth/refresh")
-    public ResponseEntity<AuthTokenRefreshResponse> refresh(@RequestBody AuthTokenRefreshRequest refreshRequest) {
+    public ResponseEntity<AuthTokenRefreshResponse> refresh(@RequestBody @Valid AuthTokenRefreshRequest refreshRequest) {
         JwtTokenResponse jwtTokens = authFacadeService.refreshToken(refreshRequest);
         ResponseCookie refreshTokenCookie = cookieManager.createCookie(
                 REFRESH_TOKEN_COOKIE_KEY,

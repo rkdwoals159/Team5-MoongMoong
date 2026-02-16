@@ -1,5 +1,7 @@
 package com.moong.exception.errorcode;
 
+import com.moong.domain.entity.CoinPayment;
+import com.moong.domain.entity.MemberExpense;
 import lombok.Getter;
 
 @Getter
@@ -24,7 +26,11 @@ public enum ErrorCode {
     ALREADY_SUCCEED_BANK_TARGET_AMOUNT(400, "이미 목표 금액을 달성하여 저금에 실패하였습니다."),
     BANK_SAVING_BELOW_ZERO(400, "저금 금액은 0원 이하일 수 없습니다."),
     TOSS_PAYMENT_CLIENT_ERROR(400, "유효하지 않은 결제 요청입니다."),
-    INVALID_PAYMENT_AMOUNT(400, "결제 요청 금액이 주문 금액과 일치하지 않습니다."),
+    MISMATCH_PAYMENT_AMOUNT(400, "결제 요청 금액이 주문 금액과 일치하지 않습니다."),
+    INVALID_PAYMENT_AMOUNT(400, "결제 요청 금액이 " + CoinPayment.MIN_PAYMENT_AMOUNT + "원 이상 - "
+            + CoinPayment.MAX_PAYMENT_AMOUNT + "원 이하가 아닙니다."),
+    INVALID_EXPENSE_COST_AMOUNT(400, "결제 요청 금액이 " + "0원 이상 - "
+            + MemberExpense.MAX_PAYMENT_AMOUNT + "원 이하가 아닙니다."),
     ALREADY_PROCESSED(400, "이미 처리 중이거나 완료된 결제 요청입니다."),
 
     //401

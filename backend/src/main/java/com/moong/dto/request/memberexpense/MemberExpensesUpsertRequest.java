@@ -4,9 +4,11 @@ import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import java.util.List;
 
 public record MemberExpensesUpsertRequest(
+        @Valid
         @ArraySchema(
                 schema = @Schema(implementation = MemberExpenseUpsertRequest.class),
                 arraySchema = @Schema(description = "생성 및 수정할 소비내역 목록")

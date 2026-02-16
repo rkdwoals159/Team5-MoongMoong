@@ -12,6 +12,7 @@ import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponseV2;
 import com.moong.service.MemberExpenseService;
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -71,7 +72,7 @@ public class MemberExpenseController implements MemberExpenseControllerSwagger {
     @PatchMapping("/api/expenses")
     public ResponseEntity<Void> upsertMemberExpenses(
             @AuthMember Member member,
-            @RequestBody MemberExpensesUpsertRequest request
+            @RequestBody @Valid MemberExpensesUpsertRequest request
     ) {
         memberExpenseService.upsertMemberExpenses(
                 member,
@@ -84,7 +85,7 @@ public class MemberExpenseController implements MemberExpenseControllerSwagger {
     @PostMapping("/api/expenses")
     public ResponseEntity<CategorizeResponse> categorizeMemberExpenses(
             @AuthMember Member member,
-            @RequestBody CategorizeRequest request
+            @RequestBody @Valid CategorizeRequest request
     ) {
         CategorizeResponse response = memberExpenseService.categorize(request);
         return ResponseEntity.ok(response);

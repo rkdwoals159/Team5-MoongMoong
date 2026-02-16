@@ -9,6 +9,7 @@ import com.moong.dto.request.payment.CoinPaymentFailRequest;
 import com.moong.dto.response.bank.CoinCreateResponse;
 import com.moong.dto.response.bank.CoinPaymentCreateResponse;
 import com.moong.facade.payment.PaymentFacadeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,7 @@ public class PaymentController implements PaymentControllerSwagger {
     @PostMapping
     public ResponseEntity<CoinPaymentCreateResponse> createCoinPayment(
             @AuthMember Member member,
-            @RequestBody CoinCreateRequest request
+            @RequestBody @Valid CoinCreateRequest request
     ) {
         CoinPaymentCreateResponse response = paymentFacadeService.createCoinPayment(member, request);
         return ResponseEntity.ok(response);
@@ -37,7 +38,7 @@ public class PaymentController implements PaymentControllerSwagger {
     @PostMapping("/confirm")
     public ResponseEntity<CoinCreateResponse> paymentSuccess(
             @AuthMember Member member,
-            @RequestBody CoinPaymentConfirmRequest request
+            @RequestBody @Valid CoinPaymentConfirmRequest request
     ) {
         CoinCreateResponse response = paymentFacadeService.paymentSuccess(member, request);
         return ResponseEntity.ok(response);
@@ -47,7 +48,7 @@ public class PaymentController implements PaymentControllerSwagger {
     @PostMapping("/fail")
     public ResponseEntity<Void> paymentFailure(
             @AuthMember Member member,
-            @RequestBody CoinPaymentFailRequest request
+            @RequestBody @Valid CoinPaymentFailRequest request
     ) {
         paymentFacadeService.paymentFailure(member, request);
         return ResponseEntity.noContent().build();

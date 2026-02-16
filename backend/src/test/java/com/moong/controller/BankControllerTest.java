@@ -56,7 +56,7 @@ class BankControllerTest extends BaseControllerTest {
         crewGenerator.generateSaved(petGroup, member);
         bankGenerator.generateSaved(petGroup, 100L, 10L);
 
-        CoinCreateRequest coinCreateRequest = new CoinCreateRequest(50L);
+        CoinCreateRequest coinCreateRequest = new CoinCreateRequest(100L);
 
         given().log().all()
                 .contentType(ContentType.JSON)

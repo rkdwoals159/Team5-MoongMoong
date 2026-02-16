@@ -11,6 +11,7 @@ import com.moong.dto.response.bank.BankInfoResponse;
 import com.moong.dto.response.bank.BankUpdateResponse;
 import com.moong.dto.response.bank.CoinsResponse;
 import com.moong.service.BankService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,7 +33,7 @@ public class BankController implements BankControllerSwagger {
     @PostMapping
     public ResponseEntity<BankCreateResponse> createBank(
             @AuthMember Member member,
-            @RequestBody BankCreateRequest request
+            @RequestBody @Valid BankCreateRequest request
     ) {
         BankCreateResponse response = bankService.createBank(member, request);
         return ResponseEntity.ok(response);
@@ -68,7 +69,7 @@ public class BankController implements BankControllerSwagger {
     @PatchMapping
     public ResponseEntity<BankUpdateResponse> updateBank(
             @AuthMember Member member,
-            @RequestBody BankUpdateRequest request
+            @RequestBody @Valid BankUpdateRequest request
     ) {
         BankUpdateResponse response = bankService.updateBank(member, request);
         return ResponseEntity.ok(response);

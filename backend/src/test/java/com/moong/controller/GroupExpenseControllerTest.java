@@ -1,7 +1,7 @@
 package com.moong.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.moong.domain.entity.GroupExpense;
 import com.moong.domain.entity.Member;
@@ -69,7 +69,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
 
         GroupExpensesResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + accessToken)
                 .queryParam("startDate", now.minusDays(2).toLocalDate().toString())
                 .queryParam("endDate", now.minusDays(1).toLocalDate().toString())
                 .get("/api/expenses/group")
@@ -121,7 +121,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
 
         CategoryAnalysisResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + accessToken)
                 .queryParam("startDate", now.minusDays(2).toLocalDate().toString())
                 .queryParam("endDate", now.minusDays(1).toLocalDate().toString())
                 .get("/api/expenses/group/analysis/category")
@@ -179,7 +179,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
 
         MedicalCategoryAnalysisResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + accessToken)
                 .queryParam("startDate", now.minusDays(2).toLocalDate().toString())
                 .queryParam("endDate", now.minusDays(1).toLocalDate().toString())
                 .get("/api/expenses/group/analysis/medical")
@@ -236,7 +236,7 @@ class GroupExpenseControllerTest extends BaseControllerTest {
 
         GroupExpensesDailyResponse response = given().log().all()
                 .contentType(ContentType.JSON)
-                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX  + accessToken)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + accessToken)
                 .queryParam("spentAt", now.toLocalDate().toString())
                 .get("/api/expenses/group/date")
                 .then()

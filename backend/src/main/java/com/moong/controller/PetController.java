@@ -8,6 +8,7 @@ import com.moong.dto.response.pet.PetCreateResponse;
 import com.moong.dto.response.pet.PetReadResponse;
 import com.moong.service.GroupService;
 import com.moong.service.PetService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ public class PetController implements PetControllerSwagger {
     @PostMapping(path = "/api/pet")
     public ResponseEntity<PetCreateResponse> savePet(
             @AuthMember Member member,
-            @RequestBody PetCreateRequest petCreateRequest
+            @RequestBody @Valid PetCreateRequest petCreateRequest
     ) {
         //TODO Facade 고민
         PetCreateResponse response = petService.createPet(member, petCreateRequest);

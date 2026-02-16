@@ -50,7 +50,7 @@ class PaymentServiceTest extends BaseServiceTest {
 
         assertThatThrownBy(() -> paymentService.verifyPayment(coinPayment.getId(), crew.getId(), differentAmount))
                 .isInstanceOf(BusinessException.class)
-                .hasMessage(ErrorCode.INVALID_PAYMENT_AMOUNT.getMessage());
+                .hasMessage(ErrorCode.MISMATCH_PAYMENT_AMOUNT.getMessage());
     }
 
     @DisplayName("결제하기 전에 저장해 놓았던 데이터 검증 성공")
