@@ -28,7 +28,7 @@ export default function SSEListener() {
   useSSE({
     onEvent: handleEvent,
     onError: handleError,
-    enabled: true,
+    enabled: false,
   });
 
   return null;
