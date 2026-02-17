@@ -21,4 +21,4 @@ export const GOOGLE_OAUTH_SCOPE = "openid email profile";
 export const GOOGLE_OAUTH_ACCESS_TYPE = "offline";
 export const GOOGLE_OAUTH_PROMPT = "consent";
 
-export const PROXY_TOKEN_EXPIRY_SKEW_SECONDS = 30;
+export const PROXY_TOKEN_EXPIRY_SKEW_SECONDS = 10000;

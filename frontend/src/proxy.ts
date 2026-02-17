@@ -3,7 +3,7 @@ import {
   ACCESS_COOKIE,
   AUTH_LOGIN_PATH,
   AUTH_REFRESH_PATH,
-  // PROXY_TOKEN_EXPIRY_SKEW_SECONDS,
+  PROXY_TOKEN_EXPIRY_SKEW_SECONDS,
 } from "./app/api/auth/_constants";
 import { validateAccessToken } from "./app/api/auth/_lib";
 
@@ -20,11 +20,11 @@ export async function proxy(request: NextRequest) {
     return redirectToLogin(request, returnTo);
   }
 
-  // 토큰 만료 시간 검증 로직 -> 백엔드 서버 안정화 이후 사용
-  // const freshness = isTokenFresh(token);
-  // if (freshness === true) {
-  //   return NextResponse.next();
-  // }
+  // 토큰 만료 시간 검증 로직
+  const freshness = isTokenFresh(token);
+  if (freshness === true) {
+    return NextResponse.next();
+  }
 
   const isValid = await validateAccessToken(token);
   if (isValid) {
@@ -73,25 +73,25 @@ function redirectToRefresh(request: NextRequest, returnTo: string) {
  * @param token - JWT 토큰
  * @returns 만료 시간 (Unix timestamp)
  */
-// function parseJwtExp(token: string): number | null {
-//   const payload = token.split(".")[1];
-//   if (!payload) return null;
+function parseJwtExp(token: string): number | null {
+  const payload = token.split(".")[1];
+  if (!payload) return null;
 
-//   try {
-//     const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
-//     const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
-//     const decoded = atob(padded);
-//     const parsed = JSON.parse(decoded) as { exp?: number };
-//     return typeof parsed.exp === "number" ? parsed.exp : null;
-//   } catch {
-//     return null;
-//   }
-// }
+  try {
+    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+    const decoded = atob(padded);
+    const parsed = JSON.parse(decoded) as { exp?: number };
+    return typeof parsed.exp === "number" ? parsed.exp : null;
+  } catch {
+    return null;
+  }
+}
 
-// function isTokenFresh(token: string): boolean | null {
-//   const exp = parseJwtExp(token);
-//   if (!exp) return null;
+function isTokenFresh(token: string): boolean | null {
+  const exp = parseJwtExp(token);
+  if (!exp) return null;
 
-//   const now = Math.floor(Date.now() / 1000);
-//   return exp - now > PROXY_TOKEN_EXPIRY_SKEW_SECONDS;
-// }
+  const now = Math.floor(Date.now() / 1000);
+  return exp - now > PROXY_TOKEN_EXPIRY_SKEW_SECONDS;
+}
