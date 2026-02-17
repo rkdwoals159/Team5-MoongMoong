@@ -96,6 +96,7 @@ public interface MemberExpenseControllerSwagger {
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
             @RequestParam(value = "mainCategory", required = false) MainCategoryType mainCategory,
+            @RequestParam(value = "lastRowId", required = false) Long lastRowId,
             @ParameterObject Pageable pageable
     );
 

@@ -4,37 +4,34 @@ import com.moong.ai.OpenAiModel;
 import com.moong.ai.OpenAiResult;
 import com.moong.ai.TokenUsage;
 import com.moong.client.categorize.ExpenseCategorizeClient;
+import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.GroupExpense;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.entity.Pet;
+import com.moong.domain.entity.PetGroup;
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.domain.enums.SubCategoryType;
+import com.moong.domain.memberexpense.MonthlyExpenseStats;
 import com.moong.dto.command.MemberExpenseReadCommand;
-import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.memberexpense.CategorizeRequest;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
 import com.moong.dto.response.categorize.AiCategorizeResponse;
 import com.moong.dto.response.categorize.CategorizeResponse;
-import com.moong.domain.entity.Crew;
-import com.moong.domain.entity.Pet;
-import com.moong.domain.memberexpense.MonthlyExpenseStats;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponseV2;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.CrewRepository;
-import com.moong.repository.MemberRepository;
-import com.moong.repository.PetGroupRepository;
 import com.moong.repository.groupexpense.GroupExpenseRepository;
 import com.moong.repository.memberexpense.MemberExpenseRepository;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
@@ -74,23 +71,38 @@ public class MemberExpenseService {
     }
 
     public MemberExpensesPeriodResponseV2 getMemberExpensesByPeriodV2(MemberExpenseReadCommand command) {
-        if(command.hasMainCategory()) {
-            Slice<MemberExpense> findCategoryMemberExpenses = memberExpenseRepository.findByMember_IdAndMainCategoryAndSpentAtBetween(
-                    command.getMember().getId(),
-                    command.getMainCategory(),
+        if (command.hasLastRowId()) {
+            MemberExpense lastRowId = memberExpenseRepository.getById(command.getLastRowId());
+            List<MemberExpense> findExpenses = memberExpenseRepository.findByLastRowAndCondition(
                     command.getStartDate(),
                     command.getEndDate(),
-                    command.getPageable()
+                    command.getMember(),
+                    lastRowId,
+                    command.getMainCategory(),
+                    command.getSort(),
+                    command.getPageSize() + 1
             );
-            return new MemberExpensesPeriodResponseV2(findCategoryMemberExpenses);
+            return makeMemberExpensesByPeriodResponse(findExpenses, command.getPageable());
         }
-        Slice<MemberExpense> findMemberExpenses = memberExpenseRepository.findByMember_IdAndSpentAtBetween(
-                command.getMember().getId(),
+        List<MemberExpense> findExpenses = memberExpenseRepository.findByCondition(
                 command.getStartDate(),
                 command.getEndDate(),
-                command.getPageable()
+                command.getMember(),
+                command.getMainCategory(),
+                command.getSort(),
+                command.getPageSize() + 1
         );
-        return new MemberExpensesPeriodResponseV2(findMemberExpenses);
+        return makeMemberExpensesByPeriodResponse(findExpenses, command.getPageable());
+    }
+
+    private MemberExpensesPeriodResponseV2 makeMemberExpensesByPeriodResponse(
+            List<MemberExpense> expenses,
+            Pageable pageable
+    ) {
+        if(expenses.size() == pageable.getPageSize() + 1) {
+            return new MemberExpensesPeriodResponseV2(expenses.subList(0, pageable.getPageSize()), true, pageable);
+        }
+        return new MemberExpensesPeriodResponseV2(expenses, false, pageable);
     }
 
     public LastMonthComparisonResponse compareLastMonthExpense(Member member) {
@@ -157,7 +169,7 @@ public class MemberExpenseService {
         memberExpenseRepository.updateAllByBulkQuery(expensesToUpdate);
         List<GroupExpense> groupExpenses = savedMemberExpenses.stream()
                 .map((memberExpense ->
-                    new GroupExpense(memberExpense, crew.getPetGroup())))
+                        new GroupExpense(memberExpense, crew.getPetGroup())))
                 .toList();
         groupExpenseRepository.saveAllByBulkQuery(groupExpenses);
     }

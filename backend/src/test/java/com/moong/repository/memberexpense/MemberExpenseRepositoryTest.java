@@ -8,13 +8,13 @@ import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.domain.enums.SubCategoryType;
 import com.moong.repository.BaseRepositoryTest;
+import com.moong.util.query.MemberExpenseColumn;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 class MemberExpenseRepositoryTest extends BaseRepositoryTest {
@@ -49,21 +49,28 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);
 
-        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(today, "사용처1", 100, MainCategoryType.FOOD_AND_TREATS, null, null, null, member);
-        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(today, "사용처2", 100, MainCategoryType.FOOD_AND_TREATS, null, null, null, member);
-        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(today, "사용처3", 100, MainCategoryType.FOOD_AND_TREATS, null, null, null, member);
-        MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(today, "사용처4", 100, MainCategoryType.FOOD_AND_TREATS, null, null, null, member);
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(today, "사용처1", 100,
+                MainCategoryType.FOOD_AND_TREATS, null, null, null, member);
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(today, "사용처2", 100,
+                MainCategoryType.FOOD_AND_TREATS, null, null, null, member);
+        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(today, "사용처3", 100,
+                MainCategoryType.FOOD_AND_TREATS, null, null, null, member);
+        MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(today, "사용처4", 100,
+                MainCategoryType.FOOD_AND_TREATS, null, null, null, member);
 
-        List<MemberExpense> result = memberExpenseRepository.findByMember_IdAndSpentAtBetween(
-                member.getId(),
+        List<MemberExpense> result = memberExpenseRepository.findByCondition(
                 yesterday,
                 today,
-                PageRequest.of(1, 2)
-        ).getContent();
+                member,
+                null,
+                Sort.by(Sort.Direction.DESC, "id"),
+                2
+        );
 
         assertThat(result)
-                .contains(memberExpense3, memberExpense4)
-                .doesNotContain(memberExpense1, memberExpense2);
+                .extracting(MemberExpense::getId)
+                .contains(memberExpense3.getId(), memberExpense4.getId())
+                .doesNotContain(memberExpense1.getId(), memberExpense2.getId());
     }
 
     @DisplayName("멤버의 소비내역을 카테고리 필터 + 페이지네이션으로 조회")
@@ -72,22 +79,32 @@ class MemberExpenseRepositoryTest extends BaseRepositoryTest {
         Member member = memberGenerator.generateSaved("멤버1");
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);
-        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(today, "사용처1", 100, MainCategoryType.SUPPLIES, null, null, null, member);
-        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(today, "사용처2", 100, MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
-        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(today, "사용처3", 100, MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
-        MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(today, "사용처4", 100, MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
+        MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(yesterday, "사용처1", 100,
+                MainCategoryType.SUPPLIES, null, null, null, member);
+        MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(yesterday, "사용처2", 100,
+                MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
+        MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(yesterday, "사용처3", 100,
+                MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
+        MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(yesterday, "사용처4", 100,
+                MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
 
-        List<MemberExpense> result = memberExpenseRepository.findByMember_IdAndMainCategoryAndSpentAtBetween(
-                member.getId(),
-                MainCategoryType.MEDICAL_EXPENSES,
+        List<MemberExpense> result = memberExpenseRepository.findByLastRowAndCondition(
                 yesterday,
                 today,
-                PageRequest.of(1, 2)
-        ).getContent();
+                member,
+                memberExpense3,
+                MainCategoryType.MEDICAL_EXPENSES,
+                Sort.by(Sort.Direction.ASC, MemberExpenseColumn.SPENT_AT.getDbColumn())
+                        .and(Sort.by(Sort.Direction.DESC, MemberExpenseColumn.COST.getDbColumn()))
+                        .and(Sort.by(Sort.Direction.ASC, MemberExpenseColumn.ID.getDbColumn())),
+                2
+        );
 
         assertThat(result)
-                .contains(memberExpense4) //카테고리2 + 페이지1
-                .doesNotContain(memberExpense1, memberExpense2, memberExpense3); //카테고리1, 페이지0, 페이지2
+                .extracting(MemberExpense::getId)
+                .contains(memberExpense4.getId()) //카테고리2 + 페이지1
+                .doesNotContain(memberExpense1.getId(), memberExpense2.getId(),
+                        memberExpense3.getId()); //카테고리1, 페이지0, 페이지2
     }
 
     @DisplayName("멤버의 소비 내역의 합을 기간 기준으로 반환한다.")

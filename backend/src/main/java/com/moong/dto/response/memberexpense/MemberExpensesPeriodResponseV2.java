@@ -4,7 +4,7 @@ import com.moong.domain.entity.MemberExpense;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
-import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Pageable;
 
 @Schema(description = "멤버 소비내역 기간 조회 응답 V2")
 public record MemberExpensesPeriodResponseV2(
@@ -26,17 +26,22 @@ public record MemberExpensesPeriodResponseV2(
         )
         List<MemberExpenseResponse> expenses
 ) {
-        public MemberExpensesPeriodResponseV2(Slice<MemberExpense> sliceExpenses) {
-                this(
-                        sliceExpenses.getContent().stream()
-                                .mapToLong(MemberExpense::getCost)
-                                .sum(),
-                        sliceExpenses.getNumber(),
-                        sliceExpenses.getSize(),
-                        sliceExpenses.hasNext(),
-                        sliceExpenses.getContent().stream()
-                                .map(MemberExpenseResponse::new)
-                                .toList()
-                );
-        }
+
+    public MemberExpensesPeriodResponseV2(
+            List<MemberExpense> sliceExpenses,
+            boolean hasNext,
+            Pageable requestPageable
+    ) {
+        this(
+                sliceExpenses.stream()
+                        .mapToLong(MemberExpense::getCost)
+                        .sum(),
+                requestPageable.getPageNumber(),
+                requestPageable.getPageSize(),
+                hasNext,
+                sliceExpenses.stream()
+                        .map(MemberExpenseResponse::new)
+                        .toList()
+        );
+    }
 }

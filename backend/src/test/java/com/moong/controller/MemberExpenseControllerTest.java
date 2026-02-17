@@ -41,7 +41,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 .statusCode(200);
     }
 
-    @DisplayName("기간 내의 개인 소비내역 반환 : spentAt DESC + category ASC")
+    @DisplayName("기간 내의 개인 소비내역 반환 : spentAt DESC + ID ASC")
     @Test
     void getMemberExpensesByPeriodSuccess_SpentAt_Desc_And_Category_Asc() {
         LocalDate startDate = LocalDate.of(2026, 1, 1);
@@ -81,7 +81,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
         );
     }
 
-    @DisplayName("기간 내의 개인 소비내역 반환 : spentAt DESC + category ASC + cost DESC")
+    @DisplayName("기간 내의 개인 소비내역 반환 : spentAt DESC + cost DESC + ID ASC")
     @Test
     void getMemberExpensesByPeriodSuccess_SpentAt_Desc_And_Category_Asc_Cost_DESC() {
         LocalDate startDate = LocalDate.of(2026, 1, 1);
@@ -103,7 +103,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 .queryParam("startDate", startDate.toString())
                 .queryParam("endDate", endDate.toString())
                 .queryParam("sort", "spentAt,desc")
-                .queryParam("sort", "mainCategory,asc")
+                .queryParam("sort", "cost,desc")
                 .queryParam("page", pageNo)
                 .queryParam("size", pageSize)
                 .get("/api/v2/expenses")
@@ -114,13 +114,13 @@ class MemberExpenseControllerTest extends BaseControllerTest {
 
         assertAll(
                 () -> assertThat(response.total())
-                        .isEqualTo(memberExpense3.getCost() + memberExpense4.getCost() + memberExpense5.getCost() + memberExpense6.getCost()),
+                        .isEqualTo(memberExpense6.getCost() + memberExpense5.getCost() + memberExpense4.getCost() + memberExpense3.getCost()),
                 () -> assertThat(response.size()).isEqualTo(pageSize),
                 () -> assertThat(response.page()).isEqualTo(pageNo),
                 () -> assertThat(response.hasNext()).isTrue(),
                 () -> assertThat(response.expenses())
                         .extracting(MemberExpenseResponse::expenseId)
-                        .containsExactly(memberExpense3.getId(), memberExpense4.getId(), memberExpense6.getId(), memberExpense5.getId())
+                        .containsExactly(memberExpense6.getId(), memberExpense5.getId(), memberExpense4.getId(), memberExpense3.getId())
         );
     }
 

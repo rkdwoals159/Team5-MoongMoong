@@ -8,7 +8,10 @@ import lombok.Getter;
 public enum ErrorCode {
 
     //400
+    NOT_FOUND_SPENT_AT_ORDER(400, "spentAt 정렬 조건을 찾을 수 없습니다"),
+    NOT_FOUND_MEMBER_EXPENSE_COLUMN(400, "MemberExpense의 프로퍼티를 찾을 수 없습니다"),
     INVALID_INVITE_CODE_URL(400, "잘못된 초대코드입니다"),
+    MEMBER_EXPENSE_SORT_NOT_START_WITH_SPENT_AT(400, "회원 소비 내역 정렬 요청이 spentAt으로 시작하지 않습니다"),
     ALREADY_EXISTS_PET(400, "이미 회원의 펫이 존재합니다"),
     ALREADY_EXISTS_BANK(400, "이미 저금통이 존재합니다."),
     ALREADY_PARTICIPATE_ANOTHER_PET_GROUP(400, "이미 다른 펫 그룹에 참여중입니다"),
@@ -53,6 +56,7 @@ public enum ErrorCode {
     MEDIA_TYPE_NOT_SUPPORTED(415, "허용되지 않은 미디어 타입입니다."),
 
     //5XX
+    MEMBER_EXPENSE_ROW_MAPPING_ERROR(500, "회원 소비내역 데이터 행 매핑 과정에서 문제가 생겼습니다"),
     REGRESSION_DATA_SHORTAGE_ERROR(500, "회귀모델에 들어간 데이터가 최소 정족수보다 적습니다"),
     YEAR_MONTH_DESERIALIZE_ERROR(500, "YearMonth 역직렬화에 실패했습니다"),
     INCONSISTENT_DISEASE_DATA(500, "서버 내부 데이터 정합성 오류입니다."),

@@ -50,10 +50,17 @@ public class MemberExpenseController implements MemberExpenseControllerSwagger {
             @RequestParam(value = "startDate") LocalDate startDate,
             @RequestParam(value = "endDate") LocalDate endDate,
             @RequestParam(value = "mainCategory", required = false) MainCategoryType mainCategory,
+            @RequestParam(value = "lastRowId", required = false) Long lastRowId,
             Pageable pageable
     ) {
-        MemberExpenseReadCommand command = new MemberExpenseReadCommand(member, startDate, endDate, mainCategory,
-                pageable);
+        MemberExpenseReadCommand command = new MemberExpenseReadCommand(
+                member,
+                startDate,
+                endDate,
+                lastRowId,
+                mainCategory,
+                pageable
+        );
         MemberExpensesPeriodResponseV2 response = memberExpenseService.getMemberExpensesByPeriodV2(command);
         return ResponseEntity.ok(response);
     }

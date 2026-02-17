@@ -16,7 +16,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
-public interface MemberExpenseRepository extends Repository<MemberExpense, Long>, MemberExpenseJdbcRepository {
+public interface MemberExpenseRepository
+        extends Repository<MemberExpense, Long>, MemberExpenseJdbcRepository, MemberExpenseDynamicRepository {
 
     MemberExpense save(MemberExpense memberExpense);
 
@@ -30,7 +31,7 @@ public interface MemberExpenseRepository extends Repository<MemberExpense, Long>
     }
 
     Optional<MemberExpense> findById(long id);
-
+    
     default MemberExpense getById(long id) {
         return findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_EXPENSE_NOT_FOUND));
