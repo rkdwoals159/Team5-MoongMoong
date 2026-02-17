@@ -38,3 +38,10 @@ export type UseExpenseCategoryPopupReturn = {
 
 /** 정렬 가능한 컬럼 (selected 제외) */
 export type SortableExpenseAccessor = "spentAt" | "usage" | "cost" | "mainCategory" | "memo";
+
+/**
+ * useAutoCategorize 파라미터 타입
+ */
+export type UseAutoCategorizeParams = {
+  updateCellByLocalId: UpdateCellByLocalId;
+};

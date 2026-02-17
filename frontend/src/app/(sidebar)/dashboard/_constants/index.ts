@@ -25,3 +25,5 @@ export {
   SAVE_ERROR_MESSAGE,
   SAVE_VALIDATION_ERROR_MESSAGE,
 } from "@/app/(sidebar)/dashboard/_constants/messages";
+
+export { AUTO_CATEGORIZE_DEBOUNCE_MS } from "@/app/(sidebar)/dashboard/_constants/expenseCategory";

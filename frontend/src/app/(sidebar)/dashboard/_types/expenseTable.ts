@@ -59,6 +59,7 @@ export type UseExpenseTableColumnsParams = {
     rowIndex: number,
     accessor: keyof ExpenseData,
   ) => void;
+  onUsageChange?: (localId: string, usage: string) => void;
 };
 
 /**

@@ -23,6 +23,7 @@ export const useExpenseTableColumns = ({
   updateAllCells,
   selectedCount,
   onCategoryCellClick,
+  onUsageChange,
 }: UseExpenseTableColumnsParams): DataTableColumn<ExpenseData>[] => {
   const isAllSelected =
     selectedCount === displayInitialRows.length - 1 && displayInitialRows.length > 1;
@@ -38,13 +39,16 @@ export const useExpenseTableColumns = ({
             onChange={(e) => {
               const v = e.target.value;
               updateCellByLocalId(row.localId, accessor, v);
+              if (accessor === "usage") {
+                onUsageChange?.(row.localId, v);
+              }
             }}
           />
         );
       };
       return editor;
     },
-    [updateCellByLocalId],
+    [updateCellByLocalId, onUsageChange],
   );
 
   const createRenderCategory = useCallback(

@@ -1,5 +1,6 @@
 "use client";
 
+import { useAutoCategorize } from "@/app/(sidebar)/dashboard/_hooks/useAutoCategorize";
 import { useExpenseRowsState } from "@/app/(sidebar)/dashboard/_hooks/useExpenseRowsState";
 import { useExpenseRowSave } from "@/app/(sidebar)/dashboard/_hooks/useExpenseRowSave";
 import { useExpenseCategoryPopup } from "@/app/(sidebar)/dashboard/_hooks/useExpenseCategoryPopup";
@@ -38,12 +39,15 @@ export const useExpenseTable = (initialData: ExpenseData[]): UseExpenseTableRetu
   const { showCategoryPopup, popupPosition, handleOpenPopup, handleClosePopup } =
     useExpenseCategoryPopup(setSelectedCell);
 
+  const { triggerCategorize } = useAutoCategorize({ updateCellByLocalId });
+
   const columns = useExpenseTableColumns({
     displayInitialRows: sortedRows,
     updateCellByLocalId,
     updateAllCells,
     selectedCount,
     onCategoryCellClick: handleOpenPopup,
+    onUsageChange: triggerCategorize,
   });
 
   const { handleCategorySelect } = useExpenseCategoryUpdate({

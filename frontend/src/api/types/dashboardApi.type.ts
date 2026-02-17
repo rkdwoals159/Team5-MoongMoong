@@ -28,3 +28,9 @@ export type SummaryData = {
   };
   petImageUrl: string;
 };
+
+export type CategorizeExpenseResponse = {
+  requestId: string;
+  mainCategory?: string;
+  subCategory?: string;
+};

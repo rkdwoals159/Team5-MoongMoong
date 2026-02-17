@@ -6,8 +6,9 @@ import type {
   ExpensesByPeriodResponse,
   MemberExpensesUpsertRequest,
   SummaryData,
+  CategorizeExpenseResponse,
 } from "@/api/types/dashboardApi.type";
-import { EXPENSES_ERROR_MESSAGE } from "@/api/constants";
+import { CATEGORIZE_ERROR_MESSAGE, EXPENSES_ERROR_MESSAGE } from "@/api/constants";
 
 /**
  * 소비내역 일괄 생성/수정/삭제 (Server Action)
@@ -55,6 +56,32 @@ export const getExpensesByPeriod = async (
   const total = data!.total ?? 0;
   const expenses = (data!.expenses ?? []).map(mapExpenseResponse);
   return { total, expenses };
+};
+
+/**
+ * 자동 카테고리 분류 (Server Action)
+ * POST /api/expenses
+ *
+ * usage, requestId로 분류 요청 후 mainCategory, subCategory 반환, 실패 시 throw.
+ */
+export const postCategorizeExpense = async (
+  usage: string,
+  requestId: string,
+): Promise<CategorizeExpenseResponse> => {
+  const { data, error, response } = await client.POST("/api/expenses", {
+    body: { usage, requestId },
+  });
+
+  if (!response.ok) {
+    console.error("postCategorizeExpense error:", error?.message ?? "no data");
+    throw new Error(CATEGORIZE_ERROR_MESSAGE);
+  }
+
+  return {
+    requestId: data!.requestId ?? requestId,
+    mainCategory: data!.mainCategory,
+    subCategory: data?.subCategory,
+  };
 };
 
 /**

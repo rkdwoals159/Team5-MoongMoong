@@ -8,7 +8,7 @@ export type ExpenseData = {
   usage: string;
   cost?: number | null;
   mainCategory?: string | null;
-  subCategory?: string;
+  subCategory?: string | null;
   memo: string | null;
   modifiedAt?: string;
 };
