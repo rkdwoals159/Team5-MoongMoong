@@ -29,6 +29,13 @@ public class LoggingFilter extends OncePerRequestFilter {
     private static final String SENSITIVE_HEADER_VALUE = "****";
     private static final String EMPTY_STRING = "";
     private static final Set<String> SENSITIVE_HEADERS = Set.of(HttpHeaders.AUTHORIZATION, HttpHeaders.COOKIE);
+    private static final String SSE_PATH = "/api/group/sse";
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith(SSE_PATH);
+    }
 
     @Override
     protected void doFilterInternal(

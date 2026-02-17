@@ -1,5 +1,6 @@
 package com.moong.repository;
 
+import com.moong.config.JpaAuditingConfig;
 import com.moong.fixture.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,7 +17,8 @@ import org.springframework.test.context.ActiveProfiles;
         CrewGenerator.class,
         MemberExpenseGenerator.class,
         GroupMedicalAdviceGenerator.class,
-        PetMedicalGenerator.class
+        PetMedicalGenerator.class,
+        JpaAuditingConfig.class
 })
 @ActiveProfiles("test")
 public abstract class BaseRepositoryTest {
