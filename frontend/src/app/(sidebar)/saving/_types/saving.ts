@@ -57,3 +57,9 @@ export type SavingBreakSummaryModalProps = {
   summary: BreakSummary | null;
   onRefresh: () => void;
 };
+
+// useSavingPayment
+export type UseSavingPaymentOptions = {
+  onSuccess: () => void;
+  handleDrop: (name: string, amount: number, createdAt: string, targetAmount: number) => void;
+};

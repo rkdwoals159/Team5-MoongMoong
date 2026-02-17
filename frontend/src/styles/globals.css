@@ -313,6 +313,30 @@ body {
   animation: modal-panel-out 150ms ease-in both;
 }
 
+/* Input shake animation */
+@keyframes input-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-4px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+}
+
+.input-shake {
+  animation: input-shake 300ms ease-out;
+}
+
 /* 스크롤바 숨기기 */
 /* 스크롤은 되는데 스크롤바는 숨김 */
 .no-scrollbar::-webkit-scrollbar {

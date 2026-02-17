@@ -27,14 +27,11 @@ export type FileInputOwnProps = {
 export type AmountInputOwnProps = {
   placeholder?: string;
   isDisabled?: boolean;
-  renderError?: (message: string) => ReactNode;
-  showError?: boolean;
-  errorMessage?: string;
-  touched?: boolean;
-  onTouchedChange?: (value: boolean) => void;
   className?: string;
   value?: string;
   suffix?: string;
+  warningMessage?: string;
+  isShaking?: boolean;
   ref?: React.RefObject<HTMLInputElement | null>;
 };
 

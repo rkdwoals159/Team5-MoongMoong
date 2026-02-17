@@ -1,36 +1,83 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
+
+const DEFAULT_MAX_INPUT_LENGTH = 12;
+const INPUT_LENGTH_BUFFER = 2; // max 초과 입력 시 즉시 차단 대신 경고를 보여주기 위한 여유 자릿수
 
 export type UseAmountInputOptions = {
   initialValue?: number;
+  min?: number;
+  minWarningMessage?: string;
+  max?: number;
+  maxWarningMessage?: string;
 };
 
 export function useAmountInput(options: UseAmountInputOptions = {}) {
-  const { initialValue } = options;
+  const { initialValue, min, minWarningMessage, max, maxWarningMessage } = options;
   const [value, setValue] = useState(() =>
     initialValue && initialValue > 0 ? String(initialValue) : "",
   );
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const numericValue = Number(value) || 0;
+  const isUnderMin = min !== undefined && numericValue > 0 && numericValue < min;
+  const isOverMax = max !== undefined && numericValue > max;
+  const warningMessage = getAmountInputWarningMessage(
+    isOverMax,
+    maxWarningMessage,
+    isUnderMin,
+    minWarningMessage,
+  );
+
+  const maxInputLength =
+    max !== undefined ? String(max).length + INPUT_LENGTH_BUFFER : DEFAULT_MAX_INPUT_LENGTH;
+
+  const [isShaking, setIsShaking] = useState(false);
+
+  const triggerShake = () => setIsShaking(true);
+  const stopShaking = () => setIsShaking(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.replace(/[^0-9]/g, "");
+    if (raw.length > maxInputLength) {
+      triggerShake();
+      return;
+    }
     setValue(raw);
-  }, []);
+  };
 
-  const reset = useCallback(() => {
+  const reset = () => {
     setValue(initialValue && initialValue > 0 ? String(initialValue) : "");
-  }, [initialValue]);
+  };
 
-  const addAmount = useCallback((amount: number) => {
-    setValue((prev) => String(Number(prev || "0") + amount));
-  }, []);
+  const addAmount = (amount: number) => {
+    setValue((prev) => {
+      const next = String(Number(prev || "0") + amount);
+      if (next.length > maxInputLength) return prev;
+      return next;
+    });
+  };
 
   return {
     value,
-    numericValue: Number(value) || 0,
-    setValue,
+    numericValue,
+    warningMessage,
+    isShaking,
+    stopShaking,
     handleChange,
     reset,
     addAmount,
   };
+}
+
+// 내부함수
+function getAmountInputWarningMessage(
+  isOverMax: boolean,
+  maxWarningMessage?: string,
+  isUnderMin?: boolean,
+  minWarningMessage?: string,
+) {
+  if (isOverMax) return maxWarningMessage;
+  if (isUnderMin) return minWarningMessage;
+  return undefined;
 }

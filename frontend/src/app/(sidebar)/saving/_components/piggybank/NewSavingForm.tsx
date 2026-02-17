@@ -1,13 +1,19 @@
 import Button from "@/components/common/Button/Button";
 import AmountInput from "@/components/common/Input/AmountInput";
-import { TEXT } from "@/app/(sidebar)/saving/_constants";
+import { TEXT, NEW_SAVING_AMOUNT_RESTRAINTS } from "@/app/(sidebar)/saving/_constants";
 import SavingModalCard from "@/app/(sidebar)/saving/_components/modals/SavingModalCard";
 import { useAmountInput } from "@/app/(sidebar)/saving/_hooks/useAmountInput";
 import type { NewSavingFormProps } from "@/app/(sidebar)/saving/_types";
 
 export default function NewSavingForm({ onSubmit, onCancel, isSubmitting }: NewSavingFormProps) {
-  const { value, numericValue, handleChange } = useAmountInput();
-  const isValid = numericValue > 0;
+  const { value, numericValue, warningMessage, isShaking, stopShaking, handleChange } =
+    useAmountInput({
+      min: NEW_SAVING_AMOUNT_RESTRAINTS.MIN,
+      minWarningMessage: NEW_SAVING_AMOUNT_RESTRAINTS.MIN_WARNING,
+      max: NEW_SAVING_AMOUNT_RESTRAINTS.MAX,
+      maxWarningMessage: NEW_SAVING_AMOUNT_RESTRAINTS.MAX_WARNING,
+    });
+  const isValid = numericValue > 0 && !warningMessage;
 
   const handleSubmit = () => {
     if (!isValid || isSubmitting) return;
@@ -22,6 +28,9 @@ export default function NewSavingForm({ onSubmit, onCancel, isSubmitting }: NewS
             value={value}
             onChange={handleChange}
             placeholder={TEXT.INPUT_PLACEHOLDER}
+            warningMessage={warningMessage}
+            isShaking={isShaking}
+            onAnimationEnd={stopShaking}
             autoFocus
             onKeyDown={(e) => {
               if (e.key === "Enter") handleSubmit();

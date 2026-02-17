@@ -1,37 +1,44 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Button from "@/components/common/Button/Button";
 import ClientModal from "@/components/ui/Modal/ClientModal";
-import { formatAmountPlain } from "@/utils/amount";
-import { AMOUNT_PRESETS } from "@/app/(sidebar)/saving/_constants";
+import AmountInput from "@/components/common/Input/AmountInput";
+import { SAVING_AMOUNT_RESTRAINTS } from "@/app/(sidebar)/saving/_constants";
 import type { SavingModalProps } from "@/app/(sidebar)/saving/_types";
-import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
-import { ANONYMOUS } from "@tosspayments/tosspayments-sdk";
-import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { useAmountInput } from "@/app/(sidebar)/saving/_hooks/useAmountInput";
-import useTossPayments from "@/app/(sidebar)/saving/_hooks/useTossPayments";
+import { useSavingPayment } from "@/app/(sidebar)/saving/_hooks/useSavingPayment";
 import SavingConfirmDialog from "./SavingConfirmDialog";
-import { getBankInfo } from "@/app/(sidebar)/saving/_api";
-import type { BankInfoResponse } from "@/api/types/savingApi.type";
+import AmountPresetButtons from "./AmountPresetButtons";
 
 export default function SavingModal({ open, onClose, handleDrop }: SavingModalProps) {
-  const { status, setStatus } = useSavingStatus();
   const [showConfirm, setShowConfirm] = useState(false);
-  const { value, numericValue, handleChange, reset, addAmount } = useAmountInput();
-  const { showToast } = useToast();
-  const { isReady, isLoading, error, clearError, requestPayment } = useTossPayments(ANONYMOUS);
-  const isValid = numericValue > 0;
+  const {
+    value,
+    numericValue,
+    warningMessage,
+    isShaking,
+    stopShaking,
+    handleChange,
+    reset,
+    addAmount,
+  } = useAmountInput({
+    min: SAVING_AMOUNT_RESTRAINTS.MIN,
+    minWarningMessage: SAVING_AMOUNT_RESTRAINTS.MIN_WARNING,
+    max: SAVING_AMOUNT_RESTRAINTS.MAX,
+    maxWarningMessage: SAVING_AMOUNT_RESTRAINTS.MAX_WARNING,
+  });
 
-  useEffect(() => {
-    if (error) {
-      showToast({
-        variant: "error",
-        message: error.message,
-      });
-      clearError();
-    }
-  }, [error, showToast, clearError]);
+  const { processPayment, isLoading, isReady } = useSavingPayment({
+    onSuccess: () => {
+      setShowConfirm(false);
+      reset();
+      onClose();
+    },
+    handleDrop,
+  });
+
+  const isValid = numericValue > 0 && !warningMessage;
 
   const handleSubmitClick = () => {
     if (!isValid || !isReady) return;
@@ -39,42 +46,8 @@ export default function SavingModal({ open, onClose, handleDrop }: SavingModalPr
   };
 
   const handleConfirm = async () => {
-    const response = await requestPayment(numericValue);
-
-    if (!response) {
-      setShowConfirm(false);
-      return;
-    }
-
-    let bankInfo: BankInfoResponse | null = null;
-    try {
-      bankInfo = await getBankInfo();
-    } catch {
-      showToast({
-        variant: "error",
-        message: "랭킹 정보를 불러오지 못했습니다.",
-      });
-    }
-
-    showToast({
-      variant: "success",
-      message: `${response.amount}원을 저금했습니다.`,
-    });
-
-    handleDrop(response.name, response.amount, response.createdAt, status.target);
-    setStatus((prev) => ({
-      ...prev,
-      current: prev.current + response.amount,
-      rankings: bankInfo?.rankings || prev.rankings,
-      coins: [
-        ...prev.coins,
-        { name: response.name, amount: response.amount, createdAt: response.createdAt },
-      ],
-    }));
-
-    setShowConfirm(false);
-    reset();
-    onClose();
+    const success = await processPayment(numericValue);
+    if (!success) setShowConfirm(false);
   };
 
   const handleCancel = () => {
@@ -116,32 +89,22 @@ export default function SavingModal({ open, onClose, handleDrop }: SavingModalPr
             <label htmlFor="saving-amount" className="typo-body-m-medium text-gray-500">
               저금할 금액
             </label>
-            <div className={inputWrapperClasses}>
-              <input
-                id="saving-amount"
-                type="text"
-                inputMode="numeric"
-                placeholder="금액을 입력해주세요"
-                value={value ? formatAmountPlain(numericValue) : ""}
-                onChange={handleChange}
-                className="flex-1 bg-transparent outline-none typo-body-m-medium placeholder:text-gray-300"
-                autoFocus
-              />
-              <span className="typo-body-m-medium text-gray-400">원</span>
-            </div>
-
-            <div className="flex gap-300">
-              {AMOUNT_PRESETS.map((preset) => (
-                <button
-                  key={preset}
-                  type="button"
-                  onClick={() => addAmount(preset)}
-                  className={presetButtonClasses}
-                >
-                  +{formatAmountPlain(preset)}원
-                </button>
-              ))}
-            </div>
+            <AmountInput
+              id="saving-amount"
+              value={value}
+              onChange={handleChange}
+              warningMessage={warningMessage}
+              isShaking={isShaking}
+              onAnimationEnd={stopShaking}
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSubmitClick();
+                }
+              }}
+            />
+            <AmountPresetButtons onAdd={addAmount} />
           </div>
 
           <Button
@@ -159,9 +122,3 @@ export default function SavingModal({ open, onClose, handleDrop }: SavingModalPr
     </ClientModal>
   );
 }
-
-const inputWrapperClasses =
-  "flex items-center gap-300 w-full h-12 px-500 rounded-250 border border-border-light bg-white-100 transition-colors focus-within:border-yellow-300";
-
-const presetButtonClasses =
-  "flex-1 py-250 rounded-250 border border-border-light bg-white-100 typo-body-s-medium text-gray-500 transition-colors hover:bg-yellow-50 hover:border-yellow-300 cursor-pointer";

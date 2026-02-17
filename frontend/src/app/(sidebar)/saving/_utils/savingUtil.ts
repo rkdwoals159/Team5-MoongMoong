@@ -1,4 +1,5 @@
 export function clamp(value: number, min: number, max: number) {
+  if (min > max) [min, max] = [max, min];
   return Math.min(Math.max(value, min), max);
 }
 
@@ -12,5 +13,6 @@ export function formatCreatedAt(createdAt: string) {
 }
 
 export function calcProgress(total: number, target: number): number {
-  return target === 0 ? 0 : Math.min((total / target) * 100, 100);
+  if (total < 0 || target <= 0) return 0;
+  return Math.min((total / target) * 100, 100);
 }

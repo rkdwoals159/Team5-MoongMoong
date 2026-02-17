@@ -18,3 +18,7 @@ export type SavingConfirmDialogProps = {
   onCancel: () => void;
   isLoading: boolean;
 };
+
+export type AmountPresetButtonsProps = {
+  onAdd: (amount: number) => void;
+};

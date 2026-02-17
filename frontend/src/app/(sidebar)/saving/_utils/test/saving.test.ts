@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { clamp, formatCreatedAt, calcProgress } from "../saving.util";
+import { clamp, formatCreatedAt, calcProgress } from "@/app/(sidebar)/saving/_utils/savingUtil";
 
 describe("saving utils", () => {
   describe("clamp", () => {

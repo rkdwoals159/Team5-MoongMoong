@@ -6,6 +6,7 @@ import { formatAmountPlain } from "@/utils/amount";
 import CloseIcon from "@/assets/icons/components/close.svg";
 import type { SavingTargetModalProps } from "@/app/(sidebar)/saving/_types";
 import { useAmountInput } from "@/app/(sidebar)/saving/_hooks/useAmountInput";
+import { TARGET_AMOUNT_RESTRAINTS } from "@/app/(sidebar)/saving/_constants";
 
 export default function SavingTargetModal({
   initialTarget,
@@ -14,17 +15,21 @@ export default function SavingTargetModal({
   onSubmit,
   focusRef,
 }: SavingTargetModalProps) {
-  const { value, numericValue, handleChange } = useAmountInput({
-    initialValue: initialTarget,
-  });
+  const { value, numericValue, warningMessage, isShaking, stopShaking, handleChange } =
+    useAmountInput({
+      initialValue: initialTarget,
+      min: currentAmount,
+      minWarningMessage: `현재 저금 금액(${formatAmountPlain(currentAmount)}원) 이상으로 설정해주세요.`,
+      max: TARGET_AMOUNT_RESTRAINTS.MAX,
+      maxWarningMessage: TARGET_AMOUNT_RESTRAINTS.MAX_WARNING,
+    });
 
   const handleSubmit = () => {
     if (numericValue <= 0) return;
     onSubmit(numericValue);
   };
 
-  const isValid = value.length > 0 && numericValue > 0 && numericValue >= currentAmount;
-  const isBelowTotal = value.length > 0 && numericValue > 0 && numericValue < currentAmount;
+  const isValid = value.length > 0 && numericValue > 0 && !warningMessage;
 
   return (
     <>
@@ -43,14 +48,16 @@ export default function SavingTargetModal({
       </p>
 
       <div className="mt-700">
-        <AmountInput value={value} onChange={handleChange} ref={focusRef} autoFocus />
+        <AmountInput
+          value={value}
+          onChange={handleChange}
+          warningMessage={warningMessage}
+          isShaking={isShaking}
+          onAnimationEnd={stopShaking}
+          ref={focusRef}
+          autoFocus
+        />
       </div>
-
-      {isBelowTotal && (
-        <p className="mt-200 typo-body-s-medium text-red-500">
-          현재 저금 금액({formatAmountPlain(currentAmount)}원) 이상으로 설정해주세요.
-        </p>
-      )}
 
       <div className="mt-900 flex gap-300">
         <Button variant="secondary" size="large" fullWidth onClick={onClose}>

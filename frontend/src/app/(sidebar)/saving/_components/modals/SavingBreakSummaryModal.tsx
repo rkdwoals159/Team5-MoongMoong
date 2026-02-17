@@ -89,7 +89,7 @@ export default function SavingBreakSummaryModal({
           }`}
           style={reduceMotion ? undefined : { animationDelay: `${ANIMATION_DELAY.SUBTITLE}ms` }}
         >
-          총 <span className="typo-body-l-bold">{displayDays}일</span> 동안 저금했어요.
+          총 <span className="typo-body-l-bold">{displayDays + 1}일</span> 동안 저금했어요.
         </p>
         <p
           className={`mt-300 typo-body-m-medium text-center text-gray-400 ${
