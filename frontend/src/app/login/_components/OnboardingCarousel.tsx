@@ -7,7 +7,6 @@ import { ONBOARDING_CAROUSEL_INTERVAL } from "@/app/login/_constants";
 export default function OnboardingCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "center" });
-  const activeSlide = slides[activeIndex] ?? slides[0]!;
 
   // 슬라이드 인디케이터 클릭 시 해당 슬라이드로 이동
   useEffect(() => {
@@ -54,7 +53,10 @@ export default function OnboardingCarousel() {
       <div className="absolute inset-0" ref={emblaRef}>
         <div className="flex h-full">
           {slides.map((slide, index) => (
-            <div key={slide.alt} className="relative flex-[0_0_100%]">
+            <div
+              key={slide.alt}
+              className="relative flex-[0_0_100%] before:pointer-events-none before:absolute before:inset-y-0 before:-left-px before:w-[2px] before:bg-[#EFC649] after:pointer-events-none after:absolute after:inset-y-0 after:-right-px after:w-[2px] after:bg-[#EFC649]"
+            >
               <button
                 type="button"
                 onClick={() => emblaApi?.scrollNext()}
@@ -62,17 +64,17 @@ export default function OnboardingCarousel() {
                 aria-label={`온보딩 ${index + 1} 이미지 클릭`}
               >
                 {slide.image}
+                <p className="pointer-events-none absolute bottom-[82px] left-0 right-0 text-center typo-headline-l-bold text-text-base">
+                  {slide.title[0]}
+                  <br />
+                  {slide.title[1]}
+                </p>
               </button>
             </div>
           ))}
         </div>
       </div>
-      <div className="absolute bottom-[32px] left-0 right-0 flex flex-col items-center gap-[40px]">
-        <p className="typo-headline-l-bold text-center text-text-base">
-          {activeSlide.title[0]}
-          <br />
-          {activeSlide.title[1]}
-        </p>
+      <div className="absolute bottom-[32px] left-0 right-0 flex justify-center">
         <div className="flex items-center gap-500" aria-label="페이지 인디케이터">
           {indicators}
         </div>
