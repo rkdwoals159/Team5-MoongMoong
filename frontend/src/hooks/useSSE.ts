@@ -4,7 +4,7 @@ import { parseSSE } from "@/lib/sse/parseSSE";
 import type { SSEConnectionStatus, SSEEvent, SSEProps } from "@/types/sse";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export function useSSE({ url, onEvent, onError, enabled }: SSEProps) {
+export function useSSE({ onEvent, onError, enabled }: SSEProps) {
   const [status, setStatus] = useState<SSEConnectionStatus>("closed");
   const abortRef = useRef<AbortController | null>(null);
   const lastEventIdRef = useRef<string>("");
@@ -26,16 +26,9 @@ export function useSSE({ url, onEvent, onError, enabled }: SSEProps) {
     setStatus("connecting");
 
     try {
-      const response = await fetch(url, {
+      // SSE 연결 요청
+      const response = await fetch("/api/sse", {
         signal: controller.signal,
-        credentials: "include",
-        headers: {
-          Accept: "text/event-stream",
-          "Cache-Control": "no-cache",
-          ...(lastEventIdRef.current && {
-            "Last-Event-ID": lastEventIdRef.current,
-          }),
-        },
       });
 
       if (!response.ok) throw new Error(`SSE 연결 실패: ${response.status}`);
@@ -70,7 +63,7 @@ export function useSSE({ url, onEvent, onError, enabled }: SSEProps) {
       setStatus("closed");
       onErrorRef.current?.(e instanceof Error ? e : new Error(String(e)));
     }
-  }, [url]);
+  }, []);
 
   const disconnect = useCallback(() => {
     abortRef.current?.abort();

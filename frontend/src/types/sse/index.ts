@@ -1,5 +1,4 @@
 export type SSEProps = {
-  url: string;
   onEvent: (event: SSEEvent) => void;
   onError?: (error: Error) => void;
   enabled?: boolean;

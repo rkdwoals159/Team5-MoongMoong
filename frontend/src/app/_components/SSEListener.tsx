@@ -26,7 +26,6 @@ export default function SSEListener() {
   };
 
   useSSE({
-    url: process.env.NEXT_PUBLIC_SSE_URL!,
     onEvent: handleEvent,
     onError: handleError,
     enabled: true,
