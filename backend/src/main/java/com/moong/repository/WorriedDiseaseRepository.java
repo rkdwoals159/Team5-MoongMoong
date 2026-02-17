@@ -2,7 +2,11 @@ package com.moong.repository;
 
 import com.moong.domain.entity.WorriedDisease;
 import java.util.List;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface WorriedDiseaseRepository extends Repository<WorriedDisease, Long> {
 
@@ -17,4 +21,9 @@ public interface WorriedDiseaseRepository extends Repository<WorriedDisease, Lon
     List<WorriedDisease> findAll();
 
     List<WorriedDisease> findAllByPet_Id(long petId);
+
+    @Transactional
+    @Modifying(flushAutomatically = true)
+    @Query("delete from WorriedDisease wd where wd.pet.id = :petId")
+    void deleteAllByPetId(@Param("petId") long petId);
 }

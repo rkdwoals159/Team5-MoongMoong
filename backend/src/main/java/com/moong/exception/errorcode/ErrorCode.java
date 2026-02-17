@@ -37,7 +37,6 @@ public enum ErrorCode {
     UNAUTHORIZED_EXCEPTION(401, "잘못된 유저 접근입니다"),
     EXPIRED_TOKEN(401, "토큰 기한이 만료되었습니다"),
 
-
     //404
     CREW_NOT_FOUND(404, "해당하는 크루를 찾을 수 없습니다."),
     PET_GROUP_NOT_FOUND(404, "해당하는 펫 그룹을 찾을 수 없습니다."),

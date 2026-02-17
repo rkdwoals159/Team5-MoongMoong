@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class WorriedDiseaseRepositoryTest extends BaseRepositoryTest{
 
@@ -32,5 +33,21 @@ class WorriedDiseaseRepositoryTest extends BaseRepositoryTest{
 
         List<WorriedDisease> savedWorriedDiseases = worriedDiseaseRepository.findAll();
         assertThat(savedWorriedDiseases).hasSize(worriedDiseases.size());
+    }
+
+    @DisplayName("펫의 걱정되는 질병을 모두 제거할 수 있다.")
+    @Test
+    void deleteAllByPetId() {
+        Pet pet = petGenerator.generateSaved();
+        List<Disease> diseases = List.of(Disease.END, Disease.CAR, Disease.GAS);
+        worriedDiseaseGenerator.generateSaved(diseases, pet);
+
+        worriedDiseaseRepository.deleteAllByPetId(pet.getId());
+
+        List<WorriedDisease> petDiseases =
+                worriedDiseaseRepository.findAllByPet_Id(pet.getId());
+        assertAll(
+                () -> assertThat(petDiseases).isEmpty()
+        );
     }
 }

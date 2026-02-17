@@ -1,4 +1,4 @@
-package com.moong.dto.request;
+package com.moong.dto.request.pet;
 
 import com.moong.domain.entity.Pet;
 import com.moong.domain.enums.Breed;

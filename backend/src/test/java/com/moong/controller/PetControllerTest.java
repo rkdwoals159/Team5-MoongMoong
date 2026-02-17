@@ -7,11 +7,14 @@ import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
+import com.moong.domain.entity.WorriedDisease;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.Gender;
-import com.moong.dto.request.PetCreateRequest;
+import com.moong.dto.request.pet.PetCreateRequest;
+import com.moong.dto.request.pet.PetUpdateRequest;
 import com.moong.dto.response.pet.PetReadResponse;
+import com.moong.dto.response.pet.PetUpdateResponse;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -118,5 +121,50 @@ class PetControllerTest extends BaseControllerTest {
                 .get("/api/pet")
                 .then()
                 .statusCode(401);
+    }
+
+    @DisplayName("펫 수정 성공")
+    @Test
+    void updatePetInfoSuccess() {
+        Member member = memberGenerator.generateSaved("softeer");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
+        List<Disease> diseases = List.of(Disease.CAR, Disease.DER);
+        List<Disease> updatedDiseases = List.of(Disease.END, Disease.GAS);
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, member);
+        worriedDiseaseGenerator.generateSaved(diseases, pet);
+        PetUpdateRequest petUpdateRequest = new PetUpdateRequest(
+                "쿠쿠",
+                Breed.DAS,
+                Gender.M,
+                YearMonth.of(2025, 7),
+                "서울시",
+                "서초구",
+                updatedDiseases
+        );
+
+        PetUpdateResponse response = given().log().all()
+                .contentType(ContentType.JSON)
+                .body(petUpdateRequest)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + accessToken)
+                .put("/api/pet")
+                .then()
+                .statusCode(200)
+                .extract()
+                .as(PetUpdateResponse.class);
+
+        assertAll(
+                () -> assertThat(response.petName()).isEqualTo(petUpdateRequest.petName()),
+                () -> assertThat(response.breed()).isEqualTo(petUpdateRequest.breed()),
+                () -> assertThat(response.gender()).isEqualTo(petUpdateRequest.gender()),
+                () -> assertThat(response.birthDate())
+                                .isEqualTo(YearMonth.from(petUpdateRequest.birthDate())),
+                () -> assertThat(response.city()).isEqualTo(petUpdateRequest.city()),
+                () -> assertThat(response.district()).isEqualTo(petUpdateRequest.district()),
+                () -> assertThat(response.diseases()).hasSize(updatedDiseases.size()),
+                () -> assertThat(response.diseases())
+                        .containsExactlyInAnyOrderElementsOf(updatedDiseases)
+        );
     }
 }

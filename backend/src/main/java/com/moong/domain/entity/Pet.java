@@ -61,4 +61,20 @@ public class Pet {
     public PetAge getAge() {
         return new PetAge(birthDate);
     }
+
+    public void updateInfo(
+            String name,
+            Breed breed,
+            Gender gender,
+            LocalDate birthDate,
+            String city,
+            String district
+    ) {
+        this.name = name;
+        this.breed = breed;
+        this.gender = gender;
+        this.birthDate = birthDate;
+        this.city = city;
+        this.district = district;
+    }
 }

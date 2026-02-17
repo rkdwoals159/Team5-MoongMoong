@@ -12,8 +12,10 @@ import com.moong.domain.entity.WorriedDisease;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.Gender;
-import com.moong.dto.request.PetCreateRequest;
+import com.moong.dto.request.pet.PetCreateRequest;
+import com.moong.dto.request.pet.PetUpdateRequest;
 import com.moong.dto.response.pet.PetCreateResponse;
+import com.moong.dto.response.pet.PetUpdateResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.PetRepository;
@@ -84,4 +86,39 @@ class PetServiceTest extends BaseServiceTest {
                 .hasMessage(ErrorCode.ALREADY_EXISTS_PET.getMessage());
     }
 
+    @DisplayName("펫 정보를 수정 수 있다")
+    @Test
+    void updatePet() {
+        Member member = memberGenerator.generateSaved("softeer");
+        List<Disease> diseases = List.of(Disease.CAR, Disease.DER);
+        List<Disease> updatedDiseases = List.of(Disease.END, Disease.GAS);
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, member);
+        worriedDiseaseGenerator.generateSaved(diseases, pet);
+        PetUpdateRequest petUpdateRequest = new PetUpdateRequest(
+                "쿠쿠",
+                Breed.DAS,
+                Gender.M,
+                YearMonth.of(2025, 7),
+                "서울시",
+                "서초구",
+                updatedDiseases
+        );
+
+        PetUpdateResponse response = petService.updatePetInfo(member, petUpdateRequest);
+
+        assertAll(
+                () -> assertThat(response.petName()).isEqualTo(petUpdateRequest.petName()),
+                () -> assertThat(response.breed()).isEqualTo(petUpdateRequest.breed()),
+                () -> assertThat(response.gender()).isEqualTo(petUpdateRequest.gender()),
+                () -> assertThat(response.birthDate())
+                        .isEqualTo(YearMonth.from(petUpdateRequest.birthDate())),
+                () -> assertThat(response.city()).isEqualTo(petUpdateRequest.city()),
+                () -> assertThat(response.district()).isEqualTo(petUpdateRequest.district()),
+                () -> assertThat(response.diseases()).hasSize(updatedDiseases.size()),
+                () -> assertThat(response.diseases())
+                        .containsExactlyInAnyOrderElementsOf(updatedDiseases)
+        );
+    }
 }

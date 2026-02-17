@@ -1,13 +1,15 @@
 package com.moong.controller.swagger;
 
-import com.moong.annotation.auth.AuthMember;
 import com.moong.annotation.swagger.ErrorCode401;
+import com.moong.annotation.swagger.ErrorCode403;
 import com.moong.annotation.swagger.ErrorCode404;
 import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
-import com.moong.dto.request.PetCreateRequest;
+import com.moong.dto.request.pet.PetCreateRequest;
+import com.moong.dto.request.pet.PetUpdateRequest;
 import com.moong.dto.response.pet.PetCreateResponse;
 import com.moong.dto.response.pet.PetReadResponse;
+import com.moong.dto.response.pet.PetUpdateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "Pet API")
 public interface PetControllerSwagger {
@@ -56,5 +59,26 @@ public interface PetControllerSwagger {
     ResponseEntity<PetReadResponse> findPetInfo(
             @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
             Member member
+    );
+
+    @Operation(
+            summary = "반려동물 정보 수정",
+            description = "요청으로 전달된 반려동물 정보를 수정합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "반려동물 정보 수정 성공",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PetUpdateResponse.class)
+            )
+    )
+    @ErrorCode401
+    @ErrorCode404(description = "반려동물 정보가 없을 때")
+    @ErrorCode500
+    ResponseEntity<PetUpdateResponse> updatePetInfo(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member,
+            PetUpdateRequest request
     );
 }
