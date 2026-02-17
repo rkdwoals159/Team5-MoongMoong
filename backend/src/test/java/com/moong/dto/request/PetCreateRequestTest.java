@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.Gender;
-import com.moong.dto.BaseVailidationTest;
+import com.moong.dto.BaseValidateTest;
 import com.moong.dto.request.pet.PetCreateRequest;
 import com.moong.fixture.NullAndEmptyAndBlankSource;
 import com.navercorp.fixturemonkey.ArbitraryBuilder;
@@ -20,7 +20,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 
-class PetCreateRequestTest extends BaseVailidationTest {
+class PetCreateRequestTest extends BaseValidateTest {
 
     private Validator validator;
 

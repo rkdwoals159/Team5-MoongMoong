@@ -1,5 +1,6 @@
 package com.moong.util;
 
+import com.moong.domain.member.MemberName;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
@@ -9,9 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MemberNameGenerator {
 
-    private static final int MAX_NAME_SUFFIX_NUMBER = 9999;
+    private static final int MAX_NAME_SUFFIX_NUMBER = 100;
     private static final int MAX_GENERATION_ATTEMPTS = 5;
-    private static final int MAX_MEMBER_NAME_LENGTH = 20;
     private static final Random RANDOM = new SecureRandom();
 
     private static final List<String> PET_OWNER_SUFFIXES = List.of(
@@ -30,35 +30,39 @@ public class MemberNameGenerator {
     );
 
     /**
-     * 꾸밈말(Decorator)이 포함된 고유한 견주 이름을 생성합니다.
-     * 예: "멋있는집사1234", "상냥한견주5678"
+     * 꾸밈말(Decorator)이 포함된 고유한 견주 이름을 생성합니다. 예: "멋있는집사1234", "상냥한견주5678"
      *
      * @param isDuplicate 이름 중복 여부를 확인하는 Predicate
      * @return 꾸밈말이 포함된 고유한 견주 이름
      */
-    public String generateUniqueNameWithDecorator(Predicate<String> isDuplicate) {
+    public MemberName generateUniqueNameWithDecorator(Predicate<String> isDuplicate) {
         for (int attempt = 0; attempt < MAX_GENERATION_ATTEMPTS; attempt++) {
             String name = generateRandomNameWithDecorator();
             if (!isDuplicate.test(name)) {
-                return name;
+                return new MemberName(name);
             }
         }
         return generateRandomNameWithTimeStamp();
     }
 
-    private String generateRandomNameWithTimeStamp() {
+    private MemberName generateRandomNameWithTimeStamp() {
         String nameWithTimeStamp = generateRandomNameWithDecorator() + getTimestampSuffix();
-        if(nameWithTimeStamp.length() > MAX_NAME_SUFFIX_NUMBER) {
-            return nameWithTimeStamp.substring(0, MAX_NAME_SUFFIX_NUMBER);
-        }
-        return nameWithTimeStamp;
+        return new MemberName(nameWithTimeStamp.substring(0, MemberName.MEMBER_NAME_MAX_LENGTH));
     }
 
     private String generateRandomNameWithDecorator() {
         String decorator = DECORATORS.get(RANDOM.nextInt(DECORATORS.size()));
         String suffix = PET_OWNER_SUFFIXES.get(RANDOM.nextInt(PET_OWNER_SUFFIXES.size()));
-        int number = RANDOM.nextInt(MAX_NAME_SUFFIX_NUMBER) + 1;
-        return decorator + suffix + number;
+        String base = decorator + suffix;
+
+        if (base.length() >= MemberName.MEMBER_NAME_MAX_LENGTH) {
+            return base.substring(0, MemberName.MEMBER_NAME_MAX_LENGTH);
+        }
+
+        int remainingLength = MemberName.MEMBER_NAME_MAX_LENGTH - base.length();
+        int maxNumber = (int) Math.pow(10, remainingLength) - 1;
+        int number = RANDOM.nextInt(Math.max(maxNumber, 1)) + 1;
+        return base + number;
     }
 
     private long getTimestampSuffix() {

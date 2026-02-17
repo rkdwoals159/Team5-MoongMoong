@@ -2,8 +2,7 @@ package com.moong.dto.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.moong.dto.BaseVailidationTest;
-import com.moong.dto.request.auth.AuthLoginRequest;
+import com.moong.dto.BaseValidateTest;
 import com.moong.fixture.NullAndEmptyAndBlankSource;
 import com.navercorp.fixturemonkey.ArbitraryBuilder;
 import jakarta.validation.ConstraintViolation;
@@ -16,7 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 
-class PetGroupParticipateRequestTest extends BaseVailidationTest {
+class PetGroupParticipateRequestTest extends BaseValidateTest {
 
     private Validator validator;
 

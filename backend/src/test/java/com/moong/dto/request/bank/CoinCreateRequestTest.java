@@ -1,9 +1,8 @@
 package com.moong.dto.request.bank;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-import com.moong.dto.BaseVailidationTest;
+import com.moong.dto.BaseValidateTest;
 import com.navercorp.fixturemonkey.ArbitraryBuilder;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -13,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class CoinCreateRequestTest extends BaseVailidationTest {
+class CoinCreateRequestTest extends BaseValidateTest {
 
     private Validator validator;
 

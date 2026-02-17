@@ -1,4 +1,4 @@
-package com.moong.dto.request.auth;
+package com.moong.dto.request.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 
-class AuthLoginRequestTest extends BaseValidateTest {
+class MemberUpdateNameRequestTest extends BaseValidateTest {
 
     private Validator validator;
 
@@ -23,24 +23,23 @@ class AuthLoginRequestTest extends BaseValidateTest {
         validator = factory.getValidator();
     }
 
-    private ArbitraryBuilder<AuthLoginRequest> giveDefaultBuilder() {
-        return fixtureMonkey.giveMeBuilder(AuthLoginRequest.class)
-                .set("inviteUrl", "https://moongmoong.site/invite/default")
-                .set("accessToken", "access_token");
+    private ArbitraryBuilder<MemberUpdateNameRequest> giveDefaultBuilder() {
+        return fixtureMonkey.giveMeBuilder(MemberUpdateNameRequest.class)
+                .set("memberName", "회원이름");
     }
 
-    @DisplayName("엑세스 토큰은 빈 값일 수 없다")
+    @DisplayName("업데이트를 요청한 이름은 빈 값일 수 없다")
     @ParameterizedTest
     @NullAndEmptyAndBlankSource
-    void validateAccessTokenFail(String invalidAccessToken) {
-        AuthLoginRequest invalidateRequest = giveDefaultBuilder()
-                .set("accessToken", invalidAccessToken)
+    void validateAccessTokenFail(String invalidName) {
+        MemberUpdateNameRequest invalidateRequest = giveDefaultBuilder()
+                .set("memberName", invalidName)
                 .sample();
 
-        ConstraintViolation<AuthLoginRequest> violation = validator.validate(invalidateRequest)
+        ConstraintViolation<MemberUpdateNameRequest> violation = validator.validate(invalidateRequest)
                 .iterator()
                 .next();
 
-        assertThat(violation.getMessage()).isEqualTo("엑세스 토큰은 빈 값일 수 없습니다");
+        assertThat(violation.getMessage()).isEqualTo("닉네임 업데이트 요청 - 회원 닉네임은 빈 값일 수 없습니다.");
     }
 }

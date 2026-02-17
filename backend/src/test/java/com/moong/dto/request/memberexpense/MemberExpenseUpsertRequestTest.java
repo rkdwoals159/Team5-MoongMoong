@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.domain.enums.SubCategoryType;
-import com.moong.dto.BaseVailidationTest;
+import com.moong.dto.BaseValidateTest;
 import com.navercorp.fixturemonkey.ArbitraryBuilder;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 
-class MemberExpenseUpsertRequestTest extends BaseVailidationTest {
+class MemberExpenseUpsertRequestTest extends BaseValidateTest {
 
     private Validator validator;
 

@@ -2,18 +2,17 @@ package com.moong.dto.request.bank;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.moong.dto.BaseVailidationTest;
+import com.moong.dto.BaseValidateTest;
 import com.navercorp.fixturemonkey.ArbitraryBuilder;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class BankCreateRequestTest extends BaseVailidationTest {
+class BankCreateRequestTest extends BaseValidateTest {
 
     private Validator validator;
 

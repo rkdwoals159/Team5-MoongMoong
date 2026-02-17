@@ -1,4 +1,4 @@
-package com.moong.dto.request.auth;
+package com.moong.dto.request.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 
-class AuthLoginRequestTest extends BaseValidateTest {
+class MemberUpdateProfileRequestTest extends BaseValidateTest {
 
     private Validator validator;
 
@@ -23,24 +23,23 @@ class AuthLoginRequestTest extends BaseValidateTest {
         validator = factory.getValidator();
     }
 
-    private ArbitraryBuilder<AuthLoginRequest> giveDefaultBuilder() {
-        return fixtureMonkey.giveMeBuilder(AuthLoginRequest.class)
-                .set("inviteUrl", "https://moongmoong.site/invite/default")
-                .set("accessToken", "access_token");
+    private ArbitraryBuilder<MemberUpdateProfileRequest> giveDefaultBuilder() {
+        return fixtureMonkey.giveMeBuilder(MemberUpdateProfileRequest.class)
+                .set("memberImageUrl", "회원이름");
     }
 
-    @DisplayName("엑세스 토큰은 빈 값일 수 없다")
+    @DisplayName("업데이트를 요청한 이미지 url은 빈 값일 수 없다")
     @ParameterizedTest
     @NullAndEmptyAndBlankSource
-    void validateAccessTokenFail(String invalidAccessToken) {
-        AuthLoginRequest invalidateRequest = giveDefaultBuilder()
-                .set("accessToken", invalidAccessToken)
+    void validateAccessTokenFail(String invalidImageUrl) {
+        MemberUpdateProfileRequest invalidateRequest = giveDefaultBuilder()
+                .set("memberImageUrl", invalidImageUrl)
                 .sample();
 
-        ConstraintViolation<AuthLoginRequest> violation = validator.validate(invalidateRequest)
+        ConstraintViolation<MemberUpdateProfileRequest> violation = validator.validate(invalidateRequest)
                 .iterator()
                 .next();
 
-        assertThat(violation.getMessage()).isEqualTo("엑세스 토큰은 빈 값일 수 없습니다");
+        assertThat(violation.getMessage()).isEqualTo("회원 프로필 변경 - 회원 프로필 url은 빈값일 수 없습니다");
     }
 }

@@ -2,7 +2,7 @@ package com.moong.dto.request.payment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.moong.dto.BaseVailidationTest;
+import com.moong.dto.BaseValidateTest;
 import com.moong.fixture.NullAndEmptyAndBlankSource;
 import com.navercorp.fixturemonkey.ArbitraryBuilder;
 import jakarta.validation.ConstraintViolation;
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 
-class CoinPaymentFailRequestTest extends BaseVailidationTest {
+class CoinPaymentFailRequestTest extends BaseValidateTest {
 
     private Validator validator;
 

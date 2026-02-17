@@ -2,6 +2,7 @@ package com.moong.exception.errorcode;
 
 import com.moong.domain.entity.CoinPayment;
 import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.member.MemberName;
 import lombok.Getter;
 
 @Getter
@@ -34,6 +35,8 @@ public enum ErrorCode {
             + CoinPayment.MAX_PAYMENT_AMOUNT + "원 이하가 아닙니다."),
     INVALID_EXPENSE_COST_AMOUNT(400, "결제 요청 금액이 " + "0원 이상 - "
             + MemberExpense.MAX_PAYMENT_AMOUNT + "원 이하가 아닙니다."),
+    INVALID_MEMBER_NAME(400, "회원 닉네임은 " + MemberName.MEMBER_NAME_MIN_LENGTH+"자 이상 "
+            + MemberName.MEMBER_NAME_MAX_LENGTH+"자 이하여야 합니다"),
     ALREADY_PROCESSED(400, "이미 처리 중이거나 완료된 결제 요청입니다."),
 
     //401
@@ -41,6 +44,7 @@ public enum ErrorCode {
     EXPIRED_TOKEN(401, "토큰 기한이 만료되었습니다"),
 
     //404
+    MEMBER_NOT_FOUND(404, "해당하는 회원을 찾을 수 없습니다."),
     CREW_NOT_FOUND(404, "해당하는 크루를 찾을 수 없습니다."),
     PET_GROUP_NOT_FOUND(404, "해당하는 펫 그룹을 찾을 수 없습니다."),
     MEDICAL_ADVICE_NOT_FOUND(404, "해당 그룹의 의사 권장사항을 찾을 수 없습니다."),

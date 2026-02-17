@@ -2,7 +2,7 @@ package com.moong.dto.request.memberexpense;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.moong.dto.BaseVailidationTest;
+import com.moong.dto.BaseValidateTest;
 import com.moong.fixture.NullAndEmptyAndBlankSource;
 import com.navercorp.fixturemonkey.ArbitraryBuilder;
 import jakarta.validation.ConstraintViolation;
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 
-class CategorizeRequestTest extends BaseVailidationTest {
+class CategorizeRequestTest extends BaseValidateTest {
 
     private Validator validator;
 
