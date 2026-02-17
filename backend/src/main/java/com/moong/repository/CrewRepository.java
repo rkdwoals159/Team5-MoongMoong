@@ -14,6 +14,15 @@ public interface CrewRepository extends Repository<Crew, Long> {
 
     Optional<Crew> findByMemberId(long memberId);
 
+    @Query(
+            """
+    select c from Crew c
+        join fetch c.member
+        where c.petGroup.id = :petGroupId
+    """
+    )
+    List<Crew> findAllByPetGroup_IdWithFetchedMember(long petGroupId);
+
     List<Crew> findAllByPetGroup_Id(long groupId);
 
     default Crew getByMemberId(long memberId) {
@@ -27,6 +36,7 @@ public interface CrewRepository extends Repository<Crew, Long> {
             select c from Crew c
             join fetch c.petGroup pg
             join fetch pg.pet
+            join fetch c.member m
             where c.member.id = :memberId
             """)
     Optional<Crew> findFetchedByMemberId(long memberId);

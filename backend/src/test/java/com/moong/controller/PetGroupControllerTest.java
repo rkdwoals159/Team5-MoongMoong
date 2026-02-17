@@ -1,12 +1,15 @@
 package com.moong.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.moong.domain.InviteCode;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.PetGroupParticipateRequest;
+import com.moong.dto.response.petgroup.GroupCrewResponse;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.util.InviteCodeGenerator;
 import io.restassured.http.ContentType;
@@ -133,5 +136,35 @@ class PetGroupControllerTest extends BaseControllerTest {
                 .post("/api/group/participate")
                 .then()
                 .statusCode(200);
+    }
+
+    @DisplayName("모임원의 이름을 반환할 수 있다")
+    @Test
+    void getCrewsSuccess() {
+        Pet savedPet = petGenerator.generateSaved();
+        Member geonwoo = memberGenerator.generateSaved("김건우");
+        Member hyeonmin = memberGenerator.generateSaved("전현민");
+        Member yeonjin = memberGenerator.generateSaved("주연진");
+        PetGroup petGroup1 = petGroupGenerator.generateSaved(savedPet);
+        String geonwooAccessToken = jwtTokenGenerator.generateAccessToken(geonwoo);
+
+        crewGenerator.generateSaveCrews(petGroup1, List.of(geonwoo, hyeonmin, yeonjin));
+
+        GroupCrewResponse response = given().log().all()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + geonwooAccessToken)
+                .get("/api/group/crews")
+                .then()
+                .statusCode(200)
+                .extract()
+                .as(GroupCrewResponse.class);
+
+        assertAll(
+                () -> assertThat(response.memberName()).isEqualTo(geonwoo.getName()),
+                () -> assertThat(inviteCodeGenerator.decode(InviteCode.parseFromUrl(response.inviteUrl())))
+                        .isEqualTo(petGroup1.getId()),
+                () -> assertThat(response.crews())
+                        .containsExactly(hyeonmin.getName(), yeonjin.getName())
+        );
     }
 }

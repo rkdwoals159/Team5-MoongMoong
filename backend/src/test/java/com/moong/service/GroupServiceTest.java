@@ -11,6 +11,7 @@ import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.PetGroupParticipateRequest;
+import com.moong.dto.response.petgroup.GroupCrewResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.CrewRepository;
@@ -201,6 +202,27 @@ class GroupServiceTest extends BaseServiceTest {
                 () -> assertThat(petGroup.getPet().getBirthDate()).isEqualTo(savedPet.getBirthDate()),
                 () -> assertThat(petGroup.getPet().getBreed()).isEqualTo(savedPet.getBreed()),
                 () -> assertThat(petGroup.getPet().getGender()).isEqualTo(savedPet.getGender())
+        );
+    }
+
+    @DisplayName("그룹에 해당하는 모임원 정보를 반환한다")
+    @Test
+    void getCrews() {
+        Pet savedPet = petGenerator.generateSaved();
+        Member geonwoo = memberGenerator.generateSaved("김건우");
+        Member hyeonmin = memberGenerator.generateSaved("전현민");
+        Member yeonjin = memberGenerator.generateSaved("주연진");
+        PetGroup petGroup1 = petGroupGenerator.generateSaved(savedPet);
+        crewGenerator.generateSaveCrews(petGroup1, List.of(geonwoo, hyeonmin, yeonjin));
+
+        GroupCrewResponse response = groupService.getCrews(geonwoo);
+
+        assertAll(
+                () -> assertThat(response.memberName()).isEqualTo(geonwoo.getName()),
+                () -> assertThat(inviteCodeGenerator.decode(InviteCode.parseFromUrl(response.inviteUrl())))
+                        .isEqualTo(petGroup1.getId()),
+                () -> assertThat(response.crews())
+                        .containsExactly(hyeonmin.getName(), yeonjin.getName())
         );
     }
 }

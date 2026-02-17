@@ -6,6 +6,7 @@ import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.PetGroupParticipateRequest;
+import com.moong.dto.response.petgroup.GroupCrewResponse;
 import com.moong.dto.response.petgroup.PetGroupParticipateResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
@@ -83,5 +84,15 @@ public class GroupService {
         InviteCode inviteCode = InviteCode.parseFromUrl(inviteUrl);
         long groupId = inviteCodeGenerator.decode(inviteCode);
         return petGroupRepository.getFetchedPetByPetId(groupId);
+    }
+
+    public GroupCrewResponse getCrews(Member member) {
+        Crew crew = crewRepository.getFetchedByMemberId(member.getId());
+        InviteCode inviteCode = inviteCodeGenerator.encrypt(crew.getPetGroup().getId());
+        List<Crew> crews = crewRepository.findAllByPetGroup_IdWithFetchedMember(crew.getPetGroup().getId())
+                .stream()
+                .filter(crewOne -> !crewOne.isSame(member.getId()))
+                .toList();
+        return new GroupCrewResponse(member, inviteCode, crews);
     }
 }
