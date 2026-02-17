@@ -3,3 +3,4 @@ export { setAuthCookies, setAuthCookiesFromHeaders, clearAuthCookies } from "./c
 export { jsonWithAuthCookies, redirectWithAuthCookies } from "./response";
 export { redirectToLogin } from "./redirect";
 export { getReturnTo, getInviteUrl, encodeState, decodeState } from "./state";
+export { extractBearerToken, validateAccessToken } from "./token";

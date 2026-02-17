@@ -3,8 +3,9 @@ import {
   ACCESS_COOKIE,
   AUTH_LOGIN_PATH,
   AUTH_REFRESH_PATH,
-  PROXY_TOKEN_EXPIRY_SKEW_SECONDS,
+  // PROXY_TOKEN_EXPIRY_SKEW_SECONDS,
 } from "./app/api/auth/_constants";
+import { validateAccessToken } from "./app/api/auth/_lib";
 
 export async function proxy(request: NextRequest) {
   if (process.env.LHCI === "true") {
@@ -72,48 +73,25 @@ function redirectToRefresh(request: NextRequest, returnTo: string) {
  * @param token - JWT 토큰
  * @returns 만료 시간 (Unix timestamp)
  */
-function parseJwtExp(token: string): number | null {
-  const payload = token.split(".")[1];
-  if (!payload) return null;
+// function parseJwtExp(token: string): number | null {
+//   const payload = token.split(".")[1];
+//   if (!payload) return null;
 
-  try {
-    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
-    const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
-    const decoded = atob(padded);
-    const parsed = JSON.parse(decoded) as { exp?: number };
-    return typeof parsed.exp === "number" ? parsed.exp : null;
-  } catch {
-    return null;
-  }
-}
+//   try {
+//     const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
+//     const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+//     const decoded = atob(padded);
+//     const parsed = JSON.parse(decoded) as { exp?: number };
+//     return typeof parsed.exp === "number" ? parsed.exp : null;
+//   } catch {
+//     return null;
+//   }
+// }
 
-function isTokenFresh(token: string): boolean | null {
-  const exp = parseJwtExp(token);
-  if (!exp) return null;
+// function isTokenFresh(token: string): boolean | null {
+//   const exp = parseJwtExp(token);
+//   if (!exp) return null;
 
-  const now = Math.floor(Date.now() / 1000);
-  return exp - now > PROXY_TOKEN_EXPIRY_SKEW_SECONDS;
-}
-
-/**
- * 액세스 토큰 검증
- * @param token - 액세스 토큰
- * @returns 검증 결과
- */
-async function validateAccessToken(token: string): Promise<boolean> {
-  const baseUrl = process.env.BASE_API_URL;
-  if (!baseUrl) return false;
-
-  try {
-    const response = await fetch(new URL("/api/auth/validate", baseUrl), {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      cache: "no-store",
-    });
-    return response.ok;
-  } catch {
-    return false;
-  }
-}
+//   const now = Math.floor(Date.now() / 1000);
+//   return exp - now > PROXY_TOKEN_EXPIRY_SKEW_SECONDS;
+// }
