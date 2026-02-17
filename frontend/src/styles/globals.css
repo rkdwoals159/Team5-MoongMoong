@@ -44,6 +44,26 @@ body {
   animation: toast-out var(--toast-duration, 500ms) ease-in forwards;
 }
 
+/* Shake Animation */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-4px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+}
+
 /* Loading Animation */
 @keyframes bounce {
   0%,

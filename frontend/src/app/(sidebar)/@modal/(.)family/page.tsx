@@ -1,5 +1,6 @@
-import FamilyManagePageView from "./_components/FamilyManagePageView";
-import type { FamilyInfo } from "./_types";
+import FamilyModal from "@/app/(sidebar)/family/_components/FamilyModal";
+import FamilyManageModalView from "@/app/(sidebar)/family/_components/FamilyManageModalView";
+import type { FamilyInfo } from "@/app/(sidebar)/family/_types";
 
 // TODO: 실제 API 연동 시 서버에서 데이터 fetch
 const mockFamilyInfo: FamilyInfo = {
@@ -22,13 +23,10 @@ const mockFamilyInfo: FamilyInfo = {
   ],
 };
 
-export default function FamilyPage() {
+export default function InterceptedFamilyPage() {
   return (
-    <article className="flex flex-col gap-850 px-850">
-      <div className="py-300">
-        <h1 className="typo-headline-s-bold text-base">가족 관리</h1>
-      </div>
-      <FamilyManagePageView familyInfo={mockFamilyInfo} />
-    </article>
+    <FamilyModal>
+      <FamilyManageModalView familyInfo={mockFamilyInfo} />
+    </FamilyModal>
   );
 }

@@ -5,8 +5,10 @@ import { ServerEventProvider } from "@/store/ServerEventProvider";
 
 export default function SidebarLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <ServerEventProvider>
@@ -20,6 +22,7 @@ export default function SidebarLayout({
           </div>
         </div>
       </div>
+      {modal}
     </ServerEventProvider>
   );
 }
