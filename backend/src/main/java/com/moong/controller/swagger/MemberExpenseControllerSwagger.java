@@ -4,20 +4,19 @@ import com.moong.annotation.swagger.ErrorCode400;
 import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
-import com.moong.domain.enums.MainCategoryType;
 import com.moong.dto.request.memberexpense.CategorizeRequest;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
 import com.moong.dto.response.categorize.CategorizeResponse;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
-import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponseV2;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
+import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponseV2;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import java.time.LocalDate;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -95,7 +94,7 @@ public interface MemberExpenseControllerSwagger {
             Member member,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
-            @RequestParam(value = "mainCategory", required = false) MainCategoryType mainCategory,
+            @RequestParam(value = "mainCategory", required = false) String mainCategory,
             @RequestParam(value = "lastRowId", required = false) Long lastRowId,
             @ParameterObject Pageable pageable
     );

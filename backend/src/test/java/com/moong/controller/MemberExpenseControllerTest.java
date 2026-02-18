@@ -131,7 +131,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
         LocalDate endDate = LocalDate.of(2026, 1, 2);
         int pageSize = 3;
         int pageNo = 0;
-        MainCategoryType filteredMainCategory = MainCategoryType.MEDICAL_EXPENSES;
+        String filteredMainCategory = MainCategoryType.MEDICAL_EXPENSES.getDescription();
         Member member = memberGenerator.generateSaved("멤버1");
         MemberExpense memberExpense1 = memberExpenseGenerator.generateSaved(startDate, "사용처1", 100, MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
         MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(startDate, "사용처2", 200, MainCategoryType.OTHER, null, null, null, member);

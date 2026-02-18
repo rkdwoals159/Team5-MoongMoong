@@ -31,7 +31,7 @@ public class MemberExpenseReadCommand {
             LocalDate startDate,
             LocalDate endDate,
             Long lastRowId,
-            MainCategoryType mainCategory,
+            String mainCategory,
             Pageable pageable
     ) {
         validatePeriod(startDate, endDate);
@@ -39,9 +39,16 @@ public class MemberExpenseReadCommand {
         this.member = member;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.mainCategory = mainCategory;
+        this.mainCategory = resolveMainCategory(mainCategory);
         this.lastRowId = lastRowId;
         this.pageable = makePageableWithDefaultSort(pageable);
+    }
+
+    private MainCategoryType resolveMainCategory(String mainCategoryDescription) {
+        if (mainCategoryDescription == null) {
+            return null;
+        }
+        return MainCategoryType.fromDescription(mainCategoryDescription);
     }
 
     private Pageable makePageableWithDefaultSort(Pageable pageable) {

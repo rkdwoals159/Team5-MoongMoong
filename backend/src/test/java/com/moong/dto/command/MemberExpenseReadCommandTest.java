@@ -30,7 +30,7 @@ class MemberExpenseReadCommandTest {
                 LocalDate.now().minusDays(1L),
                 LocalDate.now(),
                 null,
-                MainCategoryType.FOOD_AND_TREATS,
+                MainCategoryType.FOOD_AND_TREATS.getDescription(),
                 PageRequest.of(1, 10, sort)
         );
 
@@ -62,7 +62,7 @@ class MemberExpenseReadCommandTest {
                 LocalDate.now().minusDays(1L),
                 LocalDate.now(),
                 null,
-                MainCategoryType.FOOD_AND_TREATS,
+                MainCategoryType.FOOD_AND_TREATS.getDescription(),
                 PageRequest.of(1, 10, sort)
         );
 
@@ -78,7 +78,7 @@ class MemberExpenseReadCommandTest {
                 LocalDate.now().minusDays(1L),
                 LocalDate.now(),
                 1L,
-                MainCategoryType.FOOD_AND_TREATS,
+                MainCategoryType.FOOD_AND_TREATS.getDescription(),
                 PageRequest.of(1, 10, sort)
         );
 
@@ -133,7 +133,7 @@ class MemberExpenseReadCommandTest {
                     LocalDate.now().minusDays(1L),
                     LocalDate.now(),
                     null,
-                    MainCategoryType.FOOD_AND_TREATS,
+                    MainCategoryType.FOOD_AND_TREATS.getDescription(),
                     PageRequest.of(1, 10)))
                 .isInstanceOf(BusinessException.class)
                 .hasMessage(ErrorCode.MEMBER_EXPENSE_SORT_NOT_START_WITH_SPENT_AT.getMessage());
@@ -150,7 +150,7 @@ class MemberExpenseReadCommandTest {
                 LocalDate.now().minusDays(1L),
                 LocalDate.now(),
                 null,
-                MainCategoryType.FOOD_AND_TREATS,
+                MainCategoryType.FOOD_AND_TREATS.getDescription(),
                 PageRequest.of(1, 10, sort)))
                 .isInstanceOf(BusinessException.class)
                 .hasMessage(ErrorCode.MEMBER_EXPENSE_SORT_NOT_START_WITH_SPENT_AT.getMessage());

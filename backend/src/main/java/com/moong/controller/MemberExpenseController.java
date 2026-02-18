@@ -49,7 +49,7 @@ public class MemberExpenseController implements MemberExpenseControllerSwagger {
             @AuthMember Member member,
             @RequestParam(value = "startDate") LocalDate startDate,
             @RequestParam(value = "endDate") LocalDate endDate,
-            @RequestParam(value = "mainCategory", required = false) MainCategoryType mainCategory,
+            @RequestParam(value = "mainCategory", required = false) String mainCategory,
             @RequestParam(value = "lastRowId", required = false) Long lastRowId,
             Pageable pageable
     ) {

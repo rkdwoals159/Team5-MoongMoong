@@ -9,6 +9,9 @@ public record MemberInfoResponse(
         @Schema(description = "회원 닉네임", example = "커피내기장인 콜리")
         String memberName,
 
+        @Schema(description = "회원 이메일", example = "kkwoo001021@naver.com")
+        String memberEmail,
+
         @Schema(description = "회원 프로필 이미지 url", example = "S3 image Url")
         String memberImageUrl
 ) {
@@ -17,6 +20,10 @@ public record MemberInfoResponse(
 
     //TODO S3 추가 이후 수정
     public MemberInfoResponse(Member member) {
-        this(member.getName(), TEMP_MEMBER_IMAGE_URL);
+        this(
+                member.getName(),
+                member.getEmail(),
+                TEMP_MEMBER_IMAGE_URL
+        );
     }
 }

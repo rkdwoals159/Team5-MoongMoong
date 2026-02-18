@@ -33,6 +33,7 @@ class MemberControllerTest extends BaseControllerTest {
 
         assertAll(
                 () -> assertThat(response.memberName()).isEqualTo(member.getName()),
+                () -> assertThat(response.memberEmail()).isEqualTo(member.getEmail()),
                 () -> assertThat(response.memberImageUrl()).isEqualTo(member.getImageUrl())
         );
     }

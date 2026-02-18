@@ -21,6 +21,7 @@ public enum ErrorCode {
     FIELD_ERROR(400, "입력이 잘못되었습니다."),
     URL_PARAMETER_ERROR(400, "입력이 잘못되었습니다."),
     METHOD_ARGUMENT_TYPE_MISMATCH(400, "입력한 값의 타입이 잘못되었습니다."),
+    HTTP_MESSAGE_NOT_READABLE(400, "요청한 파라미터의 역직렬화 과정에서 일치하는 타입이 없습니다."),
     ALREADY_DISCONNECTED(400, "이미 클라이언트에서 요청이 종료되었습니다."),
     INVALID_DATE_RANGE(400, "시작일은 종료일보다 늦을 수 없습니다."),
     NOT_SUCCEED_BANK_TARGET_AMOUNT(400, "목표 금액을 아직 달성하지 못했습니다"),
