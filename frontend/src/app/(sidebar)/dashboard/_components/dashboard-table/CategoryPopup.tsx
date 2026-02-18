@@ -40,17 +40,9 @@ const CategoryPopup = ({
   }, [onClose]);
 
   // 메인 카테고리 클릭
-  const handleMainClick = useCallback(
-    (mainCategory: string) => {
-      setSelectedMain(mainCategory);
-
-      if (!SUB_CATEGORIES[mainCategory]) {
-        onSelect(mainCategory);
-        onClose();
-      }
-    },
-    [onSelect, onClose],
-  );
+  const handleMainClick = useCallback((mainCategory: string) => {
+    setSelectedMain(mainCategory);
+  }, []);
 
   // 서브 카테고리 클릭
   const handleSubClick = useCallback(
@@ -65,6 +57,7 @@ const CategoryPopup = ({
 
   // 선택된 메인 카테고리의 서브 카테고리 목록
   const subCategories = selectedMain ? SUB_CATEGORIES[selectedMain] || [] : [];
+  const hasSubCategories = subCategories.length > 0;
 
   return (
     <div
@@ -101,25 +94,48 @@ const CategoryPopup = ({
           })}
         </div>
         <div className="flex-1 w-[178px] overflow-y-auto">
-          {subCategories.map((subCategory) => {
-            const isSubSelected = subCategory === currentSubCategory;
-            return (
+          {selectedMain &&
+            (hasSubCategories ? (
+              subCategories.map((subCategory) => {
+                const isSubSelected = subCategory === currentSubCategory;
+                return (
+                  <button
+                    key={subCategory}
+                    type="button"
+                    className="w-full h-[48px] px-4 flex items-center text-left transition-colors cursor-pointer hover:bg-gray-50"
+                    onClick={() => handleSubClick(subCategory)}
+                  >
+                    <span
+                      className={`text-text-base ${
+                        isSubSelected ? "typo-body-m-bold" : "typo-body-m-regular"
+                      }`}
+                    >
+                      {subCategory}
+                    </span>
+                  </button>
+                );
+              })
+            ) : (
               <button
-                key={subCategory}
+                key={selectedMain}
                 type="button"
                 className="w-full h-[48px] px-4 flex items-center text-left transition-colors cursor-pointer hover:bg-gray-50"
-                onClick={() => handleSubClick(subCategory)}
+                onClick={() => {
+                  onSelect(selectedMain);
+                  onClose();
+                }}
               >
                 <span
                   className={`text-text-base ${
-                    isSubSelected ? "typo-body-m-bold" : "typo-body-m-regular"
+                    selectedMain === currentMainCategory && !currentSubCategory
+                      ? "typo-body-m-bold"
+                      : "typo-body-m-regular"
                   }`}
                 >
-                  {subCategory}
+                  {selectedMain}
                 </span>
               </button>
-            );
-          })}
+            ))}
         </div>
       </div>
     </div>

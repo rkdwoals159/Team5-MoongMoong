@@ -1,4 +1,3 @@
-import type { MouseEvent } from "react";
 import type { DataTableColumn } from "@/components/ui/DataTable/dataTable.type";
 import type { components } from "@schema";
 import type { EditableExpenseRow, ExpenseData } from "./expense";
@@ -34,6 +33,10 @@ export type UseExpenseTableReturn = {
   popupPosition: { top: number; left: number };
   handleCategorySelect: (mainCategory: string, subCategory?: string) => void;
   handleClosePopup: () => void;
+  showDatePicker: boolean;
+  datePickerPosition: { top: number; left: number };
+  handleDateSelect: (dateKey: string) => void;
+  handleCloseDatePicker: () => void;
   deleteSelectedRows: () => void;
   mergeSelectedRows: () => void;
   handleSave: (startDate: string, endDate: string) => Promise<void>;
@@ -54,11 +57,8 @@ export type UseExpenseTableColumnsParams = {
   updateCellByLocalId: UpdateCellByLocalId;
   updateAllCells: UpdateAllCells;
   selectedCount: number;
-  onCategoryCellClick: (
-    event: MouseEvent<HTMLButtonElement>,
-    rowIndex: number,
-    accessor: keyof ExpenseData,
-  ) => void;
+  onCategoryCellClick: (rowIndex: number) => void;
+  onDateCellClick: (rowIndex: number) => void;
   onUsageChange?: (localId: string, usage: string) => void;
 };
 
@@ -85,6 +85,21 @@ export type EditableDataTableProps = {
  * EditableDataTable selectedCell 타입
  */
 export type SelectedCell = { rowIndex: number; accessor: keyof ExpenseData } | null;
+
+/**
+ * useExpenseTableSelection 파라미터 타입
+ */
+export type UseExpenseTableSelectionParams = {
+  rowCount: number;
+  selectedCell: SelectedCell;
+  setSelectedCell: React.Dispatch<React.SetStateAction<SelectedCell>>;
+  openCategoryPopup?: (rowIndex: number) => void;
+  closeCategoryPopup?: () => void;
+  showCategoryPopup?: boolean;
+  openDatePicker?: (rowIndex: number) => void;
+  closeDatePicker?: () => void;
+  showDatePicker?: boolean;
+};
 
 /**
  * ExpenseTableToolbar 컴포넌트 타입 (지출 테이블 하단 툴바)

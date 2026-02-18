@@ -5,16 +5,7 @@ import {
 /**
  * 메인 카테고리 목록
  */
-export const MAIN_CATEGORIES = [
-  "미용",
-  "의류",
-  "장난감",
-  "의료비",
-  "영양제",
-  "사료",
-  "간식",
-  "기타",
-] as const;
+export const MAIN_CATEGORIES = ["사료/간식", "의료비", "물품구매비", "미용", "기타"] as const;
 
 /**
  * 서브 카테고리 매핑 (의료비만 서브카테고리 있음)

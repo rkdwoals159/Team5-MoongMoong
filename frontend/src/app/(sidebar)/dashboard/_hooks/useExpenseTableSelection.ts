@@ -1,23 +1,27 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import type { ExpenseData, SelectedCell } from "@/app/(sidebar)/dashboard/_types";
-
-const EDITABLE_ACCESSORS: (keyof ExpenseData)[] = [
-  "selected",
-  "spentAt",
-  "usage",
-  "cost",
-  "mainCategory",
-  "memo",
-];
+import { useCallback, useEffect } from "react";
+import type {
+  ExpenseData,
+  SelectedCell,
+  UseExpenseTableSelectionParams,
+} from "@/app/(sidebar)/dashboard/_types";
+import { EDITABLE_ACCESSORS } from "@/app/(sidebar)/dashboard/_constants";
 
 /**
  * 지출 테이블 셀 선택 상태 + 클릭 선택 + 포커스 + 키보드(Tab/Enter) 이동
  */
-export function useExpenseTableSelection(rowCount: number) {
-  const [selectedCell, setSelectedCell] = useState<SelectedCell>(null);
-
+export function useExpenseTableSelection({
+  rowCount,
+  selectedCell,
+  setSelectedCell,
+  openCategoryPopup,
+  closeCategoryPopup,
+  showCategoryPopup = false,
+  openDatePicker,
+  closeDatePicker,
+  showDatePicker = false,
+}: UseExpenseTableSelectionParams) {
   useEffect(() => {
     if (!selectedCell) return;
     const cell = document.querySelector<HTMLElement>(
@@ -27,37 +31,47 @@ export function useExpenseTableSelection(rowCount: number) {
     focusable?.focus();
   }, [selectedCell]);
 
-  const onCellClick = useCallback((rowIndex: number, accessor: keyof ExpenseData) => {
-    setSelectedCell({ rowIndex, accessor });
-  }, []);
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
-      // 한글 등 IME 조합 중에는 키 처리하지 않음 (두 번 이동 방지)
-      if (e.nativeEvent.isComposing) return;
-
-      switch (e.key) {
-        case "Tab": {
-          const next = getNextTabCell(selectedCell, rowCount);
-          if (next !== null) {
-            e.preventDefault();
-            setSelectedCell(next);
-          }
-          break;
-        }
-        case "Enter":
-          if (selectedCell && selectedCell.rowIndex < rowCount - 1) {
-            e.preventDefault();
-            setSelectedCell({
-              rowIndex: selectedCell.rowIndex + 1,
-              accessor: selectedCell.accessor,
-            });
-          }
-          break;
-      }
+  const onCellClick = useCallback(
+    (rowIndex: number, accessor: keyof ExpenseData) => {
+      setSelectedCell({ rowIndex, accessor });
     },
-    [selectedCell, rowCount],
+    [setSelectedCell],
   );
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.nativeEvent.isComposing) return;
+
+    const shouldCloseDatePicker = showDatePicker && selectedCell?.accessor === "spentAt";
+    const shouldCloseCategoryPopup = showCategoryPopup && selectedCell?.accessor === "mainCategory";
+
+    const processMove = (next: SelectedCell) => {
+      const shouldHandle = shouldCloseDatePicker || shouldCloseCategoryPopup || next !== null;
+      if (!shouldHandle) return;
+
+      e.preventDefault();
+      if (shouldCloseDatePicker) closeDatePicker?.();
+      if (shouldCloseCategoryPopup) closeCategoryPopup?.();
+      if (next) {
+        setSelectedCell(next);
+        if (next.accessor === "mainCategory") openCategoryPopup?.(next.rowIndex);
+        else if (next.accessor === "spentAt") openDatePicker?.(next.rowIndex);
+      }
+    };
+
+    switch (e.key) {
+      case "Tab":
+        processMove(getNextTabCell(selectedCell, rowCount));
+        break;
+      case "Enter": {
+        const next =
+          selectedCell && selectedCell.rowIndex < rowCount - 1
+            ? { rowIndex: selectedCell.rowIndex + 1, accessor: selectedCell.accessor }
+            : null;
+        processMove(next);
+        break;
+      }
+    }
+  };
 
   return { selectedCell, setSelectedCell, onCellClick, handleKeyDown };
 }

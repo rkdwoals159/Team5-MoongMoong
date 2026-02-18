@@ -1,7 +1,22 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { useState } from "react";
 import { renderHook, act } from "@testing-library/react";
 import { useExpenseTableSelection } from "@/app/(sidebar)/dashboard/_hooks/useExpenseTableSelection";
+import type { SelectedCell } from "@/app/(sidebar)/dashboard/_types";
 import { ExpenseData } from "@/api/types/dashboardApi.type";
+
+/**
+ * 테스트용 래퍼: selectedCell 상태를 보유하고 useExpenseTableSelection에 전달
+ */
+function useExpenseTableSelectionTestWrapper(rowCount: number) {
+  const [selectedCell, setSelectedCell] = useState<SelectedCell>(null);
+  const { onCellClick, handleKeyDown } = useExpenseTableSelection({
+    rowCount,
+    selectedCell,
+    setSelectedCell,
+  });
+  return { selectedCell, setSelectedCell, onCellClick, handleKeyDown };
+}
 
 /**
  * DOM 환경 설정
@@ -46,7 +61,7 @@ describe("useExpenseTableSelection", () => {
 
   describe("셀 선택", () => {
     it("onCellClick 호출 시 selectedCell이 업데이트된다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(5));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(5));
 
       act(() => {
         result.current.onCellClick(1, "usage");
@@ -57,7 +72,7 @@ describe("useExpenseTableSelection", () => {
 
     it("DOM 요소가 존재하면 포커스가 설정된다", () => {
       const { input } = setupDOMEnvironment(1, "usage");
-      const { result } = renderHook(() => useExpenseTableSelection(5));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(5));
 
       const focusSpy = vi.spyOn(input, "focus");
 
@@ -69,7 +84,7 @@ describe("useExpenseTableSelection", () => {
     });
 
     it("DOM 요소가 없어도 에러 없이 동작한다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(5));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(5));
 
       expect(() => {
         act(() => {
@@ -83,7 +98,7 @@ describe("useExpenseTableSelection", () => {
 
   describe("Tab 키 네비게이션 시나리오", () => {
     it("같은 행에서 다음 컬럼으로 이동한다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(3));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(3));
 
       act(() => {
         result.current.setSelectedCell({ rowIndex: 0, accessor: "usage" });
@@ -100,7 +115,7 @@ describe("useExpenseTableSelection", () => {
     });
 
     it("마지막 컬럼에서 Tab을 누르면 다음 행 첫 컬럼으로 이동한다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(3));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(3));
 
       act(() => {
         result.current.setSelectedCell({ rowIndex: 0, accessor: "memo" });
@@ -117,7 +132,7 @@ describe("useExpenseTableSelection", () => {
     });
 
     it("마지막 행 마지막 컬럼에서 Tab을 누르면 이동하지 않는다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(2));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(2));
 
       act(() => {
         result.current.setSelectedCell({ rowIndex: 1, accessor: "memo" });
@@ -135,7 +150,7 @@ describe("useExpenseTableSelection", () => {
     });
 
     it("selectedCell이 null일 때 Tab을 누르면 첫 셀이 선택된다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(3));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(3));
 
       const mockEvent = createKeyboardEvent("Tab");
 
@@ -148,7 +163,7 @@ describe("useExpenseTableSelection", () => {
     });
 
     it("유효하지 않은 accessor를 가진 셀에서 Tab을 누르면 변경되지 않는다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(3));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(3));
 
       act(() => {
         result.current.setSelectedCell({
@@ -172,7 +187,7 @@ describe("useExpenseTableSelection", () => {
 
   describe("Enter 키 네비게이션 시나리오", () => {
     it("같은 컬럼에서 다음 행으로 이동한다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(3));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(3));
 
       act(() => {
         result.current.setSelectedCell({ rowIndex: 0, accessor: "usage" });
@@ -189,7 +204,7 @@ describe("useExpenseTableSelection", () => {
     });
 
     it("마지막 행에서 Enter를 누르면 이동하지 않는다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(2));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(2));
 
       act(() => {
         result.current.setSelectedCell({ rowIndex: 1, accessor: "usage" });
@@ -207,7 +222,7 @@ describe("useExpenseTableSelection", () => {
     });
 
     it("selectedCell이 null일 때 Enter를 눌러도 아무 동작하지 않는다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(3));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(3));
 
       const mockEvent = createKeyboardEvent("Enter");
 
@@ -222,7 +237,7 @@ describe("useExpenseTableSelection", () => {
 
   describe("경계 조건", () => {
     it("rowCount가 0일 때 Tab을 눌러도 에러 없이 동작한다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(0));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(0));
 
       const mockEvent = createKeyboardEvent("Tab");
 
@@ -238,7 +253,7 @@ describe("useExpenseTableSelection", () => {
     });
 
     it("rowCount가 1일 때 Tab으로 같은 행 내에서만 이동한다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(1));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(1));
 
       act(() => {
         result.current.setSelectedCell({ rowIndex: 0, accessor: "selected" });
@@ -271,7 +286,7 @@ describe("useExpenseTableSelection", () => {
     });
 
     it("rowCount가 1일 때 Enter로 이동하지 않는다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(1));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(1));
 
       act(() => {
         result.current.setSelectedCell({ rowIndex: 0, accessor: "usage" });
@@ -289,9 +304,12 @@ describe("useExpenseTableSelection", () => {
     });
 
     it("rowCount가 변경되면 네비게이션이 새로운 범위에 맞춰 동작한다", () => {
-      const { result, rerender } = renderHook(({ count }) => useExpenseTableSelection(count), {
-        initialProps: { count: 3 },
-      });
+      const { result, rerender } = renderHook(
+        ({ count }) => useExpenseTableSelectionTestWrapper(count),
+        {
+          initialProps: { count: 3 },
+        },
+      );
 
       act(() => {
         result.current.setSelectedCell({ rowIndex: 2, accessor: "usage" });
@@ -314,7 +332,7 @@ describe("useExpenseTableSelection", () => {
 
   describe("실제 사용 시나리오", () => {
     it("사용자가 테이블을 Tab으로 순회하며 데이터를 입력한다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(2));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(2));
 
       const mockEvent = createKeyboardEvent("Tab");
 
@@ -358,7 +376,7 @@ describe("useExpenseTableSelection", () => {
     });
 
     it("사용자가 컬럼 내에서 Enter로 아래로 이동하며 데이터를 입력한다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(3));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(3));
 
       const mockEvent = createKeyboardEvent("Enter");
 
@@ -386,7 +404,7 @@ describe("useExpenseTableSelection", () => {
     });
 
     it("사용자가 셀을 클릭하고 Tab/Enter로 이동한다", () => {
-      const { result } = renderHook(() => useExpenseTableSelection(3));
+      const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(3));
 
       // 클릭으로 셀 선택
       act(() => {

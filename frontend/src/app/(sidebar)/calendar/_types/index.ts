@@ -1,13 +1,5 @@
 import type { components } from "@/types/schema";
-export type ExpenseCategory =
-  | "미용"
-  | "의료비"
-  | "사료"
-  | "의류"
-  | "간식"
-  | "영양제"
-  | "장난감"
-  | "기타";
+export type ExpenseCategory = "사료/간식" | "의료비" | "물품구매비" | "미용" | "기타";
 
 export type GroupExpenseItem = components["schemas"]["GroupExpenseResponse"];
 

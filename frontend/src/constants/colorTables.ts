@@ -1,13 +1,10 @@
 import type { ChipMajorColor } from "@/components/common/Chip/chip.type";
 
 export const CATEGORY_COLOR_MAP: Record<string, ChipMajorColor> = {
-  미용: "green",
-  의류: "purple",
-  장난감: "blue",
+  "사료/간식": "orange",
   의료비: "red",
-  영양제: "turquoise",
-  사료: "orange",
-  간식: "yellow",
+  미용: "green",
+  물품구매비: "purple",
   기타: "gray",
 };
 

@@ -7,10 +7,13 @@ import type {
   ExpenseData,
   UseExpenseTableColumnsParams,
 } from "@/app/(sidebar)/dashboard/_types";
-import { formatDateKey } from "@/utils/date";
 import { formatAmountPlain } from "@/utils/amount";
-import { CATEGORY_COLOR_MAP, DEFAULT_CATEGORY_COLOR } from "@/app/(sidebar)/dashboard/_constants";
-import NativeDateInput from "@/components/common/DateRangePicker/NativeDateInput";
+import {
+  CATEGORY_COLOR_MAP,
+  DEFAULT_CATEGORY_COLOR,
+  COST_MAX_DIGITS,
+} from "@/app/(sidebar)/dashboard/_constants";
+import DateInput from "@/app/(sidebar)/dashboard/_components/dashboard-table/DateInput";
 import Chip from "@/components/common/Chip/Chip";
 import CheckBox from "@/components/common/CheckBox/CheckBox";
 
@@ -23,6 +26,7 @@ export const useExpenseTableColumns = ({
   updateAllCells,
   selectedCount,
   onCategoryCellClick,
+  onDateCellClick,
   onUsageChange,
 }: UseExpenseTableColumnsParams): DataTableColumn<ExpenseData>[] => {
   const isAllSelected =
@@ -34,7 +38,7 @@ export const useExpenseTableColumns = ({
         const row = _row as EditableExpenseRow;
         return (
           <input
-            className="w-full bg-transparent outline-none px-500 py-200"
+            className="w-full bg-transparent outline-none px-500 py-200 truncate"
             value={String(value ?? "")}
             onChange={(e) => {
               const v = e.target.value;
@@ -59,9 +63,9 @@ export const useExpenseTableColumns = ({
       return (
         <button
           type="button"
-          className="w-full h-full cursor-pointer px-500 py-200 flex items-center justify-start transition-colors gap-1"
+          className="w-full h-full cursor-pointer px-500 py-200 flex items-center justify-start transition-colors gap-1 focus:outline-none focus-visible:outline-none"
           aria-label={mainCategory ? `${mainCategory} 카테고리 선택` : "카테고리 선택"}
-          onClick={(e) => onCategoryCellClick(e, rowIndex, "mainCategory")}
+          onClick={() => onCategoryCellClick(rowIndex)}
         >
           {mainCategory && <Chip label={mainCategory} level="major" color={color} />}
           {subCategory && <Chip label={subCategory} level="minor" color="none" />}
@@ -86,6 +90,7 @@ export const useExpenseTableColumns = ({
           value={displayValue}
           onChange={(e) => {
             const raw = e.target.value.replace(/[^0-9]/g, "");
+            if (raw.length > COST_MAX_DIGITS) return;
             const parsed = raw === "" ? 0 : Number(raw);
             updateCellByLocalId(row.localId, "cost", String(parsed));
           }}
@@ -95,29 +100,20 @@ export const useExpenseTableColumns = ({
     [updateCellByLocalId],
   );
 
-  const handleDateChange = useCallback(
-    (rowIndex: number, date: string) => {
-      const row = displayInitialRows[rowIndex] as EditableExpenseRow | undefined;
-      if (!row?.localId) return;
-      updateCellByLocalId(row.localId, "spentAt", date);
-    },
-    [updateCellByLocalId, displayInitialRows],
-  );
-
   const createRenderDate = useCallback(
     (value: ExpenseData[keyof ExpenseData], _row: ExpenseData, rowIndex: number) => {
+      const dateValue = value ? String(value) : "";
       return (
-        <NativeDateInput
-          className="w-full h-full cursor-pointer px-500 py-200 flex items-center justify-start transition-colors gap-1"
-          value={value ? formatDateKey(new Date(String(value))) : ""}
-          displayText={value ? formatDateKey(new Date(String(value))) : ""}
+        <DateInput
+          value={dateValue}
+          onOpen={() => onDateCellClick(rowIndex)}
+          className="w-full h-full px-500 py-200"
+          focusable
           ariaLabel="날짜 선택"
-          onChange={(date: string) => handleDateChange(rowIndex, date)}
-          focusable={false}
         />
       );
     },
-    [handleDateChange],
+    [onDateCellClick],
   );
 
   const createRenderCheckBox = useCallback(

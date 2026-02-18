@@ -4,6 +4,8 @@ import type { EditableDataTableProps, ExpenseData } from "@/app/(sidebar)/dashbo
 import { useExpenseTable } from "@/app/(sidebar)/dashboard/_hooks";
 import ClientDataTable from "@/components/ui/DataTable/ClientDataTable";
 import CategoryPopup from "@/app/(sidebar)/dashboard/_components/dashboard-table/CategoryPopup";
+import { DATE_PICKER_HEIGHT } from "@/app/(sidebar)/dashboard/_constants";
+import DatePickerPopup from "@/components/common/DatePicker/DatePickerPopup";
 import ExpenseTableToolbar from "@/app/(sidebar)/dashboard/_components/dashboard-table/ExpenseTableToolbar";
 import { cn } from "@/utils/style";
 import type { SortableExpenseAccessor } from "@/app/(sidebar)/dashboard/_types";
@@ -25,6 +27,10 @@ const EditableDataTable = ({
     popupPosition,
     handleCategorySelect,
     handleClosePopup,
+    showDatePicker,
+    datePickerPosition,
+    handleDateSelect,
+    handleCloseDatePicker,
     deleteSelectedRows,
     mergeSelectedRows,
     handleSave,
@@ -61,6 +67,16 @@ const EditableDataTable = ({
           onClose={handleClosePopup}
           currentMainCategory={String(sortedRows[selectedCell.rowIndex]?.mainCategory ?? "")}
           currentSubCategory={String(sortedRows[selectedCell.rowIndex]?.subCategory ?? "")}
+        />
+      )}
+
+      {showDatePicker && selectedCell?.accessor === "spentAt" && (
+        <DatePickerPopup
+          position={datePickerPosition}
+          value={String(sortedRows[selectedCell.rowIndex]?.spentAt ?? "")}
+          onChange={handleDateSelect}
+          onClose={handleCloseDatePicker}
+          minHeight={DATE_PICKER_HEIGHT}
         />
       )}
 
