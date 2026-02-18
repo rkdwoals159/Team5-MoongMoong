@@ -34,7 +34,7 @@ export async function refreshTokens(request: NextRequest) {
   if (!baseEnv.ok) {
     return { ok: false, response: baseEnv.response } as const;
   }
-
+  const accessToken = request.cookies.get(authCookies.access)?.value;
   const refreshToken = request.cookies.get(authCookies.refresh)?.value;
   if (!refreshToken) {
     return { ok: false, response: redirectToLogin(request), reason: "refresh token is missing" };
@@ -42,6 +42,7 @@ export async function refreshTokens(request: NextRequest) {
 
   const { response: refreshResponse } = await client.POST("/api/auth/refresh", {
     body: {
+      accessToken: accessToken,
       refreshToken: refreshToken,
     },
   });
