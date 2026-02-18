@@ -104,7 +104,7 @@ const Dropdown = ({
 
   // 옵션 선택
   const handleSelect = (optionValue: string) => {
-    onChange(optionValue);
+    onChange?.(optionValue);
     setIsOpen(false);
     setFocusedIndex(-1);
     buttonRef.current?.focus();
@@ -181,7 +181,7 @@ export default Dropdown;
 // Tailwind CSS classes
 
 const baseClasses =
-  "inline-flex items-center justify-between border transition-colors duration-200 select-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 px-500 py-400 rounded-300 min-h-10 typo-body-l-medium";
+  "inline-flex items-center justify-between border transition-colors duration-200 select-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 px-500 py-400 rounded-300 min-h-10 typo-body-l-medium cursor-pointer";
 
 const defaultClasses =
   "bg-white-100 text-text-base border-border-normal hover:border-border-heavy active:border-blue-500";

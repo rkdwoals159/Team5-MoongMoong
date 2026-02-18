@@ -1,7 +1,7 @@
 export type DropdownProps = {
   options: string[];
   value: string;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   placeholder?: string;
   disabled?: boolean;
   errorMessage?: string;
