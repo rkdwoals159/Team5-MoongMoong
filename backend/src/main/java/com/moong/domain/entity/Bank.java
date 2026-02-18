@@ -77,6 +77,10 @@ public class Bank extends BaseEntity {
         this.targetAmount = targetAmount;
     }
 
+    public boolean isCurrentAmountZero() {
+        return currentAmount == 0L;
+    }
+
     private void validateTargetAmount(long target) {
         if (target <= 0L) throw new BusinessException(ErrorCode.BANK_TARGET_BELOW_ZERO);
         if (target > MAX_TARGET_AMOUNT) throw new BusinessException(ErrorCode.BANK_TARGET_EXCEED_LIMIT);

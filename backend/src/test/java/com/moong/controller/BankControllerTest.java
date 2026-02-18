@@ -130,9 +130,11 @@ class BankControllerTest extends BaseControllerTest {
         PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
         Crew crew1 = crewGenerator.generateSaved(petGroup, member1);
         Crew crew2 = crewGenerator.generateSaved(petGroup, member2);
-        Bank bank = groupBankGenerator.generateSaved(petGroup, 1000000L);
-        Coin smallCoin = coinGenerator.generateSaved(bank, crew1, 100L);
-        Coin bigCoin = coinGenerator.generateSaved(bank, crew2, 200L);
+        long smallCoinAmount = 100L;
+        long bigCoinAmount = 200L;
+        Bank bank = bankGenerator.generateSaved(petGroup, 1000000L,  smallCoinAmount + bigCoinAmount);
+        Coin smallCoin = coinGenerator.generateSaved(bank, crew1, smallCoinAmount);
+        Coin bigCoin = coinGenerator.generateSaved(bank, crew2, bigCoinAmount);
 
         BankInfoResponse bankInfo = given().log().all()
                 .contentType(ContentType.JSON)

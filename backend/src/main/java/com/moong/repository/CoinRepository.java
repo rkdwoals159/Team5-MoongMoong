@@ -1,6 +1,6 @@
 package com.moong.repository;
 
-import com.moong.domain.bank.CoinView;
+import com.moong.view.bank.CoinView;
 import com.moong.domain.entity.Coin;
 import java.util.List;
 import org.springframework.data.domain.Sort;

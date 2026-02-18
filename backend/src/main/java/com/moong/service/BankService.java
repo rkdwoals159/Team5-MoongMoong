@@ -1,7 +1,7 @@
 package com.moong.service;
 
 import com.moong.domain.bank.BankRankings;
-import com.moong.domain.bank.CoinView;
+import com.moong.view.bank.CoinView;
 import com.moong.domain.entity.Bank;
 import com.moong.domain.entity.Coin;
 import com.moong.domain.entity.Crew;
@@ -13,6 +13,7 @@ import com.moong.dto.response.bank.BankBreakResponse;
 import com.moong.dto.response.bank.BankCreateResponse;
 import com.moong.dto.response.bank.BankInfoResponse;
 import com.moong.dto.response.bank.BankUpdateResponse;
+import com.moong.dto.response.bank.BankWithBankBreakResponse;
 import com.moong.dto.response.bank.CoinCreateResponse;
 import com.moong.dto.response.bank.CoinsResponse;
 import com.moong.exception.custom.BusinessException;
@@ -23,13 +24,15 @@ import com.moong.repository.CrewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class BankService {
+
+    private final RankingService rankingService;
 
     private final BankRepository bankRepository;
     private final CoinRepository coinRepository;
@@ -62,9 +65,11 @@ public class BankService {
 
     public BankInfoResponse findBankInfo(Member member) {
         Bank foundBank = findBank(member.getId());
-        //crew > member fetch join
-        List<Coin> bankCoins = coinRepository.findFetchedAllByBank_Id(foundBank.getId(), Sort.unsorted());
-        BankRankings bankRankings = new BankRankings(bankCoins);
+        if (foundBank.isCurrentAmountZero()) {
+            return new BankInfoResponse(foundBank, BankRankings.emptyBankRankings());
+        }
+
+        BankRankings bankRankings = rankingService.getRanking(foundBank.getId());
         return new BankInfoResponse(foundBank, bankRankings);
     }
 
@@ -79,7 +84,7 @@ public class BankService {
         return new BankUpdateResponse(foundBank.getTargetAmount());
     }
 
-    public BankBreakResponse breakBank(Member member) {
+    public BankWithBankBreakResponse breakBank(Member member) {
         Bank groupBank = findBank(member.getId());
 
         if (!groupBank.isSucceedTargetAmount()) {
@@ -87,7 +92,8 @@ public class BankService {
         }
 
         bankRepository.deleteById(groupBank.getId());
-        return new BankBreakResponse(groupBank.getCreatedAt());
+        BankBreakResponse bankBreakResponse = new BankBreakResponse(groupBank.getCreatedAt());
+        return new BankWithBankBreakResponse(groupBank.getId(), bankBreakResponse);
     }
 
     private void validateAlreadyHasBank(PetGroup petGroup) {

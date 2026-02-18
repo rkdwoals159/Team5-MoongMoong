@@ -1,30 +1,46 @@
 package com.moong.domain.bank;
 
-import com.moong.domain.entity.Coin;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.moong.view.bank.CoinView;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
+@RequiredArgsConstructor
 public class BankRankings {
-
-    private static final Comparator<BankRanking> BANK_RANKING_COMPARATOR = Comparator.comparing(BankRanking::getTotal).reversed();;
 
     private final List<BankRanking> values;
 
-    public BankRankings(List<Coin> coins) {
-        //TODO Redis 변경 예정이므로 임시 코드입니다.
-        this.values = coins.stream()
-                .collect(
-                        Collectors.groupingBy(
-                                coin -> coin.getCrew().getMember(),
-                                Collectors.summingLong(Coin::getAmount)
-                        )
-                ).entrySet()
-                .stream()
-                .map(entry -> new BankRanking(entry.getKey().getName(), entry.getValue()))
-                .sorted(BANK_RANKING_COMPARATOR)
-                .toList();
+    public static BankRankings fromCoinViews(List<CoinView> coinViews) {
+        Map<Long, Long> memberIdToSum = coinViews.stream()
+                .collect(Collectors.groupingBy(
+                        CoinView::getMemberId,
+                        Collectors.summingLong(CoinView::getAmount)
+                ));
+
+        Map<Long, String> memberIdToName = coinViews.stream()
+                .collect(Collectors.toMap(
+                        CoinView::getMemberId,
+                        CoinView::getName,
+                        (existing, replacement) -> existing
+                ));
+
+        return new BankRankings(
+                memberIdToSum.entrySet().stream()
+                        .map(entry -> new BankRanking(
+                                entry.getKey(),
+                                memberIdToName.get(entry.getKey()),
+                                entry.getValue()
+                        ))
+                        .sorted(BankRanking.BY_TOTAL_DESC)
+                        .toList()
+        );
+    }
+
+    public static BankRankings emptyBankRankings() {
+        return new BankRankings(List.of());
     }
 }

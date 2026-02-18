@@ -13,6 +13,6 @@ public record BankRankingResponse(
 ) {
 
     public BankRankingResponse(BankRanking bankRanking) {
-        this(bankRanking.getUserName(), bankRanking.getTotal());
+        this(bankRanking.getMemberName(), bankRanking.getTotal());
     }
 }

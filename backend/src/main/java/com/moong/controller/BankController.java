@@ -10,6 +10,7 @@ import com.moong.dto.response.bank.BankCreateResponse;
 import com.moong.dto.response.bank.BankInfoResponse;
 import com.moong.dto.response.bank.BankUpdateResponse;
 import com.moong.dto.response.bank.CoinsResponse;
+import com.moong.facade.bank.BankFacadeService;
 import com.moong.service.BankService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class BankController implements BankControllerSwagger {
 
+    private final BankFacadeService bankFacadeService;
     private final BankService bankService;
 
     @Override
@@ -61,7 +63,7 @@ public class BankController implements BankControllerSwagger {
     public ResponseEntity<BankBreakResponse> breakBank(
             @AuthMember Member member
     ) {
-        BankBreakResponse response = bankService.breakBank(member);
+        BankBreakResponse response = bankFacadeService.breakBank(member);
         return ResponseEntity.ok(response);
     }
 

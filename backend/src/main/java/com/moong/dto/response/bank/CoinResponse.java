@@ -1,6 +1,6 @@
 package com.moong.dto.response.bank;
 
-import com.moong.domain.bank.CoinView;
+import com.moong.view.bank.CoinView;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 

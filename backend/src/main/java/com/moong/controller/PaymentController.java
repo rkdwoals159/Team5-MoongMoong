@@ -8,6 +8,7 @@ import com.moong.dto.request.payment.CoinPaymentConfirmRequest;
 import com.moong.dto.request.payment.CoinPaymentFailRequest;
 import com.moong.dto.response.bank.CoinCreateResponse;
 import com.moong.dto.response.bank.CoinPaymentCreateResponse;
+import com.moong.facade.bank.BankFacadeService;
 import com.moong.facade.payment.PaymentFacadeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PaymentController implements PaymentControllerSwagger {
 
+    private final BankFacadeService bankFacadeService;
     private final PaymentFacadeService paymentFacadeService;
 
     @Override
