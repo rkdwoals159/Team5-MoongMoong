@@ -21,4 +21,8 @@ public class JwtTokenGenerator {
     public String generateRefreshToken(Member member) {
         return jwtManager.createRefreshToken(new MemberInfo(member.getEmail()));
     }
+
+    public String generateConnectionToken(Member member) {
+        return jwtManager.createConnectToken(new MemberInfo(member.getEmail()));
+    }
 }

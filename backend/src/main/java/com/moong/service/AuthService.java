@@ -4,6 +4,7 @@ import com.moong.client.oauth.OAuthClient;
 import com.moong.controller.tool.jwt.AuthManager;
 import com.moong.domain.entity.Member;
 import com.moong.domain.member.MemberInfo;
+import com.moong.dto.response.auth.ConnectionTokenResponse;
 import com.moong.dto.response.auth.JwtTokenResponse;
 import com.moong.dto.response.auth.MemberInfoWithTokenResponse;
 import com.moong.exception.custom.BusinessException;
@@ -26,6 +27,12 @@ public class AuthService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED_EXCEPTION));
     }
 
+    public Member authorizeByConnectionToken(String connectionToken) {
+        String email = authManager.resolveConnectionToken(connectionToken);
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_CONNECTION_TOKEN));
+    }
+
     public Member authorizeByAccessToken(String accessToken) {
         String email = authManager.resolveAccessToken(accessToken);
         return memberRepository.findByEmail(email)
@@ -36,6 +43,10 @@ public class AuthService {
         MemberInfo memberInfo = oAuthClient.requestMemberInfo(accessToken);
         JwtTokenResponse jwtTokenResponse = authManager.issueToken(memberInfo);
         return new MemberInfoWithTokenResponse(memberInfo, jwtTokenResponse);
+    }
+
+    public ConnectionTokenResponse issueConnectionToken(MemberInfo memberInfo) {
+        return authManager.issueConnectionToken(memberInfo);
     }
 
     public JwtTokenResponse refreshToken(String refreshToken) {

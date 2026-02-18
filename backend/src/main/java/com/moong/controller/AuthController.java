@@ -8,6 +8,7 @@ import com.moong.dto.request.auth.AuthLoginRequest;
 import com.moong.dto.request.auth.AuthTokenRefreshRequest;
 import com.moong.dto.response.auth.AuthLoginResponse;
 import com.moong.dto.response.auth.AuthTokenRefreshResponse;
+import com.moong.dto.response.auth.ConnectionTokenResponse;
 import com.moong.dto.response.auth.JwtTokenResponse;
 import com.moong.dto.response.member.FacadeLoginResponse;
 import com.moong.facade.auth.AuthFacadeService;
@@ -77,6 +78,15 @@ public class AuthController implements AuthControllerSwagger {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, expiredCookie.toString())
                 .build();
+    }
+
+    @Override
+    @PostMapping("/api/auth/sse-token")
+    public ResponseEntity<ConnectionTokenResponse> issueConnectionToken(
+            @AuthMember Member member
+    ) {
+        ConnectionTokenResponse response = authFacadeService.issueConnectionToken(member);
+        return ResponseEntity.ok(response);
     }
 
     @Override

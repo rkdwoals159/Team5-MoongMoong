@@ -2,6 +2,7 @@ package com.moong.config;
 
 import com.moong.argumentresolver.AuthMemberArgumentResolver;
 import com.moong.service.AuthService;
+import com.moong.util.AuthorizationHeaderExtractor;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -13,9 +14,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     private final AuthService authService;
+    private final AuthorizationHeaderExtractor authorizationHeaderExtractor;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(new AuthMemberArgumentResolver(authService));
+        argumentResolvers.add(new AuthMemberArgumentResolver(authService, authorizationHeaderExtractor));
     }
 }

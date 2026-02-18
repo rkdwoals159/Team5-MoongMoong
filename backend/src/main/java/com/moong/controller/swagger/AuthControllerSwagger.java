@@ -1,6 +1,5 @@
 package com.moong.controller.swagger;
 
-import com.moong.annotation.auth.AuthMember;
 import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
@@ -8,6 +7,7 @@ import com.moong.dto.request.auth.AuthLoginRequest;
 import com.moong.dto.request.auth.AuthTokenRefreshRequest;
 import com.moong.dto.response.auth.AuthLoginResponse;
 import com.moong.dto.response.auth.AuthTokenRefreshResponse;
+import com.moong.dto.response.auth.ConnectionTokenResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 
 public interface AuthControllerSwagger {
 
@@ -57,12 +56,25 @@ public interface AuthControllerSwagger {
             String refreshToken
     );
 
+    @Operation(summary = "Connection 토큰 발급", description = "Connection 토큰을 발급합니다.")
+    @ApiResponse(
+            responseCode = "200",
+            description = "유효한 Connection 토큰을 발급합니다.",
+            content = @Content(schema = @Schema(implementation = ConnectionTokenResponse.class))
+    )
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<ConnectionTokenResponse> issueConnectionToken(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member
+    );
+
     @Operation(summary = "로그아웃", description = "사용중인 토큰의 유효성을 판단합니다.")
     @ApiResponse(
             responseCode = "200",
             description = "유효 토큰",
             headers = {
-            @Header(name = "Authorization", description = "Bearer {accessToken}", schema = @Schema(type = "string")),
+                    @Header(name = "Authorization", description = "Bearer {accessToken}", schema = @Schema(type = "string")),
             }
     )
     @ErrorCode401

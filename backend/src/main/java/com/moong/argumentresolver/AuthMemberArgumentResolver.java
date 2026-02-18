@@ -4,6 +4,7 @@ import com.moong.annotation.auth.AuthMember;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.service.AuthService;
+import com.moong.util.AuthorizationHeaderExtractor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -17,9 +18,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private static final String BEARER_PREFIX = "Bearer ";
-
     private final AuthService authService;
+    private final AuthorizationHeaderExtractor authorizationHeaderExtractor;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -43,10 +43,7 @@ public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver
             return authService.authorize(Long.parseLong(rawAccessToken));
         }
 
-        if(rawAccessToken.length() < BEARER_PREFIX.length()) {
-            throw new BusinessException(ErrorCode.UNAUTHORIZED_EXCEPTION);
-        }
-        String accessToken = rawAccessToken.substring(BEARER_PREFIX.length());
+        String accessToken = authorizationHeaderExtractor.extractBearerToken(rawAccessToken);
         return authService.authorizeByAccessToken(accessToken);
     }
 }

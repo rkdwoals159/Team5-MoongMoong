@@ -12,6 +12,7 @@ import com.moong.dto.response.auth.JwtTokenResponse;
 import com.moong.dto.response.auth.MemberInfoWithTokenResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
+import com.moong.fixture.JwtTokenGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ class AuthServiceTest extends BaseServiceTest {
     @Autowired
     protected JwtManager jwtManager;
 
+    @Autowired
+    private JwtTokenGenerator jwtTokenGenerator;
+
     @DisplayName("OAuth 회원정보와 회원토큰을 발급받을 수 있다")
     @Test
     void findMemberInfoAndGenerateToken() {
@@ -35,6 +39,31 @@ class AuthServiceTest extends BaseServiceTest {
                 () -> assertThat(memberInfo.email()).isEqualTo(jwtManager.resolveAccessToken(tokens.accessToken())),
                 () -> assertThat(memberInfo.email()).isEqualTo(jwtManager.resolveRefreshToken(tokens.refreshToken()))
         );
+    }
+
+    @DisplayName("Connection 토큰으로 멤버를 조회할 수 있다.")
+    @Test
+    void authorizeByConnectionToken() {
+        Member member = memberGenerator.generateSaved("테스트");
+        String connectionToken = jwtTokenGenerator.generateConnectionToken(member);
+
+        Member result = authService.authorizeByConnectionToken(connectionToken);
+
+        assertAll(
+                () -> assertThat(result.getId()).isEqualTo(member.getId()),
+                () -> assertThat(result.getEmail()).isEqualTo(member.getEmail())
+        );
+    }
+
+    @DisplayName("Connection으로 멤버를 조회를 실패한다.")
+    @Test
+    void connectionTokenIssueFail() {
+        Member notSavedMember = new Member("test@email.com", "테스트2", "url");
+        String connectionToken = jwtTokenGenerator.generateConnectionToken(notSavedMember);
+
+        assertThatThrownBy(() -> authService.authorizeByConnectionToken(connectionToken))
+                .isInstanceOf(BusinessException.class)
+                .hasMessage(ErrorCode.INVALID_CONNECTION_TOKEN.getMessage());
     }
 
     @DisplayName("토큰을 재발급할 수 있다")

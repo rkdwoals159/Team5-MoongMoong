@@ -45,14 +45,14 @@ class SseControllerTest extends BaseSseControllerTest {
     @Test
     void subscribe_success() throws IOException {
         Member member = memberGenerator.generateSaved("softeer");
-        String accessToken = jwtTokenGenerator.generateAccessToken(member);
+        String connectionToken = jwtTokenGenerator.generateConnectionToken(member);
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         crewGenerator.generateSaved(petGroup, member);
 
         webTestClient.get()
                 .uri("/api/group/sse")
-                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + accessToken)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + connectionToken)
                 .accept(MediaType.TEXT_EVENT_STREAM)
                 .exchange()
                 .expectStatus().isOk()
@@ -61,5 +61,23 @@ class SseControllerTest extends BaseSseControllerTest {
 
         emitter = emitterRepository.findById(member.getId()).get();
         assertThat(emitter).isNotNull();
+    }
+
+    @DisplayName("SSE 구독 실패: 유효한 Connection 토큰을 전달하지 않을 시 토큰이 아닌 경우")
+    @Test
+    void subscribe_fail() throws IOException {
+        Member member = memberGenerator.generateSaved("softeer");
+        String accessToken = jwtTokenGenerator.generateAccessToken(member);
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, member);
+
+        webTestClient.get()
+                .uri("/api/group/sse")
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + accessToken)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .returnResult(String.class);
     }
 }

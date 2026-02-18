@@ -39,7 +39,7 @@ public interface PaymentControllerSwagger {
             Member member,
             @RequestBody(
                     description = "결제 요청 전 검증을 위한 금액 데이터 저장 요청",
-                    content = @Content(schema = @Schema(implementation = CoinPaymentConfirmRequest.class))
+                    content = @Content(schema = @Schema(implementation = CoinCreateRequest.class))
             )
             CoinCreateRequest request
     );

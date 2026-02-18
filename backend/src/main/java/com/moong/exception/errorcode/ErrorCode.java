@@ -41,6 +41,7 @@ public enum ErrorCode {
 
     //401
     UNAUTHORIZED_EXCEPTION(401, "잘못된 유저 접근입니다"),
+    INVALID_CONNECTION_TOKEN(401, "Connection 토큰이 유효하지 않습니다"),
     EXPIRED_TOKEN(401, "토큰 기한이 만료되었습니다"),
 
     //404

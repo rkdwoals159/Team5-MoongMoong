@@ -15,12 +15,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@EnableConfigurationProperties(JwtProperties.class)
+@EnableConfigurationProperties({JwtProperties.class, SseTokenProperties.class})
 public class JwtManager {
 
     private static final String JWT_TOKEN_TYPE_KEY = "type";
 
     private final JwtProperties jwtProperties;
+    private final SseTokenProperties sseTokenProperties;
+
+    public String createConnectToken(MemberInfo memberInfo) {
+        Duration accessTokenExpiration = sseTokenProperties.expiration();
+        return createToken(memberInfo, accessTokenExpiration, TokenType.CONNECT_TOKEN);
+    }
 
     public String createAccessToken(MemberInfo memberInfo) {
         Duration accessTokenExpiration = jwtProperties.accessTokenExpiration();
@@ -46,6 +52,10 @@ public class JwtManager {
 
     public Duration getRefreshTokenExpiration() {
         return jwtProperties.refreshTokenExpiration();
+    }
+
+    public String resolveConnectionToken(String connectionToken) {
+        return resolveToken(connectionToken, TokenType.CONNECT_TOKEN);
     }
 
     public String resolveAccessToken(String accessToken) {

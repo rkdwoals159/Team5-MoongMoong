@@ -111,6 +111,11 @@ jwt:
   access_token_expiration: ${JWT_ACCESS_EXPIRATION}
   refresh_token_expiration: ${JWT_REFRESH_EXPIRATION}
 
+sse:
+  token:
+    secret-key: ${JWT_SSE_SECRET}
+    expiration: ${JWT_SSE_EXPIRATION}
+
 flowise:
   base-url: ${FLOWISE_URL:}
   id: ${FLOWISE_ID:}

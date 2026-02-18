@@ -13,6 +13,7 @@ import com.moong.domain.member.MemberInfo;
 import com.moong.dto.request.auth.AuthLoginRequest;
 import com.moong.dto.request.auth.AuthTokenRefreshRequest;
 import com.moong.dto.response.auth.AuthLoginResponse;
+import com.moong.dto.response.auth.ConnectionTokenResponse;
 import com.moong.util.InviteCodeGenerator;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpHeaders;
@@ -211,6 +212,34 @@ class AuthControllerTest extends BaseControllerTest {
                     .post("/api/auth/refresh")
                     .then()
                     .statusCode(200);
+        }
+    }
+
+    @Nested
+    class ConnectionToken {
+
+        @DisplayName("Connection 토큰을 발급 받을 수 있다")
+        @Test
+        void issueSuccess() {
+            Member member = memberGenerator.generateSaved("테스트");
+            String accessToken = jwtTokenGenerator.generateAccessToken(member);
+
+            given().log().all()
+                    .contentType(ContentType.JSON)
+                    .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + accessToken)
+                    .post("/api/auth/sse-token")
+                    .then()
+                    .statusCode(200);
+        }
+
+        @DisplayName("Connection 토큰 발행 실패- 인증 오류")
+        @Test
+        void refreshSuccess() {
+            given().log().all()
+                    .contentType(ContentType.JSON)
+                    .post("/api/auth/sse-token")
+                    .then()
+                    .statusCode(401);
         }
     }
 

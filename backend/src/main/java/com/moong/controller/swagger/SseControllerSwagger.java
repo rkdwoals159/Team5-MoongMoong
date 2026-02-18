@@ -1,14 +1,9 @@
 package com.moong.controller.swagger;
 
-import com.moong.annotation.swagger.ErrorCode400;
 import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode500;
-import com.moong.domain.entity.Member;
-import com.moong.dto.response.petgroup.PetGroupParticipateResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +13,11 @@ public interface SseControllerSwagger {
 
     @Operation(
             summary = "SSE 연결",
-            description = "그룹 관련 이벤트를 받을 수 있도록 서버와 연결합니다."
+            description = """
+                그룹 관련 이벤트를 받을 수 있도록 서버와 SSE 연결을 생성합니다.
+                - Authorization 헤더에 Connection 토큰을 Bearer 형식으로 전달해야 합니다.
+                - 응답은 text/event-stream 스트림이며, 연결이 유지됩니다.
+                """
     )
     @ApiResponse(
             responseCode = "200",
@@ -28,7 +27,6 @@ public interface SseControllerSwagger {
     @ErrorCode401
     @ErrorCode500
     ResponseEntity<SseEmitter> subscribe(
-            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
-            Member member
+            String rawConnectionToken
     );
 }

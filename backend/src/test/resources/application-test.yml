@@ -52,6 +52,11 @@ jwt:
   access_token_expiration: 1h
   refresh_token_expiration: 1d
 
+sse:
+  token:
+    secret-key: 7ef557358f0a2649491ac82939d19aeb069e1984cd2c9a6ba571fd5c9d1e6c3312a3d93e550e7c65aadc5dfb1a62e235ba7d500951cd587f134a14b5a0448c14
+    expiration: 20s
+
 spring:
   h2:
     console:
