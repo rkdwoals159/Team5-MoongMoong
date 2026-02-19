@@ -3,33 +3,33 @@
 import { useState } from "react";
 import { cn } from "@/utils/style";
 import WarningIcon from "@/assets/icons/analysis/ic_warning.svg";
-import type { InviteCodeFormProps } from "@/app/(sidebar)/family/_types";
+import type { InviteUrlFormProps } from "@/app/(sidebar)/family/_types";
 import { MAX_INVITE_CODE_LENGTH } from "@/app/(sidebar)/family/_constants";
 import { useFamilySettingActions } from "@/app/(sidebar)/family/_hooks/useFamilySettingActions";
 
-export default function InviteCodeForm({ isAlone }: InviteCodeFormProps) {
-  const [code, setCode] = useState("");
+export default function InviteUrlForm({ isAlone }: InviteUrlFormProps) {
+  const [url, setUrl] = useState("");
   const { handleInviteSubmit } = useFamilySettingActions();
   const [isOverLimit, setIsOverLimit] = useState(false);
 
-  const isCodeEmpty = code.trim().length === 0;
-  const isAtLimit = code.length >= MAX_INVITE_CODE_LENGTH;
+  const isUrlEmpty = url.trim().length === 0;
+  const isAtLimit = url.length >= MAX_INVITE_CODE_LENGTH;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (value.length > MAX_INVITE_CODE_LENGTH) {
-      setCode(value.slice(0, MAX_INVITE_CODE_LENGTH));
+      setUrl(value.slice(0, MAX_INVITE_CODE_LENGTH));
       setIsOverLimit(true);
     } else {
-      setCode(value);
+      setUrl(value);
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (isCodeEmpty) return;
-    handleInviteSubmit(code.trim());
-    setCode("");
+    if (isUrlEmpty) return;
+    handleInviteSubmit(url.trim());
+    setUrl("");
   };
 
   return (
@@ -37,7 +37,7 @@ export default function InviteCodeForm({ isAlone }: InviteCodeFormProps) {
       <form onSubmit={handleSubmit} className="relative flex gap-350">
         <input
           type="text"
-          value={code}
+          value={url}
           onChange={handleChange}
           onAnimationEnd={() => setIsOverLimit(false)}
           disabled={!isAlone}
@@ -52,13 +52,11 @@ export default function InviteCodeForm({ isAlone }: InviteCodeFormProps) {
         />
         <button
           type="submit"
-          disabled={isCodeEmpty || !isAlone}
-          className={isCodeEmpty ? submitButtonDisabledClasses : submitButtonActiveClasses}
+          disabled={isUrlEmpty || !isAlone}
+          className={isUrlEmpty ? submitButtonDisabledClasses : submitButtonActiveClasses}
         >
           <span
-            className={
-              isCodeEmpty ? "typo-body-m-bold text-gray-300" : "typo-body-m-bold text-base"
-            }
+            className={isUrlEmpty ? "typo-body-m-bold text-gray-300" : "typo-body-m-bold text-base"}
           >
             확인
           </span>

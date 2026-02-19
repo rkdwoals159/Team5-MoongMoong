@@ -1,12 +1,13 @@
+import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
-import { participatePetGroup } from "@/api/familyApiActions";
+import { participateGroup } from "@/app/(sidebar)/family/_api";
 
 export function useFamilySettingActions() {
+  const router = useRouter();
   const { showToast } = useToast();
 
   const handleInviteSubmit = async (inviteCode: string) => {
-    // TODO: data.crewId 활용하여 그룹 참여 완료 처리
-    const { data, error } = await participatePetGroup(inviteCode);
+    const { error } = await participateGroup(inviteCode);
 
     if (error) {
       showToast({ message: error, variant: "error" });
@@ -14,6 +15,7 @@ export function useFamilySettingActions() {
     }
 
     showToast({ message: "가족에 참여했어요!", variant: "success" });
+    router.push("/dashboard");
   };
 
   return { handleInviteSubmit };

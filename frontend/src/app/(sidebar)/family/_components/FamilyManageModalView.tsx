@@ -1,12 +1,12 @@
 import ExpandIcon from "@/assets/icons/family/ic_expand.svg";
-import type { FamilyManageModalViewProps } from "@/app/(sidebar)/family/_types";
 import DogInfoSection from "./DogInfoSection";
-import ParentingCodeCard from "./ParentingCodeCard";
+import GroupInviteUrlCard from "./GroupInviteUrlCard";
 import FamilyMemberList from "./FamilyMemberList";
-import InviteCodeForm from "./InviteCodeForm";
+import { getGroupCrew } from "@/app/(sidebar)/family/_api";
+import InviteUrlForm from "./InviteUrlForm";
 
-export default function FamilyManageModalView({ familyInfo }: FamilyManageModalViewProps) {
-  const { dog, code, members, maxMembers } = familyInfo;
+export default async function FamilyManageModalView() {
+  const groupCrew = await getGroupCrew();
 
   return (
     <div className={cardClasses}>
@@ -27,17 +27,21 @@ export default function FamilyManageModalView({ familyInfo }: FamilyManageModalV
 
             <div className="flex flex-col gap-350 px-850">
               <p className="typo-caption-s-bold text-gray-500">강아지 정보</p>
-              <DogInfoSection dog={dog} />
-              <ParentingCodeCard code={code} />
+              <DogInfoSection />
+              <GroupInviteUrlCard inviteUrl={groupCrew.inviteUrl ?? ""} size="compact" />
             </div>
 
             <div className="px-850">
-              <FamilyMemberList members={members} maxMembers={maxMembers} />
+              <FamilyMemberList
+                members={[groupCrew.memberName, ...(groupCrew.crews ?? [])].filter(
+                  (m): m is string => !!m,
+                )}
+              />
             </div>
           </div>
 
           <div className="px-850">
-            <InviteCodeForm isAlone={members.length === 1} />
+            <InviteUrlForm isAlone={!groupCrew.crews?.length} />
           </div>
         </div>
       </div>

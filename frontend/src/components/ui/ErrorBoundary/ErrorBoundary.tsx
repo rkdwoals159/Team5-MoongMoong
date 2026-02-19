@@ -2,7 +2,7 @@
 
 import { Component, ErrorInfo, Fragment } from "react";
 import DefaultErrorFallback from "./DefaultErrorFallback";
-import type { ErrorBoundaryProps, ErrorBoundaryState, FallbackProps } from "./errorBoundary.type";
+import type { ErrorBoundaryProps, ErrorBoundaryState } from "./errorBoundary.type";
 import { isDifferentArray } from "@/utils/isDifferentArray";
 
 const initialState: ErrorBoundaryState = { error: null, retryKey: 0, retryAttempts: 0 };
@@ -55,23 +55,21 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   render() {
-    const { children, fallbackRender, fallback, message } = this.props;
+    const { children, FallbackComponent, fallback, message } = this.props;
     const { error, retryKey, retryAttempts } = this.state;
 
     if (error !== null) {
-      const props: FallbackProps = {
-        error,
-        resetErrorBoundary: this.resetErrorBoundary,
-      };
-
-      if (typeof fallbackRender === "function") {
-        return fallbackRender(props);
+      // 에러 접근 가능한 fallback 컴포넌트
+      if (FallbackComponent) {
+        return <FallbackComponent error={error} resetErrorBoundary={this.resetErrorBoundary} />;
       }
 
+      // 정적 React Node
       if (fallback !== undefined) {
         return fallback;
       }
 
+      // 기본 fallback 컴포넌트
       return (
         <DefaultErrorFallback
           message={message}

@@ -1,33 +1,34 @@
 import { cn } from "@/utils/style";
-import type { FamilyManagePageViewProps } from "@/app/(sidebar)/family/_types";
 import DogInfoSection from "./DogInfoSection";
-import ParentingCodeCard from "./ParentingCodeCard";
+import GroupInviteUrlCard from "./GroupInviteUrlCard";
 import FamilyMemberList from "./FamilyMemberList";
-import InviteCodeForm from "./InviteCodeForm";
+import InviteUrlForm from "./InviteUrlForm";
+import { getGroupCrew } from "@/app/(sidebar)/family/_api";
 
-export default function FamilyManagePageView({ familyInfo }: FamilyManagePageViewProps) {
-  const { dog, code, members, maxMembers } = familyInfo;
+export default async function FamilyManagePageView() {
+  const groupCrew = await getGroupCrew();
 
   return (
     <div className="flex flex-col gap-600">
-      {/* 2-column grid */}
       <div className="grid grid-cols-1 gap-600 lg:grid-cols-2">
-        {/* Left: 강아지 정보 + 양육 코드 */}
         <section className={sectionCardClasses}>
           <SectionHeader title="강아지 정보" />
           <div className="flex flex-col gap-600">
-            <DogInfoSection dog={dog} size="large" />
-            <ParentingCodeCard code={code} />
+            <DogInfoSection size="large" />
+            <GroupInviteUrlCard inviteUrl={groupCrew.inviteUrl} />
           </div>
         </section>
 
-        {/* Right: 가족 구성원 + 초대 */}
         <section className={cn(sectionCardClasses, "justify-between")}>
-          <FamilyMemberList members={members} maxMembers={maxMembers} />
+          <FamilyMemberList
+            members={[groupCrew.memberName, ...(groupCrew.crews ?? [])].filter(
+              (m): m is string => !!m,
+            )}
+          />
 
           <div className="border-t border-gray-200 pt-600">
             <p className="typo-caption-s-bold mb-350 text-gray-500">다른 가족 참여하기</p>
-            <InviteCodeForm isAlone={members.length === 1} />
+            <InviteUrlForm isAlone={!groupCrew.crews?.length} />
           </div>
         </section>
       </div>

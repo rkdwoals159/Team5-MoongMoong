@@ -3,14 +3,15 @@
 import Button from "@/components/common/Button/Button";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { useCallback } from "react";
-import type { ParentingCodeCardProps } from "@/app/(sidebar)/family/_types";
+import type { GroupInviteUrlCardProps } from "@/app/(sidebar)/family/_types";
+import { INVITE_BASE_URL, NO_INVITE_URL } from "@/app/(sidebar)/family/_constants";
 
-export default function ParentingCodeCard({ code }: ParentingCodeCardProps) {
+export default function GroupInviteUrlCard({ inviteUrl, size = "large" }: GroupInviteUrlCardProps) {
   const { showToast } = useToast();
   const handleCopyUrl = useCallback(async () => {
-    const shareUrl = `${window.location.origin}/invite?code=${code}`;
+    if (!inviteUrl) return;
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      await navigator.clipboard.writeText(INVITE_BASE_URL + inviteUrl);
       showToast({
         message: "공유 URL이 복사되었습니다.",
         variant: "success",
@@ -21,20 +22,27 @@ export default function ParentingCodeCard({ code }: ParentingCodeCardProps) {
         variant: "error",
       });
     }
-  }, [code, showToast]);
+  }, [inviteUrl, showToast]);
+
+  const inviteCode = inviteUrl?.split("/").pop() ?? NO_INVITE_URL;
 
   return (
     <div className={cardClasses}>
-      <div className="flex flex-col">
+      <div className="flex min-w-0 flex-col">
         <span className="typo-caption-s-medium text-gray-500">가족 가계부 초대 URL</span>
-        <span className="typo-title-l-bold text-yellow-500">{code}</span>
+        <span
+          className={`truncate text-yellow-500 ${size === "large" ? "typo-title-l-bold" : "typo-body-m-bold"}`}
+        >
+          {inviteCode}
+        </span>
       </div>
       <Button
         type="button"
         variant="secondary"
         size="xsmall"
         onClick={handleCopyUrl}
-        className="typo-body-s-medium text-base"
+        isDisabled={!inviteUrl}
+        className="shrink-0 typo-body-s-medium text-base"
       >
         URL 복사
       </Button>

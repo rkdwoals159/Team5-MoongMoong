@@ -1,4 +1,4 @@
-import { ErrorInfo, ReactNode } from "react";
+import { ComponentType, ErrorInfo, ReactNode } from "react";
 
 export type FallbackProps = {
   error: Error;
@@ -8,7 +8,7 @@ export type FallbackProps = {
 export type ErrorBoundaryProps = {
   children: ReactNode;
   fallback?: ReactNode;
-  fallbackRender?: (props: FallbackProps) => ReactNode;
+  FallbackComponent?: ComponentType<FallbackProps>;
   message?: string;
   onError?: (error: Error, info: ErrorInfo) => void;
   onReset?: () => void;

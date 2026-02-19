@@ -8,28 +8,39 @@ import {
   LARGE_SIZE,
   COMPACT_SIZE,
 } from "@/app/(sidebar)/family/_constants";
+import { getPetInfo } from "@/api/petInfoApi";
+import { BREEDS } from "@/app/onBoarding/_constants/dataTable";
 
-export default function DogInfoSection({ dog, size = "compact" }: DogInfoSectionProps) {
-  const SexIcon = dog.sex === "female" ? FemaleIcon : MaleIcon;
+export default async function DogInfoSection({ size = "compact" }: DogInfoSectionProps) {
   const isLarge = size === "large";
+
+  const petInfo = await getPetInfo();
+
+  if (!petInfo) {
+    return <DefaultDogInfoSection size={size} />;
+  }
+
+  const SexIcon = petInfo.gender === "F" ? FemaleIcon : MaleIcon;
 
   return (
     <div className="flex items-center gap-500">
       <Image
-        src={dog.imageUrl}
-        alt={`${dog.name} 프로필`}
+        src="/images/img_dog_default.svg" // TODO: 이미지 api 연결
+        alt={`${petInfo.petName} 프로필`}
         width={isLarge ? LARGE_SIZE : COMPACT_SIZE}
         height={isLarge ? LARGE_SIZE : COMPACT_SIZE}
         className={cn("rounded-400 object-cover", SIZE_VARIANT_CLASSNAMES[size])}
       />
       <div className="flex flex-col">
         <p className={cn("text-base", isLarge ? "typo-title-l-bold" : "typo-title-m-bold")}>
-          {dog.name}
+          {petInfo.petName}
         </p>
         <div className="flex items-center gap-200">
-          <span className="typo-caption-s-regular text-gray-500">{dog.breed}</span>
+          <span className="typo-caption-s-regular text-gray-500">
+            {BREEDS[petInfo.breed ?? "ETC"]}
+          </span>
           <Dot />
-          <span className="typo-caption-s-regular text-gray-500">{dog.age}세</span>
+          <span className="typo-caption-s-regular text-gray-500">{petInfo.birthDate}</span>
           <Dot />
           <SexIcon className="size-3" aria-hidden="true" />
         </div>
@@ -38,6 +49,25 @@ export default function DogInfoSection({ dog, size = "compact" }: DogInfoSection
   );
 }
 
+// 내장 컴포넌트
+
 function Dot() {
   return <span className="inline-block size-[2px] rounded-full bg-gray-300" />;
+}
+
+function DefaultDogInfoSection({ size }: { size: "compact" | "large" }) {
+  const isLarge = size === "large";
+
+  return (
+    <div className="flex items-center gap-500">
+      <div
+        className={cn("rounded-400 bg-gray-100", SIZE_VARIANT_CLASSNAMES[size])}
+        style={{
+          width: isLarge ? LARGE_SIZE : COMPACT_SIZE,
+          height: isLarge ? LARGE_SIZE : COMPACT_SIZE,
+        }}
+      />
+      <p className="typo-caption-s-regular text-gray-400">반려동물 정보를 불러올 수 없습니다</p>
+    </div>
+  );
 }
