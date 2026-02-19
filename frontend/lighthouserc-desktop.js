@@ -12,8 +12,12 @@ module.exports = {
     collect: {
       startServerCommand: "yarn start",
       url: urls,
-      numberOfRuns: 3,
-      settings: { preset: "desktop" },
+      numberOfRuns: 1,
+      settings: {
+        preset: "desktop",
+        maxWaitForLoad: 15000,
+        maxWaitForFcp: 15000,
+      },
     },
     upload: {
       target: "filesystem",

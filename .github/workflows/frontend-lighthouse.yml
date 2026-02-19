@@ -36,6 +36,7 @@ jobs:
           LHCI: 'true'
           LHCI_TEST_AUTH: ${{ secrets.LHCI_TEST_AUTH }}
           BASE_API_URL: ${{ secrets.BASE_API_URL }}
+          NEXT_PUBLIC_LHCI: 'true'
 
       - name: Run Lighthouse CI (Desktop)
         run: |

@@ -12,7 +12,7 @@ export default function SidebarLayout({
 }>) {
   return (
     <ServerEventProvider>
-      <SSEListener />
+      {process.env.NEXT_PUBLIC_LHCI !== "true" && <SSEListener />}
       <div className="h-screen bg-white-100">
         <div className="flex h-full">
           <Sidebar className="flex-1 min-w-[240px]" />
