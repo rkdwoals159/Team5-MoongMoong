@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { useCountUp } from "../useCountUp";
+import { useCountUp } from "@/app/(sidebar)/saving/_hooks/useCountUp";
 
 describe("useCountUp", () => {
   beforeEach(() => {

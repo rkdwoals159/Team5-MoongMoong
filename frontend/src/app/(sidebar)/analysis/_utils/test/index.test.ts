@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatRatio } from "../index";
+import { formatRatio } from "@/app/(sidebar)/analysis/_utils";
 
 describe("formatRatio", () => {
   describe("undefined 또는 null인 경우", () => {

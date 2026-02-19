@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { buildCalendarDays } from "@/app/(sidebar)/calendar/_lib/buildCalendarDays";
-import { GroupExpenseMap } from "@/app/(sidebar)/calendar/_types";
+import type { GroupExpenseMap } from "@/app/(sidebar)/calendar/_types";
 
 const makeDailyExpense = (expenseId: number, cost: number, mainCategory: "사료" | "간식") => ({
   expenseId,

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { useAmountInput } from "../useAmountInput";
+import { useAmountInput } from "@/app/(sidebar)/saving/_hooks/useAmountInput";
 
 describe("useAmountInput", () => {
   it("초기값 없으면 빈 문자열, numericValue는 0", () => {

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act, screen } from "@testing-library/react";
 import ToastProvider from "@/components/ui/Toast/ToastProvider";
-import { useCreateSaving } from "../useCreateSaving";
+import { useCreateSaving } from "@/app/(sidebar)/saving/_hooks/useCreateSaving";
 
 const mockCreateNewSaving = vi.fn();
 vi.mock("@/api/savingApiActions", () => ({
