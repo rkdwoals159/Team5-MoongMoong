@@ -21,7 +21,7 @@ public class SseController implements SseControllerSwagger {
 
     @GetMapping(path = "/api/group/sse")
     public ResponseEntity<SseEmitter> subscribe(
-            @RequestHeader(HttpHeaders.AUTHORIZATION)
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
             String rawConnectionToken
     ) {
         String connectionToken = authorizationHeaderExtractor.extractBearerToken(rawConnectionToken);

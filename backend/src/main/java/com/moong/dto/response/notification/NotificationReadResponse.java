@@ -1,7 +1,5 @@
 package com.moong.dto.response.notification;
 
-import static java.util.stream.Collectors.toList;
-
 import com.moong.domain.entity.CrewNotification;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;

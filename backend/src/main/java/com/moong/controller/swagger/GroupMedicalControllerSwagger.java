@@ -1,13 +1,13 @@
 package com.moong.controller.swagger;
 
-import com.moong.annotation.auth.AuthMember;
 import com.moong.annotation.swagger.ErrorCode401;
+import com.moong.annotation.swagger.ErrorCode404;
 import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
-import com.moong.dto.response.groupmedical.GroupMedicalStatisticsResponse;
-import com.moong.dto.response.groupmedical.PetDiseaseRankingResponse;
 import com.moong.domain.enums.Disease;
 import com.moong.dto.response.groupmedical.GroupMedicalInfoResponse;
+import com.moong.dto.response.groupmedical.GroupMedicalStatisticsResponse;
+import com.moong.dto.response.groupmedical.PetDiseaseRankingResponse;
 import com.moong.dto.response.groupmedical.TreatmentsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,6 +34,7 @@ public interface GroupMedicalControllerSwagger {
                     schema = @Schema(implementation = GroupMedicalInfoResponse.class))
     )
     @ErrorCode401
+    @ErrorCode404(description = "AI 의사 권장사항 생성 중")
     @ErrorCode500
     ResponseEntity<GroupMedicalInfoResponse> getGroupMedicalInfo(
             @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
