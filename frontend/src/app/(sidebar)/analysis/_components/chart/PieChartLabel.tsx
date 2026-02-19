@@ -1,11 +1,19 @@
 import type { PieLabelRenderProps, TextAnchor } from "recharts";
 
 import { getPieChartLabelLayout } from "@/app/(sidebar)/analysis/_lib/pieChartLabelLayout";
-import { CHART_LABEL_LABEL_GAP, CHART_LABEL_RATIO_GAP } from "@/app/(sidebar)/analysis/_constants";
+import {
+  CHART_LABEL_LABEL_GAP,
+  CHART_LABEL_MIN_VISIBLE_RATIO,
+  CHART_LABEL_RATIO_GAP,
+} from "@/app/(sidebar)/analysis/_constants";
 
 export default function renderPieChartLabel(props: PieLabelRenderProps) {
   const { ratio, label, lineStartX, lineY, lineEndX, textX, textAnchor } =
     getPieChartLabelLayout(props);
+
+  if (ratio < CHART_LABEL_MIN_VISIBLE_RATIO) {
+    return null;
+  }
 
   return (
     <g>

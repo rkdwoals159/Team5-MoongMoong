@@ -6,6 +6,12 @@ export const CATEGORY_COLOR_MAP: Record<string, ChipMajorColor> = {
   미용: "green",
   물품구매비: "purple",
   기타: "gray",
+  진료비: "blue",
+  예방접종: "turquoise",
+  "약/처방": "orange",
+  검사비: "yellow",
+  "수술/입원": "green",
+  "기타 의료비": "purple",
 };
 
 export const DEFAULT_CATEGORY_COLOR: ChipMajorColor = "gray";

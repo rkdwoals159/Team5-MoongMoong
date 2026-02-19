@@ -21,6 +21,12 @@ describe("getChartLabelFromPayload", () => {
     expect(getChartLabelFromPayload(payload)).toBe("약/처방");
   });
 
+  it("medical subCategory가 enum 코드인 경우 매핑된 한글 라벨을 반환한다", () => {
+    const payload = { subCategory: "SURGERY_HOSPITALIZATION", cost: 1000, ratio: 42.3 };
+
+    expect(getChartLabelFromPayload(payload)).toBe("수술/입원");
+  });
+
   it("category와 subCategory가 모두 있는 경우 category를 우선 반환한다", () => {
     const payload = { category: "의료비", subCategory: "약/처방", cost: 1000, ratio: 42.3 };
     expect(getChartLabelFromPayload(payload)).toBe("의료비");

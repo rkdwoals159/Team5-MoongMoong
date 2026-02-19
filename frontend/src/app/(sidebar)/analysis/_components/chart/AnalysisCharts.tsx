@@ -44,6 +44,7 @@ export async function MedicalAnalysisChartCard({
   medicalPromise,
 }: MedicalAnalysisChartCardProps) {
   const petInfo = await petInfoPromise;
+  const petName = petInfo?.petName ?? "반려동물";
   const { items: medicalItems, total: medicalTotal } = await medicalPromise;
   const medicalTotalLabel = medicalTotal > 0 ? `총 ${formatAmount(medicalTotal)}` : "-";
 
@@ -51,7 +52,7 @@ export async function MedicalAnalysisChartCard({
     <section className="rounded-500 border border-gray-100 bg-white-100 p-600">
       <div className="flex items-start justify-between gap-400">
         <div className="flex items-center gap-300">
-          <p className="typo-body-l-bold text-gray-500">{petInfo?.petName ?? "-"}의 의료비</p>
+          <p className="typo-body-l-bold text-gray-500">{petName}의 의료비</p>
           <InfoTooltip description="의료비 소분류별 소비 금액을 확인하세요." iconSize={20} />
         </div>
       </div>

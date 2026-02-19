@@ -9,6 +9,7 @@ export default async function AnalysisTable({
   expensesPromise,
 }: AnalysisTableSectionProps) {
   const petInfo = await petInfoPromise;
+  const petName = petInfo?.petName ?? "반려동물";
   const rows = await expensesPromise;
   const totalCost = rows.reduce((sum, row) => sum + (row.cost ?? 0), 0);
   const totalLabel = `총 ${formatAmount(totalCost)}`;
@@ -16,14 +17,12 @@ export default async function AnalysisTable({
   return (
     <section className="flex flex-col gap-400">
       <div className="flex flex-col gap-200">
-        <p className="typo-body-l-bold text-gray-500">
-          우리 가족이 {petInfo?.petName ?? "-"}에게 쓴 비용
-        </p>
+        <p className="typo-body-l-bold text-gray-500">우리 가족이 {petName}에게 쓴 비용</p>
         <p className="typo-headline-l-bold text-text-base">{totalLabel}</p>
       </div>
-      <div className="relative min-h-[336px]">
+      <div className="relative h-[336px]">
         <DataTable
-          className="border-gray-50 rounded-600"
+          className="h-full border-gray-50 rounded-600"
           columns={buildExpenseColumns()}
           data={rows}
           rowKey={(row, index) => row.expenseId ?? `empty-${index}`}

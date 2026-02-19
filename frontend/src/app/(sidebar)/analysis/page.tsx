@@ -28,7 +28,7 @@ export default async function AnalysisPage({ searchParams }: AnalysisPageProps) 
   const petInfoPromise = getPetInfo();
 
   return (
-    <article className="flex flex-col gap-850 px-850">
+    <article className="flex flex-col gap-850 px-850 pb-850">
       <AnalysisHeader startDate={startDate} endDate={endDate} />
       {/* API 데이터 조회가 필요한 컴포넌트는 suspense로 감싸서 관리 */}
       <Suspense fallback={<AnalysisTableSkeleton />}>

@@ -12,7 +12,7 @@ export const buildExpenseColumns = (): DataTableColumn<
     label: "날짜",
     accessor: "spendAt",
     render: (value) => (
-      <span className="whitespace-nowrap px-4 py-1">
+      <span className="whitespace-nowrap px-500 py-1 ">
         {value ? formatDateWithDots(String(value)) : "-"}{" "}
       </span>
     ),
@@ -20,9 +20,7 @@ export const buildExpenseColumns = (): DataTableColumn<
   {
     label: "닉네임",
     accessor: "nickName",
-    render: (value) => (
-      <span className="block max-w-[96px] truncate px-4 py-1"> {String(value ?? "-")} </span>
-    ),
+    render: (value) => <span className="block truncate px-4 py-1 "> {String(value ?? "-")} </span>,
   },
   {
     label: "항목",
@@ -41,9 +39,7 @@ export const buildExpenseColumns = (): DataTableColumn<
   {
     label: "사용내역",
     accessor: "usage",
-    render: (value) => (
-      <span className="block max-w-[240px] truncate px-4 py-1"> {String(value ?? "-")} </span>
-    ),
+    render: (value) => <span className="block truncate px-4 py-1"> {String(value ?? "-")} </span>,
   },
   {
     label: "비용",
@@ -57,8 +53,6 @@ export const buildExpenseColumns = (): DataTableColumn<
   {
     label: "메모",
     accessor: "memo",
-    render: (value) => (
-      <span className="block max-w-[200px] truncate px-4 py-1">{String(value ?? "-")}</span>
-    ),
+    render: (value) => <span className="block truncate px-4 py-1">{String(value ?? "-")}</span>,
   },
 ];
