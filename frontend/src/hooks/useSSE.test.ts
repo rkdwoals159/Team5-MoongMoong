@@ -23,13 +23,15 @@ describe("useSSE", () => {
 
   beforeEach(() => {
     fetchSpy = vi.spyOn(global, "fetch");
+    vi.stubEnv("NEXT_PUBLIC_SSE_URL", "http://test-sse-server/sse");
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
   });
 
-  it("enabled=true 시 fetch를 호출하고 connecting → open → closed 순으로 전이된다", async () => {
+  it("connectionToken이 있으면 fetch를 호출하고 connecting → open → closed 순으로 전이된다", async () => {
     let resolveFetch: (value: Response) => void;
     fetchSpy.mockImplementation(
       () =>
@@ -39,7 +41,7 @@ describe("useSSE", () => {
     );
 
     const onEvent = vi.fn();
-    const { result } = renderHook(() => useSSE({ url: "/api/sse", onEvent, enabled: true }));
+    const { result } = renderHook(() => useSSE({ onEvent, connectionToken: "test-token" }));
 
     expect(fetchSpy).toHaveBeenCalledOnce();
     expect(result.current.status).toBe("connecting");
@@ -61,7 +63,7 @@ describe("useSSE", () => {
     fetchSpy.mockResolvedValue(createMockSSEResponse([chunk]));
 
     const onEvent = vi.fn();
-    renderHook(() => useSSE({ url: "/api/sse", onEvent, enabled: true }));
+    renderHook(() => useSSE({ onEvent, connectionToken: "test-token" }));
 
     await waitFor(() => {
       expect(onEvent).toHaveBeenCalledWith({
@@ -81,7 +83,7 @@ describe("useSSE", () => {
     const onEvent = vi.fn();
     const onError = vi.fn();
     const { result } = renderHook(() =>
-      useSSE({ url: "/api/sse", onEvent, onError, enabled: true }),
+      useSSE({ onEvent, onError, connectionToken: "test-token" }),
     );
 
     await waitFor(() => {
@@ -113,7 +115,7 @@ describe("useSSE", () => {
     });
 
     const onEvent = vi.fn();
-    const { result } = renderHook(() => useSSE({ url: "/api/sse", onEvent, enabled: true }));
+    const { result } = renderHook(() => useSSE({ onEvent, connectionToken: "test-token" }));
 
     await waitFor(() => {
       expect(result.current.status).toBe("open");
@@ -126,9 +128,9 @@ describe("useSSE", () => {
     expect(result.current.status).toBe("closed");
   });
 
-  it("enabled=false 시 fetch가 호출되지 않고 연결이 닫혀있다.", () => {
+  it("connectionToken이 없으면 fetch가 호출되지 않고 연결이 닫혀있다", () => {
     const onEvent = vi.fn();
-    const { result } = renderHook(() => useSSE({ url: "/api/sse", onEvent, enabled: false }));
+    const { result } = renderHook(() => useSSE({ onEvent, connectionToken: null }));
 
     expect(fetchSpy).not.toHaveBeenCalled();
     expect(result.current.status).toBe("closed");

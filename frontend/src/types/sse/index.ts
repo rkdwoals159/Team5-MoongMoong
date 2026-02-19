@@ -1,7 +1,7 @@
 export type SSEProps = {
   onEvent: (event: SSEEvent) => void;
   onError?: (error: Error) => void;
-  enabled?: boolean;
+  connectionToken?: string | null;
 };
 
 export type SSEEventType = "SAVING";

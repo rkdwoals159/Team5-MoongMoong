@@ -80,7 +80,7 @@ export const postCategorizeExpense = async (
   return {
     requestId: data!.requestId ?? requestId,
     mainCategory: data!.mainCategory,
-    subCategory: data?.subCategory,
+    subCategory: data?.subCategory ?? undefined,
   };
 };
 

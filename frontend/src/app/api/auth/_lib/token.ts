@@ -36,6 +36,9 @@ export async function refreshTokens(request: NextRequest) {
   }
   const accessToken = request.cookies.get(authCookies.access)?.value;
   const refreshToken = request.cookies.get(authCookies.refresh)?.value;
+  if (!accessToken) {
+    return { ok: false, response: redirectToLogin(request), reason: "access token is missing" };
+  }
   if (!refreshToken) {
     return { ok: false, response: redirectToLogin(request), reason: "refresh token is missing" };
   }

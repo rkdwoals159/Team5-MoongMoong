@@ -16,7 +16,11 @@ export interface paths {
      * @description 로그인한 회원의 반려동물 정보를 조회합니다.
      */
     get: operations["findPetInfo"];
-    put?: never;
+    /**
+     * 반려동물 정보 수정
+     * @description 요청으로 전달된 반려동물 정보를 수정합니다.
+     */
+    put: operations["updatePetInfo"];
     /**
      * 반려동물 등록
      * @description 회원이 새로운 반려동물을 등록합니다.
@@ -173,6 +177,26 @@ export interface paths {
     patch: operations["upsertMemberExpenses"];
     trace?: never;
   };
+  "/api/auth/sse-token": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Connection 토큰 발급
+     * @description Connection 토큰을 발급합니다.
+     */
+    post: operations["issueConnectionToken"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/auth/refresh": {
     parameters: {
       query?: never;
@@ -234,6 +258,46 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/member/profile": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 회원 프로필 업데이트 요청
+     * @description 회원 프로필을 업데이트합니다.
+     */
+    patch: operations["updateProfile"];
+    trace?: never;
+  };
+  "/api/member/name": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * 회원 닉네임 업데이트 요청
+     * @description 회원 닉네임을 업데이트합니다.
+     */
+    patch: operations["updateName"];
+    trace?: never;
+  };
   "/api/v2/expenses": {
     parameters: {
       query?: never;
@@ -266,6 +330,28 @@ export interface paths {
      * @description 회원 닉네임과 이미지 url을 반환합니다.
      */
     get: operations["findMember"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/group/sse": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * SSE 연결
+     * @description 그룹 관련 이벤트를 받을 수 있도록 서버와 SSE 연결을 생성합니다.
+     *     - Authorization 헤더에 Connection 토큰을 Bearer 형식으로 전달해야 합니다.
+     *     - 응답은 text/event-stream 스트림이며, 연결이 유지됩니다.
+     */
+    get: operations["subscribe"];
     put?: never;
     post?: never;
     delete?: never;
@@ -348,6 +434,26 @@ export interface paths {
      *     그리고 치료비의 최소·최대·평균값을 조회합니다.
      */
     get: operations["getTreatment"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/group/crews": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 그룹 모임원 조회
+     * @description 현재 사용자가 속한 펫 그룹의 모임원 목록과 초대 URL을 조회합니다.
+     */
+    get: operations["getCrews"];
     put?: never;
     post?: never;
     delete?: never;
@@ -487,8 +593,94 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
-    /** @description 반려동물 생성 요청 */
-    PetCreateRequest: {
+    /** @description 반려동물 수정 요청 */
+    PetUpdateRequest: {
+      /**
+       * @description 반려동물 이름
+       * @example 초코
+       */
+      petName: string;
+      /**
+       * @description 반려동물 종류
+       * @example DAS
+       * @enum {string}
+       */
+      breed:
+        | "GRE"
+        | "DAL"
+        | "DAS"
+        | "DOB"
+        | "GOL"
+        | "LAB"
+        | "MAL"
+        | "BUL"
+        | "BEA"
+        | "BIC"
+        | "SHE"
+        | "SCH"
+        | "MIL"
+        | "MIS"
+        | "HUS"
+        | "HOU"
+        | "GER"
+        | "JIN"
+        | "CHS"
+        | "CHL"
+        | "COC"
+        | "TER"
+        | "POM"
+        | "POO"
+        | "SHI"
+        | "WEL"
+        | "ETC";
+      /**
+       * @description 성별
+       * @example M
+       * @enum {string}
+       */
+      gender: "M" | "F";
+      /** @example 2026-02 */
+      birthDate: string;
+      /**
+       * @description 거주 시
+       * @example 서울시
+       */
+      city: string;
+      /**
+       * @description 거주 구역
+       * @example 종로구
+       */
+      district?: string;
+      /**
+       * @description 우려하는 질병 목록
+       * @example [
+       *       "OCU",
+       *       "MUS"
+       *     ]
+       */
+      diseases: (
+        | "DER"
+        | "MUS"
+        | "NEU"
+        | "OCU"
+        | "RES"
+        | "CAR"
+        | "HEM"
+        | "GAS"
+        | "URI"
+        | "REP"
+        | "END"
+        | "INF"
+      )[];
+    };
+    /** @description 반려동물 수정 응답 */
+    PetUpdateResponse: {
+      /**
+       * Format: int64
+       * @description 반려동물 아이디
+       * @example 1
+       */
+      petId?: number;
       /**
        * @description 반려동물 이름
        * @example 초코
@@ -547,7 +739,10 @@ export interface components {
       district?: string;
       /**
        * @description 우려하는 질병 목록
-       * @example OCU, MUS
+       * @example [
+       *       "OCU",
+       *       "MUS"
+       *     ]
        */
       diseases?: (
         | "DER"
@@ -569,6 +764,83 @@ export interface components {
       /** Format: int32 */
       status?: number;
       message?: string;
+    };
+    /** @description 반려동물 생성 요청 */
+    PetCreateRequest: {
+      /**
+       * @description 반려동물 이름
+       * @example 초코
+       */
+      petName: string;
+      /**
+       * @description 반려동물 종류
+       * @example DAS
+       * @enum {string}
+       */
+      breed:
+        | "GRE"
+        | "DAL"
+        | "DAS"
+        | "DOB"
+        | "GOL"
+        | "LAB"
+        | "MAL"
+        | "BUL"
+        | "BEA"
+        | "BIC"
+        | "SHE"
+        | "SCH"
+        | "MIL"
+        | "MIS"
+        | "HUS"
+        | "HOU"
+        | "GER"
+        | "JIN"
+        | "CHS"
+        | "CHL"
+        | "COC"
+        | "TER"
+        | "POM"
+        | "POO"
+        | "SHI"
+        | "WEL"
+        | "ETC";
+      /**
+       * @description 성별
+       * @example M
+       * @enum {string}
+       */
+      gender: "M" | "F";
+      /** @example 2026-02 */
+      birthDate: string;
+      /**
+       * @description 거주 시
+       * @example 서울시
+       */
+      city: string;
+      /**
+       * @description 거주 구역
+       * @example 종로구
+       */
+      district: string;
+      /**
+       * @description 우려하는 질병 목록
+       * @example OCU, MUS
+       */
+      diseases: (
+        | "DER"
+        | "MUS"
+        | "NEU"
+        | "OCU"
+        | "RES"
+        | "CAR"
+        | "HEM"
+        | "GAS"
+        | "URI"
+        | "REP"
+        | "END"
+        | "INF"
+      )[];
     };
     /** @description 반려동물 생성 응답 */
     PetCreateResponse: {
@@ -662,7 +934,7 @@ export interface components {
        * @description 초대코드 url
        * @example https://moong.site/invite/RRJ2A2gf4I9pSxpW6F1byH2RGEweYjpmZOGasbaXvOGtHCwq
        */
-      inviteUrl?: string;
+      inviteUrl: string;
     };
     /** @description 참여 완료 응답 */
     PetGroupParticipateResponse: {
@@ -697,25 +969,14 @@ export interface components {
        */
       target?: number;
     };
-    /** @description 결제 confirm 요청 */
-    CoinPaymentConfirmRequest: {
-      /**
-       * Format: uuid
-       * @description 결제 Id
-       * @example 8973f452-cabc-4098-bdd9-d32737c86a33
-       */
-      orderId?: string;
+    /** @description 저금하기 요청 */
+    CoinCreateRequest: {
       /**
        * Format: int64
-       * @description 결제 금액
-       * @example 10000
+       * @description 저금 금액
+       * @example 5000
        */
       amount?: number;
-      /**
-       * @description 결제 키
-       * @example asdfew20260205134206Rsdd
-       */
-      paymentKey?: string;
     };
     /** @description 결제 신청 전 금액 저장 및 결제 Id 생성 요청 */
     CoinPaymentCreateResponse: {
@@ -738,18 +999,38 @@ export interface components {
        * @description 토스 결제 에러 코드
        * @example ALREADY_PROCESSED_PAYMENT
        */
-      code?: string;
+      code: string;
       /**
        * @description 토스 에러 메세지
        * @example 이미 처리된 결제 입니다.
        */
-      message?: string;
+      message: string;
       /**
        * Format: uuid
        * @description 결제 Id
        * @example 8973f452-cabc-4098-bdd9-d32737c86a33
        */
-      orderId?: string;
+      orderId: string;
+    };
+    /** @description 결제 confirm 요청 */
+    CoinPaymentConfirmRequest: {
+      /**
+       * Format: uuid
+       * @description 결제 Id
+       * @example 8973f452-cabc-4098-bdd9-d32737c86a33
+       */
+      orderId: string;
+      /**
+       * Format: int64
+       * @description 결제 금액
+       * @example 10000
+       */
+      amount?: number;
+      /**
+       * @description 결제 키
+       * @example asdfew20260205134206Rsdd
+       */
+      paymentKey: string;
     };
     /** @description 저금하기 응답 */
     CoinCreateResponse: {
@@ -786,14 +1067,14 @@ export interface components {
       requestId?: string;
       /**
        * @description 분류된 대분류
-       * @example 의료
+       * @example 의료비
        */
       mainCategory?: string;
       /**
        * @description 분류된 소분류
        * @example 수술비
        */
-      subCategory?: string;
+      subCategory?: string | null;
     };
     /** @description 자동 카테고리 분류 요청 */
     CategorizeRequest: {
@@ -801,12 +1082,15 @@ export interface components {
        * @description 사용한 지출내역
        * @example 뚱이 허리 수술
        */
-      usage?: string;
+      usage: string;
       /**
        * @description 요청 id 값
        * @example 550e8400-e29b-41d4-a716-446655440000
        */
-      requestId?: string;
+      requestId: string;
+    };
+    ConnectionTokenResponse: {
+      connectionToken?: string;
     };
     /** @description 토큰 재발급 요청 */
     AuthTokenRefreshRequest: {
@@ -814,12 +1098,12 @@ export interface components {
        * @description 만료된 Access Token
        * @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
        */
-      accessToken?: string;
+      accessToken: string;
       /**
        * @description 유효한 Refresh Token
        * @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.cThIIoDvwdueQB4NgjKBAI
        */
-      refreshToken?: string;
+      refreshToken: string;
     };
     /** @description 토큰 재발급 응답 */
     AuthTokenRefreshResponse: {
@@ -845,7 +1129,7 @@ export interface components {
        * @description Google OAuth 엑세스 토큰
        * @example google access
        */
-      accessToken?: string;
+      accessToken: string;
       /**
        * @description 초대 코드 url(없을 시 null)
        * @example https://moong.site/invite/123
@@ -933,6 +1217,34 @@ export interface components {
       /** @example 2026-02 */
       birthDate?: string;
     };
+    /** @description 회원 프로필 업데이트 요청 */
+    MemberUpdateProfileRequest: {
+      /**
+       * @description 회원 프로필
+       * @example http://~~~
+       */
+      memberImageUrl: string;
+    };
+    MemberUpdateProfileResponse: {
+      /** Format: int64 */
+      memberId?: number;
+      memberName?: string;
+      memberImageUrl?: string;
+    };
+    /** @description 회원 닉네임 업데이트 요청 */
+    MemberUpdateNameRequest: {
+      /**
+       * @description 회원 닉네임
+       * @example john koo
+       */
+      memberName: string;
+    };
+    MemberUpdateNameResponse: {
+      /** Format: int64 */
+      memberId?: number;
+      memberName?: string;
+      memberImageUrl?: string;
+    };
     /** @description 저금통 목표 금액 변경 요청 */
     BankUpdateRequest: {
       /**
@@ -968,12 +1280,12 @@ export interface components {
        * @description 소비 날짜
        * @example 2026-01-20
        */
-      spentAt?: string;
+      spentAt: string;
       /**
        * @description 사용 내역
        * @example 감기약 및 처방약 구매
        */
-      usage?: string;
+      usage: string;
       /**
        * Format: int64
        * @description 소비 금액
@@ -984,7 +1296,7 @@ export interface components {
        * @description 대분류 카테고리
        * @example 병원비
        */
-      mainCategory?: string;
+      mainCategory: string;
       /**
        * @description 소분류 카테고리
        * @example 약/처방
@@ -1163,13 +1475,6 @@ export interface components {
         | "INF"
       )[];
     };
-    Member: {
-      /** Format: int64 */
-      id?: number;
-      email: string;
-      name: string;
-      imageUrl?: string;
-    };
     /** @description 회원 정보 응답 */
     MemberInfoResponse: {
       /**
@@ -1298,6 +1603,28 @@ export interface components {
     TreatmentsResponse: {
       /** @description 특정 질병의 의료비 데이터 리스트 응답 */
       treatments?: components["schemas"]["TreatmentResponse"][];
+    };
+    /** @description 모임원 정보 조회 응답 */
+    GroupCrewResponse: {
+      /**
+       * @description 요청한 사용자 이름
+       * @example 김건우
+       */
+      memberName?: string;
+      /**
+       * @description 초대 URL
+       * @example https://moong.site/invite/ABCD1234
+       */
+      inviteUrl?: string;
+      /**
+       * @description 모임원 닉네임 목록
+       * @example [
+       *       "두john쿠",
+       *       "용용이",
+       *       "헬창재민"
+       *     ]
+       */
+      crews?: string[];
     };
     BankInfoResponse: {
       /**
@@ -1467,7 +1794,14 @@ export interface components {
       expenses?: components["schemas"]["GroupExpenseDailyResponse"][];
     };
     MedicalAnalysisResponse: {
-      subCategory?: string;
+      /** @enum {string} */
+      subCategory?:
+        | "CONSULTATION"
+        | "VACCINATION"
+        | "MEDICATION"
+        | "EXAMINATION"
+        | "SURGERY_HOSPITALIZATION"
+        | "OTHER_MEDICAL";
       /** Format: int64 */
       cost?: number;
       /** Format: double */
@@ -1573,6 +1907,57 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["PetReadResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 반려동물 정보가 없을 때 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  updatePetInfo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json;charset=UTF-8": components["schemas"]["PetUpdateRequest"];
+      };
+    };
+    responses: {
+      /** @description 반려동물 정보 수정 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PetUpdateResponse"];
         };
       };
       /** @description 인증되지 않은 사용자 */
@@ -1933,7 +2318,7 @@ export interface operations {
     /** @description 결제 요청 전 검증을 위한 금액 데이터 저장 요청 */
     requestBody: {
       content: {
-        "application/json;charset=UTF-8": components["schemas"]["CoinPaymentConfirmRequest"];
+        "application/json;charset=UTF-8": components["schemas"]["CoinCreateRequest"];
       };
     };
     responses: {
@@ -2208,6 +2593,44 @@ export interface operations {
       };
     };
   };
+  issueConnectionToken: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 유효한 Connection 토큰을 발급합니다. */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ConnectionTokenResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
   refresh: {
     parameters: {
       query?: never;
@@ -2328,6 +2751,92 @@ export interface operations {
       };
     };
   };
+  updateProfile: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description 회원 프로필 업데이트 요청 */
+    requestBody: {
+      content: {
+        "application/json;charset=UTF-8": components["schemas"]["MemberUpdateProfileRequest"];
+      };
+    };
+    responses: {
+      /** @description 회원 프로필 업데이트 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["MemberUpdateProfileResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  updateName: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description 회원 닉네임 업데이트 요청 */
+    requestBody: {
+      content: {
+        "application/json;charset=UTF-8": components["schemas"]["MemberUpdateNameRequest"];
+      };
+    };
+    responses: {
+      /** @description 회원 닉네임 업데이트 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["MemberUpdateNameResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
   getMemberExpensesByPeriodV2: {
     parameters: {
       query: {
@@ -2345,7 +2854,8 @@ export interface operations {
          * @description 메인 카테고리 필터 (선택)
          * @example 사료/간식
          */
-        mainCategory?: string;
+        mainCategory?: "FOOD_AND_TREATS" | "MEDICAL_EXPENSES" | "SUPPLIES" | "GROOMING" | "OTHER";
+        lastRowId?: number;
         /** @description Zero-based page index (0..N) */
         page?: number;
         /** @description The size of the page to be returned */
@@ -2381,9 +2891,7 @@ export interface operations {
   };
   findMember: {
     parameters: {
-      query: {
-        member: components["schemas"]["Member"];
-      };
+      query?: never;
       header?: never;
       path?: never;
       cookie?: never;
@@ -2397,6 +2905,46 @@ export interface operations {
         };
         content: {
           "application/json;charset=UTF-8": components["schemas"]["MemberInfoResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  subscribe: {
+    parameters: {
+      query?: never;
+      header: {
+        Authorization: string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 연결 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "text/event-stream": unknown;
         };
       };
       /** @description 인증되지 않은 사용자 */
@@ -2545,6 +3093,56 @@ export interface operations {
         };
         content: {
           "application/json;charset=UTF-8": components["schemas"]["TreatmentsResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  getCrews: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 모임원 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["GroupCrewResponse"];
+        };
+      };
+      /**
+       * @description 다음과 같은 경우 조회가 실패합니다.
+       *             - 사용자가 그룹에 속해있지 않은 경우
+       */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
         };
       };
       /** @description 인증되지 않은 사용자 */

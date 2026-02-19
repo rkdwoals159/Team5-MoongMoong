@@ -4,7 +4,7 @@ import { parseSSE } from "@/lib/sse/parseSSE";
 import type { SSEConnectionStatus, SSEEvent, SSEProps } from "@/types/sse";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export function useSSE({ onEvent, onError, enabled }: SSEProps) {
+export function useSSE({ onEvent, onError, connectionToken }: SSEProps) {
   const [status, setStatus] = useState<SSEConnectionStatus>("closed");
   const abortRef = useRef<AbortController | null>(null);
   const lastEventIdRef = useRef<string>("");
@@ -19,15 +19,19 @@ export function useSSE({ onEvent, onError, enabled }: SSEProps) {
     onErrorRef.current = onError;
   }, [onError]);
 
-  const connect = useCallback(async () => {
+  const connect = useCallback(async (token: string) => {
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
     setStatus("connecting");
 
     try {
-      // SSE 연결 요청
-      const response = await fetch("/api/sse", {
+      const response = await fetch(process.env.NEXT_PUBLIC_SSE_URL!, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "text/event-stream",
+        },
+        cache: "no-store",
         signal: controller.signal,
       });
 
@@ -71,11 +75,11 @@ export function useSSE({ onEvent, onError, enabled }: SSEProps) {
   }, []);
 
   useEffect(() => {
-    if (enabled) connect();
+    if (connectionToken) connect(connectionToken);
     return () => {
       disconnect();
     };
-  }, [enabled, connect, disconnect]);
+  }, [connectionToken, connect, disconnect]);
 
   return { status, connect, disconnect };
 }
