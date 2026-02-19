@@ -3,7 +3,7 @@ name: Frontend Lighthouse CI
 on:
   pull_request:
     branches: [develop]
-    types: [opened, synchronize]
+    types: [opened]
     paths:
       - 'frontend/**'
 
