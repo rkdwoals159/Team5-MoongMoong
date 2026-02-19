@@ -2,14 +2,14 @@ package com.moong.repository.memberexpense;
 
 import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.enums.MainCategoryType;
+import com.moong.dto.response.memberexpense.ExpenseCategoryStatics;
+import com.moong.dto.response.memberexpense.MemberExpenseStatics;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -46,19 +46,65 @@ public interface MemberExpenseRepository
             Sort sort
     );
 
-    Slice<MemberExpense> findByMember_IdAndSpentAtBetween(
-            long memberId,
-            LocalDate startDate,
-            LocalDate endDate,
-            Pageable pageable
+    @Query("""
+            select new com.moong.dto.response.memberexpense.MemberExpenseStatics(
+                        me.member,
+                        sum(me.cost)
+                )
+            from MemberExpense me
+            where me.spentAt >= :startDate and  me.spentAt < :endDate
+            group by me.member.id
+            """)
+    List<MemberExpenseStatics> findMemberExpenseStaticsBetween(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
     );
 
-    Slice<MemberExpense> findByMember_IdAndMainCategoryAndSpentAtBetween(
-            long memberId,
-            MainCategoryType mainCategory,
-            LocalDate startDate,
-            LocalDate endDate,
-            Pageable pageable
+    @Query("""
+            select new com.moong.dto.response.memberexpense.MemberExpenseStatics(
+                        me.member,
+                        sum(me.cost)
+                )
+            from MemberExpense me
+            where me.spentAt >= :startDate and  me.spentAt < :endDate and me.member.id in :memberIds
+            group by me.member.id
+            """)
+    List<MemberExpenseStatics> findFetchedMembersExpenseStaticsBetween(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("memberIds") List<Long> memberIds
+    );
+
+    @Query("""
+            select new com.moong.dto.response.memberexpense.ExpenseCategoryStatics(
+                        me.mainCategory,
+                        sum(me.cost)
+                )
+            from MemberExpense me
+            where me.spentAt >= :startDate and  me.spentAt < :endDate
+                        and me.id in :ids
+            group by me.mainCategory
+            """)
+    List<ExpenseCategoryStatics> findMembersCategoryStatics(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("ids") List<Long> ids
+    );
+
+    @Query("""
+            select new com.moong.dto.response.memberexpense.ExpenseCategoryStatics(
+                        me.mainCategory,
+                        sum(me.cost)
+                )
+            from MemberExpense me
+            where me.spentAt >= :startDate and  me.spentAt < :endDate
+                        and me.member.id = :memberId
+            group by me.mainCategory
+            """)
+    List<ExpenseCategoryStatics> findMemberCategoryStatics(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("memberId") long memberId
     );
 
     @Query("""
@@ -86,13 +132,6 @@ public interface MemberExpenseRepository
             LocalDate startDate,
             LocalDate endDate
     );
-
-    @Query("""
-            select me
-            from MemberExpense me
-            where me.id in :ids
-            """)
-    List<MemberExpense> findAllByIds(List<Long> ids);
 
     @Query("""
                 delete from MemberExpense me

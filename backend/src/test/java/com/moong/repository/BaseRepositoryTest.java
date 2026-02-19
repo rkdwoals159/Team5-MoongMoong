@@ -9,6 +9,7 @@ import com.moong.fixture.PetGenerator;
 import com.moong.fixture.PetGroupGenerator;
 import com.moong.fixture.PetMedicalGenerator;
 import com.moong.fixture.WorriedDiseaseGenerator;
+import com.moong.repository.monthlyexpense.MonthlyGroupExpenseRepository;
 import com.moong.util.query.MemberExpenseDynamicQueryBuilder;
 import com.moong.config.JpaAuditingConfig;
 import com.moong.fixture.*;
@@ -29,6 +30,8 @@ import org.springframework.test.context.ActiveProfiles;
         GroupMedicalAdviceGenerator.class,
         PetMedicalGenerator.class,
         MemberExpenseDynamicQueryBuilder.class,
+        MonthlyGroupExpenseGenerator.class,
+        MonthlyMemberExpenseGenerator.class,
         JpaAuditingConfig.class
 })
 @ActiveProfiles("test")
@@ -60,4 +63,10 @@ public abstract class BaseRepositoryTest {
 
     @Autowired
     protected PetMedicalGenerator petMedicalGenerator;
+
+    @Autowired
+    protected MonthlyGroupExpenseGenerator monthlyGroupExpenseGenerator;
+
+    @Autowired
+    protected MonthlyMemberExpenseGenerator monthlyMemberExpenseGenerator;
 }

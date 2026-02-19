@@ -13,18 +13,19 @@ import org.apache.commons.math3.stat.regression.SimpleRegression;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RegressionUtils {
 
-    public static RegressionResponse predict(List<Integer> values) {
+    public static RegressionResponse predict(List<Long> amounts) {
         SimpleRegression regression = new SimpleRegression();
         AtomicInteger count = new AtomicInteger();
-        for (Integer value : values) {
+        for (Long value : amounts) {
             regression.addData(count.getAndIncrement(), value);
         }
         long prediction = Math.round(regression.getSlope() * count.get() + regression.getIntercept());
-        long margin = getMargin(values.size(), regression);
+        long margin = getMargin(amounts.size(), regression);
         return new RegressionResponse(
                 regression.getSlope(),
                 regression.getIntercept(),
                 regression.getR(),
+                margin,
                 prediction,
                 Math.max(prediction - margin, 0),
                 prediction + margin

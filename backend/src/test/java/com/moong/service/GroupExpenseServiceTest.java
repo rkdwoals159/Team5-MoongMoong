@@ -65,9 +65,9 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 coli
         );
 
-        groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
-        groupExpenseGenerator.generateSaved(petGroup, memberExpense2, coli.getName());
-        groupExpenseGenerator.generateSaved(petGroup, memberExpense3, coli.getName());
+        groupExpenseGenerator.generateSaved(petGroup, memberExpense1);
+        groupExpenseGenerator.generateSaved(petGroup, memberExpense2);
+        groupExpenseGenerator.generateSaved(petGroup, memberExpense3);
 
         GroupExpensesResponse response = groupExpenseService.findGroupExpensesByPeriod(
                 coli,
@@ -109,8 +109,8 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 coli
         );
 
-        GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
-        GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2, coli.getName());
+        GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1);
+        GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2);
 
         CategoryAnalysisResponse response = groupExpenseService.findCategoryAnalysisByPeriod(
                 coli,
@@ -160,8 +160,8 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(1L),
                 member
         );
-        GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1, member.getName());
-        GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2, member.getName());
+        GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1);
+        GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2);
 
         GroupExpensesDailyResponse response = groupExpenseService.findBySpentAt(
                 member,
@@ -210,8 +210,8 @@ class GroupExpenseServiceTest extends BaseServiceTest {
                 now.minusDays(1L),
                 coli
         );
-        GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
-        GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2, coli.getName());
+        GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1);
+        GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2);
 
         MedicalCategoryAnalysisResponse response = groupExpenseService.findMedicalCategoryAnalysisByPeriod(
                 coli,

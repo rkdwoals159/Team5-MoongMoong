@@ -11,25 +11,32 @@ import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.domain.enums.MainCategoryType;
-import com.moong.domain.enums.SubCategoryType;
 import com.moong.domain.memberexpense.MonthlyExpenseStats;
+import com.moong.domain.report.ExpenseCategoryRankings;
+import com.moong.domain.report.MonthlyExpenseRegressionAnalyzer;
 import com.moong.dto.command.MemberExpenseReadCommand;
 import com.moong.dto.request.memberexpense.CategorizeRequest;
 import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
 import com.moong.dto.response.categorize.AiCategorizeResponse;
 import com.moong.dto.response.categorize.CategorizeResponse;
+import com.moong.dto.response.memberexpense.ExpenseCategoryStatics;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponseV2;
+import com.moong.dto.response.regression.RegressionResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.CrewRepository;
 import com.moong.repository.groupexpense.GroupExpenseRepository;
 import com.moong.repository.memberexpense.MemberExpenseRepository;
+import com.moong.util.RegressionUtils;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -45,6 +52,8 @@ public class MemberExpenseService {
     private final MemberExpenseRepository memberExpenseRepository;
     private final CrewRepository crewRepository;
     private final GroupExpenseRepository groupExpenseRepository;
+    private final MonthlyExpenseRegressionAnalyzer expenseRegressionAnalyzer;
+    private final MonthlyExpenseRegressionAnalyzer monthlyExpenseRegressionAnalyzer;
 
     public MemberExpensesPeriodResponse getMemberExpensesByPeriod(
             Member member,
@@ -192,12 +201,36 @@ public class MemberExpenseService {
                 ).exceptionally(exception -> fallBackResponse)
                 .join();
 
-        MainCategoryType mainCategory = MainCategoryType.fromDescription(result.getResult().mainCategory());
-        SubCategoryType subCategory = SubCategoryType.fromDescription(result.getResult().subCategory());
         return new CategorizeResponse(
                 request.requestId(),
-                mainCategory,
-                subCategory
+                result.getResult().getMainCategory(),
+                result.getResult().getSubCategory()
         );
+    }
+
+    public ExpenseCategoryRankings getMemberCategoryStats(LocalDate startDate, LocalDate endDate, long memberId) {
+        List<ExpenseCategoryStatics> memberExpenseCategoryStatics = memberExpenseRepository.findMemberCategoryStatics(
+                startDate,
+                endDate,
+                memberId
+        );
+        return new ExpenseCategoryRankings(memberExpenseCategoryStatics);
+    }
+
+    public RegressionResponse predictNextMonthExpenses(Member member, LocalDate start, LocalDate end) {
+        List<Long> yearMonthCostHistory = memberExpenseRepository.findByMember_IdAndSpentAtBetween(
+                        member.getId(),
+                        start,
+                        end,
+                        Sort.unsorted()
+                )
+                .stream()
+                .collect(
+                        Collectors.groupingBy(MemberExpense::getSpentAtYearMonth,
+                        Collectors.summingLong(MemberExpense::getCost))
+                ).values()
+                .stream()
+                .toList();
+        return monthlyExpenseRegressionAnalyzer.predictByCostHistory(yearMonthCostHistory);
     }
 }

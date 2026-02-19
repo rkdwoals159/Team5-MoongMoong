@@ -25,6 +25,19 @@ invite:
   key: ${INVITE_AES_KEY}
 
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: moongmoong.dev@gmail.com
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        debug: false
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQL_SERVER_IP}:3306/moong?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
@@ -120,3 +133,8 @@ flowise:
   base-url: ${FLOWISE_URL:}
   id: ${FLOWISE_ID:}
   key: ${FLOWISE_KEY:}
+
+moong:
+  mail:
+    from: moongmoong.dev@gmail.com
+    service-name: "Moong 강아지 가계부"

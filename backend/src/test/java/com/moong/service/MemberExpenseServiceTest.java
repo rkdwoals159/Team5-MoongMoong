@@ -245,7 +245,7 @@ class MemberExpenseServiceTest extends BaseServiceTest {
         MemberExpense updateTarget = memberExpenses.get(0);
         List<MemberExpense> deleteTargets = memberExpenses.subList(1, memberExpenses.size());
         List<Long> deleteTargetIds = deleteTargets.stream().map(MemberExpense::getId).toList();
-        memberExpenses.forEach(me -> groupExpenseGenerator.generateSaved(petGroup, me, null));
+        memberExpenses.forEach(me -> groupExpenseGenerator.generateSaved(petGroup, me));
         MemberExpenseUpsertRequest newRequest = new MemberExpenseUpsertRequest(
                 true,
                 null,

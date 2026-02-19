@@ -16,7 +16,7 @@ class RegressionUtilsTest {
     @DisplayName("선형 회귀 모델을 구현할 수 있다")
     @Test
     void predictSuccess() {
-        List<Integer> values = List.of(3, 7, 11);
+        List<Long> values = List.of(3L, 7L, 11L);
 
         RegressionResponse response = RegressionUtils.predict(values);
 
@@ -30,7 +30,7 @@ class RegressionUtilsTest {
     @DisplayName("선형 회귀 모델 학습 데이터가 2개 이하일 경우 에러를 반환한다")
     @Test
     void predictFail() {
-        List<Integer> values = List.of(3, 7);
+        List<Long> values = List.of(3L, 7L);
 
         Assertions.assertThatThrownBy(() -> RegressionUtils.predict(values))
                 .isInstanceOf(BusinessException.class)

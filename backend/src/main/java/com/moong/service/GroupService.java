@@ -95,4 +95,8 @@ public class GroupService {
                 .toList();
         return new GroupCrewResponse(member, inviteCode, crews);
     }
+
+    public List<PetGroup> findAll() {
+        return petGroupRepository.findAll();
+    }
 }

@@ -1,12 +1,12 @@
 package com.moong.domain.groupexpense;
 
-import com.moong.domain.entity.GroupExpense;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.MemberExpense;
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.domain.enums.SubCategoryType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import lombok.Getter;
 
 @Getter
@@ -32,5 +32,9 @@ public class GroupExpenseDetail {
         this.subCategory = memberExpense.getSubCategory();
         this.memo = memberExpense.getMemo();
         this.modifiedAt = memberExpense.getModifiedAt();
+    }
+
+    public YearMonth getSpentAtYearMonth() {
+        return YearMonth.of(spentAt.getYear(), spentAt.getMonth());
     }
 }

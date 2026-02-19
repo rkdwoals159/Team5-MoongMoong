@@ -3,6 +3,7 @@ package com.moong.flyway;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+import com.moong.service.MailService;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -44,6 +46,9 @@ class DatabaseSchemaManagerTest {
     @Autowired
     private DataSource dataSource;
 
+    @MockitoBean
+    private MailService mailService;
+
     @DisplayName("flyway 스크립트를 모두 잘 실행한다")
     @Test
     void contextLoads() {
@@ -59,7 +64,8 @@ class DatabaseSchemaManagerTest {
             String[] expectedTables = {
                     "member", "pet", "pet_group", "bank", "crew",
                     "coin", "coin_payment", "member_expense", "group_expense",
-                    "group_medical_advice", "pet_medical", "treatment", "worried_disease"
+                    "group_medical_advice", "pet_medical", "treatment", "worried_disease",
+                    "monthly_member_expense", "monthly_group_expense",
             };
 
             for (String table : expectedTables) {

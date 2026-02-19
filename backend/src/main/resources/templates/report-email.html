@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title th:text="'[월간 소비 리포트] ' + ${reportYear} + '년 ' + ${reportMonth} + '월'">[월간 소비 리포트] 2025년 1월</title>
+</head>
+<body bgcolor="#faf3d4" style="margin:0;padding:0;background-color:#faf3d4;font-family:'Apple SD Gothic Neo','Malgun Gothic',Arial,sans-serif;">
+
+<!-- 전체 래퍼 -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#faf3d4" style="background-color:#faf3d4;">
+    <tr>
+        <td align="center" style="padding:40px 16px 56px;">
+
+            <!-- 쉘 600px -->
+            <table width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;">
+
+                <!-- 상단 황금 바 -->
+                <tr>
+                    <td height="6" bgcolor="#e6b800" style="background-color:#e6b800;height:6px;font-size:0;line-height:0;">&nbsp;</td>
+                </tr>
+
+                <!-- ───── 헤더 ───── -->
+                <tr>
+                    <td bgcolor="#ffcc01" style="background-color:#ffcc01;padding:36px 40px 32px;border-left:1px solid #f0d840;border-right:1px solid #f0d840;">
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+
+                            <!-- 로고 행 -->
+                            <tr>
+                                <td style="padding-bottom:20px;">
+                                    <table cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td width="52" height="52" bgcolor="#5c3d1e"
+                                                style="background-color:#5c3d1e;width:52px;height:52px;border-radius:50%;text-align:center;vertical-align:middle;font-size:24px;line-height:52px;">
+                                                🐶
+                                            </td>
+                                            <td style="padding-left:14px;vertical-align:middle;">
+                                                <div style="font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#5c3d1e;margin-bottom:3px;">MOONG</div>
+                                                <div style="font-size:18px;font-weight:800;color:#5c3d1e;">강아지 가계부</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- 간격 -->
+                            <tr>
+                                <td height="20" style="font-size:0;line-height:0;">&nbsp;</td>
+                            </tr>
+
+                            <!-- 인사말 -->
+                            <tr>
+                                <td style="font-size:13px;font-weight:600;color:#5c3d1e;padding-bottom:10px;"
+                                    th:text="${memberName} + '님, 안녕하세요! 🐾'">홍길동님, 안녕하세요! 🐾</td>
+                            </tr>
+
+                            <!-- 타이틀 -->
+                            <tr>
+                                <td style="padding-bottom:18px;">
+                                    <table cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td bgcolor="#5c3d1e" style="background-color:#5c3d1e;border-radius:10px;padding:5px 16px;">
+                        <span style="font-size:21px;font-weight:800;color:#ffcc01;"
+                              th:text="${reportYear} + '년 ' + ${reportMonth} + '월'">2025년 1월</span>
+                                            </td>
+                                        </tr>
+                                        <tr><td height="8" style="font-size:0;">&nbsp;</td></tr>
+                                        <tr>
+                                            <td style="font-size:21px;font-weight:800;color:#5c3d1e;">
+                                                월간 소비 리포트가 도착했어요
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- 칩 -->
+                            <tr>
+                                <td>
+                                    <table cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td bgcolor="#c9a800" style="background-color:#c9a800;border-radius:30px;padding:6px 14px;">
+                        <span style="font-size:11px;font-weight:600;color:#5c3d1e;">
+                          📅 <span th:text="${reportYear} + '.' + ${reportMonth} + '.01 발행'">2025.01.01 발행</span>
+                        </span>
+                                            </td>
+                                            <td width="8">&nbsp;</td>
+                                            <td bgcolor="#c9a800" style="background-color:#c9a800;border-radius:30px;padding:6px 14px;">
+                                                <span style="font-size:11px;font-weight:600;color:#5c3d1e;">🐕 멍멍 가계부</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- ───── 본문 ───── -->
+                <tr>
+                    <td bgcolor="#fffdf5" style="background-color:#fffdf5;padding:36px 36px 24px;border-left:1px solid #efe5b8;border-right:1px solid #efe5b8;">
+
+                        <!-- ■ 개인 섹션 헤더 -->
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-bottom:2px solid #f0e8c8;margin-bottom:20px;">
+                            <tr>
+                                <td style="padding-bottom:14px;">
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td width="34" height="34" bgcolor="#ffcc01"
+                                                style="background-color:#ffcc01;width:34px;height:34px;border-radius:10px;text-align:center;vertical-align:middle;font-size:15px;line-height:34px;">🦴</td>
+                                            <td style="padding-left:10px;font-size:16px;font-weight:800;color:#2d2416;vertical-align:middle;">개인 소비내역</td>
+                                            <td align="right" style="vertical-align:middle;">
+                                                <table cellpadding="0" cellspacing="0" border="0">
+                                                    <tr>
+                                                        <td bgcolor="#fff6c2" style="background-color:#fff6c2;border:1px solid #f0d060;border-radius:20px;padding:4px 12px;">
+                                                            <span style="font-size:10px;font-weight:700;color:#5c3d1e;letter-spacing:1px;">PERSONAL</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- 개인 스탯 카드 2열 -->
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;">
+                            <tr valign="top">
+                                <!-- 총 지출액 -->
+                                <td width="49%">
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td height="3" bgcolor="#e6b800" style="background-color:#e6b800;height:3px;font-size:0;">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td bgcolor="#ffffff" style="background-color:#ffffff;border:1px solid #f0e8c8;border-top:none;padding:18px 20px;">
+                                                <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b09e7a;margin-bottom:10px;">총 지출액</div>
+                                                <div style="font-size:22px;font-weight:800;color:#2d2416;margin-bottom:12px;"
+                                                     th:text="${#numbers.formatDecimal(personal.totalAmount, 0, 'COMMA', 0, 'POINT')} + '원'">1,240,500원</div>
+                                                <table cellpadding="0" cellspacing="0" border="0">
+                                                    <tr th:if="${personal.changeRate > 0}">
+                                                        <td bgcolor="#fff0ed" style="background-color:#fff0ed;border:1px solid #ffe0d9;border-radius:8px;padding:4px 10px;">
+                                                            <span style="font-size:11px;font-weight:700;color:#c9321a;">▲ <span th:text="${personal.changeRate} + '%'">7.4%</span> 전월 대비</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr th:if="${personal.changeRate} lt 0">
+                                                        <td bgcolor="#e6f9ef" style="background-color:#e6f9ef;border:1px solid #c8f0d8;border-radius:8px;padding:4px 10px;">
+                                                            <span style="font-size:11px;font-weight:700;color:#1f8a55;">▼ <span th:text="${personal.changeRate} + '%'">3.2%</span> 전월 대비</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr th:if="${personal.changeRate == 0}">
+                                                        <td bgcolor="#f7f2e4" style="background-color:#f7f2e4;border:1px solid #ede5c8;border-radius:8px;padding:4px 10px;">
+                                                            <span style="font-size:11px;font-weight:700;color:#b09e7a;">─ 전월 동일</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+
+                                <td width="2%">&nbsp;</td>
+
+                                <!-- 일 평균 -->
+                                <td width="49%">
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td height="3" bgcolor="#e6b800" style="background-color:#e6b800;height:3px;font-size:0;">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td bgcolor="#ffffff" style="background-color:#ffffff;border:1px solid #f0e8c8;border-top:none;padding:18px 20px;">
+                                                <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b09e7a;margin-bottom:10px;">하루 평균 소비</div>
+                                                <div style="font-size:22px;font-weight:800;color:#2d2416;margin-bottom:12px;"
+                                                     th:text="${#numbers.formatDecimal(personal.dailyAvgAmount, 0, 'COMMA', 0, 'POINT')} + '원'">40,016원</div>
+                                                <table cellpadding="0" cellspacing="0" border="0">
+                                                    <tr>
+                                                        <td bgcolor="#f7f2e4" style="background-color:#f7f2e4;border:1px solid #ede5c8;border-radius:8px;padding:4px 10px;">
+                              <span style="font-size:11px;font-weight:700;color:#b09e7a;"
+                                    th:text="'기준 ' + ${personal.daysInMonth} + '일'">기준 31일</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- 개인 예측 카드 -->
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;">
+                            <tr>
+                                <td bgcolor="#5c3d1e" style="background-color:#5c3d1e;border-radius:12px;padding:22px 24px;">
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr valign="middle">
+                                            <td>
+                                                <div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#c9a800;margin-bottom:8px;">🤖 다음 달 예측 소비 · 회귀 분석</div>
+                                                <div style="font-size:24px;font-weight:800;color:#ffcc01;line-height:1.2;margin-bottom:4px;"
+                                                     th:text="${#numbers.formatDecimal(personal.predictedAmount, 0, 'COMMA', 0, 'POINT')} + '원'">1,318,000원</div>
+                                                <div style="font-size:12px;color:#c9a800;"
+                                                     th:text="'± ' + ${#numbers.formatDecimal(personal.predictMargin, 0, 'COMMA', 0, 'POINT')} + '원'">± 65,000원</div>
+                                            </td>
+                                            <td align="right" style="padding-left:20px;white-space:nowrap;">
+                                                <div style="font-size:9px;font-weight:600;color:#a08060;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;">선형 회귀 분석</div>
+                                                <div style="font-size:11px;color:#c0a880;"
+                                                     th:text="${#numbers.formatDecimal(personal.predictMin, 0, 'COMMA', 0, 'POINT')} + ' ~'">1,253,000 ~</div>
+                                                <div style="font-size:11px;color:#c0a880;"
+                                                     th:text="${#numbers.formatDecimal(personal.predictMax, 0, 'COMMA', 0, 'POINT')} + '원'">1,383,000원</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- 개인 카테고리 TOP3 -->
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;">
+                            <tr>
+                                <td bgcolor="#ffffff" style="background-color:#ffffff;border:1px solid #f0e8c8;border-radius:12px;padding:20px 22px;">
+                                    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b09e7a;margin-bottom:18px;">🏆 가장 많이 쓴 카테고리 TOP 3</div>
+
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0"
+                                           th:each="cat, iterStat : ${personal.topCategories}" th:if="${iterStat.index < 3}"
+                                           style="margin-bottom:14px;">
+                                        <tr>
+                                            <td>
+                                                <!-- 카테고리명 + 퍼센트 -->
+                                                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:7px;">
+                                                    <tr valign="middle">
+                                                        <td>
+                                                            <table cellpadding="0" cellspacing="0" border="0">
+                                                                <tr>
+                                                                    <td th:if="${iterStat.count == 1}" width="24" height="24" bgcolor="#ffcc01"
+                                                                        style="background-color:#ffcc01;width:24px;height:24px;border-radius:50%;text-align:center;vertical-align:middle;font-size:11px;font-weight:800;color:#5c3d1e;line-height:24px;"
+                                                                        th:text="${iterStat.count}">1</td>
+                                                                    <td th:if="${iterStat.count == 2}" width="24" height="24" bgcolor="#f0dfa0"
+                                                                        style="background-color:#f0dfa0;width:24px;height:24px;border-radius:50%;text-align:center;vertical-align:middle;font-size:11px;font-weight:800;color:#7a6020;line-height:24px;"
+                                                                        th:text="${iterStat.count}">2</td>
+                                                                    <td th:if="${iterStat.count == 3}" width="24" height="24" bgcolor="#f5e8c8"
+                                                                        style="background-color:#f5e8c8;width:24px;height:24px;border-radius:50%;text-align:center;vertical-align:middle;font-size:11px;font-weight:800;color:#9a7040;line-height:24px;"
+                                                                        th:text="${iterStat.count}">3</td>
+                                                                    <td style="padding-left:8px;font-size:13px;font-weight:700;color:#5a4a35;"
+                                                                        th:text="${cat.category}">식비</td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                        <td align="right" style="font-size:14px;font-weight:800;color:#2d2416;"
+                                                            th:text="${cat.ratio} + '%'">38.2%</td>
+                                                    </tr>
+                                                </table>
+                                                <!-- 바 -->
+                                                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                    <tr>
+                                                        <td height="8" bgcolor="#f5f0e0" style="background-color:#f5f0e0;border-radius:99px;height:8px;line-height:8px;">
+                                                            <table cellpadding="0" cellspacing="0" border="0" th:style="'width:' + ${cat.ratio} + '%;height:8px;'">
+                                                                <tr>
+                                                                    <td th:if="${iterStat.count == 1}" height="8" bgcolor="#e6b800" style="background-color:#e6b800;height:8px;border-radius:99px;font-size:0;line-height:8px;">&nbsp;</td>
+                                                                    <td th:if="${iterStat.count == 2}" height="8" bgcolor="#ecc440" style="background-color:#ecc440;height:8px;border-radius:99px;font-size:0;line-height:8px;">&nbsp;</td>
+                                                                    <td th:if="${iterStat.count == 3}" height="8" bgcolor="#f0d870" style="background-color:#f0d870;height:8px;border-radius:99px;font-size:0;line-height:8px;">&nbsp;</td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <div style="font-size:11px;color:#b09e7a;margin-top:5px;"
+                                                     th:text="${#numbers.formatDecimal(cat.amount, 0, 'COMMA', 0, 'POINT')} + '원'">474,000원</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- 구분선 -->
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:28px 0;">
+                            <tr>
+                                <td height="2" bgcolor="#efe0a0" style="background-color:#efe0a0;height:2px;font-size:0;line-height:0;">&nbsp;</td>
+                            </tr>
+                        </table>
+
+                        <!-- ■ 그룹 섹션 헤더 -->
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-bottom:2px solid #f0e8c8;margin-bottom:20px;">
+                            <tr>
+                                <td style="padding-bottom:14px;">
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td width="34" height="34" bgcolor="#ffe4a0"
+                                                style="background-color:#ffe4a0;width:34px;height:34px;border-radius:10px;text-align:center;vertical-align:middle;font-size:15px;line-height:34px;">🏠</td>
+                                            <td style="padding-left:10px;font-size:16px;font-weight:800;color:#2d2416;vertical-align:middle;">우리 가족 소비 내역</td>
+                                            <td align="right" style="vertical-align:middle;">
+                                                <table cellpadding="0" cellspacing="0" border="0">
+                                                    <tr>
+                                                        <td bgcolor="#fff0cc" style="background-color:#fff0cc;border:1px solid #f5d070;border-radius:20px;padding:4px 12px;">
+                                                            <span style="font-size:10px;font-weight:700;color:#7a5230;letter-spacing:1px;">GROUP</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- 그룹 스탯 카드 2열 -->
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;">
+                            <tr valign="top">
+                                <td width="49%">
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td height="3" bgcolor="#e6b800" style="background-color:#e6b800;height:3px;font-size:0;">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td bgcolor="#ffffff" style="background-color:#ffffff;border:1px solid #f0e8c8;border-top:none;padding:18px 20px;">
+                                                <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b09e7a;margin-bottom:10px;">그룹 총 지출액</div>
+                                                <div style="font-size:22px;font-weight:800;color:#2d2416;"
+                                                     th:text="${#numbers.formatDecimal(group.totalAmount, 0, 'COMMA', 0, 'POINT')} + '원'">3,780,000원</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td width="2%">&nbsp;</td>
+                                <td width="49%">
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td height="3" bgcolor="#e6b800" style="background-color:#e6b800;height:3px;font-size:0;">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td bgcolor="#ffffff" style="background-color:#ffffff;border:1px solid #f0e8c8;border-top:none;padding:18px 20px;">
+                                                <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b09e7a;margin-bottom:10px;">그룹 일 평균 소비</div>
+                                                <div style="font-size:22px;font-weight:800;color:#2d2416;"
+                                                     th:text="${#numbers.formatDecimal(group.dailyAvgAmount, 0, 'COMMA', 0, 'POINT')} + '원'">121,935원</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- 그룹 예측 카드 -->
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;">
+                            <tr>
+                                <td bgcolor="#7a5230" style="background-color:#7a5230;border-radius:12px;padding:22px 24px;">
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr valign="middle">
+                                            <td>
+                                                <div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#c9a800;margin-bottom:8px;">🤖 그룹 다음 달 예측 소비 · 회귀 분석</div>
+                                                <div style="font-size:24px;font-weight:800;color:#ffcc01;line-height:1.2;margin-bottom:4px;"
+                                                     th:text="${#numbers.formatDecimal(group.predictedAmount, 0, 'COMMA', 0, 'POINT')} + '원'">3,950,000원</div>
+                                                <div style="font-size:12px;color:#c9a800;"
+                                                     th:text="'± ' + ${#numbers.formatDecimal(group.predictMargin, 0, 'COMMA', 0, 'POINT')} + '원'">± 180,000원</div>
+                                            </td>
+                                            <td align="right" style="padding-left:20px;white-space:nowrap;">
+                                                <div style="font-size:9px;font-weight:600;color:#b09070;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;">선형 회귀 분석</div>
+                                                <div style="font-size:11px;color:#c0a880;"
+                                                     th:text="${#numbers.formatDecimal(group.predictMin, 0, 'COMMA', 0, 'POINT')} + ' ~'">3,770,000 ~</div>
+                                                <div style="font-size:11px;color:#c0a880;"
+                                                     th:text="${#numbers.formatDecimal(group.predictMax, 0, 'COMMA', 0, 'POINT')} + '원'">4,130,000원</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- 그룹원별 소비 비율 -->
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;">
+                            <tr>
+                                <td bgcolor="#ffffff" style="background-color:#ffffff;border:1px solid #f0e8c8;border-radius:12px;padding:20px 22px;">
+                                    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b09e7a;margin-bottom:14px;">🐾 그룹원별 소비 비율</div>
+
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0"
+                                           th:each="member : ${group.members}" style="margin-bottom:10px;">
+                                        <tr>
+                                            <td bgcolor="#fffbe8" style="background-color:#fffbe8;border:1px solid #f0e4a0;border-radius:10px;padding:12px 14px;">
+                                                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                    <tr valign="middle">
+                                                        <!-- 아바타 -->
+                                                        <td width="40">
+                                                            <table cellpadding="0" cellspacing="0" border="0">
+                                                                <tr>
+                                                                    <td width="40" height="40" bgcolor="#e6b800"
+                                                                        style="background-color:#e6b800;width:40px;height:40px;border-radius:50%;text-align:center;vertical-align:middle;font-size:15px;font-weight:800;color:#5c3d1e;border:2px solid #c9a800;line-height:40px;"
+                                                                        th:text="${member.name.substring(0,1)}">홍</td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                        <!-- 이름 + 바 -->
+                                                        <td style="padding-left:12px;">
+                                                            <div style="font-size:13px;font-weight:700;color:#2d2416;margin-bottom:6px;"
+                                                                 th:text="${member.name}">홍길동</div>
+                                                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                                <tr>
+                                                                    <td height="6" bgcolor="#f0e4a0" style="background-color:#f0e4a0;border-radius:99px;height:6px;line-height:6px;">
+                                                                        <table cellpadding="0" cellspacing="0" border="0" th:style="'width:' + ${member.ratio} + '%;height:6px;'">
+                                                                            <tr>
+                                                                                <td height="6" bgcolor="#5c3d1e" style="background-color:#5c3d1e;height:6px;border-radius:99px;font-size:0;line-height:6px;">&nbsp;</td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                        <!-- 금액 -->
+                                                        <td align="right" style="padding-left:12px;white-space:nowrap;">
+                                                            <div style="font-size:13px;font-weight:800;color:#2d2416;"
+                                                                 th:text="${#numbers.formatDecimal(member.amount, 0, 'COMMA', 0, 'POINT')} + '원'">1,240,500원</div>
+                                                            <div style="font-size:11px;font-weight:600;color:#b09e7a;margin-top:2px;"
+                                                                 th:text="${member.ratio} + '%'">32.8%</div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- 그룹 카테고리 TOP3 -->
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;">
+                            <tr>
+                                <td bgcolor="#ffffff" style="background-color:#ffffff;border:1px solid #f0e8c8;border-radius:12px;padding:20px 22px;">
+                                    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b09e7a;margin-bottom:18px;">🏆 그룹 가장 많이 쓴 카테고리 TOP 3</div>
+
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0"
+                                           th:each="cat, iterStat : ${group.topCategories}" th:if="${iterStat.index < 3}"
+                                           style="margin-bottom:14px;">
+                                        <tr>
+                                            <td>
+                                                <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:7px;">
+                                                    <tr valign="middle">
+                                                        <td>
+                                                            <table cellpadding="0" cellspacing="0" border="0">
+                                                                <tr>
+                                                                    <td th:if="${iterStat.count == 1}" width="24" height="24" bgcolor="#ffcc01"
+                                                                        style="background-color:#ffcc01;width:24px;height:24px;border-radius:50%;text-align:center;vertical-align:middle;font-size:11px;font-weight:800;color:#5c3d1e;line-height:24px;"
+                                                                        th:text="${iterStat.count}">1</td>
+                                                                    <td th:if="${iterStat.count == 2}" width="24" height="24" bgcolor="#f0dfa0"
+                                                                        style="background-color:#f0dfa0;width:24px;height:24px;border-radius:50%;text-align:center;vertical-align:middle;font-size:11px;font-weight:800;color:#7a6020;line-height:24px;"
+                                                                        th:text="${iterStat.count}">2</td>
+                                                                    <td th:if="${iterStat.count == 3}" width="24" height="24" bgcolor="#f5e8c8"
+                                                                        style="background-color:#f5e8c8;width:24px;height:24px;border-radius:50%;text-align:center;vertical-align:middle;font-size:11px;font-weight:800;color:#9a7040;line-height:24px;"
+                                                                        th:text="${iterStat.count}">3</td>
+                                                                    <td style="padding-left:8px;font-size:13px;font-weight:700;color:#5a4a35;"
+                                                                        th:text="${cat.category}">식비</td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                        <td align="right" style="font-size:14px;font-weight:800;color:#2d2416;"
+                                                            th:text="${cat.ratio} + '%'">41.0%</td>
+                                                    </tr>
+                                                </table>
+                                                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                    <tr>
+                                                        <td height="8" bgcolor="#f5f0e0" style="background-color:#f5f0e0;border-radius:99px;height:8px;line-height:8px;">
+                                                            <table cellpadding="0" cellspacing="0" border="0" th:style="'width:' + ${cat.ratio} + '%;height:8px;'">
+                                                                <tr>
+                                                                    <td th:if="${iterStat.count == 1}" height="8" bgcolor="#5c3d1e" style="background-color:#5c3d1e;height:8px;border-radius:99px;font-size:0;line-height:8px;">&nbsp;</td>
+                                                                    <td th:if="${iterStat.count == 2}" height="8" bgcolor="#7a5230" style="background-color:#7a5230;height:8px;border-radius:99px;font-size:0;line-height:8px;">&nbsp;</td>
+                                                                    <td th:if="${iterStat.count == 3}" height="8" bgcolor="#a0714f" style="background-color:#a0714f;height:8px;border-radius:99px;font-size:0;line-height:8px;">&nbsp;</td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <div style="font-size:11px;color:#b09e7a;margin-top:5px;"
+                                                     th:text="${#numbers.formatDecimal(cat.amount, 0, 'COMMA', 0, 'POINT')} + '원'">1,549,800원</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- CTA -->
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:28px 0 16px;">
+                            <tr>
+                                <td bgcolor="#fff8d6" style="background-color:#fff8d6;border:2px solid #f0d440;border-radius:16px;padding:28px 32px;text-align:center;">
+                                    <div style="font-size:14px;color:#5c3d1e;line-height:1.8;margin-bottom:20px;">
+                                        더 자세한 소비 분석, 예산 설정,<br/>카테고리 상세 내역은 홈페이지에서 확인하세요 🐾
+                                    </div>
+                                    <table cellpadding="0" cellspacing="0" border="0" align="center">
+                                        <tr>
+                                            <td bgcolor="#5c3d1e" style="background-color:#5c3d1e;border-radius:50px;padding:14px 40px;">
+                                                <a href="https://moongmoong.site"
+                                                   style="font-size:15px;font-weight:800;color:#ffcc01;text-decoration:none;display:block;white-space:nowrap;">
+                                                    🏠 홈페이지 바로가기
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </td>
+                </tr>
+
+                <!-- ───── 푸터 ───── -->
+                <tr>
+                    <td bgcolor="#5c3d1e" style="background-color:#5c3d1e;padding:30px 40px;text-align:center;border-left:1px solid #4a3018;border-right:1px solid #4a3018;">
+                        <div style="font-size:20px;letter-spacing:6px;margin-bottom:12px;">🐾 🐾 🐾</div>
+                        <div style="font-size:16px;font-weight:800;color:#ffcc01;margin-bottom:12px;"
+                             th:text="${serviceName}">Moong 강아지 가계부</div>
+                        <div style="font-size:12px;color:#c9a800;line-height:1.8;">
+                            본 메일은 발신 전용이며 회신이 불가합니다.<br/>
+                            <span th:text="${memberEmail}">example@email.com</span> 계정으로 발송되었습니다.
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- 하단 황금 바 -->
+                <tr>
+                    <td height="6" bgcolor="#e6b800" style="background-color:#e6b800;height:6px;font-size:0;line-height:0;">&nbsp;</td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

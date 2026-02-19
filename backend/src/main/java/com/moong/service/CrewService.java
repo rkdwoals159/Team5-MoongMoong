@@ -1,7 +1,9 @@
 package com.moong.service;
 
 import com.moong.domain.entity.Crew;
+import com.moong.domain.entity.Member;
 import com.moong.repository.CrewRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +19,12 @@ public class CrewService {
 
     public boolean existsByMemberId(long memberId) {
         return crewRepository.existsByMember_Id(memberId);
+    }
+
+    public List<Member> findAllMemberByGroupId(long groupId) {
+        return crewRepository.findAllByPetGroup_IdWithFetchedMember(groupId)
+                .stream()
+                .map(Crew::getMember)
+                .toList();
     }
 }

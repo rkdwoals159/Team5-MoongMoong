@@ -47,7 +47,7 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 coli
         );
 
-        groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
+        groupExpenseGenerator.generateSaved(petGroup, memberExpense1);
 
         Sort expenseSort = Sort.by(
                 Sort.Order.desc(GroupExpense.MEMBER_EXPENSE_FILED_NAME + "." + MemberExpense.SPENT_AT_COLUMN_NAME),
@@ -98,7 +98,7 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 coli
         );
 
-        groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
+        groupExpenseGenerator.generateSaved(petGroup, memberExpense1);
 
         Sort expenseSort = Sort.by(
                 Sort.Order.desc(GroupExpense.MEMBER_EXPENSE_FILED_NAME + "." + MemberExpense.SPENT_AT_COLUMN_NAME),
@@ -170,9 +170,9 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 coli
         );
 
-        GroupExpense expense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
-        GroupExpense expense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2, coli.getName());
-        GroupExpense expense3 = groupExpenseGenerator.generateSaved(petGroup, memberExpense3, coli.getName());
+        GroupExpense expense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1);
+        GroupExpense expense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2);
+        GroupExpense expense3 = groupExpenseGenerator.generateSaved(petGroup, memberExpense3);
         Sort expenseSort = Sort.by(
                 Sort.Order.desc(GroupExpense.MEMBER_EXPENSE_FILED_NAME + "." + MemberExpense.SPENT_AT_COLUMN_NAME),
                 Sort.Order.desc(GroupExpense.MEMBER_EXPENSE_FILED_NAME + "." + MemberExpense.MODIFIED_AT_COLUMN_NAME)
@@ -234,8 +234,8 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
                 coli
         );
 
-        GroupExpense expense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
-        GroupExpense expense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2, coli.getName());
+        GroupExpense expense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1);
+        GroupExpense expense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2);
         Sort expenseSort = Sort.by(
                 Sort.Order.desc(GroupExpense.MEMBER_EXPENSE_FILED_NAME + "." + MemberExpense.SPENT_AT_COLUMN_NAME),
                 Sort.Order.desc(GroupExpense.MEMBER_EXPENSE_FILED_NAME + "." + MemberExpense.MODIFIED_AT_COLUMN_NAME)
@@ -299,9 +299,9 @@ class GroupExpenseRepositoryTest extends BaseRepositoryTest {
         List<Long> ids = memberExpenses.stream()
                 .map(MemberExpense::getId)
                 .toList();
-        groupExpenseGenerator.generateSaved(petGroup, memberExpense1, null);
-        groupExpenseGenerator.generateSaved(petGroup, memberExpense2, null);
-        groupExpenseGenerator.generateSaved(petGroup, memberExpense3, null);
+        groupExpenseGenerator.generateSaved(petGroup, memberExpense1);
+        groupExpenseGenerator.generateSaved(petGroup, memberExpense2);
+        groupExpenseGenerator.generateSaved(petGroup, memberExpense3);
 
         groupExpenseRepository.deleteByGroupIdAndMemberExpenseIds(petGroup.getId(), ids);
 

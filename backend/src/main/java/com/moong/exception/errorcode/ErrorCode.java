@@ -46,6 +46,8 @@ public enum ErrorCode {
     EXPIRED_TOKEN(401, "토큰 기한이 만료되었습니다"),
 
     //404
+    MONTHLY_GROUP_EXPENSE_NOT_FOUND(404, "월별 그룹 소비내역을 찾을 수 없습니다."),
+    MONTHLY_MEMBER_EXPENSE_NOT_FOUND(404, "월별 회원 소비내역을 찾을 수 없습니다."),
     MEMBER_NOT_FOUND(404, "해당하는 회원을 찾을 수 없습니다."),
     CREW_NOT_FOUND(404, "해당하는 크루를 찾을 수 없습니다."),
     PET_GROUP_NOT_FOUND(404, "해당하는 펫 그룹을 찾을 수 없습니다."),

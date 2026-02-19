@@ -63,9 +63,9 @@ class GroupExpenseControllerTest extends BaseControllerTest {
                 coli
         );
 
-        groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
-        groupExpenseGenerator.generateSaved(petGroup, memberExpense2, coli.getName());
-        groupExpenseGenerator.generateSaved(petGroup, memberExpense3, coli.getName());
+        groupExpenseGenerator.generateSaved(petGroup, memberExpense1);
+        groupExpenseGenerator.generateSaved(petGroup, memberExpense2);
+        groupExpenseGenerator.generateSaved(petGroup, memberExpense3);
 
         GroupExpensesResponse response = given().log().all()
                 .contentType(ContentType.JSON)
@@ -116,8 +116,8 @@ class GroupExpenseControllerTest extends BaseControllerTest {
                 coli
         );
 
-        GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
-        GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2, coli.getName());
+        GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1);
+        GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2);
 
         CategoryAnalysisResponse response = given().log().all()
                 .contentType(ContentType.JSON)
@@ -174,8 +174,8 @@ class GroupExpenseControllerTest extends BaseControllerTest {
                 now.minusDays(1L),
                 coli
         );
-        GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1, coli.getName());
-        GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2, coli.getName());
+        GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1);
+        GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2);
 
         MedicalCategoryAnalysisResponse response = given().log().all()
                 .contentType(ContentType.JSON)
@@ -231,8 +231,8 @@ class GroupExpenseControllerTest extends BaseControllerTest {
                 now.minusDays(1L),
                 member
         );
-        GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1, member.getName());
-        GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2, member.getName());
+        GroupExpense groupExpense1 = groupExpenseGenerator.generateSaved(petGroup, memberExpense1);
+        GroupExpense groupExpense2 = groupExpenseGenerator.generateSaved(petGroup, memberExpense2);
 
         GroupExpensesDailyResponse response = given().log().all()
                 .contentType(ContentType.JSON)

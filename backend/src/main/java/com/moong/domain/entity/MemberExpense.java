@@ -20,6 +20,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -103,5 +104,9 @@ public class MemberExpense {
             return this.subCategory.name();
         }
         return null;
+    }
+
+    public YearMonth getSpentAtYearMonth() {
+        return YearMonth.of(spentAt.getYear(), spentAt.getMonthValue());
     }
 }

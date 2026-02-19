@@ -17,8 +17,7 @@ public class GroupExpenseGenerator {
 
     public GroupExpense generateSaved(
             PetGroup petGroup,
-            MemberExpense memberExpense,
-            String name
+            MemberExpense memberExpense
     ) {
         GroupExpense expense = new GroupExpense(
                 null,

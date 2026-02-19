@@ -79,6 +79,12 @@ public abstract class BaseServiceTest {
     protected CoinGenerator coinGenerator;
 
     @Autowired
+    protected MonthlyMemberExpenseGenerator monthlyMemberExpenseGenerator;
+
+    @Autowired
+    protected MonthlyGroupExpenseGenerator monthlyGroupExpenseGenerator;
+
+    @Autowired
     protected CoinPaymentGenerator coinPaymentGenerator;
 
     @MockitoBean
