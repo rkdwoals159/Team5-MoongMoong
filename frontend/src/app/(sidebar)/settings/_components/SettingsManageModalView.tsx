@@ -1,18 +1,19 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import ExpandIcon from "@/assets/icons/family/ic_expand.svg";
 import SettingsTabs from "./SettingsTabs";
 import AccountSettingsSection from "./AccountSettingsSection";
 import DogSettingsSection from "./DogSettingsSection";
-import { accountSettingsMock } from "@/app/(sidebar)/settings/_mock/accountSettingsMock";
-import { dogSettingsMock } from "@/app/(sidebar)/settings/_mock/dogSettingsMock";
-import type { SettingsTab } from "@/app/(sidebar)/settings/types";
+import type { SettingsManageModalViewProps } from "@/app/(sidebar)/settings/types";
 
-export default function SettingsManageModalView() {
-  const searchParams = useSearchParams();
-  const currentTabParam = searchParams.get("tab");
-  const currentTab: SettingsTab = currentTabParam === "dog" ? "dog" : "account";
+export default function SettingsManageModalView({
+  currentTab,
+  account,
+  dog,
+}: SettingsManageModalViewProps) {
+  const router = useRouter();
+  const handleClose = () => router.back();
 
   return (
     <div className={cardClasses}>
@@ -36,23 +37,13 @@ export default function SettingsManageModalView() {
               <ExpandIcon className="size-5" aria-hidden="true" />
             </a>
           </div>
-          {renderContent(currentTab)}
+          {currentTab === "account"
+            ? account && <AccountSettingsSection account={account} onClose={handleClose} />
+            : dog && <DogSettingsSection dog={dog} onClose={handleClose} />}
         </div>
       </div>
     </div>
   );
-}
-
-// 내장 함수
-function renderContent(currentTab: SettingsTab) {
-  switch (currentTab) {
-    case "account":
-      return <AccountSettingsSection account={accountSettingsMock} />;
-    case "dog":
-      return <DogSettingsSection dog={dogSettingsMock} />;
-    default:
-      return null;
-  }
 }
 
 const cardClasses =

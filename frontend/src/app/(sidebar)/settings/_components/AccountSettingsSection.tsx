@@ -3,9 +3,11 @@
 import Button from "@/components/common/Button/Button";
 import type { AccountSettingsSectionProps } from "@/app/(sidebar)/settings/types";
 import TextInput from "@/components/common/Input/TextInput";
+import useAccountSettingsForm from "@/app/(sidebar)/settings/_hooks/useAccountSettingsForm";
 
-export default function AccountSettingsSection({ account }: AccountSettingsSectionProps) {
-  const { email, nickname } = account;
+export default function AccountSettingsSection({ account, onClose }: AccountSettingsSectionProps) {
+  const { nickname, email, isSaveDisabled, handleNicknameChange, handleSaveClick } =
+    useAccountSettingsForm(account);
 
   return (
     <section
@@ -23,7 +25,7 @@ export default function AccountSettingsSection({ account }: AccountSettingsSecti
             <span className="typo-caption-s-bold text-gray-500">사용자 닉네임</span>
             <TextInput
               value={nickname}
-              onChange={() => {}}
+              onChange={handleNicknameChange}
               placeholder="닉네임을 입력해주세요"
               showCounter={true}
               maxLength={10}
@@ -33,15 +35,17 @@ export default function AccountSettingsSection({ account }: AccountSettingsSecti
       </div>
 
       <div className="mt-600 flex w-[32rem] gap-200">
-        <Button variant="secondary" size="medium" fullWidth={true} onClick={() => {}}>
-          닫기
-        </Button>
+        {onClose && (
+          <Button variant="secondary" size="medium" fullWidth={true} onClick={onClose}>
+            닫기
+          </Button>
+        )}
         <Button
           variant="primary"
           size="medium"
           fullWidth={true}
-          onClick={() => {}}
-          isDisabled={true}
+          onClick={handleSaveClick}
+          isDisabled={isSaveDisabled}
         >
           저장하기
         </Button>

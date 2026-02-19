@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/components/common/Button/Button";
 import TextInput from "@/components/common/Input/TextInput";
 import Dropdown from "@/components/ui/Dropdown/Dropdown";
 import SelectChip from "@/components/common/SelectChip/SelectChip";
@@ -10,29 +11,25 @@ import {
   CITY_OPTIONS,
   CITY_DISTRICT_OPTIONS,
 } from "@/app/(sidebar)/settings/constants";
+import useDogSettingsForm from "@/app/(sidebar)/settings/_hooks/useDogSettingsForm";
 
-export default function DogSettingsSection({ dog }: DogSettingsSectionProps) {
-  const { petName, breed, gender, birthDate, district, diseases = [] } = dog;
-
-  function handlePetNameChange() {
-    // TODO: 강아지 이름 변경 핸들러 (추후 상태 연동)
-  }
-
-  function handleBreedChange() {
-    // TODO: 견종 변경 핸들러 (추후 상태 연동)
-  }
-
-  function handleDistrictChange() {
-    // TODO: 구 Dropdown 변경 핸들러 (추후 상태 연동)
-  }
-
-  function handleGenderSelect() {
-    // TODO: 성별 선택 핸들러 (추후 상태 연동)
-  }
-
-  function handleDiseaseSelect() {
-    // TODO: 질병 선택 핸들러 (추후 상태 연동)
-  }
+export default function DogSettingsSection({ dog, onClose }: DogSettingsSectionProps) {
+  const {
+    petName,
+    breed,
+    gender,
+    birthDate,
+    district,
+    diseases,
+    isSaveDisabled,
+    handlePetNameChange,
+    handleBreedChange,
+    handleGenderSelect,
+    handleBirthDateChange,
+    handleDistrictChange,
+    handleDiseaseSelect,
+    handleSaveClick,
+  } = useDogSettingsForm(dog);
 
   return (
     <section
@@ -65,12 +62,13 @@ export default function DogSettingsSection({ dog }: DogSettingsSectionProps) {
           </div>
         </FieldWrapper>
 
-        <FieldWrapper label="생년월일">
+        <FieldWrapper label="생년월">
           <TextInput
             value={birthDate}
-            maxLength={10}
+            maxLength={7}
             showCounter={false}
-            placeholder="YYYY-MM-DD"
+            placeholder="YYYY-MM"
+            onChange={handleBirthDateChange}
           />
         </FieldWrapper>
 
@@ -95,12 +93,29 @@ export default function DogSettingsSection({ dog }: DogSettingsSectionProps) {
               <SelectChip
                 key={diseaseCode}
                 label={DISEASE_CODE_SHORT_NAMES[diseaseCode]}
+                code={diseaseCode}
                 onSelect={handleDiseaseSelect}
                 className={diseases.includes(diseaseCode) ? selectedChipClasses : ""}
               />
             ))}
           </div>
         </FieldWrapper>
+      </div>
+      <div className="mt-600 flex w-[32rem] gap-200">
+        {onClose && (
+          <Button variant="secondary" size="medium" fullWidth={true} onClick={onClose}>
+            닫기
+          </Button>
+        )}
+        <Button
+          variant="primary"
+          size="medium"
+          fullWidth={true}
+          onClick={handleSaveClick}
+          isDisabled={isSaveDisabled}
+        >
+          저장하기
+        </Button>
       </div>
     </section>
   );

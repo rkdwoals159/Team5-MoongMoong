@@ -298,6 +298,26 @@ export interface paths {
     patch: operations["updateName"];
     trace?: never;
   };
+  "/report": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 월간 레포트 발송
+     * @description 즉석 월간 레포트 발송
+     */
+    get: operations["sendThisMonthReport"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v2/expenses": {
     parameters: {
       query?: never;
@@ -673,6 +693,12 @@ export interface components {
         | "INF"
       )[];
     };
+    ErrorResponse: {
+      code?: string;
+      /** Format: int32 */
+      status?: number;
+      message?: string;
+    };
     /** @description 반려동물 수정 응답 */
     PetUpdateResponse: {
       /**
@@ -759,11 +785,82 @@ export interface components {
         | "INF"
       )[];
     };
-    ErrorResponse: {
-      code?: string;
-      /** Format: int32 */
-      status?: number;
-      message?: string;
+    /** @description 반려동물 생성 요청 */
+    PetCreateRequest: {
+      /**
+       * @description 반려동물 이름
+       * @example 초코
+       */
+      petName: string;
+      /**
+       * @description 반려동물 종류
+       * @example DAS
+       * @enum {string}
+       */
+      breed:
+        | "GRE"
+        | "DAL"
+        | "DAS"
+        | "DOB"
+        | "GOL"
+        | "LAB"
+        | "MAL"
+        | "BUL"
+        | "BEA"
+        | "BIC"
+        | "SHE"
+        | "SCH"
+        | "MIL"
+        | "MIS"
+        | "HUS"
+        | "HOU"
+        | "GER"
+        | "JIN"
+        | "CHS"
+        | "CHL"
+        | "COC"
+        | "TER"
+        | "POM"
+        | "POO"
+        | "SHI"
+        | "WEL"
+        | "ETC";
+      /**
+       * @description 성별
+       * @example M
+       * @enum {string}
+       */
+      gender: "M" | "F";
+      /** @example 2026-02 */
+      birthDate: string;
+      /**
+       * @description 거주 시
+       * @example 서울시
+       */
+      city: string;
+      /**
+       * @description 거주 구역
+       * @example 종로구
+       */
+      district: string;
+      /**
+       * @description 우려하는 질병 목록
+       * @example OCU, MUS
+       */
+      diseases: (
+        | "DER"
+        | "MUS"
+        | "NEU"
+        | "OCU"
+        | "RES"
+        | "CAR"
+        | "HEM"
+        | "GAS"
+        | "URI"
+        | "REP"
+        | "END"
+        | "INF"
+      )[];
     };
     /** @description 반려동물 생성 요청 */
     PetCreateRequest: {
@@ -1483,6 +1580,11 @@ export interface components {
        */
       memberName?: string;
       /**
+       * @description 회원 이메일
+       * @example kkwoo001021@naver.com
+       */
+      memberEmail?: string;
+      /**
        * @description 회원 프로필 이미지 url
        * @example S3 image Url
        */
@@ -1907,6 +2009,57 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["PetReadResponse"];
+        };
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 반려동물 정보가 없을 때 */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  updatePetInfo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json;charset=UTF-8": components["schemas"]["PetUpdateRequest"];
+      };
+    };
+    responses: {
+      /** @description 반려동물 정보 수정 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PetUpdateResponse"];
         };
       };
       /** @description 인증되지 않은 사용자 */
@@ -2837,6 +2990,42 @@ export interface operations {
       };
     };
   };
+  sendThisMonthReport: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 발송 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
   getMemberExpensesByPeriodV2: {
     parameters: {
       query: {
@@ -2854,7 +3043,7 @@ export interface operations {
          * @description 메인 카테고리 필터 (선택)
          * @example 사료/간식
          */
-        mainCategory?: "FOOD_AND_TREATS" | "MEDICAL_EXPENSES" | "SUPPLIES" | "GROOMING" | "OTHER";
+        mainCategory?: string;
         lastRowId?: number;
         /** @description Zero-based page index (0..N) */
         page?: number;
