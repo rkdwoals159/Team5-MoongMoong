@@ -30,13 +30,20 @@ export async function proxy(request: NextRequest) {
   if (isValid) {
     return NextResponse.next();
   }
-
   return redirectToRefresh(request, returnTo);
 }
 
 export const config = {
   matcher: [
-    "/((?!api/auth|login|assets|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.json|.*\\..*).*)",
+    {
+      source:
+        "/((?!api/auth|login|assets|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.json|.*\\..*).*)",
+      missing: [
+        { type: "header", key: "next-router-prefetch" },
+        { type: "header", key: "next-router-segment-prefetch" },
+        { type: "header", key: "purpose", value: "prefetch" },
+      ],
+    },
   ],
 };
 
