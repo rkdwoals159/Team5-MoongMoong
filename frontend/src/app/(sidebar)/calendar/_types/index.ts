@@ -1,9 +1,20 @@
+import type { CSSProperties, RefObject } from "react";
 import type { components } from "@/types/schema";
-export type ExpenseCategory = "사료/간식" | "의료비" | "물품구매비" | "미용" | "기타";
+
+export type { CalendarErrorProps } from "./calendarError";
+export type { CalculatePanelLayoutParams, PanelLayout } from "./calendarDayCell";
+export type ExpenseCategory =
+  | "미용"
+  | "의료비"
+  | "사료"
+  | "의류"
+  | "간식"
+  | "영양제"
+  | "장난감"
+  | "기타";
 
 export type GroupExpenseItem = components["schemas"]["GroupExpenseResponse"];
 
-export type GroupDailyExpenseItem = components["schemas"]["GroupExpensesDailyResponse"];
 export type GroupExpenseMap = Record<string, GroupExpenseItem[]>;
 
 export type CalendarDay = {
@@ -18,16 +29,16 @@ export type CalendarDay = {
 export type CalendarDayCellProps = {
   day: CalendarDay;
   isSelected: boolean;
+  hasSelectedDate: boolean;
   isBottomLeft: boolean;
   isBottomRight: boolean;
-  monthParam: string;
+  isCompact: boolean;
 };
 
 export type CalendarGridProps = {
   days: CalendarDay[];
   weeks: number;
   selectedDate: string | null;
-  monthParam: string;
 };
 
 export type CalendarHeaderProps = {
@@ -43,24 +54,15 @@ export type ExpenseCountChipProps = {
   count: number;
 };
 
-export type ExpenseModalProps = {
-  open: boolean;
-  title: string;
-  items: GroupDailyExpenseItem["expenses"];
-  closeHref: string;
-};
-
 export type CalendarPageProps = {
   searchParams?: Promise<{
     month?: string;
     selected?: string;
-    open?: string;
   }>;
 };
 export type CalendarSearchParams = {
   month?: string;
   selected?: string;
-  open?: string;
 };
 
 export type CalendarContext = {
@@ -77,8 +79,30 @@ export type UseCalendarNavigationParams = {
   todayDateParam: string;
 };
 
+export type UseCalendarDayCellDataParams = {
+  day: CalendarDay;
+  isSelected: boolean;
+  hasSelectedDate: boolean;
+  isPanelOpen: boolean;
+  visibleExpenseCount: number;
+};
+
+export type UseCalendarDayCellPanelParams = {
+  dayDate: string;
+  isClickable: boolean;
+  containerRef: RefObject<HTMLDivElement | null>;
+  dayButtonRef: RefObject<HTMLButtonElement | null>;
+};
+
+export type UseCalendarDayCellPanelResult = {
+  isPanelOpen: boolean;
+  panelId: string;
+  panelStyle: CSSProperties;
+  tableStyle: CSSProperties;
+  handleTogglePanel: () => void;
+};
+
 export type CalendarViewContext = CalendarContext & {
   todayKey: string;
-  monthParam: string;
   isCurrentMonth: boolean;
 };

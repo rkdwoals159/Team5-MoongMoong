@@ -1,10 +1,5 @@
 import type { CalendarDay, GroupExpenseMap } from "@/app/(sidebar)/calendar/_types";
 import { formatDateKey } from "@/utils/date";
-import { categoryColorMap } from "@/app/(sidebar)/calendar/_constants";
-import type { ExpenseCategory } from "@/app/(sidebar)/calendar/_types";
-export function getChipColorForCategory(category: ExpenseCategory) {
-  return categoryColorMap[category];
-}
 
 export function buildCalendarDays(year: number, month: number, expenseMap: GroupExpenseMap) {
   const firstOfMonth = new Date(year, month, 1);
@@ -12,7 +7,8 @@ export function buildCalendarDays(year: number, month: number, expenseMap: Group
   const daysInMonth = lastOfMonth.getDate();
   const startDay = firstOfMonth.getDay();
   const prevMonthLastDate = new Date(year, month, 0).getDate();
-  const totalCells = startDay + daysInMonth <= 35 ? 35 : 42;
+  const totalWeeks = Math.ceil((startDay + daysInMonth) / 7);
+  const totalCells = totalWeeks * 7;
   const todayKey = formatDateKey(new Date());
 
   const days: CalendarDay[] = Array.from({ length: totalCells }, (_, index) => {
@@ -45,6 +41,6 @@ export function buildCalendarDays(year: number, month: number, expenseMap: Group
 
   return {
     days,
-    weeks: totalCells / 7,
+    weeks: totalWeeks,
   };
 }

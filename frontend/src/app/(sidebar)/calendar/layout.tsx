@@ -3,9 +3,5 @@ export default function CalendarLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <article className="px-8">
-      <div className="flex flex-col gap-850">{children}</div>
-    </article>
-  );
+  return <article className="px-8">{children}</article>;
 }

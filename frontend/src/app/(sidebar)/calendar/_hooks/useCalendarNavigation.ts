@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import type { UseCalendarNavigationParams } from "@/app/(sidebar)/calendar/_types";
+import { buildCalendarQuery } from "@/app/(sidebar)/calendar/_utils";
 
 export function useCalendarNavigation({
   isCurrentMonth,
@@ -13,7 +14,7 @@ export function useCalendarNavigation({
   const router = useRouter();
 
   function handleNavigate(monthParam: string) {
-    router.push(buildQuery(monthParam));
+    router.push(buildCalendarQuery(monthParam));
   }
 
   function handlePrev() {
@@ -27,7 +28,7 @@ export function useCalendarNavigation({
     if (isCurrentMonth) {
       return;
     }
-    router.push(buildQuery(todayMonthParam, todayDateParam));
+    router.push(buildCalendarQuery(todayMonthParam, todayDateParam));
   }
 
   return {
@@ -35,13 +36,4 @@ export function useCalendarNavigation({
     handleNext,
     handleToday,
   };
-}
-
-function buildQuery(monthParam: string, selected?: string) {
-  const params = new URLSearchParams();
-  params.set("month", monthParam);
-  if (selected) {
-    params.set("selected", selected);
-  }
-  return `?${params.toString()}`;
 }

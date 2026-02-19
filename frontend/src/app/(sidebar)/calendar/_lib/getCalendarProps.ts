@@ -1,6 +1,5 @@
 import {
   formatDateKey,
-  formatFullDateLabel,
   formatMonthLabel,
   formatMonthParam,
   isDateInMonth,
@@ -29,7 +28,6 @@ export function getCalendarPageProps(
   return {
     headerProps: buildHeaderProps(context),
     gridProps: buildGridProps(context, expenseMap, selectedDate),
-    modalProps: buildModalProps(resolvedSearchParams, context.monthParam, selectedDate),
   };
 }
 
@@ -59,14 +57,12 @@ function resolveCalendarContext(resolvedSearchParams: CalendarSearchParams): Cal
   const parsedMonth = parseMonthParam(resolvedSearchParams.month);
   const viewYear = parsedMonth?.year ?? today.getFullYear();
   const viewMonth = parsedMonth?.monthIndex ?? today.getMonth();
-  const monthParam = formatMonthParam(viewYear, viewMonth);
 
   return {
     today,
     todayKey,
     viewYear,
     viewMonth,
-    monthParam,
     isCurrentMonth: isSameMonth(viewYear, viewMonth, today),
   };
 }
@@ -101,35 +97,5 @@ function buildGridProps(
   selectedDate: string | null,
 ): CalendarGridProps {
   const { days, weeks } = buildCalendarDays(context.viewYear, context.viewMonth, expenseMap);
-  return { days, weeks, selectedDate, monthParam: context.monthParam };
-}
-
-function buildModalProps(
-  resolvedSearchParams: CalendarSearchParams,
-  monthParam: string,
-  selectedDate: string | null,
-) {
-  return {
-    isModalOpen: resolvedSearchParams.open === "1",
-    selectedDate,
-    modalTitle: selectedDate ? formatFullDateLabel(selectedDate) : "",
-    closeHref: buildCloseHref(monthParam, selectedDate),
-  };
-}
-
-/**
- * 닫기 링크 빌드
- * @param monthParam - 월 파라미터
- * @param selectedDate - 선택된 날짜
- * @returns 닫기 링크
- */
-function buildCloseHref(monthParam: string, selectedDate: string | null) {
-  const closeParams = new URLSearchParams();
-  closeParams.set("month", monthParam);
-
-  if (selectedDate) {
-    closeParams.set("selected", selectedDate);
-  }
-
-  return `?${closeParams.toString()}`;
+  return { days, weeks, selectedDate };
 }

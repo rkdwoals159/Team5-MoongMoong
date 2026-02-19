@@ -2,6 +2,12 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { buildCalendarDays } from "@/app/(sidebar)/calendar/_lib/buildCalendarDays";
 import { GroupExpenseMap } from "@/app/(sidebar)/calendar/_types";
 
+const makeDailyExpense = (expenseId: number, cost: number, mainCategory: "사료" | "간식") => ({
+  expenseId,
+  cost,
+  mainCategory,
+});
+
 describe("buildCalendarDays", () => {
   describe("기본 구조", () => {
     it("days 배열과 weeks 수를 반환한다", () => {
@@ -19,17 +25,25 @@ describe("buildCalendarDays", () => {
       expect(result.days.length).toBe(result.weeks * 7);
     });
 
-    it("weeks는 5 또는 6이다", () => {
+    it("weeks는 4~6 사이 값이다", () => {
       const result = buildCalendarDays(2026, 1, {});
 
-      expect([5, 6]).toContain(result.weeks);
+      expect(result.weeks).toBeGreaterThanOrEqual(4);
+      expect(result.weeks).toBeLessThanOrEqual(6);
     });
   });
 
   describe("주 수 계산", () => {
-    it("2026년 2월은 5주(35칸)를 생성한다", () => {
-      // 2026년 2월 1일 = 일요일, 28일까지
+    it("2026년 2월은 4주(28칸)를 생성한다", () => {
+      // 2026년 2월은 일요일 시작 + 28일이라 정확히 4주
       const result = buildCalendarDays(2026, 1, {});
+
+      expect(result.weeks).toBe(4);
+      expect(result.days.length).toBe(28);
+    });
+
+    it("2026년 3월은 5주(35칸)를 생성한다", () => {
+      const result = buildCalendarDays(2026, 2, {});
 
       expect(result.weeks).toBe(5);
       expect(result.days.length).toBe(35);
@@ -66,13 +80,13 @@ describe("buildCalendarDays", () => {
       expect(result?.days[0]?.inCurrentMonth).toBe(true);
     });
 
-    it("2026년 2월 마지막 날(28일) 이후는 다음 월(3월) 날짜들이다", () => {
-      const result = buildCalendarDays(2026, 1, {});
-      const feb28Index = result.days.findIndex((d) => d.date === "2026-02-28");
+    it("2026년 5월 마지막 날(31일) 이후는 다음 월(6월) 날짜들이다", () => {
+      const result = buildCalendarDays(2026, 4, {});
+      const may31Index = result.days.findIndex((d) => d.date === "2026-05-31");
 
-      expect(result?.days[feb28Index + 1]?.date).toBe("2026-03-01");
-      expect(result?.days[feb28Index + 1]?.inCurrentMonth).toBe(false);
-      expect(result?.days[feb28Index + 2]?.date).toBe("2026-03-02");
+      expect(result?.days[may31Index + 1]?.date).toBe("2026-06-01");
+      expect(result?.days[may31Index + 1]?.inCurrentMonth).toBe(false);
+      expect(result?.days[may31Index + 2]?.date).toBe("2026-06-02");
     });
   });
 
@@ -88,8 +102,8 @@ describe("buildCalendarDays", () => {
       expect(result?.days[feb1Index]?.inCurrentMonth).toBe(true);
       expect(result?.days[feb28Index]?.inCurrentMonth).toBe(true);
 
-      // 다음 월
-      expect(result?.days[feb28Index + 1]?.inCurrentMonth).toBe(false);
+      // 2026년 2월은 정확히 4주 달력이라 모든 셀이 현재 월이다.
+      expect(result.days.every((day) => day.inCurrentMonth)).toBe(true);
     });
   });
 
@@ -121,8 +135,8 @@ describe("buildCalendarDays", () => {
 
     it("특정 날짜에만 expenses가 매핑된다", () => {
       const expenseMap: GroupExpenseMap = {
-        "2026-02-15": [{ expenseId: 1, cost: 10000, mainCategory: "사료" }],
-        "2026-02-20": [{ expenseId: 2, cost: 5000, mainCategory: "간식" }],
+        "2026-02-15": [makeDailyExpense(1, 10000, "사료")],
+        "2026-02-20": [makeDailyExpense(2, 5000, "간식")],
       };
 
       const result = buildCalendarDays(2026, 1, expenseMap);
@@ -139,8 +153,8 @@ describe("buildCalendarDays", () => {
 
     it("이전/다음 월 날짜에는 expenses가 매핑되지 않는다", () => {
       const expenseMap: GroupExpenseMap = {
-        "2026-04-30": [{ expenseId: 1, cost: 10000, mainCategory: "사료" }],
-        "2026-06-01": [{ expenseId: 2, cost: 5000, mainCategory: "간식" }],
+        "2026-04-30": [makeDailyExpense(1, 10000, "사료")],
+        "2026-06-01": [makeDailyExpense(2, 5000, "간식")],
       };
 
       const result = buildCalendarDays(2026, 4, expenseMap); // 2026년 5월
@@ -182,15 +196,16 @@ describe("buildCalendarDays", () => {
 
   describe("dayNumber 필드", () => {
     it("각 날짜의 dayNumber가 올바르다", () => {
-      const result = buildCalendarDays(2026, 1, {});
+      const febResult = buildCalendarDays(2026, 1, {});
+      const mayResult = buildCalendarDays(2026, 4, {});
 
-      const feb1 = result.days.find((d) => d.date === "2026-02-01");
-      const feb15 = result.days.find((d) => d.date === "2026-02-15");
-      const mar01 = result.days.find((d) => d.date === "2026-03-01");
+      const feb1 = febResult.days.find((d) => d.date === "2026-02-01");
+      const feb15 = febResult.days.find((d) => d.date === "2026-02-15");
+      const jun01 = mayResult.days.find((d) => d.date === "2026-06-01");
 
       expect(feb1?.dayNumber).toBe(1);
       expect(feb15?.dayNumber).toBe(15);
-      expect(mar01?.dayNumber).toBe(1);
+      expect(jun01?.dayNumber).toBe(1);
     });
   });
 });

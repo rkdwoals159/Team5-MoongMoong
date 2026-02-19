@@ -1,169 +1,74 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { getCalendarPageProps } from "@/app/(sidebar)/calendar/_lib/getCalendarProps";
-import { CalendarSearchParams, GroupExpenseMap } from "@/app/(sidebar)/calendar/_types";
+import type { CalendarSearchParams, GroupExpenseMap } from "@/app/(sidebar)/calendar/_types";
 
 describe("getCalendarPageProps", () => {
-  describe("기본 구조", () => {
-    it("headerProps, gridProps, modalProps를 반환한다", () => {
-      const result = getCalendarPageProps({}, {});
-
-      expect(result).toHaveProperty("headerProps");
-      expect(result).toHaveProperty("gridProps");
-      expect(result).toHaveProperty("modalProps");
-    });
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 1, 10));
   });
 
-  describe("headerProps (현재 월)", () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
-      vi.setSystemTime(new Date(2026, 1, 10)); // 2026-02-10
-    });
-
-    afterEach(() => {
-      vi.useRealTimers();
-    });
-
-    it("headerProps가 올바른 형식으로 생성됨 (현재 월)", () => {
-      const result = getCalendarPageProps({ month: "2026-02" }, {});
-
-      expect(result.headerProps.label).toBe("2026년 2월");
-      expect(result.headerProps.isCurrentMonth).toBe(true);
-      expect(result.headerProps.prevMonthParam).toBe("2026-01");
-      expect(result.headerProps.todayMonthParam).toBe("2026-02");
-      expect(result.headerProps.nextMonthParam).toBe("2026-03");
-      expect(result.headerProps.todayDateParam).toBe("2026-02-10");
-    });
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
-  describe("headerProps (다른 월)", () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
-      vi.setSystemTime(new Date(2026, 2, 10)); // 2026-03-10
-    });
+  it("headerProps와 gridProps를 반환한다", () => {
+    const result = getCalendarPageProps({}, {});
 
-    afterEach(() => {
-      vi.useRealTimers();
-    });
-
-    it("headerProps가 올바른 형식으로 생성됨 (다른 월)", () => {
-      const result = getCalendarPageProps({ month: "2026-02" }, {});
-
-      expect(result.headerProps.label).toBe("2026년 2월");
-      expect(result.headerProps.isCurrentMonth).toBe(false);
-      expect(result.headerProps.prevMonthParam).toBe("2026-01");
-      expect(result.headerProps.todayMonthParam).toBe("2026-03");
-      expect(result.headerProps.nextMonthParam).toBe("2026-03");
-      expect(result.headerProps.todayDateParam).toBe("2026-03-10");
-    });
+    expect(result).toHaveProperty("headerProps");
+    expect(result).toHaveProperty("gridProps");
+    expect(result).not.toHaveProperty("modalProps");
   });
 
-  describe("gridProps", () => {
-    it("buildCalendarDays 결과를 포함", () => {
-      const result = getCalendarPageProps({ month: "2026-02" }, {});
+  it("현재 월이면 isCurrentMonth가 true다", () => {
+    const result = getCalendarPageProps({ month: "2026-02" }, {});
 
-      expect(result.gridProps.days).toBeDefined();
-      expect(Array.isArray(result.gridProps.days)).toBe(true);
-      expect(result.gridProps.weeks).toBeDefined();
-      expect(result.gridProps.selectedDate).toBeNull();
-      expect(result.gridProps.monthParam).toBe("2026-02");
-    });
+    expect(result.headerProps.label).toBe("2026년 2월");
+    expect(result.headerProps.isCurrentMonth).toBe(true);
+    expect(result.headerProps.prevMonthParam).toBe("2026-01");
+    expect(result.headerProps.todayMonthParam).toBe("2026-02");
+    expect(result.headerProps.nextMonthParam).toBe("2026-03");
+    expect(result.headerProps.todayDateParam).toBe("2026-02-10");
   });
 
-  describe("modalProps", () => {
-    it("selected가 없을 때 modalTitle이 빈 문자열", () => {
-      const result = getCalendarPageProps({ month: "2026-02" }, {});
+  it("다른 월이면 isCurrentMonth가 false다", () => {
+    const result = getCalendarPageProps({ month: "2026-03" }, {});
 
-      expect(result.modalProps.modalTitle).toBe("");
-    });
-
-    it("modalProps가 올바른 형식으로 생성됨 (selected가 있을 때)", () => {
-      const result = getCalendarPageProps({ month: "2026-02", selected: "2026-02-15" }, {});
-
-      expect(result.modalProps.modalTitle).toBe("2026년 2월 15일 (일)");
-      expect(result.modalProps.closeHref).toContain("month=2026-02");
-      expect(result.modalProps.closeHref).toContain("selected=2026-02-15");
-    });
-
-    it("modalProps가 올바른 형식으로 생성됨 (selected가 없을 때)", () => {
-      const result = getCalendarPageProps({ month: "2026-02" }, {});
-
-      expect(result.modalProps.closeHref).toBe("?month=2026-02");
-    });
-
-    it("modalProps가 올바른 형식으로 생성됨 (open이 있을 때)", () => {
-      const result1 = getCalendarPageProps({ month: "2026-02", open: "1" }, {});
-      const result2 = getCalendarPageProps({ month: "2026-02" }, {});
-
-      expect(result1.modalProps.isModalOpen).toBe(true);
-      expect(result2.modalProps.isModalOpen).toBe(false);
-    });
+    expect(result.headerProps.label).toBe("2026년 3월");
+    expect(result.headerProps.isCurrentMonth).toBe(false);
   });
 
-  describe("통합 시나리오", () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
-      vi.setSystemTime(new Date(2026, 1, 10)); // 2026-02-10
-    });
+  it("selected가 현재 월에 포함될 때만 유지한다", () => {
+    const result = getCalendarPageProps({ month: "2026-02", selected: "2026-02-15" }, {});
 
-    afterEach(() => {
-      vi.useRealTimers();
-    });
+    expect(result.gridProps.selectedDate).toBe("2026-02-15");
+  });
 
-    it("모든 파라미터가 조합되어 올바르게 동작", () => {
-      const searchParams: CalendarSearchParams = {
-        month: "2026-02",
-        selected: "2026-02-15",
-        open: "1",
-      };
+  it("selected가 현재 월 바깥이거나 형식이 잘못되면 null이다", () => {
+    const outOfMonth = getCalendarPageProps({ month: "2026-02", selected: "2026-03-01" }, {});
+    const invalidFormat = getCalendarPageProps({ month: "2026-02", selected: "2026/02/15" }, {});
 
-      const expenseMap: GroupExpenseMap = {
-        "2026-02-15": [{ expenseId: 1, cost: 10000, mainCategory: "사료" }],
-      };
+    expect(outOfMonth.gridProps.selectedDate).toBeNull();
+    expect(invalidFormat.gridProps.selectedDate).toBeNull();
+  });
 
-      const result = getCalendarPageProps(searchParams, expenseMap);
+  it("현재 월 날짜에만 expenseMap을 매핑한다", () => {
+    const searchParams: CalendarSearchParams = {
+      month: "2026-05",
+      selected: "2026-05-15",
+    };
 
-      // headerProps 검증
-      expect(result.headerProps.label).toBe("2026년 2월");
-      expect(result.headerProps.isCurrentMonth).toBe(true);
-      expect(result.headerProps.prevMonthParam).toBe("2026-01");
-      expect(result.headerProps.nextMonthParam).toBe("2026-03");
-      expect(result.headerProps.todayMonthParam).toBe("2026-02");
-      expect(result.headerProps.todayDateParam).toBe("2026-02-10");
+    const expenseMap: GroupExpenseMap = {
+      "2026-05-15": [{ expenseId: 1, cost: 10000, mainCategory: "사료" }],
+      "2026-04-30": [{ expenseId: 2, cost: 5000, mainCategory: "간식" }],
+    };
 
-      // gridProps 검증
-      expect(result.gridProps.selectedDate).toBe("2026-02-15");
-      expect(result.gridProps.monthParam).toBe("2026-02");
-      const feb15 = result.gridProps.days.find((d) => d.date === "2026-02-15");
-      expect(feb15?.expenses).toHaveLength(1);
+    const result = getCalendarPageProps(searchParams, expenseMap);
+    const may15 = result.gridProps.days.find((d) => d.date === "2026-05-15");
+    const apr30 = result.gridProps.days.find((d) => d.date === "2026-04-30");
 
-      // modalProps 검증
-      expect(result.modalProps.isModalOpen).toBe(true);
-      expect(result.modalProps.selectedDate).toBe("2026-02-15");
-      expect(result.modalProps.modalTitle).toBe("2026년 2월 15일 (일)");
-      expect(result.modalProps.closeHref).toBe("?month=2026-02&selected=2026-02-15");
-    });
-
-    it("빈 searchParams로도 정상 동작", () => {
-      const result = getCalendarPageProps({}, {});
-
-      expect(result.headerProps.label).toBe("2026년 2월");
-      expect(result.gridProps.selectedDate).toBeNull();
-      expect(result.modalProps.isModalOpen).toBe(false);
-      expect(result.modalProps.modalTitle).toBe("");
-    });
-
-    it("다른 월을 보면서 날짜를 선택한 시나리오", () => {
-      // 3월을 보고 있음
-      const result = getCalendarPageProps(
-        { month: "2026-03", selected: "2026-03-20", open: "1" },
-        {},
-      );
-
-      expect(result.headerProps.label).toBe("2026년 3월");
-      expect(result.headerProps.isCurrentMonth).toBe(false); // 3월은 현재 월 아님
-      expect(result.gridProps.selectedDate).toBe("2026-03-20");
-      expect(result.modalProps.isModalOpen).toBe(true);
-      expect(result.modalProps.modalTitle).toBe("2026년 3월 20일 (금)");
-    });
+    expect(may15?.expenses).toHaveLength(1);
+    expect(apr30?.inCurrentMonth).toBe(false);
+    expect(apr30?.expenses).toEqual([]);
   });
 });
