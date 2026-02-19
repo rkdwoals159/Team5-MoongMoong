@@ -2,7 +2,7 @@ package com.moong.event.transport;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moong.DataBaseCleaner;
-import com.moong.event.dto.CoinCreateEventResponse;
+import com.moong.event.dto.CoinCreatedPayload;
 import com.moong.event.group.GroupEvent;
 import com.moong.event.group.GroupEventType;
 import com.moong.service.SseService;
@@ -67,12 +67,12 @@ class GroupEventMessageListenerTest {
 
         groupEventMessageListener.onMessage(message, null);
 
-        ArgumentCaptor<GroupEvent<CoinCreateEventResponse>> captor =
+        ArgumentCaptor<GroupEvent<CoinCreatedPayload>> captor =
                 ArgumentCaptor.forClass(GroupEvent.class);
 
-        verify(sseService).handleGroupEvent(captor.capture());
+        verify(sseService).sendGroupNotification(captor.capture());
 
-        GroupEvent<CoinCreateEventResponse> event = captor.getValue();
+        GroupEvent<CoinCreatedPayload> event = captor.getValue();
 
         assertAll(
                 () -> assertThat(event.eventType()).isEqualTo(GroupEventType.SAVING),
@@ -80,9 +80,9 @@ class GroupEventMessageListenerTest {
                 () -> assertThat(event.groupId()).isEqualTo(1L),
                 () -> assertThat(event.senderId()).isEqualTo(3L),
                 () -> assertThat(event.data()).isNotNull(),
-                () -> assertThat(event.data()).isInstanceOf(CoinCreateEventResponse.class),
+                () -> assertThat(event.data()).isInstanceOf(CoinCreatedPayload.class),
                 () -> {
-                    CoinCreateEventResponse data = (CoinCreateEventResponse) event.data();
+                    CoinCreatedPayload data = (CoinCreatedPayload) event.data();
                     assertThat(data.coinId()).isEqualTo(1L);
                     assertThat(data.amount()).isEqualTo(5000);
                     assertThat(data.name()).isEqualTo("민수");

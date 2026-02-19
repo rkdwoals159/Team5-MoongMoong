@@ -33,7 +33,7 @@ public class PaymentService {
     public void verifyPayment(UUID orderId,  long crewId, long amount) {
         CoinPayment coinPayment = coinPaymentRepository.getByIdAndCrewId(orderId, crewId);
 
-        if (!coinPayment.isReady()) {
+        if (!coinPayment.hasStatus(PaymentStatus.READY)) {
             throw new BusinessException(ErrorCode.ALREADY_PROCESSED);
         }
         if (!coinPayment.hasSameAmount(amount)) {

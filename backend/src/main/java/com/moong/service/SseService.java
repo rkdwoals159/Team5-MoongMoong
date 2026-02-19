@@ -54,7 +54,7 @@ public class SseService {
         groupConnectionRepository.delete(groupId, memberId);
     }
 
-    public void handleGroupEvent(GroupEvent<? extends GroupEventPayload> event) {
+    public void sendGroupNotification(GroupEvent<? extends GroupEventPayload> event) {
         groupConnectionRepository.findAllMemberIdsByGroupId(event.groupId()).stream()
                 .filter(memberId -> memberId != event.senderId())
                 .forEach(memberId -> {

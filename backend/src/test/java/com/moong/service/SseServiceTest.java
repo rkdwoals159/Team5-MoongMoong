@@ -13,7 +13,7 @@ import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.event.SseEventSender;
 import com.moong.event.transport.CustomSseEmitter;
-import com.moong.event.dto.CoinCreateEventResponse;
+import com.moong.event.dto.CoinCreatedPayload;
 import com.moong.event.group.GroupEvent;
 import com.moong.event.group.GroupEventType;
 import com.moong.repository.EmitterRepository;
@@ -65,14 +65,14 @@ class SseServiceTest extends BaseServiceTest {
 
     @DisplayName("그룹 이벤트 발생 시 sender를 제외한 연결된 멤버에게 이벤트를 전송한다")
     @Test
-    void handleGroupEvent() {
+    void sendGroupNotification() {
         long groupId = 1L;
         long senderId = 1L;
         long receiver1 = 2L;
         long receiver2 = 3L;
 
-        CoinCreateEventResponse payload = new CoinCreateEventResponse(1L, LocalDateTime.now(), 5000, "민수");
-        GroupEvent<CoinCreateEventResponse> event = new GroupEvent<>(
+        CoinCreatedPayload payload = new CoinCreatedPayload(1L, LocalDateTime.now(), 5000, "민수");
+        GroupEvent<CoinCreatedPayload> event = new GroupEvent<>(
                 GroupEventType.SAVING,
                 groupId,
                 4L,
@@ -83,7 +83,7 @@ class SseServiceTest extends BaseServiceTest {
         groupConnectionRepository.save(groupId, receiver1);
         groupConnectionRepository.save(groupId, receiver2);
 
-        sseService.handleGroupEvent(event);
+        sseService.sendGroupNotification(event);
 
         assertAll(
                 () -> verify(sseEventSender, never()).send(eq(senderId), any(SseEmitter.SseEventBuilder.class)),

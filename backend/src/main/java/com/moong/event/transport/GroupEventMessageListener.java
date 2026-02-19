@@ -46,7 +46,7 @@ public class GroupEventMessageListener implements MessageListener {
             log.info("received pubsub: eventType={}, eventId={}, groupId={}, senderId={}",
                     event.eventType(), event.eventId(), event.groupId(), event.senderId());
 
-            sseService.handleGroupEvent(event);
+            sseService.sendGroupNotification(event);
         } catch (Exception e) {
             log.error("Failed to parse pubsub message: {}", e.getMessage(), e);
         }

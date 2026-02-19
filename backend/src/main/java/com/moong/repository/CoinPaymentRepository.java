@@ -4,15 +4,13 @@ import com.moong.domain.entity.CoinPayment;
 import com.moong.domain.enums.PaymentStatus;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
-import jakarta.persistence.LockModeType;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface CoinPaymentRepository extends Repository<CoinPayment, UUID> {
 
@@ -25,6 +23,7 @@ public interface CoinPaymentRepository extends Repository<CoinPayment, UUID> {
                 .orElseThrow(() -> new BusinessException(ErrorCode.NO_SUCH_COIN_PAYMENT_FOUND));
     }
 
+    @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("""
             update CoinPayment cp

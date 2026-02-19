@@ -53,14 +53,13 @@ public class BankService {
     }
 
     @Transactional
-    public CoinCreateResponse createCoin(Member member, Crew crew, long amount) {
+    public Coin createCoin(Member member, Crew crew, long amount) {
         PetGroup petGroup = crew.getPetGroup();
         Bank groupBank = bankRepository.getByPetGroupId(petGroup.getId());
 
         groupBank.updateCurrentAmount(amount);
         Coin coin = new Coin(groupBank, crew, amount);
-        Coin savedCoin = coinRepository.save(coin);
-        return new CoinCreateResponse(savedCoin, member);
+        return coinRepository.save(coin);
     }
 
     public BankInfoResponse findBankInfo(Member member) {

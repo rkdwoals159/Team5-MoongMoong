@@ -61,12 +61,8 @@ public class CoinPayment {
         }
     }
 
-    public boolean isReady() {
-        return this.paymentStatus == PaymentStatus.READY;
-    }
-
-    public boolean isConfirm() {
-        return this.paymentStatus == PaymentStatus.CONFIRMED;
+    public boolean hasStatus(PaymentStatus status) {
+        return this.paymentStatus == status;
     }
 
     public boolean hasSameAmount(long amount) {

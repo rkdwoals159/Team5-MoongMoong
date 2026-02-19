@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
+import com.moong.client.payment.TossPaymentClient;
 import com.moong.dto.PaymentFailedEvent;
 import com.moong.dto.response.payment.TossCancelResponse;
 import com.moong.domain.entity.Bank;
@@ -22,6 +23,7 @@ import com.moong.dto.request.payment.CoinPaymentConfirmRequest;
 import com.moong.dto.request.payment.CoinPaymentFailRequest;
 import com.moong.dto.response.bank.CoinCreateResponse;
 import com.moong.dto.response.bank.CoinPaymentCreateResponse;
+import com.moong.event.transport.GroupEventChannelSender;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.CoinPaymentRepository;
@@ -38,6 +40,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.event.ApplicationEvents;
 import org.springframework.test.context.event.RecordApplicationEvents;
 
@@ -53,8 +56,12 @@ class PaymentFacadeServiceTest extends BaseServiceTest {
     @Autowired
     private CoinPaymentRepository coinPaymentRepository;
 
+    @MockitoBean
+    private GroupEventChannelSender groupEventChannelSender;
+
     @Autowired
     private ApplicationEvents applicationEvents;
+
 
     @Nested
     class Payment {

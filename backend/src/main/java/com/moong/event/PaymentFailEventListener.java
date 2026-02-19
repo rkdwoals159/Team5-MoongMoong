@@ -26,18 +26,29 @@ public class PaymentFailEventListener {
     @EventListener
     public void handlePaymentFailed(PaymentFailedEvent event) {
         CoinPayment coinPayment = coinPaymentRepository.getByIdAndCrewId(event.orderId(), event.crewId());
-        if (coinPayment.isConfirm()) {
-            try {
-                tossPaymentClient.cancel(event.paymentKey(), TossCancelRequest.forInternalError()).join();
-            } catch (Exception e) {
-                log.error("Failed to cancel coin payment - Error: {}", e.getMessage(), e);
-            }
+        PaymentStatus status = coinPayment.getPaymentStatus();
+
+        if (coinPayment.hasStatus(PaymentStatus.COIN_CREATED)) {
+            log.warn("Payment failed after coin created. orderId={}, crewId={}", event.orderId(), event.crewId());
+            return;
         }
+        if (coinPayment.hasStatus(PaymentStatus.CONFIRMED)) {
+            cancelPaymentOnFailure(event);
+        }
+
         paymentService.changePaymentStatus(
                 event.orderId(),
                 event.crewId(),
-                coinPayment.getPaymentStatus(),
+                status,
                 PaymentStatus.FAILED
         );
+    }
+
+    private void cancelPaymentOnFailure(PaymentFailedEvent event) {
+        try {
+            tossPaymentClient.cancel(event.paymentKey(), TossCancelRequest.forInternalError()).join();
+        } catch (Exception e) {
+            log.error("Failed to cancel coin payment - Error: {}", e.getMessage(), e);
+        }
     }
 }

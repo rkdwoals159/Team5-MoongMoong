@@ -17,7 +17,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 public class AsyncConfig implements AsyncConfigurer {
 
-    @Bean(name = "groupEventExecutor")
+    @Bean(name = "groupEventChannelExecutor")
     public Executor groupEventExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setThreadNamePrefix("group-event-");
@@ -25,7 +25,7 @@ public class AsyncConfig implements AsyncConfigurer {
         executor.setMaxPoolSize(4);
         executor.setQueueCapacity(300);
         executor.setRejectedExecutionHandler((r, ex) -> {
-            log.warn("groupEventExecutor rejected task. poolSize={}, active={}, queued={}",
+            log.warn("groupEventChannelExecutor rejected task. poolSize={}, active={}, queued={}",
                     ex.getPoolSize(), ex.getActiveCount(), ex.getQueue().size());
         });
         executor.initialize();

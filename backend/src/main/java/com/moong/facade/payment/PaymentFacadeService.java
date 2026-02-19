@@ -1,6 +1,7 @@
 package com.moong.facade.payment;
 
 import com.moong.client.payment.TossPaymentClient;
+import com.moong.domain.entity.Coin;
 import com.moong.domain.entity.CoinPayment;
 import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.Member;
@@ -12,6 +13,9 @@ import com.moong.dto.request.payment.CoinPaymentFailRequest;
 import com.moong.dto.response.bank.CoinCreateResponse;
 import com.moong.dto.response.bank.CoinPaymentCreateResponse;
 import com.moong.dto.response.payment.TossConfirmResponse;
+import com.moong.event.dto.CoinCreatedPayload;
+import com.moong.event.dto.GroupEventMessage;
+import com.moong.event.transport.GroupEventChannelSender;
 import com.moong.service.BankService;
 import com.moong.service.CrewService;
 import com.moong.service.PaymentService;
@@ -34,6 +38,7 @@ public class PaymentFacadeService {
     private final RankingService rankingService;
     private final TossPaymentClient tossPaymentClient;
     private final ApplicationEventPublisher eventPublisher;
+    private final GroupEventChannelSender groupEventChannelSender;
 
     public CoinPaymentCreateResponse createCoinPayment(Member member, CoinCreateRequest coinCreateRequest) {
         Crew crew = crewService.getByMemberId(member.getId());
@@ -44,18 +49,29 @@ public class PaymentFacadeService {
     }
 
     public CoinCreateResponse paymentSuccess(Member member, CoinPaymentConfirmRequest request) {
-        Crew crew = crewService.getByMemberId(member.getId());
+        Crew crew = crewService.getFetchedByMemberId(member.getId());
         UUID orderId = request.orderId();
         long crewId = crew.getId();
+        long groupId = crew.getPetGroup().getId();
 
         try {
             paymentService.verifyPayment(orderId, crewId, request.amount());
             TossConfirmResponse clientResponse = tossPaymentClient.confirm(request).join();
-            paymentService.changePaymentStatus(request.orderId(), crewId, PaymentStatus.READY, PaymentStatus.CONFIRMED);
-            CoinCreateResponse response = bankService.createCoin(member, crew, clientResponse.totalAmount());
-            paymentService.changePaymentStatus(request.orderId(), crewId, PaymentStatus.CONFIRMED, PaymentStatus.DONE);
-            rankingService.updateRanking(member, response.amount());
-            return response;
+
+            paymentService.changePaymentStatus(orderId, crewId, PaymentStatus.READY, PaymentStatus.CONFIRMED);
+
+            Coin savedCoin = bankService.createCoin(member, crew, clientResponse.totalAmount());
+
+            paymentService.changePaymentStatus(orderId, crewId, PaymentStatus.CONFIRMED, PaymentStatus.COIN_CREATED);
+
+            GroupEventMessage<CoinCreatedPayload> savingMessage =
+                    GroupEventMessage.saving(member, groupId, savedCoin);
+
+            groupEventChannelSender.sendAsync(savingMessage);
+            rankingService.updateRanking(member, savedCoin.getAmount());
+
+            paymentService.changePaymentStatus(orderId, crewId, PaymentStatus.COIN_CREATED, PaymentStatus.DONE);
+            return new CoinCreateResponse(savedCoin, member);
         } catch (Exception e) {
             log.error("Failed to create coin - OrderId: {}, Error: {}", request.orderId(), e.getMessage(), e);
             PaymentFailedEvent paymentFailedEvent = new PaymentFailedEvent(
