@@ -2,11 +2,11 @@ package com.moong.event.dto;
 
 import com.moong.domain.entity.Coin;
 import com.moong.domain.entity.Member;
+import com.moong.event.EventType;
 import com.moong.event.group.GroupEventPayload;
-import com.moong.event.group.GroupEventType;
 
 public record GroupEventMessage<T extends GroupEventPayload>(
-        GroupEventType eventType,
+        EventType eventType,
         long groupId,
         long senderId,
         T data
@@ -18,7 +18,7 @@ public record GroupEventMessage<T extends GroupEventPayload>(
             Coin coin
     ) {
         return new GroupEventMessage<>(
-                GroupEventType.SAVING,
+                EventType.SAVING,
                 groupId,
                 member.getId(),
                 new CoinCreatedPayload(member, coin)

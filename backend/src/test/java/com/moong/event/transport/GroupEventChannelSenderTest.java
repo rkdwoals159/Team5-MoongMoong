@@ -12,7 +12,7 @@ import com.moong.domain.entity.PetGroup;
 import com.moong.event.dto.GroupEventMessage;
 import com.moong.event.group.GroupEvent;
 import com.moong.event.group.GroupEventPayload;
-import com.moong.event.group.GroupEventType;
+import com.moong.event.EventType;
 import com.moong.redis.transport.RedisChannel;
 import com.moong.service.BaseServiceTest;
 import org.junit.jupiter.api.DisplayName;
@@ -49,6 +49,9 @@ class GroupEventChannelSenderTest extends BaseServiceTest {
         Pet savedPet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(savedPet);
         crewGenerator.generateSaved(petGroup, member);
+        GroupEventMessage<TestDto> req =
+                new GroupEventMessage<>(EventType.SAVING, 1L, 3L, new TestDto("test"));
+        String seq_key = "sse:seq:groupId:" + 1L;
         String json = """
                 {
                   "eventType": "SAVING",
@@ -64,7 +67,7 @@ class GroupEventChannelSenderTest extends BaseServiceTest {
         long memberId = member.getId();
         long groupId = petGroup.getId();
         String expectedSeqKey = "sse:seq:groupId:" + groupId;
-        GroupEventType type = GroupEventType.SAVING;
+        EventType type = EventType.SAVING;
         when(stringRedisTemplate.opsForValue()).thenReturn(valueOps);
         when(objectMapper.writeValueAsString(any(GroupEvent.class))).thenReturn(json);
         when(valueOps.increment(expectedSeqKey)).thenReturn(1L);
@@ -85,7 +88,7 @@ class GroupEventChannelSenderTest extends BaseServiceTest {
     @Test
     void send_skip_whenEventIdIsNull() throws Exception {
         GroupEventMessage<TestDto> req =
-                new GroupEventMessage<>(GroupEventType.SAVING, 1L, 10L, new TestDto("test"));
+                new GroupEventMessage<>(EventType.SAVING, 1L, 10L, new TestDto("test"));
 
         when(stringRedisTemplate.opsForValue()).thenReturn(valueOps);
         when(valueOps.increment(anyString())).thenReturn(null);
@@ -102,7 +105,7 @@ class GroupEventChannelSenderTest extends BaseServiceTest {
     @Test
     void send_fail_whenSerializeThrows() throws Exception {
         GroupEventMessage<TestDto> groupEventMessage =
-                new GroupEventMessage<>(GroupEventType.SAVING, 1L, 3L, new TestDto("test"));
+                new GroupEventMessage<>(EventType.SAVING, 1L, 3L, new TestDto("test"));
         String seq_key = "sse:seq:groupId:" + 1L;
         when(stringRedisTemplate.opsForValue()).thenReturn(valueOps);
         when(valueOps.increment(seq_key)).thenReturn(1L);
@@ -118,7 +121,7 @@ class GroupEventChannelSenderTest extends BaseServiceTest {
     @Test
     void send_fail_whenRedisThrows() throws Exception {
         GroupEventMessage<TestDto> req =
-                new GroupEventMessage<>(GroupEventType.SAVING, 1L, 10L, new TestDto("test"));
+                new GroupEventMessage<>(EventType.SAVING, 1L, 10L, new TestDto("test"));
 
         String seqKey = "sse:seq:groupId:" + 1L;
         String json = "{ \"dummy\": true }";

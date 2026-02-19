@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moong.DataBaseCleaner;
 import com.moong.event.dto.CoinCreatedPayload;
 import com.moong.event.group.GroupEvent;
-import com.moong.event.group.GroupEventType;
+import com.moong.event.EventType;
 import com.moong.service.SseService;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -75,7 +75,7 @@ class GroupEventMessageListenerTest {
         GroupEvent<CoinCreatedPayload> event = captor.getValue();
 
         assertAll(
-                () -> assertThat(event.eventType()).isEqualTo(GroupEventType.SAVING),
+                () -> assertThat(event.eventType()).isEqualTo(EventType.SAVING),
                 () -> assertThat(event.eventId()).isEqualTo(10L),
                 () -> assertThat(event.groupId()).isEqualTo(1L),
                 () -> assertThat(event.senderId()).isEqualTo(3L),

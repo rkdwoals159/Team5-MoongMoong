@@ -87,6 +87,15 @@ public abstract class BaseServiceTest {
     @Autowired
     protected CoinPaymentGenerator coinPaymentGenerator;
 
+    @Autowired
+    protected NotificationInboxGenerator notificationInboxGenerator;
+
+    @Autowired
+    protected NotificationGenerator notificationGenerator;
+
+    @Autowired
+    protected CrewNotificationGenerator crewNotificationGenerator;
+
     @MockitoBean
     protected OAuthClient oAuthClient;
 

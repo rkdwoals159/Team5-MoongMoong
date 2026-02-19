@@ -58,6 +58,7 @@ public enum ErrorCode {
     NO_SUCH_BANK_FOUND(404, "저금통을 찾을 수 없습니다."),
     DISEASE_CODE_NOT_FOUND(404, "존재하지 않는 질병 코드입니다."),
     NO_SUCH_COIN_PAYMENT_FOUND(404, "코인 결제 내역을 찾을 수 없습니다"),
+    NOTIFICATION_INBOX_NOT_FOUND(404, "알림 수신 정보를 찾을 수 없습니다."),
 
     //405
     METHOD_NOT_SUPPORTED(405, "허용되지 않은 메서드입니다."),

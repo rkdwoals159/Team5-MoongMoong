@@ -1,7 +1,9 @@
 package com.moong.event.group;
 
+import com.moong.event.EventType;
+
 public record GroupEvent<T>(
-        GroupEventType eventType,
+        EventType eventType,
         long groupId,
         long eventId,
         long senderId,

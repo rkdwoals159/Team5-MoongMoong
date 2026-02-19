@@ -15,7 +15,7 @@ import com.moong.event.SseEventSender;
 import com.moong.event.transport.CustomSseEmitter;
 import com.moong.event.dto.CoinCreatedPayload;
 import com.moong.event.group.GroupEvent;
-import com.moong.event.group.GroupEventType;
+import com.moong.event.EventType;
 import com.moong.repository.EmitterRepository;
 import com.moong.repository.groupConnection.GroupConnectionRepository;
 import java.time.LocalDateTime;
@@ -73,7 +73,7 @@ class SseServiceTest extends BaseServiceTest {
 
         CoinCreatedPayload payload = new CoinCreatedPayload(1L, LocalDateTime.now(), 5000, "민수");
         GroupEvent<CoinCreatedPayload> event = new GroupEvent<>(
-                GroupEventType.SAVING,
+                EventType.SAVING,
                 groupId,
                 4L,
                 senderId,

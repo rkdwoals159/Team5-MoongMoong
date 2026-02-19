@@ -77,6 +77,15 @@ public abstract class BaseControllerTest {
     @Autowired
     protected ObjectMapper objectMapper;
 
+    @Autowired
+    protected NotificationInboxGenerator notificationInboxGenerator;
+
+    @Autowired
+    protected NotificationGenerator notificationGenerator;
+
+    @Autowired
+    protected CrewNotificationGenerator crewNotificationGenerator;
+
     @MockitoBean
     protected OAuthClient oAuthClient;
 
