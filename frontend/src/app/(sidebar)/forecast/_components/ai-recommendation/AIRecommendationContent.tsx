@@ -4,7 +4,7 @@ import { getAIRecommendation } from "@/api/forecastApi";
  * AI 의사 권장사항 컴포넌트
  * @returns AI 의사 권장사항 컴포넌트
  */
-const AIRecommendationContent = async () => {
+export default async function AIRecommendationContent() {
   const recommendation = await getAIRecommendation();
 
   // recommendation은 있지만 advice나 expectedCost가 없으면 정보 없음 메시지 표시
@@ -28,9 +28,7 @@ const AIRecommendationContent = async () => {
       )}
     </>
   );
-};
-
-export default AIRecommendationContent;
+}
 
 const descriptionClasses = "typo-body-l-medium text-text-base mt-200";
 const highlightClasses =

@@ -1,7 +1,7 @@
 import { getDiseaseRanking, getDiseaseStatistics } from "@/api/forecastApi";
 import AnnualDiseaseRiskClient from "./AnnualDiseaseRiskClient";
 
-const AnnualDiseaseRiskContent = async () => {
+export default async function AnnualDiseaseRiskContent() {
   const [diseaseList, statisticsData] = await Promise.all([
     getDiseaseRanking(),
     getDiseaseStatistics(),
@@ -17,9 +17,7 @@ const AnnualDiseaseRiskContent = async () => {
   }
 
   return <AnnualDiseaseRiskClient diseaseList={diseaseList} statisticsData={statisticsData} />;
-};
-
-export default AnnualDiseaseRiskContent;
+}
 
 const emptyStateClasses = "flex items-center justify-center py-600";
 const emptyMessageClasses = "typo-body-l-medium text-text-sub";

@@ -14,7 +14,7 @@ import AnnualDiseaseRiskSkeleton from "./AnnualDiseaseRiskSkeleton";
  * AnnualDiseaseRisk 컴포넌트
  * @returns AnnualDiseaseRisk 컴포넌트
  */
-const AnnualDiseaseRisk = () => {
+export default function AnnualDiseaseRisk() {
   return (
     <section>
       <div className={containerClasses}>
@@ -38,9 +38,7 @@ const AnnualDiseaseRisk = () => {
       </div>
     </section>
   );
-};
-
-export default AnnualDiseaseRisk;
+}
 
 const containerClasses = "flex flex-col rounded-500 border border-gray-100 bg-white-100 p-600";
 const headerClasses = "flex items-start justify-between gap-500";

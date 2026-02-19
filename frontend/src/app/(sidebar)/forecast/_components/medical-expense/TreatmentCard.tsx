@@ -1,11 +1,13 @@
 import type { TreatmentResponse } from "@/app/(sidebar)/forecast/_types/medicalExpense";
-const TreatmentCard = ({ treatment }: { treatment: TreatmentResponse }) => {
+export default function TreatmentCard({ treatment }: { treatment: TreatmentResponse }) {
   const { name, description, minPrice, maxPrice, averagePrice } = treatment;
 
   return (
     <div className={cardClasses}>
       <div className={contentClasses}>
-        <h1 className={nameClasses}>{name}</h1>
+        <h1 className={(name?.length ?? 0) > 12 ? nameLongClasses : nameClasses} title={name}>
+          {name}
+        </h1>
         <p className={descriptionClasses}>{description}</p>
       </div>
       <div className={priceContainerClasses}>
@@ -24,18 +26,17 @@ const TreatmentCard = ({ treatment }: { treatment: TreatmentResponse }) => {
       </div>
     </div>
   );
-};
-
-export default TreatmentCard;
+}
 
 // Tailwind CSS classes
 const cardClasses =
-  "flex flex-col gap-900 py-700 px-600 rounded-250 border border-gray-100 bg-gray-10";
+  "flex flex-col justify-between h-[220px] py-700 px-600 rounded-250 border border-gray-100 bg-gray-10";
 
 const contentClasses = "flex flex-col gap-200";
-const nameClasses = "typo-headline-s-bold text-gray-800";
+const nameClasses = "typo-headline-s-bold text-gray-800 line-clamp-1";
+const nameLongClasses = "typo-title-s-bold text-gray-800 line-clamp-1";
 const descriptionClasses = "typo-body-l-bold text-gray-500 line-clamp-2";
 
-const priceContainerClasses = "flex items-end flex-col";
+const priceContainerClasses = "flex items-start flex-col";
 const priceLabelClasses = "typo-body-l-medium text-gray-300";
 const averageLabelClasses = "typo-headline-m-bold text-gray-800";

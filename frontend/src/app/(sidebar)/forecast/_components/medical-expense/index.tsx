@@ -4,12 +4,12 @@ import MedicalExpenseTabs from "./MedicalExpenseTabs";
 import MedicalExpenseTreatments from "./MedicalExpenseTreatments";
 import { PAGE_SIZE } from "@/app/(sidebar)/forecast/_constants";
 
-const MedicalExpense = ({
+export default function MedicalExpense({
   diseaseList,
   selectedDisease,
   costData,
   currentPage,
-}: MedicalExpenseProps) => {
+}: MedicalExpenseProps) {
   const totalPages = Math.ceil(costData.length / PAGE_SIZE);
   const visibleTreatments = costData.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE);
 
@@ -27,10 +27,8 @@ const MedicalExpense = ({
       </div>
     </section>
   );
-};
-
-export default MedicalExpense;
+}
 
 // Tailwind CSS classes
 const containerClasses =
-  "flex flex-col gap-600 rounded-500 border border-gray-100 bg-white-100 p-600 overflow-hidden w-full mb-[150px]";
+  "flex flex-col gap-600 rounded-500 border border-gray-100 bg-white-100 p-600 overflow-hidden w-full mb-[50px]";

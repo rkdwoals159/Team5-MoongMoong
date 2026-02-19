@@ -15,8 +15,8 @@ export default function SidebarLayout({
       {process.env.NEXT_PUBLIC_LHCI !== "true" && <SSEListener />}
       <div className="h-screen bg-white-100">
         <div className="flex h-full">
-          <Sidebar className="flex-1 min-w-[240px]" />
-          <div className="flex flex-5 flex-col">
+          <Sidebar className="w-[240px] shrink-0" />
+          <div className="flex flex-5 flex-col min-w-0">
             <Header className="shrink-0" />
             <main className="flex-1 flex flex-col min-h-0 overflow-auto">{children}</main>
           </div>

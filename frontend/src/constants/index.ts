@@ -5,3 +5,5 @@ export * from "./diseases";
 export * from "./colorTables";
 export * from "./sseConnection";
 export const DAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"] as const;
+export const SCROLL_THRESHOLD = 20;
+export const OBSERVER_THRESHOLD = 0.1;

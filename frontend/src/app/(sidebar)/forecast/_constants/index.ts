@@ -35,3 +35,5 @@ export const PAGE_SIZE = 3;
 export const ANNUAL_DISEASE_SUBTITLE = "향후 7년간 위험도 상위 질병";
 export const ANNUAL_DISEASE_TITLE = "연간 질병 위험도";
 export const ANNUAL_DISEASE_UNIT = "단위: %";
+
+export const LINECHART_Y_PADDING = 5;

@@ -5,7 +5,7 @@ import AnnualDiseaseRiskSelect from "./AnnualDiseaseRiskSelect";
 import AnnualDiseaseRiskChart from "./AnnualDiseaseRiskChart";
 import { useAnnualDiseaseRisk } from "@/app/(sidebar)/forecast/_hooks/useAnnualDiseaseRisk";
 
-const AnnualDiseaseRiskClient = (props: AnnualDiseaseRiskProps) => {
+export default function AnnualDiseaseRiskClient(props: AnnualDiseaseRiskProps) {
   const {
     selectedDiseases,
     unselectedDiseases,
@@ -27,6 +27,4 @@ const AnnualDiseaseRiskClient = (props: AnnualDiseaseRiskProps) => {
       />
     </>
   );
-};
-
-export default AnnualDiseaseRiskClient;
+}

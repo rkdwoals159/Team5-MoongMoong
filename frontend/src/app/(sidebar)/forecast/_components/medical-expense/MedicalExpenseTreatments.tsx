@@ -2,12 +2,12 @@ import PaginationButton from "@/components/common/PaginationButton/PaginationBut
 import TreatmentCard from "@/app/(sidebar)/forecast/_components/medical-expense/TreatmentCard";
 import Link from "next/link";
 import type { MedicalExpenseTreatmentsProps } from "@/app/(sidebar)/forecast/_types/medicalExpense";
-const MedicalExpenseTreatments = ({
+export default function MedicalExpenseTreatments({
   visibleTreatments,
   totalPages,
   selectedDisease,
   currentPage,
-}: MedicalExpenseTreatmentsProps) => {
+}: MedicalExpenseTreatmentsProps) {
   return (
     <div className={cardsContainerClasses}>
       <div className={cardsGridClasses}>
@@ -48,9 +48,7 @@ const MedicalExpenseTreatments = ({
       )}
     </div>
   );
-};
-
-export default MedicalExpenseTreatments;
+}
 
 const cardsContainerClasses = "flex flex-col gap-500 relative";
 const cardsGridClasses = "grid grid-cols-3 gap-400";

@@ -1,4 +1,3 @@
-import type { MouseEvent } from "react";
 import type { FilterChipProps } from "./filterChip.type";
 import { cn } from "@/utils/style";
 import CancelIcon from "@/assets/ic_out_small.svg";
@@ -27,9 +26,10 @@ const FilterChip = ({
   return (
     <button
       type="button"
+      aria-label={`${label} 선택`}
       {...rest}
       className={cn(...classes)}
-      onClick={onSelect}
+      onClick={isSelected ? onCancel : onSelect}
       disabled={isSelected && !hasCancelIcon}
     >
       <div className={contentClasses}>
@@ -48,10 +48,6 @@ const FilterChip = ({
             width={40}
             height={40}
             className={cancelButtonClasses}
-            onClick={(event: MouseEvent<SVGSVGElement>) => {
-              event.stopPropagation();
-              onCancel?.();
-            }}
             aria-label="선택 해제"
           />
         )}
@@ -65,13 +61,13 @@ export default FilterChip;
 //--------------------------------
 // Tailwind CSS classes
 const baseClasses =
-  "inline-flex items-center justify-center h-[48px] px-[20px] py-[10px] rounded-[44px] bg-[var(--color-white-100)] cursor-pointer select-none";
+  "inline-flex items-center justify-center h-[48px] px-[20px] py-[10px] rounded-[44px] bg-white-100 cursor-pointer select-none transition-colors duration-200";
 
-const selectedBorderClasses = "border border-[var(--color-yellow-300)]";
-const unselectedBorderClasses = "border border-[var(--color-gray-200)]";
+const selectedBorderClasses = "border border-yellow-300 hover:border-yellow-400";
+const unselectedBorderClasses = "border border-gray-200 hover:border-gray-300";
 
-const selectedTextClasses = "text-[var(--color-gray-800)]";
-const unselectedTextClasses = "text-[var(--color-gray-600)]";
+const selectedTextClasses = "text-gray-800";
+const unselectedTextClasses = "text-gray-600";
 
 const contentClasses = "flex items-center gap-[2px]";
 const labelGroupClasses = "flex items-center gap-[10px]";
@@ -79,5 +75,5 @@ const labelClasses = "typo-body-m-medium";
 
 const indicatorClasses = "h-[14px] w-[14px] rounded-full";
 const cancelButtonClasses =
-  "z-50 flex items-center justify-center p-[8px] text-[var(--color-gray-600)] cursor-pointer";
+  "z-50 flex items-center justify-center p-[8px] text-gray-600 cursor-pointer";
 //--------------------------------

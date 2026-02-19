@@ -10,7 +10,7 @@ import ErrorBoundary from "@/components/ui/ErrorBoundary/ErrorBoundary";
  * AIRecommendation 컴포넌트
  * @returns AIRecommendation 컴포넌트
  */
-const AIRecommendation = () => {
+export default function AIRecommendation() {
   return (
     <section>
       <div className={containerClasses}>
@@ -29,9 +29,7 @@ const AIRecommendation = () => {
       </div>
     </section>
   );
-};
-
-export default AIRecommendation;
+}
 
 const containerClasses = "flex gap-500 p-600 rounded-500 bg-yellow-100";
 const iconClasses = "shrink-0";

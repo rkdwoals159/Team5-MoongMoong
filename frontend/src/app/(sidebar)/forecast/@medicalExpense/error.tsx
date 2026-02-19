@@ -4,13 +4,13 @@ import { useEffect } from "react";
 import Button from "@/components/common/Button/Button";
 import MedicalExpenseHeader from "@/app/(sidebar)/forecast/_components/medical-expense/MedicalExpenseHeader";
 
-const MedicalExpenseError = ({
+export default function MedicalExpenseError({
   error,
   reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
-}) => {
+}) {
   useEffect(() => {
     console.error("MedicalExpense error:", error);
   }, [error]);
@@ -28,9 +28,7 @@ const MedicalExpenseError = ({
       </div>
     </section>
   );
-};
-
-export default MedicalExpenseError;
+}
 
 const containerClasses =
   "flex flex-col gap-600 rounded-500 border border-gray-100 bg-white-100 p-600 overflow-hidden w-full mb-[150px] mt-[20px]";

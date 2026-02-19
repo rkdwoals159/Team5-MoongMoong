@@ -1,4 +1,4 @@
-const SkeletonCard = () => {
+export default function SkeletonCard() {
   return (
     <div className={cardClasses}>
       <div className={contentClasses}>
@@ -21,9 +21,7 @@ const SkeletonCard = () => {
       </div>
     </div>
   );
-};
-
-export default SkeletonCard;
+}
 
 // Tailwind CSS classes
 const cardClasses =
