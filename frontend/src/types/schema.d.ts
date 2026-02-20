@@ -338,6 +338,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/notifications": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 알림을 조회합니다.
+     * @description 현재 참여한 그룹에서 발생한 알림을 조회합니다.
+     */
+    get: operations["findNotification"];
+    put?: never;
+    post?: never;
+    delete: operations["deleteNotification"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/member": {
     parameters: {
       query?: never;
@@ -609,6 +629,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/notifications/{notificationId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete: operations["deleteNotification_1"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -771,83 +807,6 @@ export interface components {
        *     ]
        */
       diseases?: (
-        | "DER"
-        | "MUS"
-        | "NEU"
-        | "OCU"
-        | "RES"
-        | "CAR"
-        | "HEM"
-        | "GAS"
-        | "URI"
-        | "REP"
-        | "END"
-        | "INF"
-      )[];
-    };
-    /** @description 반려동물 생성 요청 */
-    PetCreateRequest: {
-      /**
-       * @description 반려동물 이름
-       * @example 초코
-       */
-      petName: string;
-      /**
-       * @description 반려동물 종류
-       * @example DAS
-       * @enum {string}
-       */
-      breed:
-        | "GRE"
-        | "DAL"
-        | "DAS"
-        | "DOB"
-        | "GOL"
-        | "LAB"
-        | "MAL"
-        | "BUL"
-        | "BEA"
-        | "BIC"
-        | "SHE"
-        | "SCH"
-        | "MIL"
-        | "MIS"
-        | "HUS"
-        | "HOU"
-        | "GER"
-        | "JIN"
-        | "CHS"
-        | "CHL"
-        | "COC"
-        | "TER"
-        | "POM"
-        | "POO"
-        | "SHI"
-        | "WEL"
-        | "ETC";
-      /**
-       * @description 성별
-       * @example M
-       * @enum {string}
-       */
-      gender: "M" | "F";
-      /** @example 2026-02 */
-      birthDate: string;
-      /**
-       * @description 거주 시
-       * @example 서울시
-       */
-      city: string;
-      /**
-       * @description 거주 구역
-       * @example 종로구
-       */
-      district: string;
-      /**
-       * @description 우려하는 질병 목록
-       * @example OCU, MUS
-       */
-      diseases: (
         | "DER"
         | "MUS"
         | "NEU"
@@ -1572,6 +1531,56 @@ export interface components {
         | "INF"
       )[];
     };
+    /** @description 알림 내역 조회 응답 */
+    NotificationReadResponse: {
+      /**
+       * Format: int64
+       * @description 마지막으로 확인한 알림 ID(조회 시작 시점 기준). 알림이 없으면 null
+       */
+      lastSeenNotificationId?: number;
+      /**
+       * Format: int32
+       * @description 현재 페이지 인덱스(0부터 시작)
+       * @example 0
+       */
+      page?: number;
+      /**
+       * Format: int32
+       * @description 페이지 사이즈
+       * @example 10
+       */
+      size?: number;
+      /**
+       * @description 다음 페이지 존재 여부
+       * @example true
+       */
+      hasNext?: boolean;
+      /** @description 알림 목록 */
+      notifications?: components["schemas"]["NotificationResponse"][];
+    };
+    /** @description 사용자에게 표시되는 개별 알림 정보 */
+    NotificationResponse: {
+      /**
+       * Format: int64
+       * @description 알림 ID
+       * @example 1
+       */
+      notificationId?: number;
+      /** @description 알림 내용 */
+      content?: string;
+      /**
+       * @description 이벤트 종류
+       * @example SAVING
+       * @enum {string}
+       */
+      eventType?: "SAVING";
+      /**
+       * Format: date-time
+       * @description 생성 시간
+       * @example 2026-01-30T14:32:15.123+09:00
+       */
+      createdAt?: string;
+    };
     /** @description 회원 정보 응답 */
     MemberInfoResponse: {
       /**
@@ -1970,6 +1979,13 @@ export interface components {
        */
       petImageUrl?: string;
     };
+    Member: {
+      /** Format: int64 */
+      id?: number;
+      email: string;
+      name: string;
+      imageUrl?: string;
+    };
     /** @description 저금통 깨기 응답 */
     BankBreakResponse: {
       /**
@@ -2009,57 +2025,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["PetReadResponse"];
-        };
-      };
-      /** @description 인증되지 않은 사용자 */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
-        };
-      };
-      /** @description 반려동물 정보가 없을 때 */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
-        };
-      };
-      /** @description 서버 오류 */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
-        };
-      };
-    };
-  };
-  updatePetInfo: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json;charset=UTF-8": components["schemas"]["PetUpdateRequest"];
-      };
-    };
-    responses: {
-      /** @description 반려동물 정보 수정 성공 */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PetUpdateResponse"];
         };
       };
       /** @description 인증되지 않은 사용자 */
@@ -3078,6 +3043,62 @@ export interface operations {
       };
     };
   };
+  findNotification: {
+    parameters: {
+      query?: {
+        /** @description Zero-based page index (0..N) */
+        page?: number;
+        /** @description The size of the page to be returned */
+        size?: number;
+        /** @description Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
+        sort?: string[];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 알림 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["NotificationReadResponse"];
+        };
+      };
+      /** @description 알림 수신 정보를 찾을 수 없습니다. */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  deleteNotification: {
+    parameters: {
+      query: {
+        member: components["schemas"]["Member"];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
   findMember: {
     parameters: {
       query?: never;
@@ -3119,8 +3140,8 @@ export interface operations {
   subscribe: {
     parameters: {
       query?: never;
-      header: {
-        Authorization: string;
+      header?: {
+        Authorization?: string;
       };
       path?: never;
       cookie?: never;
@@ -3196,6 +3217,15 @@ export interface operations {
       };
       /** @description 인증되지 않은 사용자 */
       401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description AI 의사 권장사항 생성 중 */
+      404: {
         headers: {
           [name: string]: unknown;
         };
@@ -3618,6 +3648,28 @@ export interface operations {
         content: {
           "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
         };
+      };
+    };
+  };
+  deleteNotification_1: {
+    parameters: {
+      query: {
+        member: components["schemas"]["Member"];
+      };
+      header?: never;
+      path: {
+        notificationId: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
       };
     };
   };

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/Header/PageHeader";
 import DateRangePicker from "@/components/common/DateRangePicker/DateRangePicker";
+import AnalysisReportButton from "@/components/ui/Demo/AnalysisReportButton";
 import type { AnalysisHeaderProps } from "@/app/(sidebar)/analysis/_types/componentPropsType.type";
 export default function AnalysisHeader({ startDate, endDate }: AnalysisHeaderProps) {
   const router = useRouter();
@@ -17,7 +18,10 @@ export default function AnalysisHeader({ startDate, endDate }: AnalysisHeaderPro
 
   return (
     <div className="flex flex-col gap-400">
-      <PageHeader title="반려동물 소비분석" />
+      <div className="flex items-center justify-between">
+        <PageHeader title="반려동물 소비분석" />
+        <AnalysisReportButton />
+      </div>
       <DateRangePicker
         startDate={startDate}
         endDate={endDate}

@@ -1,5 +1,5 @@
 export type AdministrativeRegionName =
-  | "서울특별시"
+  | "서울시"
   | "부산광역시"
   | "인천광역시"
   | "대구광역시"
@@ -24,7 +24,7 @@ export type AdministrativeDistricts = Record<AdministrativeRegionName, string[]>
  * 온보딩, 설정 등 여러 화면에서 재사용되는 공용 데이터입니다.
  */
 export const ADMINISTRATIVE_DISTRICTS: AdministrativeDistricts = {
-  서울특별시: [
+  서울시: [
     "종로구",
     "중구",
     "용산구",

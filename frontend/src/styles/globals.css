@@ -44,6 +44,30 @@ body {
   animation: toast-out var(--toast-duration, 500ms) ease-in forwards;
 }
 
+.hover-bell-swing:hover {
+  animation: bell-swing 500ms ease-out;
+  transform-origin: bottom center;
+}
+
+@keyframes bell-swing {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(16deg);
+  }
+  40% {
+    transform: rotate(-12deg);
+  }
+  60% {
+    transform: rotate(8deg);
+  }
+  80% {
+    transform: rotate(-4deg);
+  }
+}
+
 /* Shake Animation */
 @keyframes shake {
   0%,
@@ -218,7 +242,11 @@ body {
   .saving-break-panel-out,
   .saving-break-stagger-in,
   .saving-break-cta-pulse-once,
-  .saving-break-confetti-piece {
+  .saving-break-confetti-piece,
+  .report-fly-up,
+  .report-check-in,
+  .report-spinner,
+  .report-error-in {
     animation: none !important;
     transform: none !important;
     opacity: 1 !important;
@@ -335,6 +363,58 @@ body {
 
 .input-shake {
   animation: input-shake 300ms ease-out;
+}
+
+/* Report button animations */
+@keyframes report-fly-up {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+}
+
+@keyframes report-check-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.report-fly-up {
+  animation: report-fly-up 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.report-check-in {
+  animation: report-check-in 350ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.report-spinner {
+  border: 2px solid var(--color-gray-200);
+  border-top-color: var(--color-gray-600);
+  border-radius: 50%;
+  animation: report-spin 600ms linear infinite;
+}
+
+@keyframes report-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.report-error-in {
+  animation: report-check-in 350ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 /* 스크롤바 숨기기 */

@@ -1,6 +1,6 @@
 export const LARGE_SIZE = 80;
 export const COMPACT_SIZE = 55;
-export const MAX_INVITE_CODE_LENGTH = 100;
+export const MAX_INVITE_CODE_LENGTH = 255;
 export const MAX_CREW_MEMBERS = 6;
 export const SIZE_VARIANT_CLASSNAMES = {
   large: `size-[80px]`,
