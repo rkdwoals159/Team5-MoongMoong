@@ -19,6 +19,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
+    private static final String MEMBER_DEFAULT_IMAGE_URL = "https://u99onbtkkwkbgusc.public.blob.vercel-storage.com/images/img_dog_default-vbfra7RkKndq0xCOJhUExOVRVTNRwo.png";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,6 +38,10 @@ public class Member {
 
     public Member(String email, String name, String imageUrl) {
         this(null, email, name, imageUrl);
+    }
+
+    public Member(String email, String name) {
+        this(null, email, name, MEMBER_DEFAULT_IMAGE_URL);
     }
 
     public boolean isSame(String email) {

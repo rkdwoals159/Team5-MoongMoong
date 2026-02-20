@@ -16,14 +16,11 @@ public record MemberInfoResponse(
         String memberImageUrl
 ) {
 
-    public static final String TEMP_MEMBER_IMAGE_URL = "https://avatars.githubusercontent.com/u/148152234?v=4"; //임시 회원 url
-
-    //TODO S3 추가 이후 수정
     public MemberInfoResponse(Member member) {
         this(
                 member.getName(),
                 member.getEmail(),
-                TEMP_MEMBER_IMAGE_URL
+                member.getImageUrl()
         );
     }
 }

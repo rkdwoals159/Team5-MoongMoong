@@ -5,7 +5,6 @@ import com.moong.domain.member.MemberInfo;
 import com.moong.domain.member.MemberName;
 import com.moong.dto.request.member.MemberUpdateNameRequest;
 import com.moong.dto.request.member.MemberUpdateProfileRequest;
-import com.moong.dto.response.member.MemberInfoResponse;
 import com.moong.dto.response.member.MemberReadResponse;
 import com.moong.dto.response.member.MemberUpdateNameResponse;
 import com.moong.dto.response.member.MemberUpdateProfileResponse;
@@ -33,7 +32,7 @@ public class MemberService {
 
     private Member saveNewMember(MemberInfo memberInfo) {
         MemberName memberName = memberNameGenerator.generateUniqueNameWithDecorator(memberRepository::existsByName);
-        Member freshMember = new Member(memberInfo.email(), memberName.getValue(), MemberInfoResponse.TEMP_MEMBER_IMAGE_URL);
+        Member freshMember = new Member(memberInfo.email(), memberName.getValue());
         return memberRepository.save(freshMember);
     }
 
