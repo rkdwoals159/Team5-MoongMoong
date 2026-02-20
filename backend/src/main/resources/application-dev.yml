@@ -177,6 +177,9 @@ flowise:
   id: ${FLOWISE_ID:}
   key: ${FLOWISE_KEY:}
 
+pet-medical:
+  base-url: ${AI_PET_MEDICAL_URL:}
+
 moong:
   mail:
     from: moongmoong.dev@gmail.com

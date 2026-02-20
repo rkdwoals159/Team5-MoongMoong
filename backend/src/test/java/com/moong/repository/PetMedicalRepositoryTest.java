@@ -1,17 +1,19 @@
 package com.moong.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import com.moong.domain.entity.PetMedical;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.Gender;
+import com.moong.repository.petmedical.PetMedicalRepository;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 class PetMedicalRepositoryTest extends BaseRepositoryTest {
 
@@ -47,6 +49,90 @@ class PetMedicalRepositoryTest extends BaseRepositoryTest {
                 .containsExactly(beaFMedical3);
     }
 
+    @DisplayName("제외 : 해당 종, 성별, 나이 구간 내의 의료 예측 정보를 생성 기간을 필터링하여 가져온다")
+    @Test
+    void findByBreedAndGenderAndAgeBetweenWithCreatedAt_Except() {
+        LocalDateTime createdAt = LocalDateTime.now();
+        petMedicalGenerator.generateSaved(Breed.CHL, 3, Gender.F, Disease.CAR, 3);
+
+        List<PetMedical> foundPetMedical = petMedicalRepository.findByBreedAndGenderAndAgeBetweenAndCreatedAtBetween(
+                Breed.CHL,
+                Gender.F,
+                2,
+                4,
+                createdAt.minusSeconds(2),
+                createdAt.minusSeconds(1)
+        );
+
+        assertThat(foundPetMedical).isEmpty();
+    }
+
+    @DisplayName("포함 : 해당 종, 성별, 나이 구간 내의 의료 예측 정보를 생성 기간을 필터링하여 가져온다")
+    @Test
+    void findByBreedAndGenderAndAgeBetweenWithCreatedAt_Include() {
+        LocalDateTime createdAt = LocalDateTime.now();
+        //검색 범위 제외 나이
+        petMedicalGenerator.generateSaved(Breed.CHL, 3, Gender.F, Disease.CAR, 3);
+
+        List<PetMedical> foundPetMedical = petMedicalRepository.findByBreedAndGenderAndAgeBetweenAndCreatedAtBetween(
+                Breed.CHL,
+                Gender.F,
+                2,
+                4,
+                createdAt,
+                createdAt.plusSeconds(1)
+        );
+
+        assertThat(foundPetMedical).hasSize(1);
+    }
+
+
+    @DisplayName("제외 : 해당 종, 성별, 나이의 의료 예측 정보를 생성 기간을 필터링하여 가져온다")
+    @Test
+    void findByBreedAndGenderAndAgeWithCreatedAt_Except() {
+        LocalDateTime createdAt = LocalDateTime.now();
+        petMedicalGenerator.generateSaved(Breed.CHL, 3, Gender.F, Disease.CAR, 3);
+
+        List<PetMedical> foundPetMedical = petMedicalRepository.findMedicalByBreedAndAgeAndGenderAndCreatedAtBetween(
+                Breed.CHL,
+                3,
+                Gender.F,
+                createdAt.minusSeconds(2),
+                createdAt.minusSeconds(1)
+        );
+
+        assertThat(foundPetMedical).isEmpty();
+    }
+
+    @DisplayName("포함 : 해당 종, 성별, 나이 구간 내의 의료 예측 정보를 생성 기간을 필터링하여 가져온다")
+    @Test
+    void findByBreedAndGenderAndAgeWithCreatedAt_Include() {
+        LocalDateTime createdAt = LocalDateTime.now();
+        petMedicalGenerator.generateSaved(Breed.CHL, 3, Gender.F, Disease.CAR, 3);
+
+        List<PetMedical> foundPetMedical = petMedicalRepository.findMedicalByBreedAndAgeAndGenderAndCreatedAtBetween(
+                Breed.CHL,
+                3,
+                Gender.F,
+                createdAt,
+                createdAt.plusSeconds(1)
+        );
+
+        assertThat(foundPetMedical).hasSize(1);
+    }
+
+    @DisplayName("최신 생성 데이터의 날짜를 조회한다")
+    @Test
+    void findLatestDate() {
+        petMedicalGenerator.generateSaved(Breed.CHL, 3, Gender.F, Disease.CAR, 3);
+        LocalDate createdDate = LocalDate.now();
+
+        LocalDate actual = petMedicalRepository.findLatestCreatedDate()
+                .toLocalDate();
+
+        assertThat(actual).isEqualTo(createdDate);
+    }
+
     @DisplayName("해당 종, 나이, 성별 중 발병 확률 ratio가 가장 높은 의료 정보를 반환한다")
     @Test
     void findTopByBreedAndAgeAndGenderOrderByRatioDesc() {
@@ -60,7 +146,7 @@ class PetMedicalRepositoryTest extends BaseRepositoryTest {
 
         // when
         PetMedical found = petMedicalRepository
-                .findTopByBreedAndAgeAndGenderOrderByRatioDesc(
+                .findTopRatioPetMedical(
                         Breed.BEA,
                         5,
                         Gender.F

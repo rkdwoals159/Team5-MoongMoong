@@ -17,17 +17,15 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.reactive.function.client.ExchangeFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 
-@ActiveProfiles("test")
-public class TossPaymentClientTest extends BaseWebClientTest {
+class TossPaymentClientTest extends BaseWebClientTest {
 
     private TossPaymentClient tossPaymentClient;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mockExchangeFunction = Mockito.mock(ExchangeFunction.class);
 
         WebClient.Builder webClientBuilder = WebClient.builder()

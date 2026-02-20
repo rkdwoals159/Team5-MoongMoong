@@ -13,7 +13,6 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
-
 import java.time.Duration;
 
 @Configuration
@@ -27,7 +26,8 @@ public class ClientConfig {
     private static final int SLACK_SENDER_READ_TIMEOUT = 10000;
     private static final int ADVICE_CLIENT_CONNECTION_TIMEOUT = 5000;
     private static final int ADVICE_CLIENT_READ_TIMEOUT = 10000;
-
+    private static final int PET_MEDICAL_CLIENT_CONNECTION_TIMEOUT = 10000;
+    private static final int PET_MEDICAL_CLIENT_READ_TIMEOUT = 10000;
 
     @Bean
     public RestClient.Builder clientBuilder() {
@@ -63,6 +63,20 @@ public class ClientConfig {
     }
 
     @Bean
+    @Qualifier("petMedicalClientBuilder")
+    public WebClient.Builder petMedicalClientBuilder(ObjectMapper objectMapper) {
+        HttpClient petMedicalClient = HttpClient.create()
+                .responseTimeout(Duration.ofMillis(PET_MEDICAL_CLIENT_READ_TIMEOUT))
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, PET_MEDICAL_CLIENT_CONNECTION_TIMEOUT);
+
+        return WebClient.builder()
+                .clientConnector(new ReactorClientHttpConnector(petMedicalClient))
+                .exchangeStrategies(registerJacksonMapper(objectMapper))
+                .filter(WebClientLoggingFilter.logRequest())
+                .filter(WebClientLoggingFilter.logResponseWithBody());
+    }
+
+    @Bean
     @Qualifier("categorizeClientBuilder")
     public WebClient.Builder categorizeClientBuilder(ObjectMapper objectMapper) {
         HttpClient categorizeHttpClient = HttpClient.create()
@@ -90,6 +104,15 @@ public class ClientConfig {
                 .filter(WebClientLoggingFilter.logResponseWithBody());
     }
 
+    @Bean
+    @Qualifier("paymentClientBuilder")
+    public WebClient.Builder paymentClientBuilder(ObjectMapper objectMapper) {
+        return WebClient.builder()
+                .exchangeStrategies(registerJacksonMapper(objectMapper))
+                .filter(WebClientLoggingFilter.logRequest())
+                .filter(WebClientLoggingFilter.logResponseWithBody());
+    }
+
     private ExchangeStrategies registerJacksonMapper(ObjectMapper objectMapper) {
         return ExchangeStrategies.builder()
                 .codecs(configurer -> {
@@ -100,14 +123,5 @@ public class ClientConfig {
                             .jackson2JsonEncoder(new Jackson2JsonEncoder(objectMapper));
                 })
                 .build();
-    }
-
-    @Bean
-    @Qualifier("paymentClientBuilder")
-    public WebClient.Builder paymentClientBuilder(ObjectMapper objectMapper) {
-        return WebClient.builder()
-                .exchangeStrategies(registerJacksonMapper(objectMapper))
-                .filter(WebClientLoggingFilter.logRequest())
-                .filter(WebClientLoggingFilter.logResponseWithBody());
     }
 }

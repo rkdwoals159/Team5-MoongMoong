@@ -13,10 +13,10 @@ import com.moong.domain.medicaladvice.AiMedicalAdvice;
 import com.moong.dto.response.medicaladvice.AiMedicalAdviceRequest;
 import com.moong.dto.response.medicaladvice.AiMedicalAdviceResponse;
 import com.moong.repository.PetGroupRepository;
-import com.moong.repository.PetMedicalRepository;
 import com.moong.repository.TreatmentRepository;
 import com.moong.repository.groupexpense.GroupExpenseRepository;
 import com.moong.repository.medicaladvice.GroupMedicalAdviceJdbcRepository;
+import com.moong.repository.petmedical.PetMedicalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -63,7 +63,7 @@ public class MedicalAdviceService {
     public AiMedicalAdviceRequest getAiMedicalAdviceInput(long groupId, LocalDate date) {
         Pet pet = petGroupRepository.getById(groupId).getPet();
         int nextAge = Math.min(pet.getAge().plus(1), MAX_PET_MEDICAL_AGE);
-        PetMedical highestRiskMedical = petMedicalRepository.findTopByBreedAndAgeAndGenderOrderByRatioDesc(
+        PetMedical highestRiskMedical = petMedicalRepository.findTopRatioPetMedical(
                 pet.getBreed(),
                 nextAge,
                 pet.getGender()

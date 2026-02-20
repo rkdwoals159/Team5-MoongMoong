@@ -4,7 +4,7 @@ import com.moong.domain.entity.PetMedical;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.Gender;
-import com.moong.repository.PetMedicalRepository;
+import com.moong.repository.petmedical.PetMedicalRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

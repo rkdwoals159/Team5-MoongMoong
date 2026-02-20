@@ -7,10 +7,12 @@ import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.ExchangeFunction;
 import reactor.core.publisher.Mono;
 
+@ActiveProfiles("test")
 public abstract class BaseWebClientTest {
 
     protected ExchangeFunction mockExchangeFunction;

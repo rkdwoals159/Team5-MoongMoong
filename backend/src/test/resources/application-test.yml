@@ -139,3 +139,6 @@ spring:
     open-in-view: false
   flyway:
     enabled: false
+
+pet-medical:
+  base-url: testUrl

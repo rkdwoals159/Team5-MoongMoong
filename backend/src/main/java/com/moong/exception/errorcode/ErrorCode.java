@@ -52,6 +52,7 @@ public enum ErrorCode {
     CREW_NOT_FOUND(404, "해당하는 크루를 찾을 수 없습니다."),
     PET_GROUP_NOT_FOUND(404, "해당하는 펫 그룹을 찾을 수 없습니다."),
     MEDICAL_ADVICE_NOT_FOUND(404, "해당 그룹의 의사 권장사항을 찾을 수 없습니다."),
+    PET_MEDICAL_NOT_FOUND(404, "펫 의료정보를 찾을 수 없습니다."),
     NO_RESOURCE_FOUND(404, "요청한 리소스를 찾을 수 없습니다."),
     MEMBER_EXPENSE_NOT_FOUND(404, "해당하는 사용자 소비내역을 찾을 수 없습니다"),
     NO_SUCH_PET_FOUND(404, "PET을 찾을 수 없습니다."),
