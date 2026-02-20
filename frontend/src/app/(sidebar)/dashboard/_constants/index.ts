@@ -32,3 +32,20 @@ export {
 } from "@/app/(sidebar)/dashboard/_constants/messages";
 
 export { AUTO_CATEGORIZE_DEBOUNCE_MS } from "@/app/(sidebar)/dashboard/_constants/expenseCategory";
+
+export {
+  IMAGE_SIZE,
+  IMAGE_OVERLAY_TEXT,
+  SUCCESS_VIEW_TITLE,
+  SUCCESS_VIEW_DESCRIPTION,
+  SUCCESS_VIEW_IMAGE_SIZE,
+  SELECT_VIEW_TITLE,
+  SELECT_VIEW_DESCRIPTION,
+  SELECT_VIEW_FILE_NAME_PLACEHOLDER,
+  LOADING_VIEW_TITLE,
+  LOADING_VIEW_DESCRIPTION,
+  ERROR_VIEW_TITLE,
+  ERROR_VIEW_DESCRIPTION,
+  ARIA_LABEL_BY_VIEW,
+  SAVE_DELAY_MS,
+} from "@/app/(sidebar)/dashboard/_constants/petImageModal";

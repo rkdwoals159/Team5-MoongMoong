@@ -103,9 +103,7 @@ export const getCompareLastMonth = async (): Promise<SummaryData> => {
       medicalRatio: data.medicalRatio ?? 0,
       petName: data.petName ?? "",
     },
-    // TODO: 백엔드 S3 작업 이후, 변경 필요
-    // petImageUrl: data.petImageUrl ?? "/images/img_dog_default.svg",
-    petImageUrl: "/images/img_dog_default.svg",
+    petImageUrl: data.petImageUrl ?? "",
   };
 };
 
