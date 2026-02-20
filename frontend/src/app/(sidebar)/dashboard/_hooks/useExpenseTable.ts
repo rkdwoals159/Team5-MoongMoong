@@ -57,6 +57,8 @@ export const useExpenseTable = (initialData: ExpenseData[]): UseExpenseTableRetu
     openDatePicker: handleOpenDatePicker,
     closeDatePicker: handleCloseDatePicker,
     showDatePicker,
+    sortedRows,
+    updateCellByLocalId,
   });
 
   const { handleSave } = useExpenseRowSave({

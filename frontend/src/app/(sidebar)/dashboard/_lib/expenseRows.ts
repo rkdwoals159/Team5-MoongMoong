@@ -95,8 +95,10 @@ export const buildPatchPayload = (rows: EditableExpenseRow[]): BuildPatchPayload
   let invalidCount = 0;
 
   rows.forEach((row) => {
-    if (row.isDeleted && row.expenseId != null && row.expenseId > 0) {
-      deletedIds.push(row.expenseId);
+    if (row.isDeleted) {
+      if (row.expenseId != null && row.expenseId > 0) {
+        deletedIds.push(row.expenseId);
+      }
       return;
     }
 

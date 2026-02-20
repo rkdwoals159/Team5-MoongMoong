@@ -50,6 +50,7 @@ export default function StepTwoFields({
             placeholder={CITY_PLACEHOLDER}
             errorMessage={hasCityError ? errors?.city : undefined}
             onChange={(city) => onChange({ city, district: "" })}
+            disabled={true}
           />
           <Dropdown
             options={districtOptions}

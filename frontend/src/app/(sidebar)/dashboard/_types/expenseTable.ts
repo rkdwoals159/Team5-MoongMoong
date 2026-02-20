@@ -99,6 +99,8 @@ export type UseExpenseTableSelectionParams = {
   openDatePicker?: (rowIndex: number) => void;
   closeDatePicker?: () => void;
   showDatePicker?: boolean;
+  sortedRows: ExpenseData[];
+  updateCellByLocalId: UpdateCellByLocalId;
 };
 
 /**

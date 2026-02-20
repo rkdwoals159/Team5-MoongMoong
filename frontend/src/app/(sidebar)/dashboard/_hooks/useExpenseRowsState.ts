@@ -99,11 +99,11 @@ export function useExpenseRowsState(initialData: ExpenseData[]) {
   /** 패치 페이로드 생성 핸들러 */
   const getPatchPayload = useCallback(() => buildPatchPayload(rows), [rows]);
 
-  /** 변경 사항 존재 여부 체크 핸들러 */
-  const hasUnsavedChanges = useMemo(
-    () => rows.some((row) => row.isNew || row.isDirty || row.isDeleted),
-    [rows],
-  );
+  /** 저장할 내용이 있을 때만 true (payload 기준). 삭제된 새 행·빈 행만 있으면 false */
+  const hasUnsavedChanges = useMemo(() => {
+    const { payload } = getPatchPayload();
+    return (payload.expenses?.length ?? 0) > 0 || (payload.deletedIds?.length ?? 0) > 0;
+  }, [getPatchPayload]);
 
   /** 선택된 셀 개수 체크 핸들러 */
   const selectedCount = useMemo(

@@ -63,7 +63,7 @@ export const DEFAULT_FORM_DATA: OnboardingFormData = {
   breed: "",
   gender: "",
   birthDate: "",
-  city: "",
+  city: "서울시",
   district: "",
   diseases: [],
 };

@@ -27,7 +27,7 @@ export default async function Header({ className, ...rest }: HeaderProps) {
       <Profile
         name={memberInfo?.memberName || "견주"}
         petName={petInfo?.petName || "코코"}
-        memberImage={process.env.NEXT_PUBLIC_DEFAULT_IMAGE!}
+        memberImage={memberInfo?.memberImageUrl || process.env.NEXT_PUBLIC_DEFAULT_IMAGE!}
       />
     </header>
   );
