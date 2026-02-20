@@ -1,12 +1,12 @@
 package com.moong.client.categorize;
 
+import com.moong.ai.OpenAiModel;
 import com.moong.ai.OpenAiProperties;
 import com.moong.ai.OpenAiResult;
 import com.moong.ai.prompt.CategorizePromptGenerator;
 import com.moong.dto.request.categorize.OpenAiRequest;
 import com.moong.dto.request.memberexpense.CategorizeRequest;
 import com.moong.dto.response.categorize.AiCategorizeResponse;
-import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -15,6 +15,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Component
@@ -40,9 +42,9 @@ public class OpenAiCategorizeClient implements ExpenseCategorizeClient {
     }
 
     @Override
-    public CompletableFuture<OpenAiResult<AiCategorizeResponse>> categorize(CategorizeRequest request, String model) {
+    public CompletableFuture<OpenAiResult<AiCategorizeResponse>> categorize(CategorizeRequest request, OpenAiModel aiModel) {
         String prompt = promptGenerator.generate(request.usage());
-        OpenAiRequest aiRequest = new OpenAiRequest(model, prompt);
+        OpenAiRequest aiRequest = new OpenAiRequest(aiModel.getModel(), prompt);
         return webClient.post()
                 .uri("/responses")
                 .bodyValue(aiRequest)

@@ -15,13 +15,14 @@ import com.moong.dto.response.groupmedical.GroupMedicalStatisticsResponse;
 import com.moong.dto.response.groupmedical.PetDiseaseRankingResponse;
 import com.moong.dto.response.groupmedical.TreatmentsResponse;
 import com.moong.repository.CrewRepository;
-import com.moong.repository.GroupMedicalAdviceRepository;
 import com.moong.repository.PetMedicalRepository;
 import com.moong.repository.TreatmentRepository;
-import java.util.List;
+import com.moong.repository.medicaladvice.GroupMedicalAdviceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

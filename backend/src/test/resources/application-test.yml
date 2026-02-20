@@ -21,6 +21,22 @@ slack:
   webhook-url: test_url
 
 category-classification:
+  system-prompt: |
+    유저가 입력한 소비 내역의 카테고리를 다음 중에 분류해    
+    
+    조건:
+    - mainCategory는 대분류고 subCategory는 소분류야
+    - mainCategory는 '사료/간식', '의료비', `물품구매비`, `미용`, `기타` 중 하나로 분류해줘
+    - mainCategory가 `의료비`가 아닌 경우 subCategory에는 null을 반환해.   
+    - mainCategory가 `의료비`일 경우 subCategory도 생성해줘     
+    - mainCategory가 의료비인 경우 subCategory는 [진료비, 예방접종, 약/처방, 검사비, 수술/입원, 기타 의료비] 중 하나로 분류해줘
+
+  prompt-template: |
+    반려동물 소비 카테고리 대분류 -> mainCategory
+    소비 카테고리 소분류 -> subCategory
+    
+    유저 입력: {input}
+
   format-message: |
     응답은 반드시 다음 JSON 스키마에 맞춰 정확한 JSON 형식으로 제공해주세요(맨 처음에 ```json 같은 것도 절대 포함하지 마세요).
     
@@ -32,20 +48,48 @@ category-classification:
     응답에는 JSON만 포함하고, 다른 텍스트나 설명은 포함하지 마세요.
     JSON 형식으로만 응답해야 하며, 내가 그대로 파싱할 예정입니다.
 
-  prompt-template: |
-      반려동물 소비 카테고리 대분류 -> mainCategory
-      소비 카테고리 소분류 -> subCategory
-      
-      유저 입력: {input}
+medical-advice :
   system-prompt: |
-      유저가 입력한 소비 내역의 카테고리를 다음 중에 분류해    
-      
-      조건:
-      - mainCategory는 대분류고 subCategory는 소분류야
-      - mainCategory는 '사료/간식', '의료비', `물품구매비`, `미용`, `기타` 중 하나로 분류해줘
-      - mainCategory가 `의료비`가 아닌 경우 subCategory에는 null을 반환해.   
-      - mainCategory가 `의료비`일 경우 subCategory도 생성해줘     
-      - mainCategory가 의료비인 경우 subCategory는 [진료비, 예방접종, 약/처방, 검사비, 수술/입원, 기타 의료비] 중 하나로 분류해줘
+    당신은 반려동물 의료비 예측 전문가 역할을 수행한다.
+    제공된 정보를 분석하고 반드시 JSON 형식으로만 응답한다.
+    
+    [데이터 형식]
+    - treatments는 JSON 배열이며, 각 항목은 { "treatment": string, "cost": number } 구조
+    - ratio는 0~100 사이의 퍼센트 값(%)
+
+    [작성 가이드]
+    - medicalAdvice: disease와 ratio를 근거로 예방 및 관리법을 제안하는 전문적인 한 문장
+      * treatments 항목명(검사명, 수술명 등)을 나열하지 않는다.
+      * 문장 시작은 반드시 다음 중 하나의 템플릿을 따른다.
+      - ratio >= 70: "내년 {disease} 질환의 발생 확률이 높으므로 "
+      - 40 <= ratio < 70: "내년 {disease} 질환의 발생 확률이 {ratio}% 정도로 예상되어 "
+      - ratio < 40: "내년 {disease} 질환의 발생 확률이 낮은 편이지만 "
+      * 명령형(…하세요/…줄이세요) 대신 “…도움이 됩니다/권장됩니다” 톤으로 쓴다.
+    - expectedCost: treatments 항목들의 비용을 ratio에 따라 확률 가중하여 계산한 정수값.
+      * 수술/입원 등 고비용 이벤트성 항목은 동시에 여러 개가 발생한다고 가정하지 말고, 최대 1개만 제한적으로 반영한다.
+      * 진료/검사/검진 등 반복 관리 항목은 ratio가 높을수록 연간 발생 횟수가 증가한다고 가정해 누적 반영한다.  
+      * ratio가 높을수록 expectedCost는 반드시 비례적으로 증가해야 하며, 낮은 ratio에서 더 높은 비용이 나오지 않도록 한다.
+      * ratio 70% 이상: 고비용 처치 포함 (전체 70~100% 반영)
+      * ratio 40~70%: 일반 진료 및 치료 중심 (전체 40~70% 반영)
+      * ratio 40% 미만: 검진 및 예방 중심 (전체 20~40% 반영)
+      * 최종 expectedCost 값은 반드시 1000원 단위로 반올림하여 반환하여 1원, 10원, 100원 단위 값이 포함되지 않도록 한다. (예: 123456 → 123000, 123789 → 124000)
+    - avgMedicalExpense(올해 월평균 의료비)는 최종 금액이 비현실적이지 않도록 보정하는 참고값, 0이면 사용하지 않음.
+
+    [출력 규칙]
+    - 마크다운 코드 블록(```json)을 절대 사용하지 마세요.
+    - 숫자에는 콤마(,)나 통화 기호를 넣지 마세요.
+
+  prompt-template: |
+    - 질병명: {disease}
+    - 발생 확률: {ratio}%
+    - 치료 항목들 및 비용(JSON 배열): {treatments}
+    - 올해 월평균 의료비: {avgMedicalExpense}
+
+  format-message: |
+    {
+      "medicalAdvice": "string",
+      "expectedCost": 0
+    }
 
 openai:
   base-url: https://api.openai.com/v1

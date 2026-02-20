@@ -29,20 +29,18 @@ import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.CrewRepository;
 import com.moong.repository.groupexpense.GroupExpenseRepository;
 import com.moong.repository.memberexpense.MemberExpenseRepository;
-import com.moong.util.RegressionUtils;
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -192,7 +190,7 @@ public class MemberExpenseService {
 
         OpenAiResult<AiCategorizeResponse> result = expenseCategorizeClient.categorize(
                         request,
-                        OpenAiModel.GPT_4_1_MODEL.getModel()
+                        OpenAiModel.GPT_4_1_MODEL
                 )
                 .completeOnTimeout(
                         fallBackResponse,

@@ -1,4 +1,4 @@
-package com.moong.repository;
+package com.moong.repository.medicaladvice;
 
 import com.moong.domain.entity.GroupMedicalAdvice;
 import com.moong.exception.custom.BusinessException;

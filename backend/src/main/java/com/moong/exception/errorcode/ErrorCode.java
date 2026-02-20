@@ -67,6 +67,7 @@ public enum ErrorCode {
     //5XX
     MEMBER_EXPENSE_ROW_MAPPING_ERROR(500, "회원 소비내역 데이터 행 매핑 과정에서 문제가 생겼습니다"),
     REGRESSION_DATA_SHORTAGE_ERROR(500, "회귀모델에 들어간 데이터가 최소 정족수보다 적습니다"),
+    TREATMENT_AVG_COST_SERIALIZED_ERROR(500, "TreatmentAvgCost 직렬화에 실패했습니다"),
     YEAR_MONTH_DESERIALIZE_ERROR(500, "YearMonth 역직렬화에 실패했습니다"),
     INCONSISTENT_DISEASE_DATA(500, "서버 내부 데이터 정합성 오류입니다."),
     INVALID_PET_BIRTH_DATA(500, "펫 생년월일 데이터가 유효하지 않습니다."),

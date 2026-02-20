@@ -6,6 +6,7 @@ import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
+import com.moong.repository.medicaladvice.GroupMedicalAdviceRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

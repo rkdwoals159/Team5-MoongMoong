@@ -18,13 +18,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.YearMonth;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.YearMonth;
 
 @Entity
 @Table(name = "member_expense")
@@ -104,6 +106,10 @@ public class MemberExpense {
             return this.subCategory.name();
         }
         return null;
+    }
+
+    public Month getSpentAtMonth() {
+        return this.spentAt.getMonth();
     }
 
     public YearMonth getSpentAtYearMonth() {

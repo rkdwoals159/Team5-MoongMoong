@@ -1,8 +1,5 @@
 package com.moong.client.categorize;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import com.moong.ai.OpenAiModel;
 import com.moong.ai.OpenAiProperties;
 import com.moong.ai.OpenAiResult;
@@ -11,11 +8,6 @@ import com.moong.ai.prompt.CategorizePromptProperties;
 import com.moong.client.BaseWebClientTest;
 import com.moong.dto.request.memberexpense.CategorizeRequest;
 import com.moong.dto.response.categorize.AiCategorizeResponse;
-import java.io.IOException;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -24,6 +16,15 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.ExchangeFunction;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.io.IOException;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class OpenAiCategorizeClientBindTest extends BaseWebClientTest {
 
@@ -57,7 +58,7 @@ class OpenAiCategorizeClientBindTest extends BaseWebClientTest {
 
             OpenAiResult<AiCategorizeResponse> response = expenseCategorizeClient.categorize(
                     request,
-                    OpenAiModel.GPT_4_1_MODEL.getModel()
+                    OpenAiModel.GPT_4_1_MODEL
             ).get(3L, TimeUnit.SECONDS);
 
             assertAll(

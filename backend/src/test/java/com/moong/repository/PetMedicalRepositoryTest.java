@@ -1,16 +1,17 @@
 package com.moong.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.moong.domain.entity.PetMedical;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.Gender;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class PetMedicalRepositoryTest extends BaseRepositoryTest {
 
@@ -44,5 +45,31 @@ class PetMedicalRepositoryTest extends BaseRepositoryTest {
 
         assertThat(foundPetMedical)
                 .containsExactly(beaFMedical3);
+    }
+
+    @DisplayName("해당 종, 나이, 성별 중 발병 확률 ratio가 가장 높은 의료 정보를 반환한다")
+    @Test
+    void findTopByBreedAndAgeAndGenderOrderByRatioDesc() {
+        // given
+        petMedicalGenerator.generateSaved(Breed.CHL, 5, Gender.F, Disease.CAR, 10);
+        petMedicalGenerator.generateSaved(Breed.BEA, 5, Gender.M, Disease.CAR, 90);
+
+        petMedicalGenerator.generateSaved(Breed.BEA, 5, Gender.F, Disease.CAR, 20);
+        petMedicalGenerator.generateSaved(Breed.BEA, 5, Gender.F, Disease.DER, 50);
+        petMedicalGenerator.generateSaved(Breed.BEA, 5, Gender.F, Disease.GAS, 80);
+
+        // when
+        PetMedical found = petMedicalRepository
+                .findTopByBreedAndAgeAndGenderOrderByRatioDesc(
+                        Breed.BEA,
+                        5,
+                        Gender.F
+                );
+
+        // then
+        assertAll(
+                () -> assertThat(found.getRatio()).isEqualTo(80),
+                () -> assertThat(found.getDisease()).isEqualTo(Disease.GAS)
+        );
     }
 }

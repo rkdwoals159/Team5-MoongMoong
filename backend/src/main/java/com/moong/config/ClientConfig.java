@@ -3,7 +3,6 @@ package com.moong.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moong.logging.ai.WebClientLoggingFilter;
 import io.netty.channel.ChannelOption;
-import java.time.Duration;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +14,8 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
+import java.time.Duration;
+
 @Configuration
 public class ClientConfig {
 
@@ -24,6 +25,8 @@ public class ClientConfig {
     private static final int LLM_ANALYZER_READ_TIMEOUT = 60000;
     private static final int SLACK_SENDER_CONNECTION_TIMEOUT = 5000;
     private static final int SLACK_SENDER_READ_TIMEOUT = 10000;
+    private static final int ADVICE_CLIENT_CONNECTION_TIMEOUT = 5000;
+    private static final int ADVICE_CLIENT_READ_TIMEOUT = 10000;
 
 
     @Bean
@@ -68,6 +71,20 @@ public class ClientConfig {
 
         return WebClient.builder()
                 .clientConnector(new ReactorClientHttpConnector(categorizeHttpClient))
+                .exchangeStrategies(registerJacksonMapper(objectMapper))
+                .filter(WebClientLoggingFilter.logRequest())
+                .filter(WebClientLoggingFilter.logResponseWithBody());
+    }
+
+    @Bean
+    @Qualifier("medicalAdviceClientBuilder")
+    public WebClient.Builder medicalAdviceClientBuilder(ObjectMapper objectMapper) {
+        HttpClient medicalAdviceClient = HttpClient.create()
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, ADVICE_CLIENT_CONNECTION_TIMEOUT)
+                .responseTimeout(Duration.ofMillis(ADVICE_CLIENT_READ_TIMEOUT));
+
+        return WebClient.builder()
+                .clientConnector(new ReactorClientHttpConnector(medicalAdviceClient))
                 .exchangeStrategies(registerJacksonMapper(objectMapper))
                 .filter(WebClientLoggingFilter.logRequest())
                 .filter(WebClientLoggingFilter.logResponseWithBody());
