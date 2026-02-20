@@ -14,6 +14,6 @@ public class BusinessException extends RuntimeException{
     }
 
     public boolean isClientError() {
-        return errorCode.isClientException();
+        return errorCode.shouldAnalyze();
     }
 }
