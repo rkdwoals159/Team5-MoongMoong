@@ -1,20 +1,24 @@
 package com.moong.service;
 
-import com.moong.domain.entity.*;
-import com.moong.domain.enums.Breed;
-import com.moong.domain.enums.Disease;
-import com.moong.domain.enums.Gender;
-import com.moong.dto.response.groupmedical.GroupMedicalInfoResponse;
-import com.moong.dto.response.groupmedical.GroupMedicalStatisticsResponse;
-import com.moong.dto.response.groupmedical.TreatmentResponse;
-import com.moong.dto.response.groupmedical.TreatmentsResponse;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import com.moong.domain.entity.GroupMedicalAdvice;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.domain.entity.PetMedical;
+import com.moong.domain.entity.Treatment;
+import com.moong.domain.enums.Breed;
+import com.moong.domain.enums.Disease;
+import com.moong.domain.enums.Gender;
 import com.moong.domain.pet.PetAge;
+import com.moong.dto.response.groupmedical.GroupMedicalInfoResponse;
+import com.moong.dto.response.groupmedical.GroupMedicalStatisticsResponse;
 import com.moong.dto.response.groupmedical.PetDiseaseRankingResponse;
+import com.moong.dto.response.groupmedical.TreatmentResponse;
+import com.moong.dto.response.groupmedical.TreatmentsResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import java.time.LocalDate;
@@ -23,10 +27,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 class GroupMedicalServiceTest extends BaseServiceTest {
 
@@ -74,10 +74,10 @@ class GroupMedicalServiceTest extends BaseServiceTest {
 
         GroupMedicalStatisticsResponse response = groupMedicalService.findGroupMedicalStatistics(member);
         List<Integer> carRatio = response.statistics().stream()
-                        .filter(statistic -> statistic.disease().isSame(Disease.CAR))
-                                .findAny()
-                                .get()
-                                .ratios();
+                .filter(statistic -> statistic.disease().isSame(Disease.CAR))
+                .findAny()
+                .get()
+                .ratios();
 
         assertAll(
                 () -> assertThat(response.startYear()).isEqualTo(LocalDate.now().getYear()),
@@ -117,6 +117,34 @@ class GroupMedicalServiceTest extends BaseServiceTest {
         List<PetMedical> petMedicals = petMedicalGenerator.generateSavePetMedicals(
                 pet.getBreed(),
                 petAge.getValue(),
+                pet.getGender()
+        );
+        List<Disease> diseases = petMedicals.stream()
+                .sorted(Comparator.comparing(PetMedical::getRatio).reversed())
+                .map(PetMedical::getDisease)
+                .toList();
+
+        PetDiseaseRankingResponse response = groupMedicalService.findPetDiseaseRanking(member);
+
+        assertAll(
+                () -> assertThat(response.diseases()).hasSize(diseases.size()),
+                () -> assertThat(response.diseases())
+                        .containsExactlyElementsOf(diseases)
+        );
+    }
+
+    @DisplayName("사용자의 펫이 의료데이터를 제공하는 최대 나이를 초과하면 최대 나이 기준 데이터를 반환합니다")
+    @Test
+    void findOldestPetMedicalWhenAgeExceed() {
+        int maxAge = 20;
+        LocalDate oldPetBirthDate = LocalDate.now().minusYears(maxAge +1);
+        Member member = memberGenerator.generateSaved("softeer");
+        Pet pet = petGenerator.generateSaved(Breed.BEA, Gender.F, oldPetBirthDate);
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, member);
+        List<PetMedical> petMedicals = petMedicalGenerator.generateSavePetMedicals(
+                pet.getBreed(),
+                maxAge,
                 pet.getGender()
         );
         List<Disease> diseases = petMedicals.stream()

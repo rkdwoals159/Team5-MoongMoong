@@ -1,18 +1,18 @@
 package com.moong.repository;
 
+import com.moong.config.JpaAuditingConfig;
 import com.moong.fixture.CrewGenerator;
 import com.moong.fixture.GroupExpenseGenerator;
 import com.moong.fixture.GroupMedicalAdviceGenerator;
 import com.moong.fixture.MemberExpenseGenerator;
 import com.moong.fixture.MemberGenerator;
+import com.moong.fixture.MonthlyGroupExpenseGenerator;
+import com.moong.fixture.MonthlyMemberExpenseGenerator;
 import com.moong.fixture.PetGenerator;
 import com.moong.fixture.PetGroupGenerator;
 import com.moong.fixture.PetMedicalGenerator;
 import com.moong.fixture.WorriedDiseaseGenerator;
-import com.moong.repository.monthlyexpense.MonthlyGroupExpenseRepository;
 import com.moong.util.query.MemberExpenseDynamicQueryBuilder;
-import com.moong.config.JpaAuditingConfig;
-import com.moong.fixture.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;

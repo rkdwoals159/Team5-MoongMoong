@@ -74,7 +74,7 @@ public class GroupMedicalService {
 
         List<PetMedical> petMedicalList = petMedicalRepository.findByBreedAndAgeAndGender(
                 pet.getBreed(),
-                petAge.getValue(),
+                Math.min(petAge.getValue(), MAX_PET_MEDICAL_AGE),
                 pet.getGender()
         );
         PetMedicals petMedicals = new PetMedicals(petMedicalList);
