@@ -36,6 +36,8 @@ public class MemberExpense {
 
     public static final long MIN_PAYMENT_AMOUNT = 0;
     public static final long MAX_PAYMENT_AMOUNT = 99_999_999;
+    public static final long MAX_USAGE_LENGTH = 250;
+    public static final long MAX_MEMO_LENGTH = 250;
     public static final String SPENT_AT_COLUMN_NAME = "spentAt";
     public static final String MODIFIED_AT_COLUMN_NAME = "modifiedAt";
 
@@ -84,6 +86,8 @@ public class MemberExpense {
             Member member
     ) {
         validateAmount(cost);
+        validateUsage(usage);
+        validateMemo(memo);
         this.id = id;
         this.spentAt = spentAt;
         this.usage = usage;
@@ -93,6 +97,18 @@ public class MemberExpense {
         this.memo = memo;
         this.modifiedAt = modifiedAt;
         this.member = member;
+    }
+
+    private void validateUsage(String usage) {
+        if(usage != null && usage.length() > MAX_USAGE_LENGTH) {
+            throw new BusinessException(ErrorCode.USAGE_LENGTH_EXCEED);
+        }
+    }
+
+    private void validateMemo(String memo) {
+        if(memo != null && memo.length() > MAX_MEMO_LENGTH) {
+            throw new BusinessException(ErrorCode.MEMO_LENGTH_EXCEED);
+        }
     }
 
     private void validateAmount(long amount) {

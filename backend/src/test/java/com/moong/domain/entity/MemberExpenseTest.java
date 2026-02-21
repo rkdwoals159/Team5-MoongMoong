@@ -9,6 +9,7 @@ import com.moong.exception.errorcode.ErrorCode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
@@ -32,5 +33,43 @@ class MemberExpenseTest {
                     )
                 ).isInstanceOf(BusinessException.class)
                 .hasMessage(ErrorCode.INVALID_EXPENSE_COST_AMOUNT.getMessage());
+    }
+
+    @DisplayName("사용 내역은 일정 길이 범위 이내의 문자열이어야 한다")
+    @Test
+    void invalidUsage() {
+        String invalidUsage = "k".repeat((int)MemberExpense.MAX_USAGE_LENGTH + 1);
+        assertThatThrownBy(() -> new MemberExpense(
+                        1L,
+                        LocalDate.now(),
+                        invalidUsage,
+                        100,
+                        MainCategoryType.MEDICAL_EXPENSES,
+                        SubCategoryType.CONSULTATION,
+                        "",
+                        LocalDateTime.now(),
+                        Mockito.mock(Member.class)
+                )
+        ).isInstanceOf(BusinessException.class)
+                .hasMessage(ErrorCode.USAGE_LENGTH_EXCEED.getMessage());
+    }
+
+    @DisplayName("메모는 일정 길이 범위 이내의 문자열이어야 한다")
+    @Test
+    void invalidMemo() {
+        String invalidMemo = "k".repeat((int)MemberExpense.MAX_MEMO_LENGTH + 1);
+        assertThatThrownBy(() -> new MemberExpense(
+                        1L,
+                        LocalDate.now(),
+                        "usage",
+                        100,
+                        MainCategoryType.MEDICAL_EXPENSES,
+                        SubCategoryType.CONSULTATION,
+                        invalidMemo,
+                        LocalDateTime.now(),
+                        Mockito.mock(Member.class)
+                )
+        ).isInstanceOf(BusinessException.class)
+                .hasMessage(ErrorCode.MEMO_LENGTH_EXCEED.getMessage());
     }
 }

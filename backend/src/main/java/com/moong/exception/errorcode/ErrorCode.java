@@ -9,6 +9,8 @@ import lombok.Getter;
 public enum ErrorCode {
 
     //400
+    USAGE_LENGTH_EXCEED(400, "사용 내역은 최대 " + MemberExpense.MAX_USAGE_LENGTH + "자를 넘을 수 없습니다", true),
+    MEMO_LENGTH_EXCEED(400, "메모는 최대 " + MemberExpense.MAX_MEMO_LENGTH + "자를 넘을 수 없습니다", true),
     NOT_FOUND_SPENT_AT_ORDER(400, "spentAt 정렬 조건을 찾을 수 없습니다", true),
     NOT_FOUND_MEMBER_EXPENSE_COLUMN(400, "MemberExpense의 프로퍼티를 찾을 수 없습니다", true),
     INVALID_INVITE_CODE_URL(400, "잘못된 초대코드입니다", true),
@@ -36,8 +38,8 @@ public enum ErrorCode {
             + CoinPayment.MAX_PAYMENT_AMOUNT + "원 이하가 아닙니다.", false),
     INVALID_EXPENSE_COST_AMOUNT(400, "결제 요청 금액이 " + "0원 이상 - "
             + MemberExpense.MAX_PAYMENT_AMOUNT + "원 이하가 아닙니다.", false),
-    INVALID_MEMBER_NAME(400, "회원 닉네임은 " + MemberName.MEMBER_NAME_MIN_LENGTH+"자 이상 "
-            + MemberName.MEMBER_NAME_MAX_LENGTH+"자 이하여야 합니다", false),
+    INVALID_MEMBER_NAME(400, "회원 닉네임은 " + MemberName.MEMBER_NAME_MIN_LENGTH + "자 이상 "
+            + MemberName.MEMBER_NAME_MAX_LENGTH + "자 이하여야 합니다", false),
     ALREADY_PROCESSED(400, "이미 처리 중이거나 완료된 결제 요청입니다.", true),
 
     //401
