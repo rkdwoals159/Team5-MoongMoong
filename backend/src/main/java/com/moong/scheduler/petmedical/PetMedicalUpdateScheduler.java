@@ -12,7 +12,7 @@ public class PetMedicalUpdateScheduler {
     private final PetMedicalService petMedicalService;
 
     @Scheduled(
-            cron = "0 0 5 ? * MON", //월요일 새벽 5시 갱신
+            cron = "0 0 5 ? * SUN", //일요일 새벽 5시 갱신
             zone = "Asia/Seoul"
     )
     public void refreshPetMedical() {

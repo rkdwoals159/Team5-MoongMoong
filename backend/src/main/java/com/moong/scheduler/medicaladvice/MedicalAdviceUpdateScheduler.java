@@ -14,7 +14,7 @@ public class MedicalAdviceUpdateScheduler {
     private final MedicalAdviceService medicalAdviceService;
 
     @Scheduled(
-            cron = "0 0 7 ? * MON#1", // 매달 첫째주 월요일 새벽 7시 갱신
+            cron = "0 0 7 ? * SUN#1", // 매달 첫째주 월요일 새벽 7시 갱신
             zone = "Asia/Seoul"
     )
     public void refreshMedicalAdvice() {
