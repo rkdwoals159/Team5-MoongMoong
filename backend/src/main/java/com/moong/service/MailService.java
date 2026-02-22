@@ -1,9 +1,13 @@
 package com.moong.service;
 
 import com.moong.config.MailProperties;
+import com.moong.domain.entity.Member;
 import com.moong.domain.report.MonthlyReport;
+import com.moong.exception.custom.BusinessException;
+import com.moong.exception.errorcode.ErrorCode;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -21,7 +25,9 @@ import org.thymeleaf.context.Context;
 public class MailService {
 
     private static final String MONTHLY_REPORT_SUBJECT_FORMAT = "[월간 소비 리포트] %d년 %d월";
+    private static final String WELCOME_SUBJECT_FORMAT = "🐾 moong 가족이 되신 걸 환영해요!";
     private static final String REPORT_TEMPLATE_FILE_NAME = "report-email";
+    private static final String WELCOME_TEMPLATE_FILE_NAME = "welcome-email";
 
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
@@ -34,12 +40,7 @@ public class MailService {
             Context ctx = buildMonthlyReportContext(report, mailProperties.serviceName());
             String htmlContent = templateEngine.process(REPORT_TEMPLATE_FILE_NAME, ctx);
 
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setFrom(mailProperties.from());
-            helper.setTo(report.getMemberEmail());
-            helper.setSubject(subject);
-            helper.setText(htmlContent, true);
+            MimeMessage message = createMailToMember(report.getMemberEmail(), subject, htmlContent);
 
             mailSender.send(message);
             log.info("월간 리포트 발송 완료: {} ({}년 {}월)",
@@ -49,8 +50,31 @@ public class MailService {
             );
         } catch (MessagingException e) {
             log.error("월간 리포트 발송 실패: {} - {}", report.getMemberEmail(), e.getMessage(), e);
-            throw new RuntimeException("메일 발송에 실패했습니다.", e);
+            throw new BusinessException(ErrorCode.MONTHLY_REPORT_SEND_ERROR);
         }
+    }
+
+    public void sendWelcomeEmail(String email) {
+        try {
+            String htmlContent = templateEngine.process(WELCOME_TEMPLATE_FILE_NAME, new Context());
+            MimeMessage message = createMailToMember(email, WELCOME_SUBJECT_FORMAT, htmlContent);
+            mailSender.send(message);
+            log.info("회원 가입 이메일 발송 완료: {} ({})", email, LocalDateTime.now());
+        } catch (MessagingException e) {
+            log.error("회원 가입 이메일 발송 실패: {} - {}", email, e.getMessage(), e);
+            throw new BusinessException(ErrorCode.WELCOME_MAIL_SEND_ERROR);
+        }
+    }
+
+    private MimeMessage createMailToMember(String memberEmail, String subject, String htmlContent)
+            throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setFrom(mailProperties.from());
+        helper.setTo(memberEmail);
+        helper.setSubject(subject);
+        helper.setText(htmlContent, true);
+        return message;
     }
 
     private String buildSubject(MonthlyReport report) {

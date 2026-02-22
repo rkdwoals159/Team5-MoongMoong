@@ -11,10 +11,12 @@ import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.domain.member.MemberInfo;
+import com.moong.dto.PaymentFailedEvent;
 import com.moong.dto.request.auth.AuthLoginRequest;
 import com.moong.dto.response.auth.JwtTokenResponse;
 import com.moong.dto.response.member.FacadeLoginResponse;
 import com.moong.dto.response.pet.InvitedPetResponse;
+import com.moong.event.member.WelcomeMailEvent;
 import com.moong.service.BaseServiceTest;
 import com.moong.util.InviteCodeGenerator;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +24,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.event.ApplicationEvents;
+import org.springframework.test.context.event.RecordApplicationEvents;
 
+@RecordApplicationEvents
 class AuthFacadeServiceTest extends BaseServiceTest {
 
     @Autowired
@@ -33,6 +38,9 @@ class AuthFacadeServiceTest extends BaseServiceTest {
 
     @Autowired
     private JwtManager jwtManager;
+
+    @Autowired
+    private ApplicationEvents applicationEvents;
 
     @Nested
     class Login {
@@ -158,6 +166,38 @@ class AuthFacadeServiceTest extends BaseServiceTest {
             JwtTokenResponse tokens = loginResponse.tokenResponse();
 
             assertThat(loginResponse.hasGroup()).isFalse();
+        }
+    }
+
+    @Nested
+    class SendWelcomeEmail {
+
+        @DisplayName("신규유저 + 미초대 인원 : 환영 이메일 발송")
+        @Test
+        void freshMember_NonInvitedMember() {
+            AuthLoginRequest freshNonInvitedUser = new AuthLoginRequest("accessToken", null);
+
+            authFacadeService.login(freshNonInvitedUser);
+
+            assertThat(applicationEvents.stream(WelcomeMailEvent.class))
+                    .hasSize(1);
+        }
+
+        @DisplayName("신규유저 + 초대 인원 : 환영 이메일 발송")
+        @Test
+        void freshMember_InvitedMember() {
+            Pet pet = petGenerator.generateSaved();
+            PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+            InviteCode inviteCode = inviteCodeGenerator.encrypt(petGroup.getId());
+            AuthLoginRequest request = new AuthLoginRequest(
+                    "accessToken",
+                    InviteCode.HTTP_INVITE_URL_PREFIX + inviteCode.getCode()
+            );
+
+            authFacadeService.login(request);
+
+            assertThat(applicationEvents.stream(WelcomeMailEvent.class))
+                    .hasSize(1);
         }
     }
 }

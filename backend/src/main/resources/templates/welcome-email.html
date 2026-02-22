@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 다크모드 힌트: 라이트/다크 모두 지원함을 클라이언트에 알림 -->
+    <meta name="color-scheme" content="light dark">
+    <meta name="supported-color-schemes" content="light dark">
+    <title>뭉뭉이의 모든 순간, 이제 moong이 함께해요</title>
+    <style>
+        /* ── 다크모드 오버라이드 (Apple Mail, Outlook 2019+, Samsung Mail 등 지원) ── */
+        @media (prefers-color-scheme: dark) {
+
+            /* 전체 배경 */
+            body,
+            .body-bg,
+            .email-bg td { background-color: #1a1410 !important; }
+
+            /* 본문 컨테이너 */
+            .email-card,
+            .email-card td { background-color: #241e18 !important; }
+
+            /* 히어로: 다크모드에서도 오렌지 유지 (브랜드 컬러) */
+            .hero-td { background-color: #d4721e !important; }
+
+            /* 인사 영역 */
+            .greeting-td { background-color: #241e18 !important; }
+            .greeting-title { color: #f5e6d3 !important; }
+            .greeting-body { color: #c4a882 !important; }
+
+            /* 기능 카드 */
+            .card-outer { background-color: #241e18 !important; }
+            .card-inner,
+            .card-inner td { background-color: #2e2218 !important; }
+            .card-title { color: #f5e6d3 !important; }
+            .card-desc { color: #a08060 !important; }
+            .card-divider { background-color: #3d2e1e !important; }
+
+            /* CTA 영역 */
+            .cta-outer { background-color: #241e18 !important; }
+            .cta-sub { color: #7a6040 !important; }
+
+            /* 구분선 */
+            .footer-divider { background-color: #3d2e1e !important; }
+
+            /* 푸터 */
+            .footer-td { background-color: #1e1810 !important; }
+            .footer-logo { color: #ff9a3c !important; }
+            .footer-text { color: #7a6040 !important; }
+            .footer-paws { color: #5a4030 !important; }
+
+            /* 히어로 서브텍스트 */
+            .hero-sub { color: #ffd9a0 !important; }
+
+            /* 브랜드 강조 */
+            .brand-accent { color: #ff9a3c !important; }
+
+            /* 간격 td */
+            .spacer { background-color: #241e18 !important; }
+        }
+
+        /* Gmail 다크모드 (u + body 핵) */
+        u + .body .email-bg { background-color: #1a1410 !important; }
+        u + .body .email-card { background-color: #241e18 !important; }
+    </style>
+</head>
+<body class="body" style="margin:0;padding:0;background-color:#f0ebe3;" bgcolor="#f0ebe3">
+
+<table class="email-bg" role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f0ebe3" style="background-color:#f0ebe3;width:100%;border-collapse:collapse;">
+    <tr>
+        <td class="body-bg" align="center" style="padding:32px 16px;background-color:#f0ebe3;">
+
+            <!-- 본문 컨테이너 -->
+            <table class="email-card" role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" bgcolor="#fffdf9" style="width:560px;background-color:#fffdf9;border-collapse:collapse;border-radius:24px;">
+
+                <!-- ══ HERO ══ -->
+                <tr>
+                    <td class="hero-td" align="center" bgcolor="#ff9a3c" style="background-color:#ff9a3c;padding:52px 48px 48px;border-radius:24px 24px 0 0;">
+                        <p style="margin:0;padding:0;font-size:56px;line-height:1;text-align:center;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">🐶</p>
+                        <p style="margin:14px 0 0 0;padding:0;font-size:50px;font-weight:900;color:#ffffff;letter-spacing:-2px;line-height:1;text-align:center;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">moong</p>
+                        <p class="hero-sub" style="margin:12px 0 0 0;padding:0;font-size:14px;color:#fff3e0;font-weight:500;letter-spacing:1px;text-align:center;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">반려견 가족을 위한 스마트 가계부</p>
+                    </td>
+                </tr>
+
+                <!-- ══ 인사 ══ -->
+                <tr>
+                    <td class="greeting-td" align="center" bgcolor="#fffdf9" style="background-color:#fffdf9;padding:44px 48px 8px;">
+                        <p class="greeting-title" style="margin:0 0 16px 0;padding:0;font-size:22px;font-weight:800;color:#2d2416;line-height:1.5;text-align:center;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">
+                            뭉뭉이의 모든 순간,<br>이제 moong이 함께해요 🐾
+                        </p>
+                        <p class="greeting-body" style="margin:0;padding:0;font-size:14px;line-height:2;color:#7a6651;text-align:center;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">
+                            가족이 함께 쓰는 반려견 가계부부터<br>
+                            AI 의료비 예측, 저금통, 월간 소비 레포트까지.<br>
+                            우리 집 막내의 지출을 가장 똑똑하게 관리하는 방법,<br>
+                            <strong class="brand-accent" style="color:#ff8c42;">moong</strong>에서 지금 바로 시작해보세요.
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- 간격 -->
+                <tr>
+                    <td class="spacer" bgcolor="#fffdf9" style="background-color:#fffdf9;height:32px;font-size:1px;line-height:1px;" height="32">&nbsp;</td>
+                </tr>
+
+                <!-- ══ 기능 카드 ══ -->
+                <tr>
+                    <td class="card-outer" bgcolor="#fffdf9" style="background-color:#fffdf9;padding:0 40px;">
+                        <table class="card-inner" role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#fff4ea" style="width:100%;background-color:#fff4ea;border-collapse:collapse;border-radius:16px;">
+
+                            <!-- 기능 1 -->
+                            <tr>
+                                <td bgcolor="#fff4ea" style="background-color:#fff4ea;padding:24px 28px 0 28px;border-radius:16px 16px 0 0;">
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;border-collapse:collapse;">
+                                        <tr>
+                                            <td width="36" valign="top" style="width:36px;vertical-align:top;font-size:22px;line-height:1;padding-top:2px;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">📅</td>
+                                            <td valign="top" style="vertical-align:top;padding-left:12px;">
+                                                <p class="card-title" style="margin:0 0 3px 0;padding:0;font-size:14px;font-weight:700;color:#2d2416;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">가족 가계부 &amp; 저금통</p>
+                                                <p class="card-desc" style="margin:0;padding:0;font-size:13px;color:#a08060;line-height:1.6;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">흩어진 가족의 지출을 한 곳에, 목표 저금도 함께</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- 구분선 -->
+                            <tr>
+                                <td bgcolor="#fff4ea" style="background-color:#fff4ea;padding:16px 28px 0 28px;">
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;border-collapse:collapse;">
+                                        <tr>
+                                            <td class="card-divider" bgcolor="#fde8cc" style="background-color:#fde8cc;height:1px;font-size:1px;line-height:1px;" height="1">&nbsp;</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- 기능 2 -->
+                            <tr>
+                                <td bgcolor="#fff4ea" style="background-color:#fff4ea;padding:16px 28px 0 28px;">
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;border-collapse:collapse;">
+                                        <tr>
+                                            <td width="36" valign="top" style="width:36px;vertical-align:top;font-size:22px;line-height:1;padding-top:2px;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">🤖</td>
+                                            <td valign="top" style="vertical-align:top;padding-left:12px;">
+                                                <p class="card-title" style="margin:0 0 3px 0;padding:0;font-size:14px;font-weight:700;color:#2d2416;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">AI 의료비 예측</p>
+                                                <p class="card-desc" style="margin:0;padding:0;font-size:13px;color:#a08060;line-height:1.6;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">4,000건 진료 데이터 기반, 20살까지 예상 비용 확인</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- 구분선 -->
+                            <tr>
+                                <td bgcolor="#fff4ea" style="background-color:#fff4ea;padding:16px 28px 0 28px;">
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;border-collapse:collapse;">
+                                        <tr>
+                                            <td class="card-divider" bgcolor="#fde8cc" style="background-color:#fde8cc;height:1px;font-size:1px;line-height:1px;" height="1">&nbsp;</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- 기능 3 -->
+                            <tr>
+                                <td bgcolor="#fff4ea" style="background-color:#fff4ea;padding:16px 28px 0 28px;">
+                                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;border-collapse:collapse;">
+                                        <tr>
+                                            <td width="36" valign="top" style="width:36px;vertical-align:top;font-size:22px;line-height:1;padding-top:2px;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">💌</td>
+                                            <td valign="top" style="vertical-align:top;padding-left:12px;">
+                                                <p class="card-title" style="margin:0 0 3px 0;padding:0;font-size:14px;font-weight:700;color:#2d2416;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">월간 소비 레포트</p>
+                                                <p class="card-desc" style="margin:0;padding:0;font-size:13px;color:#a08060;line-height:1.6;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">매월 1일, 뭉뭉이의 소비 분석을 메일로 받아보세요</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <!-- 카드 하단 여백 -->
+                            <tr>
+                                <td bgcolor="#fff4ea" style="background-color:#fff4ea;height:20px;font-size:1px;line-height:1px;border-radius:0 0 16px 16px;" height="20">&nbsp;</td>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- 간격 -->
+                <tr>
+                    <td class="spacer" bgcolor="#fffdf9" style="background-color:#fffdf9;height:36px;font-size:1px;line-height:1px;" height="36">&nbsp;</td>
+                </tr>
+
+                <!-- ══ CTA 버튼 ══ -->
+                <tr>
+                    <td class="cta-outer" align="center" bgcolor="#fffdf9" style="background-color:#fffdf9;padding:0 48px;">
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="border-collapse:collapse;">
+                            <tr>
+                                <td align="center" bgcolor="#ff8c42" style="background-color:#ff8c42;border-radius:50px;">
+                                    <a href="https://moong-onboarding.vercel.app/"
+                                       target="_blank"
+                                       style="display:inline-block;padding:18px 56px;font-size:16px;font-weight:800;color:#ffffff;text-decoration:none;letter-spacing:0.5px;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">
+                                        🐾 &nbsp; moong 핵심기능 살펴보기
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- 버튼 안내 -->
+                <tr>
+                    <td class="cta-outer" align="center" bgcolor="#fffdf9" style="background-color:#fffdf9;padding:12px 48px 0;">
+                        <p class="cta-sub" style="margin:0;padding:0;font-size:12px;color:#c4ab92;text-align:center;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">
+                            버튼을 누르면 moong 소개 페이지로 이동해요
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- 간격 -->
+                <tr>
+                    <td class="spacer" bgcolor="#fffdf9" style="background-color:#fffdf9;height:44px;font-size:1px;line-height:1px;" height="44">&nbsp;</td>
+                </tr>
+
+                <!-- 구분선 -->
+                <tr>
+                    <td class="footer-divider" bgcolor="#e8d9c5" style="background-color:#e8d9c5;height:2px;font-size:1px;line-height:1px;" height="2">&nbsp;</td>
+                </tr>
+
+                <!-- ══ FOOTER ══ -->
+                <tr>
+                    <td class="footer-td" align="center" bgcolor="#f5ede0" style="background-color:#f5ede0;padding:26px 48px;border-radius:0 0 24px 24px;">
+                        <p class="footer-logo" style="margin:0 0 8px 0;padding:0;font-size:18px;font-weight:900;color:#ff8c42;text-align:center;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">moong</p>
+                        <p class="footer-text" style="margin:0;padding:0;font-size:12px;color:#b09a82;line-height:1.8;text-align:center;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">
+                            본 메일은 moong 회원가입을 완료하신 분께 발송되는 안내 메일이에요.
+                        </p>
+                        <p class="footer-paws" style="margin:12px 0 0 0;padding:0;font-size:16px;letter-spacing:4px;color:#d4b896;text-align:center;font-family:'Apple SD Gothic Neo',AppleGothic,'Malgun Gothic',sans-serif;">🐾 🐾 🐾</p>
+                    </td>
+                </tr>
+
+            </table>
+            <!-- /본문 컨테이너 -->
+
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

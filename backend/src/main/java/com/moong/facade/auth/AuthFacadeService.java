@@ -10,12 +10,15 @@ import com.moong.dto.response.auth.JwtTokenResponse;
 import com.moong.dto.response.auth.MemberInfoWithTokenResponse;
 import com.moong.dto.response.member.FacadeLoginResponse;
 import com.moong.dto.response.member.MemberReadResponse;
+import com.moong.event.member.WelcomeMailEvent;
 import com.moong.service.AuthService;
 import com.moong.service.CrewService;
 import com.moong.service.GroupService;
 import com.moong.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,15 +28,21 @@ public class AuthFacadeService {
     private final GroupService groupService;
     private final AuthService authService;
     private final CrewService crewService;
+    private final ApplicationEventPublisher eventPublisher;
 
+    @Transactional
     public FacadeLoginResponse login(AuthLoginRequest loginRequest) {
         boolean isInvited = loginRequest.hasInviteUrl();
         MemberInfoWithTokenResponse memberInfoWithToken = authService.findMemberInfoAndGenerateToken(
-                loginRequest.accessToken());
+                loginRequest.accessToken()
+        );
         JwtTokenResponse jwtTokenResponse = memberInfoWithToken.jwtTokenResponse();
         MemberReadResponse foundMemberResponse = memberService.findExistsMemberOrSave(memberInfoWithToken.memberInfo());
         boolean hasGroup = crewService.existsByMemberId(foundMemberResponse.member().getId());
 
+        if (foundMemberResponse.isNew()) {
+            eventPublisher.publishEvent(new WelcomeMailEvent(foundMemberResponse.member().getEmail()));
+        }
         if (isInvited) {
             PetGroup petGroup = groupService.findFetchedPetGroupByInviteUrl(loginRequest.inviteUrl());
             return FacadeLoginResponse.invitedMember(hasGroup, foundMemberResponse, petGroup.getPet(), jwtTokenResponse);

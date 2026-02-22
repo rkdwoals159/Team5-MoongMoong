@@ -62,6 +62,21 @@ public class AsyncConfig implements AsyncConfigurer {
         return executor;
     }
 
+    @Bean(name = "welcomeEmailExecutor")
+    public Executor welcomeEmalEventExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setThreadNamePrefix("welcome-email-event-");
+        executor.setCorePoolSize(0);
+        executor.setQueueCapacity(0);
+        executor.setMaxPoolSize(12);
+        executor.setRejectedExecutionHandler((r, ex) -> {
+            log.warn("welcomeEmailEventExecutor rejected task. poolSize={}, active={}, queued={}",
+                    ex.getPoolSize(), ex.getActiveCount(), ex.getQueue().size());
+        });
+        executor.initialize();
+        return executor;
+    }
+
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return (ex, method, params) ->

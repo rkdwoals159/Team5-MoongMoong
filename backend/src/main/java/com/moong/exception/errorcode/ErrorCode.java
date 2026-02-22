@@ -70,6 +70,8 @@ public enum ErrorCode {
 
     //5XX
     MEMBER_EXPENSE_ROW_MAPPING_ERROR(500, "회원 소비내역 데이터 행 매핑 과정에서 문제가 생겼습니다", false),
+    MONTHLY_REPORT_SEND_ERROR(500, "월간 레포트 발송 과정에서 문제가 생겼습니다", true),
+    WELCOME_MAIL_SEND_ERROR(500, "환영 메일 발송 과정에서 문제가 생겼습니다", true),
     REGRESSION_DATA_SHORTAGE_ERROR(500, "회귀모델에 들어간 데이터가 최소 정족수보다 적습니다", false),
     TREATMENT_AVG_COST_SERIALIZED_ERROR(500, "TreatmentAvgCost 직렬화에 실패했습니다", false),
     YEAR_MONTH_DESERIALIZE_ERROR(500, "YearMonth 역직렬화에 실패했습니다", false),
