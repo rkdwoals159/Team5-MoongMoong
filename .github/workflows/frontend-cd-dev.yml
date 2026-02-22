@@ -56,15 +56,15 @@ jobs:
           cache: yarn
           cache-dependency-path: frontend/yarn.lock
 
-      - name: Cache Vercel Build
-        id: vercel-cache
+      - name: Cache Next.js Build Cache
+        id: next-cache
         uses: actions/cache@v4
         with:
-          path: frontend/.vercel/cache
-          key: ${{ runner.os }}-vercel-${{ hashFiles('frontend/yarn.lock') }}-${{ hashFiles('frontend/package.json') }}
+          path: frontend/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('frontend/yarn.lock') }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-vercel-${{ hashFiles('frontend/yarn.lock') }}-
-            ${{ runner.os }}-vercel-
+            ${{ runner.os }}-nextjs-${{ hashFiles('frontend/yarn.lock') }}-
+            ${{ runner.os }}-nextjs-
 
       - name: Install Vercel CLI
         run: npm install -g vercel
@@ -111,4 +111,4 @@ jobs:
         if: always()
         run: |
           echo "### Frontend CD Cache KPI" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Vercel cache hit: ${{ steps.vercel-cache.outputs.cache-hit }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Next.js cache hit: ${{ steps.next-cache.outputs.cache-hit }}" >> "$GITHUB_STEP_SUMMARY"
