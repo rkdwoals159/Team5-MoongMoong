@@ -1,10 +1,12 @@
 name: Frontend CD (Dev)
 
 on:
+  workflow_dispatch:
   push:
     branches: [develop]
     paths:
       - "frontend/**"
+      - ".github/workflows/frontend-cd-dev.yml"
 
 jobs:
   deploy-check:
@@ -20,9 +22,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 25.2.1
+          cache: yarn
+          cache-dependency-path: frontend/yarn.lock
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --prefer-offline
 
       - name: Lint
         run: yarn lint
@@ -49,6 +53,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 25.2.1
+          cache: yarn
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Cache Vercel Build
+        id: vercel-cache
+        uses: actions/cache@v4
+        with:
+          path: frontend/.vercel/cache
+          key: ${{ runner.os }}-vercel-${{ hashFiles('frontend/yarn.lock') }}-${{ hashFiles('frontend/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vercel-${{ hashFiles('frontend/yarn.lock') }}-
+            ${{ runner.os }}-vercel-
 
       - name: Install Vercel CLI
         run: npm install -g vercel
@@ -90,3 +106,9 @@ jobs:
           echo "Health check failed. Rolling back..."
           vercel rollback --token=$VERCEL_TOKEN --yes
           echo "Rollback command executed."
+
+      - name: Cache KPI Summary
+        if: always()
+        run: |
+          echo "### Frontend CD Cache KPI" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Vercel cache hit: ${{ steps.vercel-cache.outputs.cache-hit }}" >> "$GITHUB_STEP_SUMMARY"
