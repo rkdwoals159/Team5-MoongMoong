@@ -66,7 +66,10 @@ public interface BankControllerSwagger {
     )
     @ErrorCode401
     @ErrorCode500
-    ResponseEntity<Void> createGroupNudge(Member member);
+    ResponseEntity<Void> createGroupNudge(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member
+    );
 
     @Operation(
             summary = "저금통 정보 조회",
