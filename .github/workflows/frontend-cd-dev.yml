@@ -9,8 +9,13 @@ on:
       - ".github/workflows/frontend-cd-dev.yml"
 
 jobs:
-  deploy-check:
+  deploy-production:
     runs-on: ubuntu-latest
+    environment: production
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     defaults:
       run:
         working-directory: frontend
@@ -33,28 +38,6 @@ jobs:
 
       - name: Format check
         run: yarn format:check
-
-  deploy-production:
-    needs: deploy-check
-    runs-on: ubuntu-latest
-    environment: production
-    env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-    defaults:
-      run:
-        working-directory: frontend
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 25.2.1
-          cache: yarn
-          cache-dependency-path: frontend/yarn.lock
 
       - name: Cache Next.js Build Cache
         id: next-cache
