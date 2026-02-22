@@ -30,11 +30,15 @@ public class SseService {
         Crew crew = crewRepository.getByMemberId(member.getId());
         long groupId = crew.getPetGroup().getId();
 
-        CustomSseEmitter customSseEmitter =
-                new CustomSseEmitter(
-                        member.getId(),
-                        () -> leaveGroup(member.getId(), groupId)
-                );
+        CustomSseEmitter customSseEmitter = new CustomSseEmitter(member.getId());
+
+        customSseEmitter.configureLifecycleCallbacks(() -> {
+            boolean removed =  emitterRepository.deleteByMemberIdAndEmitter(member.getId(), customSseEmitter);
+            if (removed) {
+                groupConnectionRepository.delete(groupId, member.getId());
+            }
+        });
+
         joinGroup(customSseEmitter, member, groupId);
 
         SseEmitter.SseEventBuilder event = SseEmitter.event()
@@ -47,11 +51,6 @@ public class SseService {
     private void joinGroup(CustomSseEmitter sseEmitter, Member member, long groupId) {
         emitterRepository.save(member.getId(), sseEmitter);
         groupConnectionRepository.save(groupId, member.getId());
-    }
-
-    private void leaveGroup(long memberId, long groupId) {
-        emitterRepository.deleteById(memberId);
-        groupConnectionRepository.delete(groupId, memberId);
     }
 
     public void sendGroupNotification(GroupEvent<? extends GroupEventPayload> event) {

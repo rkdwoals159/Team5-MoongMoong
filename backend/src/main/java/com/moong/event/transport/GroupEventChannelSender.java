@@ -23,25 +23,31 @@ public class GroupEventChannelSender {
     @Async("groupEventChannelExecutor")
     public void sendAsync(GroupEventMessage<? extends GroupEventPayload> message) {
         String seqKey = new SseSeqKey(message.groupId()).value();
-        Long eventId = stringRedisTemplate.opsForValue().increment(seqKey);
-        if (eventId == null) {
-            log.error("eventId increment failed. seqKey={}", seqKey);
-            return;
-        }
-
-        GroupEvent<GroupEventPayload> event = new GroupEvent<>(
-                message.eventType(),
-                message.groupId(),
-                eventId,
-                message.senderId(),
-                message.data()
-        );
-
         try {
+            Long eventId = stringRedisTemplate.opsForValue().increment(seqKey);
+            if (eventId == null) {
+                log.error("eventId increment failed. seqKey={}", seqKey);
+                return;
+            }
+
+            GroupEvent<GroupEventPayload> event = new GroupEvent<>(
+                    message.eventType(),
+                    message.groupId(),
+                    eventId,
+                    message.senderId(),
+                    message.data()
+            );
+
             String json = objectMapper.writeValueAsString(event);
             stringRedisTemplate.convertAndSend(RedisChannel.SSE_GROUP_EVENT, json);
+            log.info("send group event success. groupId={}, eventId={}, eventType={}",
+                    message.groupId(),
+                    eventId,
+                    message.eventType()
+            );
         } catch (Exception e) {
-            log.error("group event publish error: {}", e.getMessage(), e);
+            log.error("send group event failed. seqKey={}, groupId={}, eventType={}",
+                    seqKey, message.groupId(), message.eventType(), e);
         }
     }
 }

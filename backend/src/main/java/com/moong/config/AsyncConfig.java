@@ -32,6 +32,21 @@ public class AsyncConfig implements AsyncConfigurer {
         return executor;
     }
 
+    @Bean(name = "paymentEventExecutor")
+    public Executor paymentEventExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setThreadNamePrefix("payment-event-");
+        executor.setCorePoolSize(2);
+        executor.setMaxPoolSize(8);
+        executor.setQueueCapacity(100);
+        executor.setRejectedExecutionHandler((r, ex) -> {
+            log.warn("paymentEventExecutor rejected task. poolSize={}, active={}, queued={}",
+                    ex.getPoolSize(), ex.getActiveCount(), ex.getQueue().size());
+        });
+        executor.initialize();
+        return executor;
+    }
+
     @Bean(name = "emailEventExecutor")
     public Executor emalEventExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

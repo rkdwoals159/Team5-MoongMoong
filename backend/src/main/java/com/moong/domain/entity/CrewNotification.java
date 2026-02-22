@@ -49,4 +49,8 @@ public class CrewNotification extends BaseEntity {
     private Notification notification;
 
     private LocalDateTime deletedAt;
+
+    public CrewNotification(Crew crew, Notification notification) {
+        this(null, crew, notification, null);
+    }
 }

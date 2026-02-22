@@ -1,4 +1,4 @@
-package com.moong.event;
+package com.moong.event.payment;
 
 import com.moong.client.payment.TossPaymentClient;
 import com.moong.domain.entity.CoinPayment;
@@ -22,7 +22,7 @@ public class PaymentFailEventListener {
     private final PaymentService paymentService;
     private final TossPaymentClient tossPaymentClient;
 
-    @Async
+    @Async("paymentEventExecutor")
     @EventListener
     public void handlePaymentFailed(PaymentFailedEvent event) {
         CoinPayment coinPayment = coinPaymentRepository.getByIdAndCrewId(event.orderId(), event.crewId());

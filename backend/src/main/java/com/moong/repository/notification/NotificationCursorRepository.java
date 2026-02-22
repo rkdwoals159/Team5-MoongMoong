@@ -27,4 +27,6 @@ public interface NotificationCursorRepository extends Repository<NotificationCur
                         where crew.id = :crewId
             """)
     void updateLastSeenNotificationId(long updateLastSeenNotificationId, long crewId);
+
+    void deleteByCrew_Id(long crewId);
 }

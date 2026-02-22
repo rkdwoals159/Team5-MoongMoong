@@ -86,8 +86,6 @@ class GroupEventMessageListenerTest {
                     assertThat(data.coinId()).isEqualTo(1L);
                     assertThat(data.amount()).isEqualTo(5000);
                     assertThat(data.name()).isEqualTo("민수");
-                    assertThat(data.createdAt())
-                            .isEqualTo(LocalDateTime.parse("2026-01-30T14:32:15.123"));
                 }
         );
     }

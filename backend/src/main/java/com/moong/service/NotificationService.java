@@ -3,13 +3,20 @@ package com.moong.service;
 import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.CrewNotification;
 import com.moong.domain.entity.Member;
+import com.moong.domain.entity.Notification;
 import com.moong.domain.entity.NotificationCursor;
+import com.moong.dto.command.NotificationCreateCommand;
 import com.moong.dto.command.NotificationReadCommand;
 import com.moong.dto.request.notification.NotificationsDeleteRequest;
 import com.moong.dto.response.notification.NotificationReadResponse;
+import com.moong.dto.response.notification.NotificationResponse;
+import com.moong.event.group.GroupEventPayload;
 import com.moong.repository.CrewRepository;
 import com.moong.repository.notification.CrewNotificationRepository;
 import com.moong.repository.notification.NotificationCursorRepository;
+import com.moong.repository.notification.NotificationRepository;
+import com.moong.convertor.GroupEventPayloadConverter;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -20,8 +27,28 @@ import org.springframework.transaction.annotation.Transactional;
 public class NotificationService {
 
     private final CrewRepository crewRepository;
+    private final NotificationRepository notificationRepository;
     private final CrewNotificationRepository crewNotificationRepository;
     private final NotificationCursorRepository notificationCursorRepository;
+    private final GroupEventPayloadConverter groupEventPayloadConverter;
+
+    @Transactional
+    public void createCrewNotification(NotificationCreateCommand command) {
+        Crew actor = command.getActor();
+        Member actorMember = actor.getMember();
+        List<Crew> crews = crewRepository.findAllByPetGroup_Id(command.getGroupId());
+
+        String payloadJson = groupEventPayloadConverter.toJson(command.getPayload());
+        Notification notification = new Notification(payloadJson, command.getEventType());
+        Notification savedNotification = notificationRepository.save(notification);
+
+        List<CrewNotification> crewNotifications = crews.stream()
+                .filter((crew) -> !crew.isSame(actorMember.getId()))
+                .map(crew -> new CrewNotification(crew, savedNotification))
+                .toList();
+
+        crewNotificationRepository.saveAll(crewNotifications);
+    }
 
     public NotificationReadResponse findNotification(NotificationReadCommand command) {
         Crew crew = crewRepository.getByMemberId(command.getMember().getId());
@@ -43,9 +70,28 @@ public class NotificationService {
         if (notificationCursor.shouldUpdateCursor(newestId)) {
             notificationCursorRepository.updateLastSeenNotificationId(newestId, crew.getId());
         }
+
+        Slice<NotificationResponse> notificationResponses = crewNotifications.map(this::toNotificationResponse);
+
         return new NotificationReadResponse(
                 lastSeenNotificationId,
-                crewNotifications
+                notificationResponses
+        );
+    }
+
+    private NotificationResponse toNotificationResponse(CrewNotification crewNotifications) {
+        Notification notification = crewNotifications.getNotification();
+
+        GroupEventPayload payload = groupEventPayloadConverter.fromJson(
+                notification.getPayload(),
+                notification.getEventType()
+        );
+
+        return new NotificationResponse(
+                notification.getId(),
+                payload,
+                notification.getEventType(),
+                notification.getCreatedAt()
         );
     }
 

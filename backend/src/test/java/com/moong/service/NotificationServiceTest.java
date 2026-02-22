@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.CrewNotification;
 import com.moong.domain.entity.Member;
@@ -11,15 +12,18 @@ import com.moong.domain.entity.Notification;
 import com.moong.domain.entity.NotificationCursor;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
+import com.moong.dto.command.NotificationCreateCommand;
 import com.moong.dto.command.NotificationReadCommand;
 import com.moong.dto.request.notification.NotificationsDeleteRequest;
 import com.moong.dto.response.notification.NotificationReadResponse;
 import com.moong.dto.response.notification.NotificationResponse;
 import com.moong.event.EventType;
+import com.moong.event.dto.NudgePayload;
+import com.moong.repository.notification.CrewNotificationRepository;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
-import com.moong.repository.notification.CrewNotificationRepository;
 import com.moong.repository.notification.NotificationCursorRepository;
+import com.moong.repository.notification.NotificationRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -39,6 +43,41 @@ class NotificationServiceTest extends BaseServiceTest {
 
     @Autowired
     private CrewNotificationRepository crewNotificationRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
+
+    @DisplayName("알림을 저장하고, 알림을 발생시킨 크루를 제외한 크루원에게 CrewNotification을 생성한다.")
+    @Test
+    void createCrewNotification() throws JsonProcessingException {
+        Member member1 = memberGenerator.generateSaved("test");
+        Member member2 = memberGenerator.generateSaved("test");
+        Member member3 = memberGenerator.generateSaved("test");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        Crew crew1 = crewGenerator.generateSaved(petGroup, member1);
+        Crew crew2 = crewGenerator.generateSaved(petGroup, member2);
+        Crew crew3 = crewGenerator.generateSaved(petGroup, member3);
+        NudgePayload nudgePayload = new NudgePayload(member1.getName());
+        NotificationCreateCommand notificationCreateCommand = new NotificationCreateCommand(petGroup.getId(), crew1,
+                nudgePayload, EventType.NUDGE);
+
+        notificationService.createCrewNotification(notificationCreateCommand);
+
+        Pageable pageable = PageRequest.of(0, 3);
+        Slice<CrewNotification> crewNotification1 = crewNotificationRepository.findFetchedByCrewId(crew1.getId(),
+                pageable);
+        Slice<CrewNotification> crewNotification2 = crewNotificationRepository.findFetchedByCrewId(crew2.getId(),
+                pageable);
+        Slice<CrewNotification> crewNotification3 = crewNotificationRepository.findFetchedByCrewId(crew3.getId(),
+                pageable);
+        assertAll(
+                () -> assertThat(notificationRepository.count()).isEqualTo(1),
+                () -> assertThat(crewNotification1.getContent()).isEmpty(),
+                () -> assertThat(crewNotification2.getContent()).hasSize(1),
+                () -> assertThat(crewNotification3.getContent()).hasSize(1)
+        );
+    }
 
     @DisplayName("조회 결과가 비어있으면 empty 응답을 반환하고 lastSeen은 갱신되지 않는다")
     @Test
@@ -75,10 +114,11 @@ class NotificationServiceTest extends BaseServiceTest {
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         Crew crew = crewGenerator.generateSaved(petGroup, member);
         notificationInboxGenerator.generateNotificationInbox(crew, null);
-        Notification notification1 = notificationGenerator.generateSaved("알림1", EventType.SAVING);
-        Notification notification2 = notificationGenerator.generateSaved("알림2", EventType.SAVING);
-        Notification notification3 = notificationGenerator.generateSaved("알림3", EventType.SAVING);
-        Notification notification4 = notificationGenerator.generateSaved("알림4", EventType.SAVING);
+        NudgePayload nudgePayload = new NudgePayload("test");
+        Notification notification1 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
+        Notification notification2 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
+        Notification notification3 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
+        Notification notification4 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
         crewNotificationGenerator.generateSavedDeletedNotification(crew, notification1);
         crewNotificationGenerator.generateSavedDeletedNotification(crew, notification2);
         crewNotificationGenerator.generateSavedDeletedNotification(crew, notification3);
@@ -113,11 +153,11 @@ class NotificationServiceTest extends BaseServiceTest {
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         Crew crew = crewGenerator.generateSaved(petGroup, member);
-
-        Notification notification1 = notificationGenerator.generateSaved("알림1", EventType.SAVING);
-        Notification notification2 = notificationGenerator.generateSaved("알림2", EventType.SAVING);
-        Notification notification3 = notificationGenerator.generateSaved("알림3", EventType.SAVING);
-        Notification notification4 = notificationGenerator.generateSaved("알림4", EventType.SAVING);
+        NudgePayload nudgePayload = new NudgePayload("test");
+        Notification notification1 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
+        Notification notification2 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
+        Notification notification3 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
+        Notification notification4 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
 
         crewNotificationGenerator.generateSavedDeletedNotification(crew, notification1);
         crewNotificationGenerator.generateSavedDeletedNotification(crew, notification2);
@@ -147,11 +187,11 @@ class NotificationServiceTest extends BaseServiceTest {
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         Crew crew = crewGenerator.generateSaved(petGroup, member);
         notificationInboxGenerator.generateNotificationInbox(crew, null);
-
-        Notification notification1 = notificationGenerator.generateSaved("알림1", EventType.SAVING);
-        Notification notification2 = notificationGenerator.generateSaved("알림2", EventType.SAVING);
-        Notification notification3 = notificationGenerator.generateSaved("알림3", EventType.SAVING);
-        Notification notification4 = notificationGenerator.generateSaved("알림4", EventType.SAVING);
+        NudgePayload nudgePayload = new NudgePayload("test");
+        Notification notification1 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
+        Notification notification2 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
+        Notification notification3 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
+        Notification notification4 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
 
         crewNotificationGenerator.generateSavedDeletedNotification(crew, notification1);
         crewNotificationGenerator.generateSavedDeletedNotification(crew, notification2);
@@ -187,7 +227,8 @@ class NotificationServiceTest extends BaseServiceTest {
         Crew crew = crewGenerator.generateSaved(petGroup, member);
         notificationInboxGenerator.generateNotificationInbox(crew, null);
 
-        Notification notification1 = notificationGenerator.generateSaved("알림1", EventType.SAVING);
+        NudgePayload nudgePayload = new NudgePayload("test");
+        Notification notification1 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
         crewNotificationGenerator.generateSavedDeletedNotification(crew, notification1);
 
         Pageable pageable = PageRequest.of(1, 2);
@@ -208,7 +249,8 @@ class NotificationServiceTest extends BaseServiceTest {
         Pet pet = petGenerator.generateSaved();
         PetGroup petGroup = petGroupGenerator.generateSaved(pet);
         Crew crew = crewGenerator.generateSaved(petGroup, member);
-        Notification notification = notificationGenerator.generateSaved("알림1", EventType.SAVING);
+        NudgePayload nudgePayload = new NudgePayload("test");
+        Notification notification = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
 
         assertThatThrownBy(
                 () -> notificationService.deleteNotification(member, notification.getId())
@@ -226,10 +268,11 @@ class NotificationServiceTest extends BaseServiceTest {
         Crew crew = crewGenerator.generateSaved(petGroup, member);
         notificationInboxGenerator.generateNotificationInbox(crew, null);
 
-        Notification notification1 = notificationGenerator.generateSaved("알림1", EventType.SAVING);
-        Notification notification2 = notificationGenerator.generateSaved("알림2", EventType.SAVING);
-        Notification notification3 = notificationGenerator.generateSaved("알림3", EventType.SAVING);
-        Notification notification4 = notificationGenerator.generateSaved("알림4", EventType.SAVING);
+        NudgePayload nudgePayload = new NudgePayload("test");
+        Notification notification1 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
+        Notification notification2 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
+        Notification notification3 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
+        Notification notification4 = notificationGenerator.generateSaved(nudgePayload, EventType.NUDGE);
 
         crewNotificationGenerator.generateSavedDeletedNotification(crew, notification1);
         crewNotificationGenerator.generateSavedDeletedNotification(crew, notification2);

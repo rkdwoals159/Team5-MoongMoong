@@ -12,6 +12,7 @@ import com.moong.domain.entity.PetGroup;
 import com.moong.domain.enums.PaymentStatus;
 import com.moong.dto.PaymentFailedEvent;
 import com.moong.dto.response.payment.TossCancelResponse;
+import com.moong.event.payment.PaymentFailEventListener;
 import com.moong.repository.CoinPaymentRepository;
 import com.moong.service.BaseServiceTest;
 import java.util.concurrent.CompletableFuture;

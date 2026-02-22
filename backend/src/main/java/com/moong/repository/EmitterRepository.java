@@ -1,7 +1,6 @@
 package com.moong.repository;
 
 import com.moong.event.transport.CustomSseEmitter;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
@@ -13,17 +12,22 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class EmitterRepository {
 
-    private final Map<Long, CustomSseEmitter> emitters = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, CustomSseEmitter> emitters = new ConcurrentHashMap<>();
 
-    public void save(long memberId, CustomSseEmitter sseEmitter) {
-        emitters.put(memberId, sseEmitter);
+    public void save(long memberId, CustomSseEmitter emitter) {
+        CustomSseEmitter previousEmitter = emitters.get(memberId);
+
+        if (previousEmitter != null) {
+            previousEmitter.complete();
+        }
+        emitters.put(memberId, emitter);
     }
 
     public Optional<CustomSseEmitter> findById(long memberId) {
         return Optional.ofNullable(emitters.get(memberId));
     }
 
-    public void deleteById(long memberId) {
-        emitters.remove(memberId);
+    public boolean deleteByMemberIdAndEmitter(long memberId, CustomSseEmitter emitter) {
+        return emitters.remove(memberId, emitter);
     }
 }

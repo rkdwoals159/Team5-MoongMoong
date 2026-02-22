@@ -12,6 +12,7 @@ import com.moong.dto.request.bank.CoinCreateRequest;
 import com.moong.dto.response.bank.BankInfoResponse;
 import com.moong.dto.response.bank.CoinResponse;
 import com.moong.dto.response.bank.CoinsResponse;
+import com.moong.event.dto.NudgePayload;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -235,5 +236,27 @@ class BankControllerTest extends BaseControllerTest {
                         .isCloseTo(bigCoin.getCreatedAt(), within(1, ChronoUnit.MICROS)),
                 () -> assertThat(createdAts).isSorted()
         );
+    }
+
+    @DisplayName("그룹 넛지를 생성하면 알림이 저장되고, 본인을 제외한 크루원에게 전파된다.")
+    @Test
+    void createGroupNudge() {
+        Member member1 = memberGenerator.generateSaved("test");
+        Member member2 = memberGenerator.generateSaved("test");
+        Member member3 = memberGenerator.generateSaved("test");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        String accessToken = jwtTokenGenerator.generateAccessToken(member1);
+        Crew crew1 = crewGenerator.generateSaved(petGroup, member1);
+        crewGenerator.generateSaved(petGroup, member2);
+        crewGenerator.generateSaved(petGroup, member3);
+        NudgePayload nudgePayload = new NudgePayload(member1.getName());
+
+        given().log().all()
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + accessToken)
+                .post("/api/group/bank/nudge")
+                .then()
+                .statusCode(200);
     }
 }

@@ -7,14 +7,18 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface CrewNotificationRepository extends Repository<CrewNotification, Long> {
 
     CrewNotification save(CrewNotification crewNotification);
+
+    default void saveAll(List<CrewNotification> crewNotifications) {
+        for (CrewNotification crewNotification : crewNotifications) {
+            save(crewNotification);
+        }
+    }
 
     @Query("""
         select cn

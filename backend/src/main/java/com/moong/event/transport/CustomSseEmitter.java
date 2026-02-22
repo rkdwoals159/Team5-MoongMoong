@@ -4,23 +4,22 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+
 @Slf4j
 @Getter
 public class CustomSseEmitter {
 
     private static final long DEFAULT_TIMEOUT = 60L * 1000 * 60;
 
+    private final long memberId;
     private final SseEmitter sseEmitter;
 
-    public CustomSseEmitter(
-            long memberId,
-            Runnable leaveAction
-    ) {
+    public CustomSseEmitter(long memberId) {
+        this.memberId = memberId;
         this.sseEmitter = new SseEmitter(DEFAULT_TIMEOUT);
-        setEmitter(memberId, leaveAction);
     }
 
-    private void setEmitter(long memberId, Runnable leaveAction) {
+    public void configureLifecycleCallbacks(Runnable leaveAction) {
         sseEmitter.onCompletion(() -> {
             leaveAction.run();
             log.info("SSE completed. memberId={}", memberId);
@@ -38,6 +37,6 @@ public class CustomSseEmitter {
     }
 
     public void complete() {
-        this.sseEmitter.complete();
+        sseEmitter.complete();
     }
 }

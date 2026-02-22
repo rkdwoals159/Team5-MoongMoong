@@ -42,6 +42,15 @@ public class BankController implements BankControllerSwagger {
     }
 
     @Override
+    @PostMapping("/nudge")
+    public ResponseEntity<Void> createGroupNudge(
+            @AuthMember Member member
+    ) {
+        bankFacadeService.createGroupNudge(member);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
     @GetMapping
     public ResponseEntity<BankInfoResponse> findBankInfo(
             @AuthMember Member member

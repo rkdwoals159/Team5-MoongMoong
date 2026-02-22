@@ -13,6 +13,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Getter
@@ -27,10 +29,16 @@ public class Notification extends BaseEntity {
     private Long id;
 
     @NotNull
-    private String content;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "json")
+    private String payload;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private EventType eventType;
+
+    public Notification(String payload, EventType eventType) {
+        this(null, payload, eventType);
+    }
 }

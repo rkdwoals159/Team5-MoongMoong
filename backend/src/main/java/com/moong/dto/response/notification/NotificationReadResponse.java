@@ -1,6 +1,5 @@
 package com.moong.dto.response.notification;
 
-import com.moong.domain.entity.CrewNotification;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import org.springframework.data.domain.Slice;
@@ -24,15 +23,13 @@ public record NotificationReadResponse(
         List<NotificationResponse> notifications
 ) {
 
-    public NotificationReadResponse(Long lastSeenNotificationId, Slice<CrewNotification> crewNotifications) {
+    public NotificationReadResponse(Long lastSeenNotificationId, Slice<NotificationResponse> notifications) {
         this(
                 lastSeenNotificationId,
-                crewNotifications.getNumber(),
-                crewNotifications.getSize(),
-                crewNotifications.hasNext(),
-                crewNotifications.getContent().stream()
-                        .map(NotificationResponse::new)
-                        .toList()
+                notifications.getNumber(),
+                notifications.getSize(),
+                notifications.hasNext(),
+                notifications.getContent()
         );
     }
 

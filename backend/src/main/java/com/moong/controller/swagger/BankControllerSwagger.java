@@ -55,6 +55,20 @@ public interface BankControllerSwagger {
     );
 
     @Operation(
+            summary = "재촉하기",
+            description = """
+                    같은 그룹원들에게 저금하기를 재촉합니다.
+                    """
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "재촉하기 성공"
+    )
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<Void> createGroupNudge(Member member);
+
+    @Operation(
             summary = "저금통 정보 조회",
             description = "저금통의 현재, 목표 금액을 반환합니다"
     )

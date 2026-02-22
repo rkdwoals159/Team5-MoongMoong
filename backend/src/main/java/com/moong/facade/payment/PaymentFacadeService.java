@@ -13,13 +13,10 @@ import com.moong.dto.request.payment.CoinPaymentFailRequest;
 import com.moong.dto.response.bank.CoinCreateResponse;
 import com.moong.dto.response.bank.CoinPaymentCreateResponse;
 import com.moong.dto.response.payment.TossConfirmResponse;
-import com.moong.event.dto.CoinCreatedPayload;
-import com.moong.event.dto.GroupEventMessage;
-import com.moong.event.transport.GroupEventChannelSender;
-import com.moong.service.BankService;
+import com.moong.event.dto.PaymentSuccessEvent;
+import com.moong.service.CoinSavingService;
 import com.moong.service.CrewService;
 import com.moong.service.PaymentService;
-import com.moong.service.RankingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -34,11 +31,9 @@ public class PaymentFacadeService {
 
     private final PaymentService paymentService;
     private final CrewService crewService;
-    private final BankService bankService;
-    private final RankingService rankingService;
     private final TossPaymentClient tossPaymentClient;
     private final ApplicationEventPublisher eventPublisher;
-    private final GroupEventChannelSender groupEventChannelSender;
+    private final CoinSavingService coinSavingService;
 
     public CoinPaymentCreateResponse createCoinPayment(Member member, CoinCreateRequest coinCreateRequest) {
         Crew crew = crewService.getByMemberId(member.getId());
@@ -60,17 +55,12 @@ public class PaymentFacadeService {
 
             paymentService.changePaymentStatus(orderId, crewId, PaymentStatus.READY, PaymentStatus.CONFIRMED);
 
-            Coin savedCoin = bankService.createCoin(member, crew, clientResponse.totalAmount());
-
-            paymentService.changePaymentStatus(orderId, crewId, PaymentStatus.CONFIRMED, PaymentStatus.COIN_CREATED);
-
-            GroupEventMessage<CoinCreatedPayload> savingMessage =
-                    GroupEventMessage.saving(member, groupId, savedCoin);
-
-            groupEventChannelSender.sendAsync(savingMessage);
-            rankingService.updateRanking(member, savedCoin.getAmount());
+            Coin savedCoin = coinSavingService.createCoin(orderId, crew, clientResponse.totalAmount());
 
             paymentService.changePaymentStatus(orderId, crewId, PaymentStatus.COIN_CREATED, PaymentStatus.DONE);
+
+            PaymentSuccessEvent paymentSuccessEvent = new PaymentSuccessEvent(member, crew, savedCoin, groupId);
+            eventPublisher.publishEvent(paymentSuccessEvent);
             return new CoinCreateResponse(savedCoin, member);
         } catch (Exception e) {
             log.error("Failed to create coin - OrderId: {}, Error: {}", request.orderId(), e.getMessage(), e);

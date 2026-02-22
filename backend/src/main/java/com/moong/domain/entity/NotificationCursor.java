@@ -44,4 +44,8 @@ public class NotificationCursor {
     public boolean shouldUpdateCursor(long newestId) {
         return lastSeenNotificationId == null || newestId > lastSeenNotificationId;
     }
+
+    public NotificationCursor(Crew crew) {
+        this(null, crew, null);
+    }
 }

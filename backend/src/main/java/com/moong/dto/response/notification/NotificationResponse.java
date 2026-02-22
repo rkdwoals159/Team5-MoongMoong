@@ -1,7 +1,7 @@
 package com.moong.dto.response.notification;
 
-import com.moong.domain.entity.CrewNotification;
 import com.moong.event.EventType;
+import com.moong.event.group.GroupEventPayload;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 
@@ -12,7 +12,7 @@ public record NotificationResponse(
         long notificationId,
 
         @Schema(description = "알림 내용")
-        String content,
+        GroupEventPayload payload,
 
         @Schema(description = "이벤트 종류", example = "SAVING")
         EventType eventType,
@@ -20,14 +20,4 @@ public record NotificationResponse(
         @Schema(description = "생성 시간", example = "2026-01-30T14:32:15.123+09:00")
         LocalDateTime createdAt
 ) {
-
-    public NotificationResponse(CrewNotification crewNotification) {
-        this(
-                crewNotification.getNotification().getId(),
-                crewNotification.getNotification().getContent(),
-                crewNotification.getNotification().getEventType(),
-                crewNotification.getNotification().getCreatedAt()
-        );
-    }
 }
-

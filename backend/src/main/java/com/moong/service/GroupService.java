@@ -3,6 +3,7 @@ package com.moong.service;
 import com.moong.domain.InviteCode;
 import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.Member;
+import com.moong.domain.entity.NotificationCursor;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.request.PetGroupParticipateRequest;
@@ -13,6 +14,7 @@ import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.CrewRepository;
 import com.moong.repository.PetGroupRepository;
 import com.moong.repository.PetRepository;
+import com.moong.repository.notification.NotificationCursorRepository;
 import com.moong.util.InviteCodeGenerator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class GroupService {
     private final CrewRepository crewRepository;
     private final PetGroupRepository petGroupRepository;
     private final PetRepository petRepository;
+    private final NotificationCursorRepository notificationCursorRepository;
     private final InviteCodeGenerator inviteCodeGenerator;
 
     @Transactional
@@ -35,7 +38,8 @@ public class GroupService {
         Pet pet = petRepository.findById(petId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NO_SUCH_PET_FOUND));
         PetGroup savedPetGroup = petGroupRepository.save(new PetGroup(pet));
-        crewRepository.save(new Crew(savedPetGroup, member));
+        Crew crew = crewRepository.save(new Crew(savedPetGroup, member));
+        notificationCursorRepository.save(new NotificationCursor(crew));
         return savedPetGroup;
     }
 
@@ -54,7 +58,9 @@ public class GroupService {
         //TODO 순서 조정 문제
         crewRepository.deleteById(crew.getId());
         petGroupRepository.deleteById(crew.getPetGroup().getId());
+        notificationCursorRepository.deleteByCrew_Id(crew.getId());
         Crew savedCrew = crewRepository.save(new Crew(targetGroup, member));
+        notificationCursorRepository.save(new NotificationCursor(savedCrew));
         return new PetGroupParticipateResponse(savedCrew.getId());
     }
 
