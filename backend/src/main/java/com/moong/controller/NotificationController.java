@@ -4,14 +4,17 @@ import com.moong.annotation.auth.AuthMember;
 import com.moong.controller.swagger.NotificationControllerSwagger;
 import com.moong.domain.entity.Member;
 import com.moong.dto.command.NotificationReadCommand;
+import com.moong.dto.request.notification.NotificationsDeleteRequest;
 import com.moong.dto.response.notification.NotificationReadResponse;
 import com.moong.service.NotificationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -38,14 +41,17 @@ public class NotificationController implements NotificationControllerSwagger {
             @AuthMember Member member,
             @PathVariable long notificationId
     ) {
+        notificationService.deleteNotification(member, notificationId);
         return ResponseEntity.ok().build();
     }
 
     @Override
     @DeleteMapping("/api/notifications")
     public ResponseEntity<Void> deleteNotification(
-            @AuthMember Member member
+            @AuthMember Member member,
+            @RequestBody @Valid NotificationsDeleteRequest request
     ) {
+        notificationService.deleteNotifications(member, request);
         return ResponseEntity.ok().build();
     }
 }

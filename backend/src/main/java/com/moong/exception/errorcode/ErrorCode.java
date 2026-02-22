@@ -62,6 +62,7 @@ public enum ErrorCode {
     DISEASE_CODE_NOT_FOUND(404, "존재하지 않는 질병 코드입니다.", true),
     NO_SUCH_COIN_PAYMENT_FOUND(404, "코인 결제 내역을 찾을 수 없습니다", true),
     NOTIFICATION_INBOX_NOT_FOUND(404, "알림 수신 정보를 찾을 수 없습니다.", false),
+    CREW_NOTIFICATION_NOT_FOUND(404, "해당 크루의 알림 정보를 찾을 수 없습니다.", false),
 
     //405
     METHOD_NOT_SUPPORTED(405, "허용되지 않은 메서드입니다.", true),

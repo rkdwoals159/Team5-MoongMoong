@@ -1,25 +1,33 @@
 package com.moong.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.moong.domain.entity.Crew;
+import com.moong.domain.entity.CrewNotification;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Notification;
 import com.moong.domain.entity.NotificationCursor;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
 import com.moong.dto.command.NotificationReadCommand;
+import com.moong.dto.request.notification.NotificationsDeleteRequest;
 import com.moong.dto.response.notification.NotificationReadResponse;
 import com.moong.dto.response.notification.NotificationResponse;
 import com.moong.event.EventType;
+import com.moong.exception.custom.BusinessException;
+import com.moong.exception.errorcode.ErrorCode;
+import com.moong.repository.notification.CrewNotificationRepository;
 import com.moong.repository.notification.NotificationCursorRepository;
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 class NotificationServiceTest extends BaseServiceTest {
 
@@ -28,6 +36,9 @@ class NotificationServiceTest extends BaseServiceTest {
 
     @Autowired
     private NotificationCursorRepository notificationCursorRepository;
+
+    @Autowired
+    private CrewNotificationRepository crewNotificationRepository;
 
     @DisplayName("조회 결과가 비어있으면 empty 응답을 반환하고 lastSeen은 갱신되지 않는다")
     @Test
@@ -165,5 +176,80 @@ class NotificationServiceTest extends BaseServiceTest {
                         ),
                 () -> assertThat(updatedInbox.getLastSeenNotificationId()).isEqualTo(notification2.getId())
         );
+    }
+
+    @DisplayName("알림 단건 삭제 성공")
+    @Test
+    void deleteNotificationSuccess() {
+        Member member = memberGenerator.generateSaved("test");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        Crew crew = crewGenerator.generateSaved(petGroup, member);
+        notificationInboxGenerator.generateNotificationInbox(crew, null);
+
+        Notification notification1 = notificationGenerator.generateSaved("알림1", EventType.SAVING);
+        crewNotificationGenerator.generateSavedDeletedNotification(crew, notification1);
+
+        Pageable pageable = PageRequest.of(1, 2);
+        NotificationReadCommand command = new NotificationReadCommand(member, pageable);
+
+        notificationService.deleteNotification(member, notification1.getId());
+
+        Optional<CrewNotification> crewNotification = crewNotificationRepository
+                .findByCrewIdAndNotificationId(crew.getId(), notification1.getId());
+        assertThat(crewNotification).isEmpty();
+
+    }
+
+    @DisplayName("해당 멤버의 알림이 아니면 삭제에 실패한다")
+    @Test
+    void deleteNotificationFailure() {
+        Member member = memberGenerator.generateSaved("test");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        Crew crew = crewGenerator.generateSaved(petGroup, member);
+        Notification notification = notificationGenerator.generateSaved("알림1", EventType.SAVING);
+
+        assertThatThrownBy(
+                () -> notificationService.deleteNotification(member, notification.getId())
+        )
+                .isInstanceOf(BusinessException.class)
+                .hasMessage(ErrorCode.CREW_NOTIFICATION_NOT_FOUND.getMessage());
+    }
+
+    @DisplayName("알림 다중 삭제 성공")
+    @Test
+    void deleteNotifications() {
+        Member member = memberGenerator.generateSaved("test");
+        Pet pet = petGenerator.generateSaved();
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        Crew crew = crewGenerator.generateSaved(petGroup, member);
+        notificationInboxGenerator.generateNotificationInbox(crew, null);
+
+        Notification notification1 = notificationGenerator.generateSaved("알림1", EventType.SAVING);
+        Notification notification2 = notificationGenerator.generateSaved("알림2", EventType.SAVING);
+        Notification notification3 = notificationGenerator.generateSaved("알림3", EventType.SAVING);
+        Notification notification4 = notificationGenerator.generateSaved("알림4", EventType.SAVING);
+
+        crewNotificationGenerator.generateSavedDeletedNotification(crew, notification1);
+        crewNotificationGenerator.generateSavedDeletedNotification(crew, notification2);
+        crewNotificationGenerator.generateSavedDeletedNotification(crew, notification3);
+        crewNotificationGenerator.generateSavedDeletedNotification(crew, notification4);
+
+        NotificationsDeleteRequest request = new NotificationsDeleteRequest(
+                List.of(
+                        notification1.getId(),
+                        notification2.getId(),
+                        notification3.getId(),
+                        notification4.getId()
+                )
+        );
+
+        notificationService.deleteNotifications(member, request);
+
+        Pageable pageable = PageRequest.of(0, 1);
+        Slice<CrewNotification> deletedCrewNotification = crewNotificationRepository.findFetchedByCrewId(crew.getId(),
+                pageable);
+        assertThat(deletedCrewNotification.getContent()).hasSize(0);
     }
 }

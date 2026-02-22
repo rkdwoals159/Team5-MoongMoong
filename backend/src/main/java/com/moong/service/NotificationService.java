@@ -2,8 +2,10 @@ package com.moong.service;
 
 import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.CrewNotification;
+import com.moong.domain.entity.Member;
 import com.moong.domain.entity.NotificationCursor;
 import com.moong.dto.command.NotificationReadCommand;
+import com.moong.dto.request.notification.NotificationsDeleteRequest;
 import com.moong.dto.response.notification.NotificationReadResponse;
 import com.moong.repository.CrewRepository;
 import com.moong.repository.notification.CrewNotificationRepository;
@@ -11,6 +13,7 @@ import com.moong.repository.notification.NotificationCursorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -44,5 +47,18 @@ public class NotificationService {
                 lastSeenNotificationId,
                 crewNotifications
         );
+    }
+
+    public void deleteNotification(Member member, long notificationId) {
+        Crew crew = crewRepository.getByMemberId(member.getId());
+        CrewNotification crewNotification = crewNotificationRepository
+                .getByCrewIdAndNotificationId(crew.getId(), notificationId);
+        crewNotificationRepository.delete(crewNotification);
+    }
+
+    @Transactional
+    public void deleteNotifications(Member member, NotificationsDeleteRequest request) {
+        Crew crew = crewRepository.getByMemberId(member.getId());
+        crewNotificationRepository.deleteAllByCrew_IdAndNotification_IdIn(crew.getId(), request.notificationIds());
     }
 }
