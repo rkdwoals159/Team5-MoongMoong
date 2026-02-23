@@ -21,11 +21,6 @@ public class AuthService {
     private final AuthManager authManager;
     private final OAuthClient oAuthClient;
 
-    //TODO 프론트 코드 전환 후 삭제
-    public Member authorize(long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED_EXCEPTION));
-    }
 
     public Member authorizeByConnectionToken(String connectionToken) {
         String email = authManager.resolveConnectionToken(connectionToken);

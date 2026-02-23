@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface CrewNotificationRepository extends Repository<CrewNotification, Long> {
 
@@ -19,6 +21,11 @@ public interface CrewNotificationRepository extends Repository<CrewNotification,
             save(crewNotification);
         }
     }
+
+    long countByCrew_IdAndNotification_IdGreaterThan(
+            long crewId,
+            long notificationId
+    );
 
     @Query("""
         select cn
@@ -37,6 +44,10 @@ public interface CrewNotificationRepository extends Repository<CrewNotification,
     }
 
     void delete(CrewNotification crewNotification);
+
+    @Transactional
+    @Modifying(clearAutomatically = true,  flushAutomatically = true)
+    void deleteByCrew_Id(long crewId);
 
     void deleteAllByCrew_IdAndNotification_IdIn(long crewId, List<Long> notificationIds);
 }

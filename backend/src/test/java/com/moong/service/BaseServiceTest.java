@@ -88,7 +88,7 @@ public abstract class BaseServiceTest {
     protected CoinPaymentGenerator coinPaymentGenerator;
 
     @Autowired
-    protected NotificationInboxGenerator notificationInboxGenerator;
+    protected NotificationCursorGenerator notificationCursorGenerator;
 
     @Autowired
     protected NotificationGenerator notificationGenerator;

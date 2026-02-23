@@ -38,10 +38,6 @@ public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver
         if(rawAccessToken == null || rawAccessToken.isBlank()) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED_EXCEPTION);
         }
-        //TODO 프론트 코드 전환 후 삭제
-        if (rawAccessToken.equals("1") || rawAccessToken.equals("2")) {
-            return authService.authorize(Long.parseLong(rawAccessToken));
-        }
 
         String accessToken = authorizationHeaderExtractor.extractBearerToken(rawAccessToken);
         return authService.authorizeByAccessToken(accessToken);

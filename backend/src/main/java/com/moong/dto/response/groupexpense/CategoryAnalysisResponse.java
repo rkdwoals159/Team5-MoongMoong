@@ -20,7 +20,6 @@ public record CategoryAnalysisResponse(
 
     private static final Comparator<CategoryCostResponse> CATEGORY_COST_COMPARATOR = Comparator.comparingLong(CategoryCostResponse::cost).reversed();
 
-    //TODO 반올림 문제 보정 필요
     public CategoryAnalysisResponse(CategoryAnalysis categoryAnalysis) {
         this(
                 categoryAnalysis.getTotal(),

@@ -4,14 +4,12 @@ import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode404;
 import com.moong.annotation.swagger.ErrorCode500;
 import com.moong.domain.entity.Member;
-import com.moong.dto.request.memberexpense.CategorizeRequest;
-import com.moong.dto.request.notification.NotificationsDeleteRequest;
+import com.moong.dto.response.notification.NotificationCountResponse;
 import com.moong.dto.response.notification.NotificationReadResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.core.annotations.ParameterObject;
@@ -38,6 +36,23 @@ public interface NotificationControllerSwagger {
             @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
             Member member,
             @ParameterObject Pageable pageable
+    );
+
+    @Operation(summary = "읽지 않은 알림 개수를 조회합니다.",
+            description = "현재 자신이 읽지 않은 알림 개수를 조회합니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "알림 개수 조회 성공",
+                            content = @Content(schema = @Schema(implementation = NotificationCountResponse.class))
+                    ),
+
+            })
+    @ErrorCode401
+    @ErrorCode500
+    ResponseEntity<NotificationCountResponse> countNotification(
+            @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
+            Member member
     );
 
     @Operation(summary = "단건 알림을 삭제합니다.",
@@ -69,11 +84,6 @@ public interface NotificationControllerSwagger {
     @ErrorCode500
     ResponseEntity<Void> deleteNotification(
             @Parameter(description = "인증된 사용자 정보 (Access Token 기반)", hidden = true)
-            Member member,
-            @RequestBody(
-                    description = "알림 다중 삭제 요청",
-                    content = @Content(schema = @Schema(implementation = NotificationsDeleteRequest.class))
-            )
-            NotificationsDeleteRequest request
+            Member member
     );
 }

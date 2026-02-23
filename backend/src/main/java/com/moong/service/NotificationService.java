@@ -7,7 +7,7 @@ import com.moong.domain.entity.Notification;
 import com.moong.domain.entity.NotificationCursor;
 import com.moong.dto.command.NotificationCreateCommand;
 import com.moong.dto.command.NotificationReadCommand;
-import com.moong.dto.request.notification.NotificationsDeleteRequest;
+import com.moong.dto.response.notification.NotificationCountResponse;
 import com.moong.dto.response.notification.NotificationReadResponse;
 import com.moong.dto.response.notification.NotificationResponse;
 import com.moong.event.group.GroupEventPayload;
@@ -79,6 +79,18 @@ public class NotificationService {
         );
     }
 
+    public NotificationCountResponse countNotification(Member member) {
+        Crew crew = crewRepository.getByMemberId(member.getId());
+        long lastSeenNotificationId = notificationCursorRepository.findByCrew_Id(crew.getId())
+                .map(NotificationCursor::getLastSeenNotificationId)
+                .orElse(0L);
+
+        long count = crewNotificationRepository.countByCrew_IdAndNotification_IdGreaterThan(
+                crew.getId(), lastSeenNotificationId
+        );
+        return new NotificationCountResponse(count);
+    }
+
     private NotificationResponse toNotificationResponse(CrewNotification crewNotifications) {
         Notification notification = crewNotifications.getNotification();
 
@@ -103,8 +115,8 @@ public class NotificationService {
     }
 
     @Transactional
-    public void deleteNotifications(Member member, NotificationsDeleteRequest request) {
+    public void deleteNotifications(Member member) {
         Crew crew = crewRepository.getByMemberId(member.getId());
-        crewNotificationRepository.deleteAllByCrew_IdAndNotification_IdIn(crew.getId(), request.notificationIds());
+        crewNotificationRepository.deleteByCrew_Id(crew.getId());
     }
 }

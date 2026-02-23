@@ -16,12 +16,12 @@ public class CrewNotificationGenerator {
         this.crewNotificationRepository = crewNotificationRepository;
     }
 
-    public CrewNotification generateSaved(Crew crew, Notification notification, LocalDateTime deletedAt) {
+    public CrewNotification generateSavedWithDeletedAt(Crew crew, Notification notification, LocalDateTime deletedAt) {
         CrewNotification crewNotification = new CrewNotification(null, crew, notification, deletedAt);
         return crewNotificationRepository.save(crewNotification);
     }
 
-    public CrewNotification generateSavedDeletedNotification(Crew crew, Notification notification) {
+    public CrewNotification generateSaved(Crew crew, Notification notification) {
         CrewNotification crewNotification = new CrewNotification(null, crew, notification, null);
         return crewNotificationRepository.save(crewNotification);
     }

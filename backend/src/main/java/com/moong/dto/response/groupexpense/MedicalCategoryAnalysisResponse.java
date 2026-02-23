@@ -27,7 +27,6 @@ public record MedicalCategoryAnalysisResponse(
         );
     }
 
-    //TODO Ratio 중복 코드 제거 + 반올림 보정문제 고민
     private static double getRatio(long total, long value) {
         if (total == 0) {
             return 0;

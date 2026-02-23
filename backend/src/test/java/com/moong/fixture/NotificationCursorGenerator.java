@@ -6,15 +6,15 @@ import com.moong.repository.notification.NotificationCursorRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NotificationInboxGenerator {
+public class NotificationCursorGenerator {
 
     private final NotificationCursorRepository notificationCursorRepository;
 
-    public NotificationInboxGenerator(NotificationCursorRepository notificationCursorRepository) {
+    public NotificationCursorGenerator(NotificationCursorRepository notificationCursorRepository) {
         this.notificationCursorRepository = notificationCursorRepository;
     }
 
-    public NotificationCursor generateNotificationInbox(Crew crew, Long lastSeenNotificationId) {
+    public NotificationCursor generateNotificationCursor(Crew crew, Long lastSeenNotificationId) {
         NotificationCursor notificationCursor = new NotificationCursor(null, crew, lastSeenNotificationId);
         return notificationCursorRepository.save(notificationCursor);
     }

@@ -15,7 +15,6 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
 import java.security.SecureRandom;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -78,7 +77,7 @@ public abstract class BaseControllerTest {
     protected ObjectMapper objectMapper;
 
     @Autowired
-    protected NotificationInboxGenerator notificationInboxGenerator;
+    protected NotificationCursorGenerator notificationCursorGenerator;
 
     @Autowired
     protected NotificationGenerator notificationGenerator;

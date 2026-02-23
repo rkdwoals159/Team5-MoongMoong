@@ -20,7 +20,7 @@ public class SchedulingConfig {
     public TaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         int coreCount = Runtime.getRuntime().availableProcessors();
-        scheduler.setPoolSize(coreCount); //TODO 스케쥴링 core수 최적화 필요
+        scheduler.setPoolSize(coreCount);
         scheduler.setThreadNamePrefix(SCHEDULER_PREFIX);
         scheduler.setTaskDecorator(getTaskDecorator());
         scheduler.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());

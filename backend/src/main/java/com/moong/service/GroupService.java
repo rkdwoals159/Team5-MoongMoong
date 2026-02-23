@@ -58,7 +58,6 @@ public class GroupService {
         validateGroupIsFull(targetGroupCrews);
         validateAlreadyAttended(targetGroupCrews, member.getId());
 
-        //TODO 순서 조정 문제
         crewRepository.deleteById(crew.getId());
         petGroupRepository.deleteById(crew.getPetGroup().getId());
         groupMedicalAdviceRepository.deleteByPetGroup_Id(crew.getPetGroup().getId());
