@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { ExpenseTableToolbarProps } from "@/app/(sidebar)/dashboard/_types";
 import { formatAmount } from "@/utils/amount";
 import Button from "@/components/common/Button/Button";
@@ -10,7 +11,7 @@ import { cn } from "@/utils/style";
  * - 좌측: 선택 삭제, 선택 합치기
  * - 우측: 지출 합계, 저장하기
  */
-export default function ExpenseTableToolbar({
+const ExpenseTableToolbar = memo(function ExpenseTableToolbar({
   totalExpense = 0,
   selectedCount = 0,
   hasUnsavedChanges = false,
@@ -73,4 +74,6 @@ export default function ExpenseTableToolbar({
       </div>
     </div>
   );
-}
+});
+
+export default ExpenseTableToolbar;

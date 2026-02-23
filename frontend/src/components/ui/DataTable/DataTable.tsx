@@ -32,16 +32,22 @@ const DataTable = <T,>({
   }));
 
   return (
-    <DataTableShell className={className} columns={colgroupColumns} {...rest}>
-      <thead className="bg-gray-50 sticky top-0 z-10">
-        <tr>
-          {columns.map((col) => (
-            <th key={String(col.accessor)} className={TH_BASE_CLASS} style={{ width: col.width }}>
-              {col.label}
-            </th>
-          ))}
-        </tr>
-      </thead>
+    <DataTableShell
+      className={className}
+      columns={colgroupColumns}
+      headerSlot={
+        <thead className="bg-gray-50">
+          <tr>
+            {columns.map((col) => (
+              <th key={String(col.accessor)} className={TH_BASE_CLASS} style={{ width: col.width }}>
+                {col.label}
+              </th>
+            ))}
+          </tr>
+        </thead>
+      }
+      {...rest}
+    >
       <tbody>
         {data.map((row, rowIndex) => (
           <tr

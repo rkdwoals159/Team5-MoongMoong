@@ -1,15 +1,17 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { memo, useMemo, useRef } from "react";
 import type { DataTableProps, DataTableColumn, DataTableShellCol } from "./dataTable.type";
-import { TH_BASE_CLASS, TD_CELL_WRAPPER_BASE } from "./dataTableConstants";
+import { TH_BASE_CLASS, VIRTUAL_ROW_HEIGHT } from "./dataTableConstants";
 import DataTableShell from "./DataTableShell";
+import VirtualRow from "./VirtualRow";
 import { cn } from "@/utils/style";
 import ArrowUpIcon from "@/assets/icons/components/arrow-up.svg";
 import ArrowDownIcon from "@/assets/icons/components/arrow-down.svg";
+import { useVirtualizer } from "@tanstack/react-virtual";
 
 // --- 정렬 아이콘 ---
-const SortIcon = ({ order }: { order: "asc" | "desc" }) => {
+const SortIcon = memo(function SortIcon({ order }: { order: "asc" | "desc" }) {
   const Icon = order === "asc" ? ArrowUpIcon : ArrowDownIcon;
 
   return (
@@ -20,7 +22,7 @@ const SortIcon = ({ order }: { order: "asc" | "desc" }) => {
       <Icon aria-hidden="true" />
     </span>
   );
-};
+});
 
 // --- 헤더 셀 렌더 ---
 const renderHeaderCell = <T,>(
@@ -68,45 +70,6 @@ const renderHeaderCell = <T,>(
   );
 };
 
-// --- 바디 셀 렌더 ---
-const renderBodyCell = <T,>(
-  col: DataTableColumn<T>,
-  row: T,
-  rowIndex: number,
-  selectedCell: DataTableProps<T>["selectedCell"],
-  mode: "read" | "edit",
-  onCellClick: DataTableProps<T>["onCellClick"],
-  renderCell: (col: DataTableColumn<T>, row: T, rowIndex: number) => ReactNode,
-) => {
-  const isSelected = selectedCell?.rowIndex === rowIndex && selectedCell?.accessor === col.accessor;
-  const isLifted = mode === "edit" && isSelected;
-
-  return (
-    <td
-      key={`${rowIndex}-${String(col.accessor)}`}
-      className={cn(
-        "h-[48px] align-top overflow-visible bg-transparent p-0 border-b border-gray-50",
-        isLifted ? "relative z-10" : "",
-      )}
-      style={{ width: col.width }}
-      data-row-index={rowIndex}
-      data-accessor={String(col.accessor)}
-      data-cell-id={`${rowIndex}-${String(col.accessor)}`}
-      onClick={onCellClick ? () => onCellClick(rowIndex, col.accessor) : undefined}
-    >
-      <div
-        className={cn(
-          TD_CELL_WRAPPER_BASE,
-          isSelected ? "ring-2 ring-yellow-300 ring-inset" : "",
-          isLifted ? "-translate-y-0.5 shadow-sm ring-2 ring-yellow-300 ring-inset" : "",
-        )}
-      >
-        {renderCell(col, row, rowIndex)}
-      </div>
-    </td>
-  );
-};
-
 /**
  * 정렬·셀 클릭·키보드 네비게이션을 지원하는 Client 전용 DataTable
  */
@@ -122,27 +85,39 @@ const ClientDataTable = <T,>({
   onCellClick,
   onKeyDown,
   bottomSlot,
-  scrollContainerRef,
+  scrollContainerRef: externalRef,
   ...rest
 }: DataTableProps<T>) => {
+  "use no memo";
+
   const hasCellInteraction = mode === "edit" && (onCellClick ?? onKeyDown);
 
-  const renderCell = (col: DataTableColumn<T>, row: T, rowIndex: number) => {
-    return col.render ? (
-      col.render(row[col.accessor], row, rowIndex)
-    ) : mode === "edit" && col.editor ? (
-      col.editor(row[col.accessor], row, rowIndex)
-    ) : (
-      <span>
-        {row[col.accessor] == null || row[col.accessor] === "" ? "-" : String(row[col.accessor])}
-      </span>
-    );
-  };
+  // 외부 ref가 없을 경우 내부 fallback ref 사용 (읽기 전용 테이블에서 사용)
+  const internalRef = useRef<HTMLDivElement>(null);
+  const scrollRef = externalRef ?? internalRef;
 
-  const colgroupColumns: DataTableShellCol[] = columns.map((c) => ({
-    accessor: String(c.accessor),
-    width: c.width,
-  }));
+  const virtualizer = useVirtualizer({
+    count: data.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => VIRTUAL_ROW_HEIGHT,
+    overscan: 5,
+  });
+
+  const virtualItems = virtualizer.getVirtualItems();
+
+  const colgroupColumns = useMemo<DataTableShellCol[]>(
+    () => columns.map((c) => ({ accessor: String(c.accessor), width: c.width })),
+    [columns],
+  );
+
+  const headerSlot = useMemo(
+    () => (
+      <thead className="bg-gray-50">
+        <tr>{columns.map((col) => renderHeaderCell(col, sortConfig, onSort))}</tr>
+      </thead>
+    ),
+    [columns, sortConfig, onSort],
+  );
 
   return (
     <DataTableShell
@@ -150,24 +125,49 @@ const ClientDataTable = <T,>({
       columns={colgroupColumns}
       tabIndex={hasCellInteraction ? 0 : undefined}
       onKeyDown={hasCellInteraction ? onKeyDown : undefined}
+      headerSlot={headerSlot}
       bottomSlot={bottomSlot}
-      scrollContainerRef={scrollContainerRef}
+      scrollContainerRef={scrollRef}
       {...rest}
     >
-      <thead className="bg-gray-50 sticky top-0 z-10">
-        <tr>{columns.map((col) => renderHeaderCell(col, sortConfig, onSort))}</tr>
-      </thead>
       <tbody>
-        {data.map((row, rowIndex) => (
-          <tr
-            key={rowKey ? rowKey(row, rowIndex) : rowIndex}
-            className="border-b border-gray-50 last:border-b-0"
-          >
-            {columns.map((col) =>
-              renderBodyCell(col, row, rowIndex, selectedCell, mode, onCellClick, renderCell),
-            )}
+        {/* 위쪽 spacer */}
+        {virtualItems.length > 0 && virtualItems[0] && (
+          <tr style={{ height: `${virtualItems[0].start}px` }} aria-hidden="true">
+            <td colSpan={columns.length} />
           </tr>
-        ))}
+        )}
+
+        {virtualItems.map((virtualRow) => {
+          const row = data[virtualRow.index];
+          if (!row) return null;
+
+          return (
+            <VirtualRow
+              key={rowKey ? rowKey(row, virtualRow.index) : virtualRow.index}
+              virtualIndex={virtualRow.index}
+              row={row}
+              columns={columns}
+              selectedAccessor={
+                selectedCell?.rowIndex === virtualRow.index ? selectedCell.accessor : null
+              }
+              mode={mode}
+              onCellClick={onCellClick}
+            />
+          );
+        })}
+
+        {/* 아래쪽 spacer */}
+        {virtualItems.length > 0 && virtualItems[virtualItems.length - 1] && (
+          <tr
+            style={{
+              height: `${virtualizer.getTotalSize() - (virtualItems[virtualItems.length - 1]?.end ?? 0)}px`,
+            }}
+            aria-hidden="true"
+          >
+            <td colSpan={columns.length} />
+          </tr>
+        )}
       </tbody>
     </DataTableShell>
   );

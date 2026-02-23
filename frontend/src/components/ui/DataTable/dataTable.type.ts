@@ -40,6 +40,7 @@ export type DataTableShellProps = {
   className?: string;
   columns: DataTableShellCol[];
   children: ReactNode;
+  headerSlot: ReactNode;
   bottomSlot?: ReactNode;
   scrollContainerRef?: React.RefObject<HTMLDivElement | null>;
   tabIndex?: number;
