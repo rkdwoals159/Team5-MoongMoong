@@ -5,6 +5,23 @@ import ToastProvider from "@/components/ui/Toast/ToastProvider";
 import AgentationClient from "@/app/_components/AgentationClient";
 import DataDogInit from "@/app/_components/DataDogInit";
 
+const SITE_NAME = "Moong";
+const SITE_DESCRIPTION = "노령 반려견 보호자를 위한 가계부 서비스, 뭉(Moong)";
+
+const getMetadataBase = () => {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://moongmoong.site";
+  const normalizedSiteUrl =
+    siteUrl.startsWith("http://") || siteUrl.startsWith("https://")
+      ? siteUrl
+      : `https://${siteUrl}`;
+
+  try {
+    return new URL(normalizedSiteUrl);
+  } catch {
+    return new URL(siteUrl);
+  }
+};
+
 const pretendard = localFont({
   src: [
     {
@@ -18,8 +35,31 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Moong",
-  description: "가족끼리 뭉쳐서 돈을 뭉치자! 노령 반려견 보호자를 위한 가계부 서비스, 뭉 (Moong)",
+  metadataBase: getMetadataBase(),
+  title: SITE_NAME,
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: "/",
+    images: [
+      {
+        url: "/images/kakao1200x630.png",
+        width: 1200,
+        height: 630,
+        alt: "Moong logo image",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: ["/images/kakao1200x630.png"],
+  },
 };
 
 export default function RootLayout({
