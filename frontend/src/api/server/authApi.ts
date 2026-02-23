@@ -15,8 +15,9 @@ export async function postAuthLogin(
   accessToken: string,
   inviteUrl: string | null,
 ): Promise<PostAuthLoginResult> {
+  const body = inviteUrl ? { accessToken, inviteUrl } : { accessToken };
   const { data, response } = await client.POST("/api/auth/login", {
-    body: { accessToken, inviteUrl: inviteUrl ?? undefined },
+    body,
   });
 
   return { data, response };

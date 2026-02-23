@@ -31,8 +31,13 @@ export default async function Home({
             </p>
           </div>
           <Link
-            href="/api/auth/google/start"
-            as={`/api/auth/google/start?inviteUrl=${inviteUrl}&returnTo=${returnTo}`}
+            href={{
+              pathname: "/api/auth/google/start",
+              query: {
+                inviteUrl,
+                returnTo,
+              },
+            }}
             className="flex h-[50px] w-full items-center justify-center gap-200 rounded-[8px] border border-gray-200 bg-white-100"
           >
             <span className="flex size-[36px] items-center justify-center">
