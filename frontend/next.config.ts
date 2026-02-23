@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
     // server components에서 로컬개발(hmr) cache 비활성화
     //https://nextjs.org/docs/app/api-reference/config/next-config-js/serverComponentsHmrCache
     serverComponentsHmrCache: false, // default true
+    serverActions: {
+      bodySizeLimit: "5mb",
+    },
   },
   turbopack: {
     rules: {

@@ -11,6 +11,7 @@ import { ARIA_LABEL_BY_VIEW, SAVE_DELAY_MS } from "@/app/(sidebar)/dashboard/_co
 import type { PetImageChangeViewState } from "@/app/(sidebar)/dashboard/_types";
 import { uploadImageToVercel, updateImageUrl } from "@/api/client/uploadImageApi";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
+import { MAX_FILE_SIZE_BYTES } from "@/api/constants";
 
 export default function PetImageChangeModal({
   open,
@@ -78,6 +79,11 @@ export default function PetImageChangeModal({
   };
 
   const handleFileSelect = async (file: File) => {
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      showToast({ variant: "error", message: "파일 용량은 최대 5MB까지 업로드할 수 있습니다." });
+      return;
+    }
+
     setSelectedFile(file);
     setViewState("loading");
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { DOG_BREEDS, DISEASE_TAB_ORDER } from "@/constants";
 import { updatePetInfo } from "@/api/server/settingsApiActions";
 import type { PetUpdateRequest } from "@/api/types/settingsApi.type";
@@ -12,6 +13,7 @@ import type { DogFormValues } from "@/app/(sidebar)/settings/types";
 import { getErrorMessage } from "@/lib/api/errorMessage";
 
 export default function useDogSettingsForm(dog: GetPetInfoResponse) {
+  const router = useRouter();
   const { showToast } = useToast();
   const [original, setOriginal] = useState<DogFormValues>(() => toInitialValues(dog));
   const [petName, setPetName] = useState(original.petName);
@@ -81,6 +83,8 @@ export default function useDogSettingsForm(dog: GetPetInfoResponse) {
       await updatePetInfo(body);
       setOriginal({ petName, breed, gender, birthDate, district, diseases: [...diseases] });
       showToast({ variant: "success", message: "반려견 정보가 저장됐어요." });
+      router.refresh();
+      router.back();
     } catch (error) {
       showToast({
         variant: "error",
