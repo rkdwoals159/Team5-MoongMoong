@@ -2,7 +2,7 @@ import ExpandIcon from "@/assets/icons/family/ic_expand.svg";
 import DogInfoSection from "./DogInfoSection";
 import GroupInviteUrlCard from "./GroupInviteUrlCard";
 import FamilyMemberList from "./FamilyMemberList";
-import { getGroupCrew } from "@/app/(sidebar)/family/_api";
+import { getGroupCrew } from "@/api/client/familyApi";
 import InviteUrlForm from "./InviteUrlForm";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
 import { safeServerFetch } from "@/lib/api";

@@ -1,17 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "@/components/common/Button/Button";
 import ClientModal from "@/components/ui/Modal/ClientModal";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { postSavingNudge } from "@/api/client/savingNudgeApi";
+import { getGroupCrew } from "@/api/client/familyApi";
 
-// TODO: 가족 구성원 수를 가져오는 API 연동 후 memberCount prop 제거
-export default function SavingNudgeButton({ memberCount = 2 }: { memberCount?: number }) {
+export default function SavingNudgeButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isAlone, setIsAlone] = useState(true);
   const { showToast } = useToast();
-  const isAlone = memberCount <= 1;
+
+  useEffect(() => {
+    getGroupCrew()
+      .then((data) => {
+        setIsAlone((data.crews ?? []).length === 0);
+      })
+      .catch(() => {
+        setIsAlone(true);
+      });
+  }, []);
 
   const handleConfirm = async () => {
     try {

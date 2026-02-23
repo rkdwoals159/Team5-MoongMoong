@@ -13,7 +13,15 @@ export default async function AIRecommendationContent() {
     return <ServerComponentErrorFallback message={recommendation.message} />;
   }
 
-  // recommendation은 있지만 advice나 expectedCost가 없으면 정보 없음 메시지 표시
+  if (recommendation === null) {
+    return (
+      <div className={emptyStateClasses}>
+        <p className={generatingMessageClasses}>AI 권장사항 생성중입니다..</p>
+        <div className={spinnerClasses} />
+      </div>
+    );
+  }
+
   if (!recommendation.advice && recommendation.expectedCost == null) {
     return (
       <div className={emptyStateClasses}>
@@ -24,9 +32,14 @@ export default async function AIRecommendationContent() {
 
   return (
     <>
-      {recommendation.advice && <div className={descriptionClasses}>{recommendation.advice}</div>}
+      {recommendation.advice && (
+        <div
+          className={descriptionClasses}
+          dangerouslySetInnerHTML={{ __html: recommendation.advice }}
+        />
+      )}
       {recommendation.expectedCost != null && recommendation.year != null && (
-        <div className="mt-500">
+        <div className="mt-800 mb-500">
           <span className={highlightClasses}>
             {recommendation.year}년 예상 의료비 : {recommendation.expectedCost.toLocaleString()}원
           </span>
@@ -39,5 +52,8 @@ export default async function AIRecommendationContent() {
 const descriptionClasses = "typo-body-l-medium text-text-base mt-200";
 const highlightClasses =
   "typo-body-l-medium text-text-base bg-yellow-150 py-300 px-400 rounded-250";
-const emptyStateClasses = "flex items-center justify-center mt-200";
+const spinnerClasses =
+  "w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin";
+const emptyStateClasses = "flex flex-col items-center justify-center gap-300 mt-200 py-500";
 const emptyMessageClasses = "typo-body-l-medium text-text-sub";
+const generatingMessageClasses = "typo-body-l-medium text-text-sub animate-pulse";

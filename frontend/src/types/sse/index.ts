@@ -4,7 +4,7 @@ export type SSEProps = {
   connectionToken?: string | null;
 };
 
-export type SSEEventType = "SAVING" | "NUDGE";
+export type SSEEventType = "SAVING" | "NUDGE" | "AI_ADVICE_CREATED";
 
 export type SavingEvent = {
   event: "SAVING";
@@ -22,7 +22,12 @@ export type NudgeEvent = {
   };
 };
 
-export type SSEEvent = SavingEvent | NudgeEvent;
+export type AIAdviceCreatedEvent = {
+  event: "AI_ADVICE_CREATED";
+  data: { message: string };
+};
+
+export type SSEEvent = SavingEvent | NudgeEvent | AIAdviceCreatedEvent;
 export type SSEConnectionStatus = "connecting" | "open" | "closed";
 
 export type ParsedSSEEvent = {

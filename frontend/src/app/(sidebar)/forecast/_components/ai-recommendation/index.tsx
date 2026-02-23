@@ -4,6 +4,7 @@ import { TITLE_TEXT, TOOLTIP_DESCRIPTION } from "@/app/(sidebar)/forecast/_const
 import { Suspense } from "react";
 import AIRecommendationContent from "./AIRecommendationContent";
 import AIRecommendationSkeleton from "./AIRecommendationSkeleton";
+import AIRecommendationRefresher from "./AIRecommendationRefresher";
 
 /**
  * AIRecommendation 컴포넌트
@@ -19,6 +20,7 @@ export default function AIRecommendation() {
             <span className={titleClasses}>{TITLE_TEXT}</span>
             <InfoTooltip description={TOOLTIP_DESCRIPTION} iconSize={20} />
           </div>
+          <AIRecommendationRefresher />
           <Suspense fallback={<AIRecommendationSkeleton />}>
             <AIRecommendationContent />
           </Suspense>
