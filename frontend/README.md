@@ -113,11 +113,29 @@ dashboard/
 
 ## 팀원별 Leading Task
 
-- 재민
+### 🧑‍💻 재민
 
-- 본승
+| 학습 태스크                       | 링크                                                                                                                                                                                                                                                                                                         |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| nextjs에서 openapi-fetch 도입하기 | [바로가기](<https://github.com/softeerbootcamp-7th/WEB-Team5-Moong/wiki/nextjs%EC%97%90%EC%84%9C-openapi%E2%80%90fetch-%EB%8F%84%EC%9E%85-(nextjs%EC%9D%98-%ED%99%95%EC%9E%A5%EB%90%9C-fetch-%EC%82%AC%EC%9A%A9%EA%B0%80%EB%8A%A5%EC%97%AC%EB%B6%80,--openapi%E2%80%90typescript-vs-openapi%E2%80%90fetch)>) |
+| 프로젝트 메인 인증 로직 개발과정  | [바로가기](https://github.com/softeerbootcamp-7th/WEB-Team5-Moong/wiki/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EA%B5%AC%EA%B8%80-%EB%A1%9C%EA%B7%B8%EC%9D%B8-JWT-%EC%9D%B8%EC%A6%9D)                                                                                                                           |
+| 프론트엔드 어떻게든 최적화해보기  | [바로가기](https://github.com/softeerbootcamp-7th/WEB-Team5-Moong/wiki/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%EC%96%B4%EB%96%BB%EA%B2%8C%EB%93%A0-%EC%B5%9C%EC%A0%81%ED%99%94%ED%95%B4%EB%B3%B4%EA%B8%B0)                                                                                            |
 
-- 용현
+### 🧑‍💻 본승
+
+| 학습 태스크                                       | 링크                                                                                                                                                                                                                                                                                                                         |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Next.js 서버 컴포넌트용 에러 바운더리 설계 도전기 | [바로가기](https://github.com/softeerbootcamp-7th/WEB-Team5-Moong/wiki/%5BFE%5D-Server-Component%EB%8A%94-throw%ED%95%98%EC%A7%80-%EC%95%8A%EB%8A%94%EB%8B%A4-%E2%80%90-Next.js-%EC%97%90%EB%9F%AC-%EC%B2%98%EB%A6%AC%EC%99%80-%EB%9D%BC%EC%9A%B0%ED%84%B0-%EC%98%A4%EC%97%BC-%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85) |
+| Next.js 의 병렬 라우팅                            | [바로가기](<https://github.com/softeerbootcamp-7th/WEB-Team5-Moong/wiki/%5BFE%5D-Parallel-Route-%EC%99%80-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%8C%93%EC%9E%84-%ED%98%84%EC%83%81-(Forecast-%ED%8E%98%EC%9D%B4%EC%A7%80)>)                                                                                                         |
+| Matter.js 를 활용한 저금통 구현                   | [바로가기](https://github.com/softeerbootcamp-7th/WEB-Team5-Moong/wiki/%5BFE%5D-Matter.js-%EC%99%80-%EC%A0%80%EA%B8%88%ED%86%B5-%ED%8E%98%EC%9D%B4%EC%A7%80)                                                                                                                                                                 |
+
+### 🧑‍💻 용현
+
+| 학습 태스크                                   | 링크                                                                                                                                                                                                                                             |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| DataTable 도전기: 기본 구조 설계 과정         | [바로가기](https://github.com/softeerbootcamp-7th/WEB-Team5-Moong/wiki/%5BFE%5D-DataTable-%EB%8F%84%EC%A0%84%EA%B8%B0:-%EA%B8%B0%EB%B3%B8-%EA%B5%AC%EC%A1%B0-%EC%84%A4%EA%B3%84-%EA%B3%BC%EC%A0%95)                                              |
+| DataTable 도전기: 기술적 도전 및 성능 최적화  | [바로가기](https://github.com/softeerbootcamp-7th/WEB-Team5-Moong/wiki/%5BFE%5D-DataTable-%EB%8F%84%EC%A0%84%EA%B8%B0:-%EA%B8%B0%EC%88%A0%EC%A0%81-%EB%8F%84%EC%A0%84-%EB%B0%8F-%EC%84%B1%EB%8A%A5-%EC%B5%9C%EC%A0%81%ED%99%94)                  |
+| 병렬 라우팅 인터셉팅 라우팅: @modal 슬롯 구현 | [바로가기](https://github.com/softeerbootcamp-7th/WEB-Team5-Moong/wiki/%5BFE%5D-%EB%B3%91%EB%A0%AC-%EB%9D%BC%EC%9A%B0%ED%8C%85---%EC%9D%B8%ED%84%B0%EC%85%89%ED%8C%85-%EB%9D%BC%EC%9A%B0%ED%8C%85:-@modal-%EC%8A%AC%EB%A1%AF-%EA%B5%AC%ED%98%84) |
 
 ## 팀원별 PR 및 wiki 바로가기
 
