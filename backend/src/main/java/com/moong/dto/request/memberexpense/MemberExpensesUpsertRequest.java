@@ -1,7 +1,7 @@
 package com.moong.dto.request.memberexpense;
 
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.member.Member;
+import com.moong.domain.memberexpense.MemberExpense;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;

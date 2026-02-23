@@ -1,5 +1,6 @@
 package com.moong.ai.prompt;
 
+import com.moong.config.ai.MedicalAdvicePromptProperties;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

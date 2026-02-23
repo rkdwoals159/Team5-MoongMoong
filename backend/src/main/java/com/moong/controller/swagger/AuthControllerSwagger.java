@@ -2,7 +2,7 @@ package com.moong.controller.swagger;
 
 import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode500;
-import com.moong.domain.entity.Member;
+import com.moong.domain.member.Member;
 import com.moong.dto.request.auth.AuthLoginRequest;
 import com.moong.dto.request.auth.AuthTokenRefreshRequest;
 import com.moong.dto.response.auth.AuthLoginResponse;

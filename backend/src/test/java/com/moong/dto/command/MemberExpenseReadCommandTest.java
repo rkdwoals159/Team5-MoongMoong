@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.member.Member;
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;

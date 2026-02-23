@@ -1,8 +1,8 @@
 package com.moong.cache;
 
-import com.moong.domain.bank.BankRanking;
-import com.moong.key.ranking.RedisRankingKey;
-import com.moong.key.ranking.RedisRankingRebuildKey;
+import com.moong.domain.ranking.BankRanking;
+import com.moong.domain.ranking.key.RedisRankingKey;
+import com.moong.domain.ranking.key.RedisRankingRebuildKey;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;

@@ -2,7 +2,6 @@ package com.moong.dto.response.auth;
 
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Gender;
-import com.moong.dto.response.member.FacadeLoginResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.YearMonth;
 

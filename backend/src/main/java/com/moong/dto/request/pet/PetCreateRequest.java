@@ -1,6 +1,6 @@
 package com.moong.dto.request.pet;
 
-import com.moong.domain.entity.Pet;
+import com.moong.domain.pet.Pet;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.Gender;

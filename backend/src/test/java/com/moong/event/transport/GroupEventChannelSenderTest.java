@@ -6,10 +6,11 @@ import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.moong.event.EventType;
+import com.moong.event.group.EventType;
 import com.moong.event.group.GroupEvent;
-import com.moong.event.group.GroupEventPayload;
-import com.moong.key.channel.RedisChannel;
+import com.moong.event.group.payload.GroupEventPayload;
+import com.moong.event.notification.GroupEventChannelSender;
+import com.moong.domain.notification.channel.RedisChannel;
 import com.moong.service.BaseServiceTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

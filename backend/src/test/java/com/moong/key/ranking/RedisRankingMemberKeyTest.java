@@ -1,5 +1,6 @@
 package com.moong.key.ranking;
 
+import com.moong.domain.ranking.key.RedisRankingMemberKey;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

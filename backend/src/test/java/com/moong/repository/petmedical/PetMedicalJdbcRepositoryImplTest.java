@@ -2,7 +2,7 @@ package com.moong.repository.petmedical;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.moong.domain.entity.PetMedical;
+import com.moong.domain.petmedical.PetMedical;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.Gender;

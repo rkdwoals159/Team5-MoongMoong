@@ -1,9 +1,7 @@
 package com.moong.fixture;
 
-import com.moong.domain.entity.Member;
-import com.moong.dto.response.member.MemberInfoResponse;
-import com.moong.repository.MemberRepository;
-import com.moong.service.MemberService;
+import com.moong.domain.member.Member;
+import com.moong.repository.member.MemberRepository;
 import java.security.SecureRandom;
 import java.util.Random;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,7 @@
 package com.moong.dto.request.bank;
 
-import com.moong.domain.entity.Bank;
-import com.moong.domain.entity.PetGroup;
+import com.moong.domain.bank.Bank;
+import com.moong.domain.petgroup.PetGroup;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Positive;
 

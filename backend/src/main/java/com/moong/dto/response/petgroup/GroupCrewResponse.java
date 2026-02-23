@@ -1,8 +1,8 @@
 package com.moong.dto.response.petgroup;
 
-import com.moong.domain.InviteCode;
-import com.moong.domain.entity.Crew;
-import com.moong.domain.entity.Member;
+import com.moong.domain.petgroup.InviteCode;
+import com.moong.domain.crew.Crew;
+import com.moong.domain.member.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;

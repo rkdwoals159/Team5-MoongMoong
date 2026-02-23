@@ -1,6 +1,7 @@
 package com.moong.repository;
 
-import com.moong.domain.entity.Pet;
+import com.moong.domain.pet.Pet;
+import com.moong.repository.pet.PetRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

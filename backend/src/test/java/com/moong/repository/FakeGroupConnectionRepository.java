@@ -1,6 +1,6 @@
 package com.moong.repository;
 
-import com.moong.repository.groupConnection.GroupConnectionRepository;
+import com.moong.repository.groupconnection.GroupConnectionRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;

@@ -1,14 +1,13 @@
 package com.moong.repository.memberexpense;
 
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.member.Member;
+import com.moong.domain.memberexpense.MemberExpense;
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.util.query.MemberExpenseDynamicQueryBuilder;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

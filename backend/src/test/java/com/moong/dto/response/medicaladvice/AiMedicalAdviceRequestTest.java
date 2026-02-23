@@ -1,11 +1,11 @@
 package com.moong.dto.response.medicaladvice;
 
-import com.moong.domain.entity.GroupExpense;
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.MemberExpense;
-import com.moong.domain.entity.PetGroup;
-import com.moong.domain.entity.PetMedical;
-import com.moong.domain.entity.Treatment;
+import com.moong.domain.groupexpense.GroupExpense;
+import com.moong.domain.member.Member;
+import com.moong.domain.memberexpense.MemberExpense;
+import com.moong.domain.petgroup.PetGroup;
+import com.moong.domain.petmedical.PetMedical;
+import com.moong.domain.treatment.Treatment;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.MainCategoryType;
 import org.junit.jupiter.api.DisplayName;

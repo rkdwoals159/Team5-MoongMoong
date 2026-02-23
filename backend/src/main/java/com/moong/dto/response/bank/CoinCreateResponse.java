@@ -1,7 +1,7 @@
 package com.moong.dto.response.bank;
 
-import com.moong.domain.entity.Coin;
-import com.moong.domain.entity.Member;
+import com.moong.domain.bank.Coin;
+import com.moong.domain.member.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;

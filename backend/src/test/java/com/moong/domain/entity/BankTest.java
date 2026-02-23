@@ -1,5 +1,6 @@
 package com.moong.domain.entity;
 
+import com.moong.domain.bank.Bank;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import org.junit.jupiter.api.DisplayName;

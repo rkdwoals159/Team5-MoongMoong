@@ -1,6 +1,6 @@
 package com.moong.dto.response.petmedical;
 
-import com.moong.domain.entity.PetMedical;
+import com.moong.domain.petmedical.PetMedical;
 import java.util.List;
 
 public record AiPetMedicalsResponse(

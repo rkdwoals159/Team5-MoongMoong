@@ -1,12 +1,12 @@
 package com.moong.facade.petgroup;
 
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.PetGroup;
+import com.moong.domain.member.Member;
+import com.moong.domain.petgroup.PetGroup;
 import com.moong.dto.request.pet.PetCreateRequest;
 import com.moong.dto.response.pet.PetCreateResponse;
-import com.moong.service.GroupMedicalAdviceService;
-import com.moong.service.GroupService;
-import com.moong.service.PetService;
+import com.moong.service.medicaladvice.PetMedicalAdviceService;
+import com.moong.service.petgroup.PetGroupService;
+import com.moong.service.pet.PetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,15 +17,15 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class PetGroupFacadeService {
 
-    private final GroupService groupService;
+    private final PetGroupService petGroupService;
     private final PetService petService;
-    private final GroupMedicalAdviceService groupMedicalAdviceService;
+    private final PetMedicalAdviceService petMedicalAdviceService;
 
     @Transactional
     public PetCreateResponse firstJoin(Member member, PetCreateRequest petCreateRequest){
         PetCreateResponse response = petService.createPet(member, petCreateRequest);
-        PetGroup savedPetGroup = groupService.firstJoin(member, response.petId());
-        groupMedicalAdviceService.createMedicalAdvice(member.getId(), savedPetGroup.getId(), LocalDate.now());
+        PetGroup savedPetGroup = petGroupService.firstJoin(member, response.petId());
+        petMedicalAdviceService.createMedicalAdvice(member.getId(), savedPetGroup.getId(), LocalDate.now());
         return response;
     }
 }

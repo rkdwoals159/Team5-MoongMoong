@@ -1,8 +1,8 @@
 package com.moong.dto.command;
 
-import com.moong.domain.entity.CrewNotification;
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.Notification;
+import com.moong.domain.notification.CrewNotification;
+import com.moong.domain.member.Member;
+import com.moong.domain.notification.Notification;
 import lombok.Getter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

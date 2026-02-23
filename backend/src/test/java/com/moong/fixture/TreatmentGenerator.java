@@ -1,8 +1,8 @@
 package com.moong.fixture;
 
-import com.moong.domain.entity.Treatment;
+import com.moong.domain.treatment.Treatment;
 import com.moong.domain.enums.Disease;
-import com.moong.repository.TreatmentRepository;
+import com.moong.repository.treatment.TreatmentRepository;
 import org.springframework.stereotype.Component;
 
 @Component

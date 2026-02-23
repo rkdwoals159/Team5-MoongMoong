@@ -1,9 +1,9 @@
 package com.moong.fixture;
 
-import com.moong.domain.entity.Pet;
+import com.moong.domain.pet.Pet;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Gender;
-import com.moong.repository.PetRepository;
+import com.moong.repository.pet.PetRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

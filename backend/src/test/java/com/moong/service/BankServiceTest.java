@@ -1,11 +1,11 @@
 package com.moong.service;
 
-import com.moong.domain.entity.Bank;
-import com.moong.domain.entity.Coin;
-import com.moong.domain.entity.Crew;
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.Pet;
-import com.moong.domain.entity.PetGroup;
+import com.moong.domain.bank.Bank;
+import com.moong.domain.bank.Coin;
+import com.moong.domain.crew.Crew;
+import com.moong.domain.member.Member;
+import com.moong.domain.pet.Pet;
+import com.moong.domain.petgroup.PetGroup;
 import com.moong.dto.request.bank.BankCreateRequest;
 import com.moong.dto.response.bank.BankCreateResponse;
 import com.moong.dto.response.bank.BankInfoResponse;
@@ -13,7 +13,8 @@ import com.moong.dto.response.bank.CoinResponse;
 import com.moong.dto.response.bank.CoinsResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
-import com.moong.repository.BankRepository;
+import com.moong.repository.bank.BankRepository;
+import com.moong.service.bank.BankService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.moong.cache;
 
-import com.moong.domain.bank.BankRanking;
-import com.moong.key.ranking.RedisRankingKey;
+import com.moong.domain.ranking.BankRanking;
+import com.moong.domain.ranking.key.RedisRankingKey;
 
 import java.util.List;
 import java.util.function.Supplier;

@@ -1,6 +1,6 @@
 package com.moong.repository.monthlyexpense;
 
-import com.moong.domain.entity.MonthlyGroupExpense;
+import com.moong.domain.report.MonthlyGroupExpense;
 import java.util.List;
 
 public interface MonthlyGroupExpenseJdbcRepository {

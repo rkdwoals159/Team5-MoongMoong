@@ -3,7 +3,7 @@ package com.moong.client.medicaladvice;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moong.ai.OpenAiModel;
-import com.moong.ai.OpenAiProperties;
+import com.moong.config.ai.OpenAiProperties;
 import com.moong.ai.OpenAiResult;
 import com.moong.ai.prompt.MedicalAdvicePromptGenerator;
 import com.moong.dto.request.categorize.OpenAiRequest;

@@ -1,8 +1,8 @@
 package com.moong.facade.sse;
 
-import com.moong.domain.entity.Member;
-import com.moong.service.AuthService;
-import com.moong.service.SseService;
+import com.moong.domain.member.Member;
+import com.moong.service.auth.AuthService;
+import com.moong.service.sse.SseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;

@@ -1,6 +1,6 @@
 package com.moong.dto.response.memberexpense;
 
-import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.memberexpense.MemberExpense;
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.domain.enums.SubCategoryType;
 import java.time.LocalDate;

@@ -1,9 +1,9 @@
 package com.moong.config;
 
+import com.moong.config.analyzer.LlmProperties;
 import com.moong.exception.analyzer.ConsoleErrorAnalyzer;
 import com.moong.exception.analyzer.ErrorAnalyzer;
 import com.moong.exception.analyzer.LlmErrorAnalyzer;
-import com.moong.exception.analyzer.LlmProperties;
 import com.moong.exception.analyzer.messagesender.ConsoleAnalyzeMessageSender;
 import com.moong.exception.analyzer.messagesender.ErrorAnalyzeMessageSender;
 import com.moong.exception.analyzer.messagesender.ErrorAnalyzeSlackMessageSender;

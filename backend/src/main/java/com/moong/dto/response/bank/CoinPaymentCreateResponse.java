@@ -1,6 +1,6 @@
 package com.moong.dto.response.bank;
 
-import com.moong.domain.entity.CoinPayment;
+import com.moong.domain.bank.CoinPayment;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.UUID;
 

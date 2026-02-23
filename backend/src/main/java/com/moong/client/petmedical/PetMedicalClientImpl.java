@@ -1,5 +1,6 @@
 package com.moong.client.petmedical;
 
+import com.moong.config.petmedical.AiPetMedicalProperties;
 import com.moong.dto.response.petmedical.AiPetMedicalResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

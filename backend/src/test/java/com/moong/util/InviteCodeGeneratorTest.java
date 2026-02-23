@@ -1,10 +1,10 @@
 package com.moong.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-import com.moong.domain.InviteCode;
-import com.moong.domain.InviteCodeProperties;
+import com.moong.domain.petgroup.InviteCode;
+import com.moong.config.petgroup.InviteCodeProperties;
+import com.moong.util.generator.InviteCodeGenerator;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

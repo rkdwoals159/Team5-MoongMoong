@@ -1,5 +1,6 @@
 package com.moong.util;
 
+import com.moong.controller.tool.auth.AuthorizationHeaderExtractor;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import org.junit.jupiter.api.DisplayName;

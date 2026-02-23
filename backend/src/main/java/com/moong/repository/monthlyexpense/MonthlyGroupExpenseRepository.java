@@ -1,6 +1,6 @@
 package com.moong.repository.monthlyexpense;
 
-import com.moong.domain.entity.MonthlyGroupExpense;
+import com.moong.domain.report.MonthlyGroupExpense;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import java.time.YearMonth;

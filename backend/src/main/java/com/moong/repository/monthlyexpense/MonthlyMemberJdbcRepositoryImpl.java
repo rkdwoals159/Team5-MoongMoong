@@ -1,6 +1,6 @@
 package com.moong.repository.monthlyexpense;
 
-import com.moong.domain.entity.MonthlyMemberExpense;
+import com.moong.domain.report.MonthlyMemberExpense;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.util.List;

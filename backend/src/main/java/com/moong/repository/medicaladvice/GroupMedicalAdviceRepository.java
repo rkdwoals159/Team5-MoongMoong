@@ -1,6 +1,6 @@
 package com.moong.repository.medicaladvice;
 
-import com.moong.domain.entity.GroupMedicalAdvice;
+import com.moong.domain.groupmedical.GroupMedicalAdvice;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import org.springframework.data.repository.Repository;

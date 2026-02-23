@@ -1,6 +1,6 @@
 package com.moong.dto.response.bank;
 
-import com.moong.domain.entity.Bank;
+import com.moong.domain.bank.Bank;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "저금통 생성 응답")

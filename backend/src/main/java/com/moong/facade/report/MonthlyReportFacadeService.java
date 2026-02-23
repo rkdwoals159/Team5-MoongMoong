@@ -1,10 +1,9 @@
 package com.moong.facade.report;
 
-import com.moong.domain.entity.Crew;
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.MonthlyGroupExpense;
-import com.moong.domain.entity.MonthlyMemberExpense;
-import com.moong.domain.entity.PetGroup;
+import com.moong.domain.crew.Crew;
+import com.moong.domain.member.Member;
+import com.moong.domain.report.MonthlyGroupExpense;
+import com.moong.domain.report.MonthlyMemberExpense;
 import com.moong.domain.report.ExpenseCategoryRankings;
 import com.moong.domain.report.GroupStats;
 import com.moong.domain.report.GroupExpenseMemberRankings;
@@ -14,13 +13,13 @@ import com.moong.dto.response.groupexpense.GroupExpensesResponse;
 import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
 import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
 import com.moong.dto.response.regression.RegressionResponse;
-import com.moong.service.CrewService;
-import com.moong.service.GroupExpenseService;
-import com.moong.service.GroupService;
-import com.moong.service.MailService;
-import com.moong.service.MemberExpenseService;
-import com.moong.service.MonthlyGroupExpenseService;
-import com.moong.service.MonthlyMemberExpenseService;
+import com.moong.service.crew.CrewService;
+import com.moong.service.groupexpense.GroupExpenseService;
+import com.moong.service.petgroup.PetGroupService;
+import com.moong.service.report.MailService;
+import com.moong.service.memberexpense.MemberExpenseService;
+import com.moong.service.report.MonthlyGroupExpenseService;
+import com.moong.service.report.MonthlyMemberExpenseService;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +37,10 @@ public class MonthlyReportFacadeService {
     private final MemberExpenseService memberExpenseService;
     private final CrewService crewService;
     private final MailService mailService;
-    private final GroupService groupService;
+    private final PetGroupService petGroupService;
 
     public void sendAllGroupMonthlyReport(YearMonth yearMonth) {
-        groupService.findAll()
+        petGroupService.findAll()
                 .forEach(group -> sendGroupMonthlyReport(yearMonth, group.getId()));
     }
 

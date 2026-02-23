@@ -1,7 +1,6 @@
 package com.moong.domain.groupexpense;
 
-import com.moong.domain.entity.GroupExpense;
-import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.memberexpense.MemberExpense;
 
 import java.time.Month;
 import java.util.List;

@@ -2,10 +2,10 @@ package com.moong.client.medicaladvice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moong.ai.OpenAiModel;
-import com.moong.ai.OpenAiProperties;
+import com.moong.config.ai.OpenAiProperties;
 import com.moong.ai.OpenAiResult;
 import com.moong.ai.prompt.MedicalAdvicePromptGenerator;
-import com.moong.ai.prompt.MedicalAdvicePromptProperties;
+import com.moong.config.ai.MedicalAdvicePromptProperties;
 import com.moong.domain.enums.Disease;
 import com.moong.dto.response.medicaladvice.AiMedicalAdviceRequest;
 import com.moong.dto.response.medicaladvice.AiMedicalAdviceResponse;

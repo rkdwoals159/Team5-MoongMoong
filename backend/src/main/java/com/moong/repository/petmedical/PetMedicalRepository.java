@@ -1,6 +1,6 @@
 package com.moong.repository.petmedical;
 
-import com.moong.domain.entity.PetMedical;
+import com.moong.domain.petmedical.PetMedical;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Gender;
 import com.moong.exception.custom.BusinessException;

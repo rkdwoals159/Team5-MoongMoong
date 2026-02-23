@@ -1,7 +1,7 @@
 package com.moong.fixture;
 
-import com.moong.domain.entity.GroupMedicalAdvice;
-import com.moong.domain.entity.PetGroup;
+import com.moong.domain.groupmedical.GroupMedicalAdvice;
+import com.moong.domain.petgroup.PetGroup;
 import com.moong.repository.medicaladvice.GroupMedicalAdviceRepository;
 import org.springframework.stereotype.Component;
 

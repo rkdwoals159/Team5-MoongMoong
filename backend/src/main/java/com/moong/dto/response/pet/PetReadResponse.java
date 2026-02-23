@@ -1,7 +1,7 @@
 package com.moong.dto.response.pet;
 
-import com.moong.domain.entity.Pet;
-import com.moong.domain.entity.WorriedDisease;
+import com.moong.domain.pet.Pet;
+import com.moong.domain.pet.WorriedDisease;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.Gender;

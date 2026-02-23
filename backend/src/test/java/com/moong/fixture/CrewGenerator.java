@@ -1,9 +1,9 @@
 package com.moong.fixture;
 
-import com.moong.domain.entity.Crew;
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.PetGroup;
-import com.moong.repository.CrewRepository;
+import com.moong.domain.crew.Crew;
+import com.moong.domain.member.Member;
+import com.moong.domain.petgroup.PetGroup;
+import com.moong.repository.crew.CrewRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;

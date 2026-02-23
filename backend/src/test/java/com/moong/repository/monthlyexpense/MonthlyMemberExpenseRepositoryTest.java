@@ -3,8 +3,8 @@ package com.moong.repository.monthlyexpense;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.MonthlyMemberExpense;
+import com.moong.domain.member.Member;
+import com.moong.domain.report.MonthlyMemberExpense;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.BaseRepositoryTest;

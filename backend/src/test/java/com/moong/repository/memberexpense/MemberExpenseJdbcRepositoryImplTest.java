@@ -2,8 +2,8 @@ package com.moong.repository.memberexpense;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.member.Member;
+import com.moong.domain.memberexpense.MemberExpense;
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.repository.BaseRepositoryTest;
 import java.time.LocalDateTime;

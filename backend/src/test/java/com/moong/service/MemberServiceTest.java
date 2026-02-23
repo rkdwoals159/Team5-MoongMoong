@@ -3,13 +3,14 @@ package com.moong.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.moong.domain.entity.Member;
+import com.moong.domain.member.Member;
 import com.moong.domain.member.MemberInfo;
 import com.moong.dto.request.member.MemberUpdateNameRequest;
 import com.moong.dto.request.member.MemberUpdateProfileRequest;
 import com.moong.dto.response.member.MemberReadResponse;
 import com.moong.dto.response.member.MemberUpdateNameResponse;
 import com.moong.dto.response.member.MemberUpdateProfileResponse;
+import com.moong.service.member.MemberService;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

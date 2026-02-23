@@ -1,6 +1,6 @@
 package com.moong.exception.analyzer.messagesender;
 
-import com.moong.exception.dto.AnalyzeErrorResponse;
+import com.moong.exception.analyzer.AnalyzeErrorResponse;
 
 public interface ErrorAnalyzeMessageSender {
 

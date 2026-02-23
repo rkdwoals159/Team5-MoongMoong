@@ -1,6 +1,6 @@
 package com.moong.repository.monthlyexpense;
 
-import com.moong.domain.entity.MonthlyMemberExpense;
+import com.moong.domain.report.MonthlyMemberExpense;
 import com.moong.domain.report.MonthlyExpense;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;

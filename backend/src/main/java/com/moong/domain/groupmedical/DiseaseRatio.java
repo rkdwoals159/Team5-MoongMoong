@@ -1,6 +1,6 @@
 package com.moong.domain.groupmedical;
 
-import com.moong.domain.entity.PetMedical;
+import com.moong.domain.petmedical.PetMedical;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.pet.PetAge;
 import java.time.LocalDate;

@@ -3,6 +3,7 @@ package com.moong.dto.request;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.moong.dto.BaseValidateTest;
+import com.moong.dto.request.petgroup.PetGroupParticipateRequest;
 import com.moong.fixture.NullAndEmptyAndBlankSource;
 import com.navercorp.fixturemonkey.ArbitraryBuilder;
 import jakarta.validation.ConstraintViolation;

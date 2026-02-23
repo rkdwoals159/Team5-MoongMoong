@@ -1,20 +1,20 @@
 package com.moong.facade.auth;
 
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.PetGroup;
+import com.moong.domain.member.Member;
+import com.moong.domain.petgroup.PetGroup;
 import com.moong.domain.member.MemberInfo;
 import com.moong.dto.request.auth.AuthLoginRequest;
 import com.moong.dto.request.auth.AuthTokenRefreshRequest;
 import com.moong.dto.response.auth.ConnectionTokenResponse;
 import com.moong.dto.response.auth.JwtTokenResponse;
 import com.moong.dto.response.auth.MemberInfoWithTokenResponse;
-import com.moong.dto.response.member.FacadeLoginResponse;
+import com.moong.dto.response.auth.FacadeLoginResponse;
 import com.moong.dto.response.member.MemberReadResponse;
 import com.moong.event.member.WelcomeMailEvent;
-import com.moong.service.AuthService;
-import com.moong.service.CrewService;
-import com.moong.service.GroupService;
-import com.moong.service.MemberService;
+import com.moong.service.auth.AuthService;
+import com.moong.service.crew.CrewService;
+import com.moong.service.petgroup.PetGroupService;
+import com.moong.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthFacadeService {
 
     private final MemberService memberService;
-    private final GroupService groupService;
+    private final PetGroupService petGroupService;
     private final AuthService authService;
     private final CrewService crewService;
     private final ApplicationEventPublisher eventPublisher;
@@ -44,7 +44,7 @@ public class AuthFacadeService {
             eventPublisher.publishEvent(new WelcomeMailEvent(foundMemberResponse.member().getEmail()));
         }
         if (isInvited) {
-            PetGroup petGroup = groupService.findFetchedPetGroupByInviteUrl(loginRequest.inviteUrl());
+            PetGroup petGroup = petGroupService.findFetchedPetGroupByInviteUrl(loginRequest.inviteUrl());
             return FacadeLoginResponse.invitedMember(hasGroup, foundMemberResponse, petGroup.getPet(), jwtTokenResponse);
         }
         return FacadeLoginResponse.nonInvitedMember(hasGroup, foundMemberResponse, jwtTokenResponse);

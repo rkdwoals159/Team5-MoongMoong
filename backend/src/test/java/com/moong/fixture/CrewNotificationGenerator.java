@@ -1,8 +1,8 @@
 package com.moong.fixture;
 
-import com.moong.domain.entity.Crew;
-import com.moong.domain.entity.CrewNotification;
-import com.moong.domain.entity.Notification;
+import com.moong.domain.crew.Crew;
+import com.moong.domain.notification.CrewNotification;
+import com.moong.domain.notification.Notification;
 import com.moong.repository.notification.CrewNotificationRepository;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;

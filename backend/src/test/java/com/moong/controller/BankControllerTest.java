@@ -1,18 +1,18 @@
 package com.moong.controller;
 
-import com.moong.domain.entity.Bank;
-import com.moong.domain.entity.Coin;
-import com.moong.domain.entity.Crew;
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.Pet;
-import com.moong.domain.entity.PetGroup;
+import com.moong.domain.bank.Bank;
+import com.moong.domain.bank.Coin;
+import com.moong.domain.crew.Crew;
+import com.moong.domain.member.Member;
+import com.moong.domain.pet.Pet;
+import com.moong.domain.petgroup.PetGroup;
 import com.moong.dto.request.bank.BankCreateRequest;
 import com.moong.dto.request.bank.BankUpdateRequest;
 import com.moong.dto.request.bank.CoinCreateRequest;
 import com.moong.dto.response.bank.BankInfoResponse;
 import com.moong.dto.response.bank.CoinResponse;
 import com.moong.dto.response.bank.CoinsResponse;
-import com.moong.event.dto.NudgePayload;
+import com.moong.event.group.payload.NudgePayload;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

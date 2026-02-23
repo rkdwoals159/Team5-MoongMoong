@@ -1,7 +1,7 @@
 package com.moong.dto.response.bank;
 
-import com.moong.domain.bank.BankRankings;
-import com.moong.domain.entity.Bank;
+import com.moong.domain.ranking.BankRankings;
+import com.moong.domain.bank.Bank;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;

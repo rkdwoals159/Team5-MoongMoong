@@ -1,6 +1,6 @@
 package com.moong.repository.groupexpense;
 
-import com.moong.domain.entity.GroupExpense;
+import com.moong.domain.groupexpense.GroupExpense;
 import java.util.List;
 
 public interface GroupExpenseJdbcRepository {

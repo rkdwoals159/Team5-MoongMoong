@@ -3,6 +3,7 @@ package com.moong.client.petmedical;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.moong.client.BaseWebClientTest;
+import com.moong.config.petmedical.AiPetMedicalProperties;
 import com.moong.dto.response.petmedical.AiPetMedicalResponse;
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;

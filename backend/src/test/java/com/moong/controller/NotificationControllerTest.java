@@ -2,14 +2,14 @@ package com.moong.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.moong.domain.entity.Crew;
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.Notification;
-import com.moong.domain.entity.Pet;
-import com.moong.domain.entity.PetGroup;
+import com.moong.domain.crew.Crew;
+import com.moong.domain.member.Member;
+import com.moong.domain.notification.Notification;
+import com.moong.domain.pet.Pet;
+import com.moong.domain.petgroup.PetGroup;
 import com.moong.dto.response.notification.NotificationCountResponse;
-import com.moong.event.EventType;
-import com.moong.event.dto.NudgePayload;
+import com.moong.event.group.EventType;
+import com.moong.event.group.payload.NudgePayload;
 import io.restassured.http.ContentType;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;

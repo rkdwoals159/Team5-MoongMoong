@@ -2,6 +2,8 @@ package com.moong.domain.entity;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.moong.domain.bank.CoinPayment;
+import com.moong.domain.crew.Crew;
 import com.moong.domain.enums.PaymentStatus;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;

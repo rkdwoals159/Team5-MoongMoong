@@ -1,7 +1,7 @@
 package com.moong.exception.errorcode;
 
-import com.moong.domain.entity.CoinPayment;
-import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.bank.CoinPayment;
+import com.moong.domain.memberexpense.MemberExpense;
 import com.moong.domain.member.MemberName;
 import lombok.Getter;
 

@@ -1,6 +1,6 @@
 package com.moong.domain.report;
 
-import com.moong.domain.entity.Member;
+import com.moong.domain.member.Member;
 import java.time.YearMonth;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

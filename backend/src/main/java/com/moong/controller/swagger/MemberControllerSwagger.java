@@ -1,12 +1,10 @@
 package com.moong.controller.swagger;
 
-import com.moong.annotation.auth.AuthMember;
 import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode500;
-import com.moong.domain.entity.Member;
+import com.moong.domain.member.Member;
 import com.moong.dto.request.member.MemberUpdateNameRequest;
 import com.moong.dto.request.member.MemberUpdateProfileRequest;
-import com.moong.dto.request.memberexpense.MemberExpensesUpsertRequest;
 import com.moong.dto.response.member.MemberInfoResponse;
 import com.moong.dto.response.member.MemberUpdateNameResponse;
 import com.moong.dto.response.member.MemberUpdateProfileResponse;
@@ -17,7 +15,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "Member API")

@@ -3,7 +3,7 @@ package com.moong.repository.memberexpense;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 
-import com.moong.domain.entity.Member;
+import com.moong.domain.member.Member;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import java.sql.ResultSet;

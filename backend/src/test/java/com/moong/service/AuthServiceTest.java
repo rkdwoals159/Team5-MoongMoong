@@ -6,13 +6,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.moong.controller.tool.jwt.JwtManager;
-import com.moong.domain.entity.Member;
+import com.moong.domain.member.Member;
 import com.moong.domain.member.MemberInfo;
 import com.moong.dto.response.auth.JwtTokenResponse;
 import com.moong.dto.response.auth.MemberInfoWithTokenResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.fixture.JwtTokenGenerator;
+import com.moong.service.auth.AuthService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

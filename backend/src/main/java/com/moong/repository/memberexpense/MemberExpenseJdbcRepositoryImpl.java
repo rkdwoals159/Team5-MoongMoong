@@ -1,6 +1,6 @@
 package com.moong.repository.memberexpense;
 
-import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.memberexpense.MemberExpense;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;

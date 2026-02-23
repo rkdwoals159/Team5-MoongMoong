@@ -2,14 +2,15 @@ package com.moong.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.moong.domain.entity.CoinPayment;
-import com.moong.domain.entity.Crew;
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.Pet;
-import com.moong.domain.entity.PetGroup;
+import com.moong.domain.bank.CoinPayment;
+import com.moong.domain.crew.Crew;
+import com.moong.domain.member.Member;
+import com.moong.domain.pet.Pet;
+import com.moong.domain.petgroup.PetGroup;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.fixture.CoinPaymentGenerator;
+import com.moong.service.bank.PaymentService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

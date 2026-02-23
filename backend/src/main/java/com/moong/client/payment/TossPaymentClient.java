@@ -1,5 +1,6 @@
 package com.moong.client.payment;
 
+import com.moong.config.payment.TossProperties;
 import com.moong.dto.request.payment.CoinPaymentConfirmRequest;
 import com.moong.dto.request.payment.TossCancelRequest;
 import com.moong.dto.response.payment.TossCancelResponse;

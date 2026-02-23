@@ -1,6 +1,6 @@
 package com.moong.dto.command;
 
-import com.moong.domain.entity.Member;
+import com.moong.domain.member.Member;
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;

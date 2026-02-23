@@ -1,7 +1,7 @@
 package com.moong.exception.analyzer.messagesender;
 
-import com.moong.exception.dto.AnalyzeErrorResponse;
-import com.moong.exception.dto.AnalyzeErrorResult;
+import com.moong.exception.analyzer.AnalyzeErrorResponse;
+import com.moong.exception.analyzer.AnalyzeErrorResult;
 import org.springframework.stereotype.Component;
 
 @Component

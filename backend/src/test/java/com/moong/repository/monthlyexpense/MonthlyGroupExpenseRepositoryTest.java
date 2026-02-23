@@ -3,7 +3,7 @@ package com.moong.repository.monthlyexpense;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.moong.domain.entity.MonthlyGroupExpense;
+import com.moong.domain.report.MonthlyGroupExpense;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.BaseRepositoryTest;

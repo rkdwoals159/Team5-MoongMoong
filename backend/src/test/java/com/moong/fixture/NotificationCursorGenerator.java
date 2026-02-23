@@ -1,7 +1,7 @@
 package com.moong.fixture;
 
-import com.moong.domain.entity.Crew;
-import com.moong.domain.entity.NotificationCursor;
+import com.moong.domain.crew.Crew;
+import com.moong.domain.notification.NotificationCursor;
 import com.moong.repository.notification.NotificationCursorRepository;
 import org.springframework.stereotype.Component;
 

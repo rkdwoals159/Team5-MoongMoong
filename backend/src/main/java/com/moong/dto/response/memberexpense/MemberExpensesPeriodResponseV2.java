@@ -1,6 +1,6 @@
 package com.moong.dto.response.memberexpense;
 
-import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.memberexpense.MemberExpense;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;

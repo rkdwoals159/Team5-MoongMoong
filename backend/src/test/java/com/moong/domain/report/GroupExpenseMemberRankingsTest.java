@@ -2,9 +2,8 @@ package com.moong.domain.report;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.MonthlyMemberExpense;
-import com.moong.util.MemberNameGenerator;
+import com.moong.domain.member.Member;
+import com.moong.util.generator.MemberNameGenerator;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package com.moong.annotation.swagger;
 
-import com.moong.exception.dto.ErrorResponse;
+import com.moong.exception.analyzer.ErrorResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

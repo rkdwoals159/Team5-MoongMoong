@@ -1,7 +1,7 @@
 package com.moong.fixture;
 
 import com.moong.controller.tool.jwt.JwtManager;
-import com.moong.domain.entity.Member;
+import com.moong.domain.member.Member;
 import com.moong.domain.member.MemberInfo;
 import org.springframework.stereotype.Component;
 

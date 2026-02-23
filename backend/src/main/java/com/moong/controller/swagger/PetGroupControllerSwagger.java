@@ -1,14 +1,12 @@
 package com.moong.controller.swagger;
 
-import com.moong.annotation.auth.AuthMember;
 import com.moong.annotation.swagger.ErrorCode400;
 import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode500;
-import com.moong.domain.entity.Member;
-import com.moong.dto.request.PetGroupParticipateRequest;
+import com.moong.domain.member.Member;
+import com.moong.dto.request.petgroup.PetGroupParticipateRequest;
 import com.moong.dto.response.petgroup.GroupCrewResponse;
 import com.moong.dto.response.petgroup.PetGroupParticipateResponse;
-import com.moong.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,7 +14,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @Tag(name = "Pet Group API")
 public interface PetGroupControllerSwagger {

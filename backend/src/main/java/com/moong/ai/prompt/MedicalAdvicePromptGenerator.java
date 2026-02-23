@@ -1,5 +1,6 @@
 package com.moong.ai.prompt;
 
+import com.moong.config.ai.MedicalAdvicePromptProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;

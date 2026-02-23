@@ -1,9 +1,9 @@
 package com.moong.fixture;
 
-import com.moong.domain.entity.Bank;
-import com.moong.domain.entity.Coin;
-import com.moong.domain.entity.Crew;
-import com.moong.repository.CoinRepository;
+import com.moong.domain.bank.Bank;
+import com.moong.domain.bank.Coin;
+import com.moong.domain.crew.Crew;
+import com.moong.repository.bank.CoinRepository;
 import org.springframework.stereotype.Component;
 
 @Component

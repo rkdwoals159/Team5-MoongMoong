@@ -3,7 +3,7 @@ package com.moong.controller.swagger;
 import com.moong.annotation.swagger.ErrorCode400;
 import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode404;
-import com.moong.domain.entity.Member;
+import com.moong.domain.member.Member;
 import com.moong.dto.request.bank.CoinCreateRequest;
 import com.moong.dto.request.payment.CoinPaymentConfirmRequest;
 import com.moong.dto.request.payment.CoinPaymentFailRequest;

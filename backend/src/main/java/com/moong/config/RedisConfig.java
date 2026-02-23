@@ -1,7 +1,7 @@
 package com.moong.config;
 
-import com.moong.event.transport.GroupEventMessageListener;
-import com.moong.key.channel.RedisChannel;
+import com.moong.event.notification.GroupEventMessageListener;
+import com.moong.domain.notification.channel.RedisChannel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

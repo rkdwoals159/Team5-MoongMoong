@@ -1,6 +1,6 @@
 package com.moong.repository.petmedical;
 
-import com.moong.domain.entity.PetMedical;
+import com.moong.domain.petmedical.PetMedical;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;

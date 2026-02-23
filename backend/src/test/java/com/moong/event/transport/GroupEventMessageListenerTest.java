@@ -2,11 +2,12 @@ package com.moong.event.transport;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moong.DataBaseCleaner;
-import com.moong.event.EventType;
-import com.moong.event.dto.AiAdviceCreatedPayload;
-import com.moong.event.dto.CoinCreatedPayload;
+import com.moong.event.group.EventType;
+import com.moong.event.group.payload.AiAdviceCreatedPayload;
+import com.moong.event.group.payload.CoinCreatedPayload;
 import com.moong.event.group.GroupEvent;
-import com.moong.service.SseService;
+import com.moong.event.notification.GroupEventMessageListener;
+import com.moong.service.sse.SseService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;

@@ -1,6 +1,6 @@
 package com.moong.exception.analyzer.messagesender;
 
-import com.moong.exception.dto.AnalyzeErrorResponse;
+import com.moong.exception.analyzer.AnalyzeErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;

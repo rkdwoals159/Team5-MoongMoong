@@ -1,10 +1,7 @@
 package com.moong.exception.analyzer;
 
 import aj.org.objectweb.asm.Type;
-import com.moong.exception.dto.AnalyzeErrorRequest;
-import com.moong.exception.dto.AnalyzeErrorResponse;
-import com.moong.exception.dto.MethodSignatureInfo;
-import com.moong.exception.dto.ParameterInfo;
+import com.moong.config.analyzer.LlmProperties;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;

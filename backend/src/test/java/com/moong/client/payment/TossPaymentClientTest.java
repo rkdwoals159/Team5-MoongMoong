@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.moong.client.BaseWebClientTest;
+import com.moong.config.payment.TossProperties;
 import com.moong.domain.enums.PaymentStatus;
 import com.moong.dto.request.payment.CoinPaymentConfirmRequest;
 import com.moong.dto.request.payment.TossCancelRequest;

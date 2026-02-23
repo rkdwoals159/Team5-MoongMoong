@@ -1,8 +1,8 @@
 package com.moong.fixture;
 
-import com.moong.domain.entity.Pet;
-import com.moong.domain.entity.PetGroup;
-import com.moong.repository.PetGroupRepository;
+import com.moong.domain.pet.Pet;
+import com.moong.domain.petgroup.PetGroup;
+import com.moong.repository.petgroup.PetGroupRepository;
 import org.springframework.stereotype.Component;
 
 @Component

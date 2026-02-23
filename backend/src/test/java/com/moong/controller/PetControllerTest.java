@@ -1,9 +1,9 @@
 package com.moong.controller;
 
-import com.moong.domain.entity.Crew;
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.Pet;
-import com.moong.domain.entity.PetGroup;
+import com.moong.domain.crew.Crew;
+import com.moong.domain.member.Member;
+import com.moong.domain.pet.Pet;
+import com.moong.domain.petgroup.PetGroup;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.Gender;
@@ -11,7 +11,7 @@ import com.moong.dto.request.pet.PetCreateRequest;
 import com.moong.dto.request.pet.PetUpdateRequest;
 import com.moong.dto.response.pet.PetReadResponse;
 import com.moong.dto.response.pet.PetUpdateResponse;
-import com.moong.service.GroupMedicalAdviceService;
+import com.moong.service.medicaladvice.PetMedicalAdviceService;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.verify;
 class PetControllerTest extends BaseControllerTest {
 
     @MockitoBean
-    private GroupMedicalAdviceService groupMedicalAdviceService;
+    private PetMedicalAdviceService petMedicalAdviceService;
 
     @DisplayName("인증에 성공한 사용자가 강아지 정보 입력에 성공")
     @Test
@@ -58,7 +58,7 @@ class PetControllerTest extends BaseControllerTest {
                 .then()
                 .statusCode(200);
 
-        verify(groupMedicalAdviceService, times(1))
+        verify(petMedicalAdviceService, times(1))
                 .createMedicalAdvice(anyLong(), anyLong(), any());
     }
 

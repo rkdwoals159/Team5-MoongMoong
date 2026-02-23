@@ -1,7 +1,7 @@
 package com.moong.fixture;
 
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.MonthlyMemberExpense;
+import com.moong.domain.member.Member;
+import com.moong.domain.report.MonthlyMemberExpense;
 import com.moong.repository.monthlyexpense.MonthlyMemberExpenseRepository;
 import java.time.YearMonth;
 import org.springframework.stereotype.Component;

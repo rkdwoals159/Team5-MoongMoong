@@ -1,7 +1,7 @@
 package com.moong.view.bank;
 
-import com.moong.domain.entity.Coin;
-import com.moong.domain.entity.Member;
+import com.moong.domain.bank.Coin;
+import com.moong.domain.member.Member;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

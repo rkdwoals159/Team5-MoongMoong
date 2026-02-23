@@ -1,11 +1,10 @@
 package com.moong.domain.groupmedical;
 
-import com.moong.domain.entity.PetMedical;
+import com.moong.domain.petmedical.PetMedical;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.pet.PetAge;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

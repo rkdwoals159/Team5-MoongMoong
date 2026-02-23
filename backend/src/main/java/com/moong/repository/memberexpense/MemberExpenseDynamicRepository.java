@@ -1,7 +1,7 @@
 package com.moong.repository.memberexpense;
 
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.member.Member;
+import com.moong.domain.memberexpense.MemberExpense;
 import com.moong.domain.enums.MainCategoryType;
 import java.time.LocalDate;
 import java.util.List;

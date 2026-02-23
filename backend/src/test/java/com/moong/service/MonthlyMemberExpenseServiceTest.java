@@ -3,11 +3,12 @@ package com.moong.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.MemberExpense;
-import com.moong.domain.entity.MonthlyMemberExpense;
+import com.moong.domain.member.Member;
+import com.moong.domain.memberexpense.MemberExpense;
+import com.moong.domain.report.MonthlyMemberExpense;
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.repository.monthlyexpense.MonthlyMemberExpenseRepository;
+import com.moong.service.report.MonthlyMemberExpenseService;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import org.junit.jupiter.api.DisplayName;

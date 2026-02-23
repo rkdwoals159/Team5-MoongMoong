@@ -1,6 +1,6 @@
 package com.moong.repository.memberexpense;
 
-import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.memberexpense.MemberExpense;
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.dto.response.memberexpense.ExpenseCategoryStatics;
 import com.moong.dto.response.memberexpense.MemberExpenseStatics;

@@ -2,7 +2,7 @@ package com.moong.controller.swagger;
 
 import com.moong.annotation.swagger.ErrorCode401;
 import com.moong.annotation.swagger.ErrorCode500;
-import com.moong.domain.entity.Member;
+import com.moong.domain.member.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

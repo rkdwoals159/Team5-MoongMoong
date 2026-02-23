@@ -1,8 +1,8 @@
 package com.moong.dto.command;
 
-import com.moong.domain.entity.Crew;
-import com.moong.event.EventType;
-import com.moong.event.group.GroupEventPayload;
+import com.moong.domain.crew.Crew;
+import com.moong.event.group.EventType;
+import com.moong.event.group.payload.GroupEventPayload;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

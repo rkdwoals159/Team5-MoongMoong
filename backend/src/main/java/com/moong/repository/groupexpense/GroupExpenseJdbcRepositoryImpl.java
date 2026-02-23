@@ -1,6 +1,6 @@
 package com.moong.repository.groupexpense;
 
-import com.moong.domain.entity.GroupExpense;
+import com.moong.domain.groupexpense.GroupExpense;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;

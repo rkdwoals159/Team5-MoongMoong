@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.domain.enums.SubCategoryType;
+import com.moong.domain.member.Member;
+import com.moong.domain.memberexpense.MemberExpense;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import java.time.LocalDate;

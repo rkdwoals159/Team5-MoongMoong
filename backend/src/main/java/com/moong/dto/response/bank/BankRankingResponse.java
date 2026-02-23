@@ -1,6 +1,6 @@
 package com.moong.dto.response.bank;
 
-import com.moong.domain.bank.BankRanking;
+import com.moong.domain.ranking.BankRanking;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "저금통 랭킹 정보")

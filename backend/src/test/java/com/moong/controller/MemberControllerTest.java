@@ -3,7 +3,7 @@ package com.moong.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.moong.domain.entity.Member;
+import com.moong.domain.member.Member;
 import com.moong.dto.request.member.MemberUpdateNameRequest;
 import com.moong.dto.request.member.MemberUpdateProfileRequest;
 import com.moong.dto.response.member.MemberInfoResponse;

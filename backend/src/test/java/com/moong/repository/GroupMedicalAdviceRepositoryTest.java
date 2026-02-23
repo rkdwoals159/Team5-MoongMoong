@@ -1,9 +1,9 @@
 package com.moong.repository;
 
-import com.moong.domain.entity.GroupMedicalAdvice;
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.Pet;
-import com.moong.domain.entity.PetGroup;
+import com.moong.domain.groupmedical.GroupMedicalAdvice;
+import com.moong.domain.member.Member;
+import com.moong.domain.pet.Pet;
+import com.moong.domain.petgroup.PetGroup;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.medicaladvice.GroupMedicalAdviceRepository;

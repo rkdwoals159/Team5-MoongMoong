@@ -1,9 +1,9 @@
 package com.moong.cache;
 
-import com.moong.domain.bank.BankRanking;
-import com.moong.key.ranking.RedisRankingKey;
-import com.moong.key.ranking.RedisRankingMemberKey;
-import com.moong.key.ranking.RedisRankingRebuildKey;
+import com.moong.domain.ranking.BankRanking;
+import com.moong.domain.ranking.key.RedisRankingKey;
+import com.moong.domain.ranking.key.RedisRankingMemberKey;
+import com.moong.domain.ranking.key.RedisRankingRebuildKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.zset.DefaultTuple;

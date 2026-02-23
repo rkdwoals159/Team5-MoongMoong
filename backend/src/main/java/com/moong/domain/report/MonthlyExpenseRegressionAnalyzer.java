@@ -1,7 +1,7 @@
 package com.moong.domain.report;
 
 import com.moong.dto.response.regression.RegressionResponse;
-import com.moong.util.RegressionUtils;
+import com.moong.util.regression.RegressionUtils;
 import java.util.List;
 import org.springframework.stereotype.Component;
 

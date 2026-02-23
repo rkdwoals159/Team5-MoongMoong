@@ -1,15 +1,15 @@
 package com.moong.facade;
 
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.MemberExpense;
-import com.moong.domain.entity.Pet;
-import com.moong.domain.entity.PetGroup;
+import com.moong.domain.member.Member;
+import com.moong.domain.memberexpense.MemberExpense;
+import com.moong.domain.pet.Pet;
+import com.moong.domain.petgroup.PetGroup;
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.domain.enums.SubCategoryType;
 import com.moong.facade.report.MonthlyReportFacadeService;
 import com.moong.service.BaseServiceTest;
-import com.moong.service.MonthlyGroupExpenseService;
-import com.moong.service.MonthlyMemberExpenseService;
+import com.moong.service.report.MonthlyGroupExpenseService;
+import com.moong.service.report.MonthlyMemberExpenseService;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;

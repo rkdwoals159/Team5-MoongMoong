@@ -1,7 +1,7 @@
 package com.moong.ai;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.moong.ai.mapper.OpenAiResultDeserializer;
+import com.moong.serdes.ai.OpenAiResultDeserializer;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

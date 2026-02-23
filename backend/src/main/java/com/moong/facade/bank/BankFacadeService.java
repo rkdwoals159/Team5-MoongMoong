@@ -1,16 +1,16 @@
 package com.moong.facade.bank;
 
-import com.moong.domain.entity.Crew;
-import com.moong.domain.entity.Member;
+import com.moong.domain.crew.Crew;
+import com.moong.domain.member.Member;
 import com.moong.dto.response.bank.BankBreakResponse;
 import com.moong.dto.response.bank.BankWithBankBreakResponse;
-import com.moong.event.EventType;
-import com.moong.event.GroupEventPublisher;
-import com.moong.event.dto.GroupEventMessage;
-import com.moong.event.dto.NudgePayload;
-import com.moong.service.BankService;
-import com.moong.service.CrewService;
-import com.moong.service.RankingService;
+import com.moong.event.group.EventType;
+import com.moong.event.notification.GroupEventPublisher;
+import com.moong.event.group.GroupEventMessage;
+import com.moong.event.group.payload.NudgePayload;
+import com.moong.service.bank.BankService;
+import com.moong.service.crew.CrewService;
+import com.moong.service.ranking.RankingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

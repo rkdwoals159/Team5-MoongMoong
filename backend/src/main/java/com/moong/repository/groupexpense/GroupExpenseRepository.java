@@ -1,7 +1,7 @@
 package com.moong.repository.groupexpense;
 
-import com.moong.domain.entity.GroupExpense;
-import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.groupexpense.GroupExpense;
+import com.moong.domain.memberexpense.MemberExpense;
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.domain.groupexpense.GroupExpenseDetail;
 import java.time.LocalDate;

@@ -1,6 +1,6 @@
 package com.moong.dto.response.member;
 
-import com.moong.domain.entity.Member;
+import com.moong.domain.member.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "회원 정보 응답")

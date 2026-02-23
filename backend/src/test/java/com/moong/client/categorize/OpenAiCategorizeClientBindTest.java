@@ -1,10 +1,10 @@
 package com.moong.client.categorize;
 
 import com.moong.ai.OpenAiModel;
-import com.moong.ai.OpenAiProperties;
+import com.moong.config.ai.OpenAiProperties;
 import com.moong.ai.OpenAiResult;
 import com.moong.ai.prompt.CategorizePromptGenerator;
-import com.moong.ai.prompt.CategorizePromptProperties;
+import com.moong.config.ai.CategorizePromptProperties;
 import com.moong.client.BaseWebClientTest;
 import com.moong.dto.request.memberexpense.CategorizeRequest;
 import com.moong.dto.response.categorize.AiCategorizeResponse;

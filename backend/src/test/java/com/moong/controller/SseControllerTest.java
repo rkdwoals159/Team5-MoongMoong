@@ -2,13 +2,13 @@ package com.moong.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.Pet;
-import com.moong.domain.entity.PetGroup;
-import com.moong.event.SseEventSender;
-import com.moong.event.transport.CustomSseEmitter;
-import com.moong.repository.EmitterRepository;
-import com.moong.repository.groupConnection.GroupConnectionRepository;
+import com.moong.domain.member.Member;
+import com.moong.domain.pet.Pet;
+import com.moong.domain.petgroup.PetGroup;
+import com.moong.event.notification.SseEventSender;
+import com.moong.event.notification.CustomSseEmitter;
+import com.moong.repository.sse.EmitterRepository;
+import com.moong.repository.groupconnection.GroupConnectionRepository;
 import java.io.IOException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;

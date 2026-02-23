@@ -1,10 +1,9 @@
 package com.moong.event.payment;
 
-import com.moong.event.GroupEventPublisher;
-import com.moong.event.dto.CoinCreatedPayload;
-import com.moong.event.dto.GroupEventMessage;
-import com.moong.event.dto.PaymentSuccessEvent;
-import com.moong.service.RankingService;
+import com.moong.event.notification.GroupEventPublisher;
+import com.moong.event.group.payload.CoinCreatedPayload;
+import com.moong.event.group.GroupEventMessage;
+import com.moong.service.ranking.RankingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;

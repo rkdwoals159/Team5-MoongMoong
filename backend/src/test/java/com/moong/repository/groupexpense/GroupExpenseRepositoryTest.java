@@ -2,11 +2,11 @@ package com.moong.repository.groupexpense;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.moong.domain.entity.GroupExpense;
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.MemberExpense;
-import com.moong.domain.entity.Pet;
-import com.moong.domain.entity.PetGroup;
+import com.moong.domain.groupexpense.GroupExpense;
+import com.moong.domain.member.Member;
+import com.moong.domain.memberexpense.MemberExpense;
+import com.moong.domain.pet.Pet;
+import com.moong.domain.petgroup.PetGroup;
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.domain.groupexpense.GroupExpenseDetail;
 import com.moong.repository.BaseRepositoryTest;

@@ -1,10 +1,10 @@
 package com.moong.fixture;
 
-import com.moong.domain.entity.Notification;
-import com.moong.event.EventType;
-import com.moong.event.group.GroupEventPayload;
+import com.moong.domain.notification.Notification;
+import com.moong.event.group.EventType;
+import com.moong.event.group.payload.GroupEventPayload;
 import com.moong.repository.notification.NotificationRepository;
-import com.moong.convertor.GroupEventPayloadConverter;
+import com.moong.serdes.groupevent.GroupEventPayloadConverter;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,17 +1,14 @@
 package com.moong.dto.request.memberexpense;
 
-import com.moong.domain.entity.Member;
-import com.moong.domain.entity.MemberExpense;
+import com.moong.domain.member.Member;
+import com.moong.domain.memberexpense.MemberExpense;
 import com.moong.domain.enums.MainCategoryType;
 import com.moong.domain.enums.SubCategoryType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
-import org.hibernate.validator.constraints.Length;
 
 public record MemberExpenseUpsertRequest(
         @Schema(

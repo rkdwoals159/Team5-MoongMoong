@@ -1,9 +1,9 @@
 package com.moong.fixture;
 
-import com.moong.domain.entity.Pet;
-import com.moong.domain.entity.WorriedDisease;
+import com.moong.domain.pet.Pet;
+import com.moong.domain.pet.WorriedDisease;
 import com.moong.domain.enums.Disease;
-import com.moong.repository.WorriedDiseaseRepository;
+import com.moong.repository.pet.WorriedDiseaseRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;

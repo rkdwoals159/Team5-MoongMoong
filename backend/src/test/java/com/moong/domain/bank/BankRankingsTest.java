@@ -1,5 +1,7 @@
 package com.moong.domain.bank;
 
+import com.moong.domain.ranking.BankRanking;
+import com.moong.domain.ranking.BankRankings;
 import com.moong.view.bank.CoinView;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

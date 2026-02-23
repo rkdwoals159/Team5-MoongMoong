@@ -1,5 +1,6 @@
 package com.moong.ai.prompt;
 
+import com.moong.config.ai.CategorizePromptProperties;
 import java.util.StringJoiner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

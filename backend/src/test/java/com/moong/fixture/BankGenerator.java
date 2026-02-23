@@ -1,10 +1,9 @@
 package com.moong.fixture;
 
-import com.moong.domain.entity.Bank;
-import com.moong.domain.entity.PetGroup;
-import com.moong.repository.BankRepository;
+import com.moong.domain.bank.Bank;
+import com.moong.domain.petgroup.PetGroup;
+import com.moong.repository.bank.BankRepository;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 
 @Component
 public class BankGenerator {

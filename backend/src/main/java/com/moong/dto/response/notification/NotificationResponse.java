@@ -1,7 +1,7 @@
 package com.moong.dto.response.notification;
 
-import com.moong.event.EventType;
-import com.moong.event.group.GroupEventPayload;
+import com.moong.event.group.EventType;
+import com.moong.event.group.payload.GroupEventPayload;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 

@@ -1,12 +1,11 @@
 package com.moong.event.payment;
 
 import com.moong.client.payment.TossPaymentClient;
-import com.moong.domain.entity.CoinPayment;
+import com.moong.domain.bank.CoinPayment;
 import com.moong.domain.enums.PaymentStatus;
-import com.moong.dto.PaymentFailedEvent;
 import com.moong.dto.request.payment.TossCancelRequest;
-import com.moong.repository.CoinPaymentRepository;
-import com.moong.service.PaymentService;
+import com.moong.repository.bank.CoinPaymentRepository;
+import com.moong.service.bank.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;

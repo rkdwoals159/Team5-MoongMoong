@@ -1,8 +1,8 @@
 package com.moong.dto.response.medicaladvice;
 
-import com.moong.domain.entity.GroupExpense;
-import com.moong.domain.entity.PetMedical;
-import com.moong.domain.entity.Treatment;
+import com.moong.domain.groupexpense.GroupExpense;
+import com.moong.domain.petmedical.PetMedical;
+import com.moong.domain.treatment.Treatment;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.groupexpense.GroupExpenses;
 import com.moong.domain.medicaladvice.TreatmentAvgCost;

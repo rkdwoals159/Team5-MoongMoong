@@ -4,8 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import com.moong.event.transport.CustomSseEmitter;
-import com.moong.repository.EmitterRepository;
+import com.moong.event.notification.CustomSseEmitter;
+import com.moong.event.notification.SseEventSender;
+import com.moong.repository.sse.EmitterRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

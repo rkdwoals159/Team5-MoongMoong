@@ -3,7 +3,7 @@ package com.moong.flyway;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import com.moong.service.MailService;
+import com.moong.service.report.MailService;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;

@@ -1,6 +1,6 @@
 package com.moong.scheduler.petmedical;
 
-import com.moong.service.PetMedicalService;
+import com.moong.service.petmedical.PetMedicalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

@@ -1,8 +1,5 @@
 package com.moong.domain.report;
 
-import com.moong.domain.entity.MonthlyMemberExpense;
-import com.moong.dto.response.memberexpense.LastMonthComparisonResponse;
-import com.moong.dto.response.memberexpense.MemberExpensesPeriodResponse;
 import com.moong.dto.response.regression.RegressionResponse;
 import java.util.List;
 

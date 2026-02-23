@@ -1,7 +1,7 @@
 package com.moong.client.categorize;
 
 import com.moong.ai.OpenAiModel;
-import com.moong.ai.OpenAiProperties;
+import com.moong.config.ai.OpenAiProperties;
 import com.moong.ai.OpenAiResult;
 import com.moong.ai.prompt.CategorizePromptGenerator;
 import com.moong.dto.request.categorize.OpenAiRequest;

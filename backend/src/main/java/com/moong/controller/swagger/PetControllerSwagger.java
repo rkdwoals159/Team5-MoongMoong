@@ -1,10 +1,9 @@
 package com.moong.controller.swagger;
 
 import com.moong.annotation.swagger.ErrorCode401;
-import com.moong.annotation.swagger.ErrorCode403;
 import com.moong.annotation.swagger.ErrorCode404;
 import com.moong.annotation.swagger.ErrorCode500;
-import com.moong.domain.entity.Member;
+import com.moong.domain.member.Member;
 import com.moong.dto.request.pet.PetCreateRequest;
 import com.moong.dto.request.pet.PetUpdateRequest;
 import com.moong.dto.response.pet.PetCreateResponse;
@@ -17,7 +16,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "Pet API")
 public interface PetControllerSwagger {

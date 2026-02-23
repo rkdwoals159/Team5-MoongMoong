@@ -1,8 +1,8 @@
 package com.moong.config;
 
 import com.moong.argumentresolver.AuthMemberArgumentResolver;
-import com.moong.service.AuthService;
-import com.moong.util.AuthorizationHeaderExtractor;
+import com.moong.service.auth.AuthService;
+import com.moong.controller.tool.auth.AuthorizationHeaderExtractor;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
