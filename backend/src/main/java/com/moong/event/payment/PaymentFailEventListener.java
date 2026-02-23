@@ -28,10 +28,6 @@ public class PaymentFailEventListener {
         CoinPayment coinPayment = coinPaymentRepository.getByIdAndCrewId(event.orderId(), event.crewId());
         PaymentStatus status = coinPayment.getPaymentStatus();
 
-        if (coinPayment.hasStatus(PaymentStatus.COIN_CREATED)) {
-            log.warn("Payment failed after coin created. orderId={}, crewId={}", event.orderId(), event.crewId());
-            return;
-        }
         if (coinPayment.hasStatus(PaymentStatus.CONFIRMED)) {
             cancelPaymentOnFailure(event);
         }

@@ -12,12 +12,12 @@ import com.moong.domain.entity.Notification;
 import com.moong.domain.entity.NotificationCursor;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
-import com.moong.dto.command.NotificationCreateCommand;
 import com.moong.dto.command.NotificationReadCommand;
 import com.moong.dto.response.notification.NotificationCountResponse;
 import com.moong.dto.response.notification.NotificationReadResponse;
 import com.moong.dto.response.notification.NotificationResponse;
 import com.moong.event.EventType;
+import com.moong.event.dto.GroupEventMessage;
 import com.moong.event.dto.NudgePayload;
 import com.moong.repository.notification.CrewNotificationRepository;
 import com.moong.exception.custom.BusinessException;
@@ -49,7 +49,7 @@ class NotificationServiceTest extends BaseServiceTest {
 
     @DisplayName("알림을 저장하고, 알림을 발생시킨 크루를 제외한 크루원에게 CrewNotification을 생성한다.")
     @Test
-    void createCrewNotification() throws JsonProcessingException {
+    void createNotification() throws JsonProcessingException {
         Member member1 = memberGenerator.generateSaved("test");
         Member member2 = memberGenerator.generateSaved("test");
         Member member3 = memberGenerator.generateSaved("test");
@@ -59,10 +59,14 @@ class NotificationServiceTest extends BaseServiceTest {
         Crew crew2 = crewGenerator.generateSaved(petGroup, member2);
         Crew crew3 = crewGenerator.generateSaved(petGroup, member3);
         NudgePayload nudgePayload = new NudgePayload(member1.getName());
-        NotificationCreateCommand notificationCreateCommand = new NotificationCreateCommand(petGroup.getId(), crew1,
-                nudgePayload, EventType.NUDGE);
-
-        notificationService.createCrewNotification(notificationCreateCommand);
+        GroupEventMessage<NudgePayload> groupEventMessage = new GroupEventMessage<>(
+                EventType.NUDGE,
+                petGroup.getId(),
+                member1.getId(),
+                nudgePayload,
+                EventType.NUDGE.includeSender()
+        );
+        notificationService.createNotification(groupEventMessage);
 
         Pageable pageable = PageRequest.of(0, 3);
         Slice<CrewNotification> crewNotification1 = crewNotificationRepository.findFetchedByCrewId(crew1.getId(),

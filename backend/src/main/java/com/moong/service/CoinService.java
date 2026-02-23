@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class CoinSavingService {
+public class CoinService {
 
     private final CoinPaymentRepository coinPaymentRepository;
     private final BankRepository bankRepository;
@@ -31,7 +31,7 @@ public class CoinSavingService {
                 orderId,
                 crew.getId(),
                 PaymentStatus.CONFIRMED,
-                PaymentStatus.COIN_CREATED
+                PaymentStatus.DONE
         );
         return coinRepository.save(coin);
     }

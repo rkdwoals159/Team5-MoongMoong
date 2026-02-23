@@ -1,6 +1,6 @@
 package com.moong.repository.groupConnection;
 
-import com.moong.event.transport.key.RedisSseKey;
+import com.moong.key.sse.RedisSseKey;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;

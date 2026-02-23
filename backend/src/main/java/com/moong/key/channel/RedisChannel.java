@@ -1,4 +1,4 @@
-package com.moong.redis.transport;
+package com.moong.key.channel;
 
 public class RedisChannel {
 

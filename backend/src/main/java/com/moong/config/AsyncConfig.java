@@ -18,7 +18,7 @@ import java.util.concurrent.Executor;
 @Configuration
 public class AsyncConfig implements AsyncConfigurer {
 
-    @Bean(name = "groupEventChannelExecutor")
+    @Bean(name = "groupEventPublisherExecutor")
     public Executor groupEventExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setThreadNamePrefix("group-event-");

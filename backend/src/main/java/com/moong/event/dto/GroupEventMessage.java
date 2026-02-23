@@ -9,7 +9,8 @@ public record GroupEventMessage<T extends GroupEventPayload>(
         EventType eventType,
         long groupId,
         long senderId,
-        T data
+        T data,
+        boolean includeSender
 ) {
 
     public static GroupEventMessage<CoinCreatedPayload> saving(
@@ -21,7 +22,8 @@ public record GroupEventMessage<T extends GroupEventPayload>(
                 EventType.SAVING,
                 groupId,
                 member.getId(),
-                new CoinCreatedPayload(member, coin)
+                new CoinCreatedPayload(member, coin),
+                false
         );
     }
 
@@ -33,7 +35,8 @@ public record GroupEventMessage<T extends GroupEventPayload>(
                 EventType.AI_ADVICE_CREATED,
                 groupId,
                 memberId,
-                new AiAdviceCreatedPayload()
+                new AiAdviceCreatedPayload(),
+                true
         );
     }
 }

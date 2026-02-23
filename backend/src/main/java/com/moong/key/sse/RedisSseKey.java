@@ -1,4 +1,4 @@
-package com.moong.event.transport.key;
+package com.moong.key.sse;
 
 public record RedisSseKey(long groupId) {
 

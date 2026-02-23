@@ -14,9 +14,9 @@ import com.moong.domain.enums.MainCategoryType;
 import com.moong.domain.medicaladvice.AiMedicalAdvice;
 import com.moong.dto.response.medicaladvice.AiMedicalAdviceRequest;
 import com.moong.dto.response.medicaladvice.AiMedicalAdviceResponse;
+import com.moong.event.GroupEventPublisher;
 import com.moong.event.dto.AiAdviceCreatedPayload;
 import com.moong.event.dto.GroupEventMessage;
-import com.moong.event.transport.GroupEventChannelSender;
 import com.moong.repository.PetGroupRepository;
 import com.moong.repository.TreatmentRepository;
 import com.moong.repository.groupexpense.GroupExpenseRepository;
@@ -49,7 +49,7 @@ public class GroupMedicalAdviceService {
     private final GroupMedicalAdviceRepository groupMedicalAdviceRepository;
     private final GroupMedicalAdviceJdbcRepository groupMedicalAdviceJdbcRepository;
 
-    private final GroupEventChannelSender groupEventChannelSender;
+    private final GroupEventPublisher groupEventPublisher;
 
     public void upsertAllMedicalAdvice(LocalDate date) {
         long petGroupCount = petGroupRepository.count();
@@ -68,7 +68,7 @@ public class GroupMedicalAdviceService {
         }
     }
 
-    @Async("groupEventChannelExecutor")
+    @Async("groupEventPublisherExecutor")
     public void createMedicalAdvice(long memberId, long groupId, LocalDate date) {
         Year nextYear = Year.from(date).plusYears(1);
         AiMedicalAdviceRequest input = getAiMedicalAdviceInput(groupId, date);
@@ -85,7 +85,7 @@ public class GroupMedicalAdviceService {
         GroupEventMessage<AiAdviceCreatedPayload> adviceCreatedMessage =
                 GroupEventMessage.adviceCreated(memberId, groupId);
 
-        groupEventChannelSender.sendAsync(adviceCreatedMessage);
+        groupEventPublisher.publishAsync(adviceCreatedMessage);
     }
 
     public AiMedicalAdviceRequest getAiMedicalAdviceInput(long groupId, LocalDate date) {

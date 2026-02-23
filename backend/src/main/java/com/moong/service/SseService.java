@@ -57,7 +57,7 @@ public class SseService {
     public void sendGroupNotification(GroupEvent<? extends GroupEventPayload> event) {
         groupConnectionRepository.findAllMemberIdsByGroupId(event.groupId()).stream()
                 .filter(memberId ->
-                        (event.data() instanceof AiAdviceCreatedPayload) || memberId != event.senderId()
+                        event.eventType().includeSender() || memberId != event.senderId()
                 )
                 .forEach(memberId -> {
                     SseEmitter.SseEventBuilder eventBuilder = SseEmitter.event()

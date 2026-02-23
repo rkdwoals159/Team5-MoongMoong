@@ -14,7 +14,7 @@ import com.moong.dto.response.bank.CoinCreateResponse;
 import com.moong.dto.response.bank.CoinPaymentCreateResponse;
 import com.moong.dto.response.payment.TossConfirmResponse;
 import com.moong.event.dto.PaymentSuccessEvent;
-import com.moong.service.CoinSavingService;
+import com.moong.service.CoinService;
 import com.moong.service.CrewService;
 import com.moong.service.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class PaymentFacadeService {
     private final CrewService crewService;
     private final TossPaymentClient tossPaymentClient;
     private final ApplicationEventPublisher eventPublisher;
-    private final CoinSavingService coinSavingService;
+    private final CoinService coinService;
 
     public CoinPaymentCreateResponse createCoinPayment(Member member, CoinCreateRequest coinCreateRequest) {
         Crew crew = crewService.getByMemberId(member.getId());
@@ -46,30 +46,32 @@ public class PaymentFacadeService {
     public CoinCreateResponse paymentSuccess(Member member, CoinPaymentConfirmRequest request) {
         Crew crew = crewService.getFetchedByMemberId(member.getId());
         UUID orderId = request.orderId();
-        long crewId = crew.getId();
         long groupId = crew.getPetGroup().getId();
 
+        Coin savedCoin = confirmAndCreateCoin(crew, request, orderId);
+        PaymentSuccessEvent paymentSuccessEvent =
+                new PaymentSuccessEvent(member, crew, savedCoin, groupId);
+        eventPublisher.publishEvent(paymentSuccessEvent);
+        return new CoinCreateResponse(savedCoin, member);
+    }
+
+    private Coin confirmAndCreateCoin(
+            Crew crew,
+            CoinPaymentConfirmRequest request,
+            UUID orderId
+    ) {
         try {
-            paymentService.verifyPayment(orderId, crewId, request.amount());
+            paymentService.verifyPayment(orderId, crew.getId(), request.amount());
             TossConfirmResponse clientResponse = tossPaymentClient.confirm(request).join();
-
-            paymentService.changePaymentStatus(orderId, crewId, PaymentStatus.READY, PaymentStatus.CONFIRMED);
-
-            Coin savedCoin = coinSavingService.createCoin(orderId, crew, clientResponse.totalAmount());
-
-            paymentService.changePaymentStatus(orderId, crewId, PaymentStatus.COIN_CREATED, PaymentStatus.DONE);
-
-            PaymentSuccessEvent paymentSuccessEvent = new PaymentSuccessEvent(member, crew, savedCoin, groupId);
-            eventPublisher.publishEvent(paymentSuccessEvent);
-            return new CoinCreateResponse(savedCoin, member);
+            paymentService.changePaymentStatus(orderId, crew.getId(), PaymentStatus.READY, PaymentStatus.CONFIRMED);
+            return coinService.createCoin(orderId, crew, clientResponse.totalAmount());
         } catch (Exception e) {
-            log.error("Failed to create coin - OrderId: {}, Error: {}", request.orderId(), e.getMessage(), e);
-            PaymentFailedEvent paymentFailedEvent = new PaymentFailedEvent(
-                    request.orderId(),
-                    crewId,
+            log.error("Failed to create coin - OrderId: {}, Error: {}", orderId, e.getMessage(), e);
+            eventPublisher.publishEvent(new PaymentFailedEvent(
+                    orderId,
+                    crew.getId(),
                     request.paymentKey()
-            );
-            eventPublisher.publishEvent(paymentFailedEvent);
+            ));
             throw e;
         }
     }
