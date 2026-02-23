@@ -39,7 +39,7 @@ public class BankFacadeService {
         GroupEventMessage<NudgePayload> groupEventMessage = new GroupEventMessage<>(
                 EventType.NUDGE,
                 crew.getPetGroup().getId(),
-                crew.getId(),
+                member.getId(),
                 nudgePayload
         );
         notificationService.createCrewNotification(notificationCreateCommand);
