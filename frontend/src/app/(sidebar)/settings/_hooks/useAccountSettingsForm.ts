@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { updateMemberName } from "@/api/settingsApiActions";
+import { updateMemberName } from "@/api/server/settingsApiActions";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import type { MemberInfoResponse } from "@/api/types/settingsApi.type";
 import { getErrorMessage } from "@/lib/api/errorMessage";

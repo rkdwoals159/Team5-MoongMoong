@@ -4,7 +4,7 @@ import { decodeState, getReturnTo } from "./state";
 import { redirectToLogin } from "./redirect";
 import { redirectWithAuthCookies } from "./response";
 import { runPostLoginFlow } from "./postLogin";
-import { postAuthLogin } from "@/api/authBackendApi";
+import { postAuthLogin } from "@/api/server/authApi";
 import { postGoogleAccessToken, getGoogleUserEmail, resolveCallbackEnv } from "./oauth";
 
 function buildLoginFailureHandler(request: NextRequest, returnTo: string) {

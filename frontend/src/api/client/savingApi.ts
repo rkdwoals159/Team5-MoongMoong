@@ -1,6 +1,5 @@
 "use server";
 import { client } from "@/lib/api";
-import type { ApiHttpError } from "@/lib/api/type";
 import type {
   GetBankResponse,
   GetBankCoinsResponse,
@@ -10,14 +9,7 @@ import type {
   PostCoinOrderResponse,
   PostCoinPaymentConfirmResponse,
 } from "@/api/types/savingApi.type";
-
-const isApiHttpError = (error: unknown): error is ApiHttpError => {
-  return (
-    error instanceof Error &&
-    "status" in error &&
-    typeof (error as { status?: unknown }).status === "number"
-  );
-};
+import { isApiHttpError } from "@/api/utils/isApiHttpError";
 
 export async function getBank(): Promise<GetBankResponse | null> {
   try {

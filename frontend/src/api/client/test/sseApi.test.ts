@@ -8,7 +8,7 @@ vi.mock("@/lib/api", () => ({
   },
 }));
 
-import { postSSEToken } from "@/api/sseApi";
+import { postSSEToken } from "@/api/client/sseApi";
 
 describe("postSSEToken", () => {
   beforeEach(() => {

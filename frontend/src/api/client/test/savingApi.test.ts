@@ -8,7 +8,7 @@ vi.mock("@/lib/api", () => ({
   },
 }));
 
-import { getBank } from "@/api/savingApi";
+import { getBank } from "@/api/client/savingApi";
 
 describe("getBank", () => {
   beforeEach(() => {

@@ -8,7 +8,7 @@ import {
   LARGE_SIZE,
   COMPACT_SIZE,
 } from "@/app/(sidebar)/family/_constants";
-import { getPetInfo } from "@/api/petInfoApi";
+import { getPetInfo } from "@/api/server/petApi";
 import { BREEDS } from "@/app/onBoarding/_constants/dataTable";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
 import { safeServerFetch } from "@/lib/api";

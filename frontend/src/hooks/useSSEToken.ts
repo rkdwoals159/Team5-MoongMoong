@@ -1,4 +1,4 @@
-import { postSSEToken } from "@/api/sseApi";
+import { postSSEToken } from "@/api/client/sseApi";
 import { useCallback, useEffect, useState } from "react";
 import { MAX_RETRY, BASE_DELAY } from "@/constants";
 

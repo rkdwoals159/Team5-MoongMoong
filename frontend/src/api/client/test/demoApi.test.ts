@@ -8,7 +8,7 @@ vi.mock("@/lib/api", () => ({
   },
 }));
 
-import { getDemoReport } from "@/api/demoApi";
+import { getDemoReport } from "@/api/client/demoApi";
 
 describe("getDemoReport", () => {
   beforeEach(() => {

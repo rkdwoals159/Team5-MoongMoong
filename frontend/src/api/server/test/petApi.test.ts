@@ -10,7 +10,7 @@ vi.mock("@/lib/api", () => ({
   },
 }));
 
-import { getPetInfo, postCreatePet } from "@/api/petApi";
+import { getPetInfo, postCreatePet } from "@/api/server/petApi";
 
 describe("petApi", () => {
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import { getAIRecommendation } from "@/api/forecastApi";
+import { getAIRecommendation } from "@/api/server/forecastApi";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
 import { safeServerFetch } from "@/lib/api";
 

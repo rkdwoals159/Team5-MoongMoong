@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, renderHook } from "@testing-library/react";
 import { useSSEToken } from "@/hooks/useSSEToken";
-import * as sseApi from "@/api/sseApi";
+import * as sseApi from "@/api/client/sseApi";
 
 // fake timers 환경에서 waitFor 대신 사용: microtask만 소비하므로 setTimeout 차단 영향 없음
 async function flushPromises() {

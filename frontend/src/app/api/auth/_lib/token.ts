@@ -1,6 +1,6 @@
 import { authCookies, redirectToLogin } from "@/app/api/auth/_lib";
 import { requireBaseUrl } from "@/app/api/auth/_utils";
-import { postAuthRefresh } from "@/api/authBackendApi";
+import { postAuthRefresh } from "@/api/server/authApi";
 import type { NextRequest } from "next/server";
 
 export function extractBearerToken(headers: Headers) {

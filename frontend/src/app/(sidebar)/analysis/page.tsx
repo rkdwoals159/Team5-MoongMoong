@@ -6,8 +6,8 @@ import {
   getCategoryAnalysis,
   getGroupExpenses,
   getMedicalAnalysis,
-  getPetInfo,
-} from "@/api/analysisApi";
+} from "@/api/server/analysisApi";
+import { getPetInfo } from "@/api/server/petApi";
 import { resolveAnalysisRange } from "./_lib/analysisRange";
 import AnalysisTable from "./_components/table/AnalysisTable";
 import {

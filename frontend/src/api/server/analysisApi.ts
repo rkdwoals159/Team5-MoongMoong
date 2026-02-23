@@ -3,7 +3,6 @@ import type {
   GetCategoryAnalysisResponse,
   GetAnalysisGroupExpensesItem,
   GetMedicalAnalysisResponse,
-  GetPetInfoResponse,
 } from "@/api/types/analysisApi.type";
 /**
  * 그룹 소비내역 조회
@@ -55,14 +54,4 @@ export async function getMedicalAnalysis(
   });
 
   return { total: data?.totalMedical ?? 0, items: data?.medicalAnalysis ?? [] };
-}
-
-/**
- * 반려동물 정보 조회
- * @returns : 반려동물 정보
- */
-export async function getPetInfo(): Promise<GetPetInfoResponse | null> {
-  const { data } = await client.GET("/api/pet");
-
-  return data ?? null;
 }

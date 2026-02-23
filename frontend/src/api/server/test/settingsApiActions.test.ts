@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { API_ERROR_MESSAGES } from "@/api/constants";
-import { updateMemberName, updatePetInfo } from "@/api/settingsApiActions";
+import { updateMemberName, updatePetInfo } from "@/api/server/settingsApiActions";
 
 const fetchMock = vi.fn();
 const originalFetch = global.fetch;

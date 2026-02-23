@@ -2,7 +2,7 @@ import type { CalendarPageProps } from "@/app/(sidebar)/calendar/_types";
 import CalendarGrid from "./_components/CalendarGrid";
 import CalendarHeader from "./_components/CalendarHeader";
 import { getCalendarPageProps } from "@/app/(sidebar)/calendar/_lib/getCalendarProps";
-import { getGroupExpenses } from "@/api/calendarApi";
+import { getGroupExpenses } from "@/api/server/calendarApi";
 import PageHeader from "@/components/layout/Header/PageHeader";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
 import { safeServerFetch } from "@/lib/api";

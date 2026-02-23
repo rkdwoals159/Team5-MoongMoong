@@ -1,6 +1,6 @@
 import { cn } from "@/utils/style";
 import { client } from "@/lib/api";
-import { getPetInfo } from "@/api/petInfoApi";
+import { getPetInfo } from "@/api/server/petApi";
 import { components } from "@/types/schema";
 import type { HeaderProps } from "./header.type";
 import Profile from "@/components/layout/Profile";

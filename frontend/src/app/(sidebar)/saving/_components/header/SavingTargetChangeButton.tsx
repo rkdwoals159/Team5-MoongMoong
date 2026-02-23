@@ -7,7 +7,7 @@ import ClientModal from "@/components/ui/Modal/ClientModal";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
 import SavingTargetModal from "@/app/(sidebar)/saving/_components/modals/SavingTargetModal";
 import { DISABLED_TOOLTIP_MESSAGE } from "@/app/(sidebar)/saving/_constants";
-import { patchBank } from "@/api/savingApi";
+import { patchBank } from "@/api/client/savingApi";
 import { API_ERROR_MESSAGES } from "@/api/constants";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { executeWithToastError } from "@/lib/api/executeWithToastError";

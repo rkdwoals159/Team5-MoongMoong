@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getDemoReport } from "@/api/demoApi";
+import { getDemoReport } from "@/api/client/demoApi";
 import DocumentIcon from "@/assets/icons/components/ic_document.svg";
 import CheckCircleIcon from "@/assets/icons/components/ic_check_circle.svg";
 import CloseIcon from "@/assets/icons/components/close.svg";

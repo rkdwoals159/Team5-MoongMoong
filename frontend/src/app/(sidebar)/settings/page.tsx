@@ -1,8 +1,8 @@
 import PageHeader from "@/components/layout/Header/PageHeader";
 import AccountSettingsSection from "./_components/AccountSettingsSection";
 import DogSettingsSection from "./_components/DogSettingsSection";
-import { getMemberInfoServer } from "@/api/settingsApiQueries";
-import { getPetInfo } from "@/api/petInfoApi";
+import { getMemberInfoServer } from "@/api/server/settingsApiQueries";
+import { getPetInfo } from "@/api/server/petApi";
 import type { SettingsTab } from "./types";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
 import { safeServerFetch } from "@/lib/api";

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { postBank } from "@/api/savingApi";
+import { postBank } from "@/api/client/savingApi";
 import { API_ERROR_MESSAGES } from "@/api/constants";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { executeWithToastError } from "@/lib/api/executeWithToastError";

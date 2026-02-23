@@ -1,18 +1,12 @@
 import { NextResponse } from "next/server";
 import { API_ERROR_MESSAGES } from "@/api/constants";
-import type { ApiHttpError } from "@/lib/api/type";
+import { isApiHttpError } from "@/api/utils/isApiHttpError";
 
 const isObjectRecord = (value: unknown): value is Record<string, unknown> => {
   return value !== null && typeof value === "object";
 };
 
-export const isApiHttpError = (error: unknown): error is ApiHttpError => {
-  return (
-    error instanceof Error &&
-    "status" in error &&
-    typeof (error as { status?: unknown }).status === "number"
-  );
-};
+export { isApiHttpError };
 
 const getMessageFromBody = (body: unknown): string | undefined => {
   if (!isObjectRecord(body)) return undefined;

@@ -6,7 +6,7 @@ import SavingModal from "@/app/(sidebar)/saving/_components/modals/SavingModal";
 import SavingBreakSummaryModal from "@/app/(sidebar)/saving/_components/modals/SavingBreakSummaryModal";
 import type { BreakSummary } from "@/app/(sidebar)/saving/_types/";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
-import { deleteBank } from "@/api/savingApi";
+import { deleteBank } from "@/api/client/savingApi";
 import { API_ERROR_MESSAGES } from "@/api/constants";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/Toast/ToastProvider";

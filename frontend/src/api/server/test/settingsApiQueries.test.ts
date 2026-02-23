@@ -8,7 +8,7 @@ vi.mock("@/lib/api", () => ({
   },
 }));
 
-import { getMemberInfoServer } from "@/api/settingsApiQueries";
+import { getMemberInfoServer } from "@/api/server/settingsApiQueries";
 
 describe("getMemberInfoServer", () => {
   beforeEach(() => {

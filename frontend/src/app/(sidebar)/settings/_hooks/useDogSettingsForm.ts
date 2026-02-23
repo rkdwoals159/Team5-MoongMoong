@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { DOG_BREEDS, DISEASE_TAB_ORDER } from "@/constants";
-import { updatePetInfo } from "@/api/settingsApiActions";
+import { updatePetInfo } from "@/api/server/settingsApiActions";
 import type { PetUpdateRequest } from "@/api/types/settingsApi.type";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import type { DogBreedCode } from "@/constants";

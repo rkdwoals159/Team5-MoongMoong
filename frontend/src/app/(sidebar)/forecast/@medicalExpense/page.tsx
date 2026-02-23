@@ -1,5 +1,5 @@
 import type { DiseaseCode } from "@/app/(sidebar)/forecast/_types";
-import { getDiseaseCost, getDiseaseRanking } from "@/api/forecastApi";
+import { getDiseaseCost, getDiseaseRanking } from "@/api/server/forecastApi";
 import { DISEASE_TAB_ORDER } from "@/app/(sidebar)/forecast/_constants";
 import MedicalExpense from "@/app/(sidebar)/forecast/_components/medical-expense";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";

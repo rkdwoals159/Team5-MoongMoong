@@ -4,7 +4,13 @@ import Logo from "@/components/ui/Logo/Logo";
 import ImgGoogleLogo from "@/assets/icons/login/img_google_logo.png";
 import OnboardingCarousel from "./_components/OnboardingCarousel";
 
-export default function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ inviteUrl: string | null; returnTo: string }>;
+}) {
+  const inviteUrl = (await searchParams).inviteUrl ?? null;
+  const returnTo = (await searchParams).returnTo ?? "/dashboard";
   return (
     <div className="min-h-screen bg-white-100">
       <header className="flex h-[64px] items-center px-[50px]">
@@ -26,6 +32,7 @@ export default function Home() {
           </div>
           <Link
             href="/api/auth/google/start"
+            as={`/api/auth/google/start?inviteUrl=${inviteUrl}&returnTo=${returnTo}`}
             className="flex h-[50px] w-full items-center justify-center gap-200 rounded-[8px] border border-gray-200 bg-white-100"
           >
             <span className="flex size-[36px] items-center justify-center">

@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
-import { postCoinPaymentConfirm, postCoinFailure, postCoinOrderId } from "@/api/savingApi";
+import { postCoinPaymentConfirm, postCoinFailure, postCoinOrderId } from "@/api/client/savingApi";
 import { isFailResponse, isConfirmResponse } from "@/app/(sidebar)/saving/_types";
 import type {
   PostCoinPaymentConfirmResponse,

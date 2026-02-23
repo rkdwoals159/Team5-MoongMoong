@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { postCreatePet } from "@/api/petApi";
+import { postCreatePet } from "@/api/server/petApi";
 import Logo from "@/components/ui/Logo/Logo";
 import ErrorBoundary from "@/components/ui/ErrorBoundary/ErrorBoundary";
 import OnboardingForm from "./_components/OnboardingForm";

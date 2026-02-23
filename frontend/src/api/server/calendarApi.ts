@@ -1,8 +1,9 @@
-import { client } from "@/lib/api";
+import { getGroupExpenses as getAnalysisGroupExpenses } from "@/api/server/analysisApi";
 import type {
   GetCalendarGroupExpensesMap,
   GetCalendarGroupDailyExpensesResponse,
 } from "@/api/types/calendarApi.type";
+import { client } from "@/lib/api";
 import { resolveMonthRange } from "@/utils/date";
 
 /**
@@ -12,16 +13,8 @@ import { resolveMonthRange } from "@/utils/date";
  */
 export async function getGroupExpenses(monthParam?: string): Promise<GetCalendarGroupExpensesMap> {
   const { startDate, endDate } = resolveMonthRange(monthParam);
-  const { data } = await client.GET("/api/expenses/group", {
-    params: {
-      query: {
-        startDate,
-        endDate,
-      },
-    },
-  });
+  const expenses = await getAnalysisGroupExpenses(startDate, endDate);
 
-  const expenses = data?.expenses ?? [];
   return expenses.reduce<GetCalendarGroupExpensesMap>((acc, expense) => {
     const dateKey = expense.spendAt;
     if (!dateKey) {

@@ -1,4 +1,4 @@
-import { getDiseaseRanking, getDiseaseStatistics } from "@/api/forecastApi";
+import { getDiseaseRanking, getDiseaseStatistics } from "@/api/server/forecastApi";
 import AnnualDiseaseRiskClient from "./AnnualDiseaseRiskClient";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
 import { safeServerFetch } from "@/lib/api";

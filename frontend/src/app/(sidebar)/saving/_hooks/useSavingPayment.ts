@@ -5,7 +5,7 @@ import { ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
 import useTossPayments from "@/app/(sidebar)/saving/_hooks/useTossPayments";
-import { getBank } from "@/api/savingApi";
+import { getBank } from "@/api/client/savingApi";
 import { API_ERROR_MESSAGES } from "@/api/constants";
 import type { GetBankResponse } from "@/api/types/savingApi.type";
 import type { UseSavingPaymentOptions } from "@/app/(sidebar)/saving/_types/saving";
