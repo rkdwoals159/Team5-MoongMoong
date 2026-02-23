@@ -1,37 +1,15 @@
 name: Frontend CD (Dev)
 
 on:
+  workflow_dispatch:
   push:
     branches: [develop]
     paths:
       - "frontend/**"
+      - ".github/workflows/frontend-cd-dev.yml"
 
 jobs:
-  deploy-check:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 25.2.1
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Lint
-        run: yarn lint
-
-      - name: Format check
-        run: yarn format:check
-
   deploy-production:
-    needs: deploy-check
     runs-on: ubuntu-latest
     environment: production
     env:
@@ -49,6 +27,27 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 25.2.1
+          cache: yarn
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --prefer-offline
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Format check
+        run: yarn format:check
+
+      - name: Cache Next.js Build Cache
+        id: next-cache
+        uses: actions/cache@v4
+        with:
+          path: frontend/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('frontend/yarn.lock') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('frontend/yarn.lock') }}-
+            ${{ runner.os }}-nextjs-
 
       - name: Install Vercel CLI
         run: npm install -g vercel
@@ -90,3 +89,9 @@ jobs:
           echo "Health check failed. Rolling back..."
           vercel rollback --token=$VERCEL_TOKEN --yes
           echo "Rollback command executed."
+
+      - name: Cache KPI Summary
+        if: always()
+        run: |
+          echo "### Frontend CD Cache KPI" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Next.js cache hit: ${{ steps.next-cache.outputs.cache-hit }}" >> "$GITHUB_STEP_SUMMARY"
