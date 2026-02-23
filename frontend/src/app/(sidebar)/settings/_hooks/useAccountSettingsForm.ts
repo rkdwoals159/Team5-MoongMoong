@@ -4,6 +4,7 @@ import { useState } from "react";
 import { updateMemberName } from "@/api/settingsApiActions";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import type { MemberInfoResponse } from "@/api/types/settingsApi.type";
+import { getErrorMessage } from "@/lib/api/errorMessage";
 
 export default function useAccountSettingsForm(account: MemberInfoResponse) {
   const { showToast } = useToast();
@@ -19,14 +20,16 @@ export default function useAccountSettingsForm(account: MemberInfoResponse) {
   }
 
   async function handleSaveClick() {
-    const response = await updateMemberName(nickname);
-    if (!response) {
-      showToast({ variant: "error", message: "닉네임 변경에 실패했어요." });
-      return;
+    try {
+      const response = await updateMemberName(nickname);
+      setOriginalNickname(response.memberName ?? "");
+      showToast({ variant: "success", message: "닉네임이 변경됐어요." });
+    } catch (error) {
+      showToast({
+        variant: "error",
+        message: getErrorMessage(error, "닉네임 변경에 실패했어요."),
+      });
     }
-
-    setOriginalNickname(response.memberName ?? "");
-    showToast({ variant: "success", message: "닉네임이 변경됐어요." });
   }
 
   return {

@@ -16,7 +16,7 @@ const Drawer = ({
   startIconSelected,
   ...rest
 }: DrawerProps) => {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
   const hrefPath =
     typeof href === "string" ? href : ((href as { pathname?: string })?.pathname ?? "");
   const autoMatch = hrefPath

@@ -1,14 +1,12 @@
 "use client";
+
+import type { DashboardTableProps } from "@/app/(sidebar)/dashboard/_types/expenseTable";
 import { useSetRangeToUrl } from "@/app/(sidebar)/dashboard/_hooks";
 import { useServerSortConfig } from "@/app/(sidebar)/dashboard/_hooks/useServerSortConfig";
 import { useExpensesV2 } from "@/app/(sidebar)/dashboard/_hooks/useExpensesV2";
 import { useMainCategoryFilter } from "@/app/(sidebar)/dashboard/_hooks/useMainCategoryFilter";
 import EditableDataTable from "@/app/(sidebar)/dashboard/_components/dashboard-table/EditableDataTable";
 import DateRangePicker from "@/components/common/DateRangePicker/DateRangePicker";
-
-export type DashboardTableProps = {
-  tableClassName?: string;
-};
 
 const DashboardTable = ({ tableClassName }: DashboardTableProps) => {
   // 정렬 상태는 DashboardTable 하나에서만 소유한다

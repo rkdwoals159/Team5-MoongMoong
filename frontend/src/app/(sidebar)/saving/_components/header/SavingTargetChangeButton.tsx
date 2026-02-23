@@ -7,8 +7,10 @@ import ClientModal from "@/components/ui/Modal/ClientModal";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
 import SavingTargetModal from "@/app/(sidebar)/saving/_components/modals/SavingTargetModal";
 import { DISABLED_TOOLTIP_MESSAGE } from "@/app/(sidebar)/saving/_constants";
-import { updateSavingTarget } from "@/api/savingApiActions";
+import { patchBank } from "@/api/savingApi";
+import { API_ERROR_MESSAGES } from "@/api/constants";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
+import { executeWithToastError } from "@/lib/api/executeWithToastError";
 
 export default function SavingTargetChangeButton() {
   const { status, setStatus } = useSavingStatus();
@@ -28,21 +30,23 @@ export default function SavingTargetChangeButton() {
       focusRef.current?.focus();
       return;
     }
-    const response = await updateSavingTarget(amount);
-    if (!response || !response.target) {
-      showToast({
-        variant: "error",
-        message: "목표 금액 수정에 실패했어요.",
-      });
+    const response = await executeWithToastError(() => patchBank(amount), {
+      showToast,
+      fallbackMessage: API_ERROR_MESSAGES.BANK_UPDATE_TARGET,
+    });
+    if (!response) {
       setIsOpen(false);
       return;
     }
+
+    const nextTarget = response.target ?? amount;
+
     showToast({
       variant: "success",
       message: "목표 금액 수정에 성공했어요.",
     });
 
-    setStatus({ ...status, target: response.target });
+    setStatus({ ...status, target: nextTarget });
     setIsOpen(false);
     router.refresh();
   };

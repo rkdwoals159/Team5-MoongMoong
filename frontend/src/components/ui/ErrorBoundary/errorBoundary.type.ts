@@ -13,8 +13,6 @@ export type ErrorBoundaryProps = {
   onError?: (error: Error, info: ErrorInfo) => void;
   onReset?: () => void;
   resetKeys?: unknown[];
-  /** true면 리셋 시 router.refresh()로 서버 리페치 (Server Component 감쌀 때 사용) */
-  refreshOnReset?: boolean;
 };
 
 export type ErrorBoundaryState = {
@@ -28,6 +26,5 @@ export type ErrorBoundaryState = {
 export type DefaultErrorFallbackProps = {
   message?: string;
   onReset: () => void;
-  refreshOnReset?: boolean;
   retryAttempts: number;
 };

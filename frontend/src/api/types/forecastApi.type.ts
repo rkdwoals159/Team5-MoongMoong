@@ -14,16 +14,18 @@ export type DiseaseCode =
   | "END"
   | "INF";
 
-export type DiseaseCodeResponse = NonNullable<
+export type GetDiseaseRankingResponse = NonNullable<
   components["schemas"]["PetDiseaseRankingResponse"]["diseases"]
 >;
 
-export type AnnualDiseases = NonNullable<components["schemas"]["GroupMedicalStatisticsResponse"]>;
+export type GetDiseaseStatisticsResponse = NonNullable<
+  components["schemas"]["GroupMedicalStatisticsResponse"]
+>;
 
-export type TreatmentsResponse = NonNullable<
+export type GetDiseaseCostResponse = NonNullable<
   components["schemas"]["TreatmentsResponse"]["treatments"]
 >;
 
-export type AIRecommendationResponse = NonNullable<
+export type GetAIRecommendationResponse = NonNullable<
   components["schemas"]["GroupMedicalInfoResponse"]
 >;

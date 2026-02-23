@@ -47,7 +47,7 @@ export function resolveCallbackEnv(request: NextRequest) {
   };
 }
 
-export async function requestGoogleAccessToken(
+export async function postGoogleAccessToken(
   authCode: string,
   env: CallbackEnv,
 ): Promise<GoogleCallResult<{ accessToken: string }>> {
@@ -76,7 +76,7 @@ export async function requestGoogleAccessToken(
   return { ok: true, data: { accessToken } };
 }
 
-export async function requestGoogleUserEmail(
+export async function getGoogleUserEmail(
   accessToken: string,
 ): Promise<GoogleCallResult<{ email: string }>> {
   const userInfoResponse = await fetch(GOOGLE_USER_INFO_URL, {

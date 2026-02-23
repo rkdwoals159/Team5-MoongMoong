@@ -14,6 +14,7 @@ import {
   CategoryAnalysisChartCard,
   MedicalAnalysisChartCard,
 } from "./_components/chart/AnalysisCharts";
+import { safeServerFetch } from "@/lib/api";
 
 import type { AnalysisPageProps } from "./_types/componentPropsType.type";
 
@@ -22,10 +23,10 @@ export default async function AnalysisPage({ searchParams }: AnalysisPageProps) 
   const { startDate, endDate } = resolveAnalysisRange(resolvedSearchParams);
 
   //page.tsx에서 API 통합관리를 위해 promise를 사용. await은 내부 컴포넌트에서 처리하도록 함.
-  const categoryPromise = getCategoryAnalysis(startDate, endDate);
-  const medicalPromise = getMedicalAnalysis(startDate, endDate);
-  const expensesPromise = getGroupExpenses(startDate, endDate);
-  const petInfoPromise = getPetInfo();
+  const categoryPromise = safeServerFetch(() => getCategoryAnalysis(startDate, endDate));
+  const medicalPromise = safeServerFetch(() => getMedicalAnalysis(startDate, endDate));
+  const expensesPromise = safeServerFetch(() => getGroupExpenses(startDate, endDate));
+  const petInfoPromise = safeServerFetch(() => getPetInfo());
 
   return (
     <article className="flex flex-col gap-850 px-850 pb-850">

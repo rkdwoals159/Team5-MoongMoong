@@ -1,11 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-type UseCountUpOptions = {
-  duration?: number;
-  disabled?: boolean;
-};
+import type { UseCountUpOptions } from "@/app/(sidebar)/saving/_types";
 
 /**
  * 숫자를 0에서 목표값까지 애니메이션하는 훅

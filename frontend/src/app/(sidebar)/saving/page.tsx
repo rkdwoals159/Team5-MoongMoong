@@ -1,16 +1,27 @@
 import SavingClient from "./_components/SavingClient";
 import MakeNewSaving from "./_components/piggybank/MakeNewSaving";
-import { getBankInfoServer, getBankCoins } from "@/api/savingApiQueries";
+import { getBank, getBankCoins } from "@/api/savingApi";
 import { getPetInfo } from "@/api/analysisApi";
+import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
+import { safeServerFetch } from "@/lib/api";
 
 export default async function SavingPage() {
-  const bankInfo = await getBankInfoServer();
+  const bankInfoResult = await safeServerFetch(() => getBank());
+  if (bankInfoResult instanceof Error) {
+    return <ServerComponentErrorFallback message={bankInfoResult.message} />;
+  }
+  const bankInfo = bankInfoResult;
 
   if (!bankInfo) {
     return <MakeNewSaving />;
   }
 
-  const [coinsResponse, petInfoResponse] = await Promise.all([getBankCoins(), getPetInfo()]);
+  const savingsResult = await safeServerFetch(() => Promise.all([getBankCoins(), getPetInfo()]));
+  if (savingsResult instanceof Error) {
+    return <ServerComponentErrorFallback message={savingsResult.message} />;
+  }
+
+  const [coinsResponse, petInfoResponse] = savingsResult;
   return (
     <>
       <main className="flex gap-700 flex-1 min-h-0 min-w-0">

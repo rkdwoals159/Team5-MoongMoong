@@ -85,6 +85,26 @@ export interface paths {
     patch: operations["updateBank"];
     trace?: never;
   };
+  "/api/group/bank/nudge": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * 재촉하기
+     * @description 같은 그룹원들에게 저금하기를 재촉합니다.
+     */
+    post: operations["createGroupNudge"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/group/bank/coins": {
     parameters: {
       query?: never;
@@ -1555,6 +1575,8 @@ export interface components {
         | "INF"
       )[];
     };
+    /** @description 알림 내용 */
+    GroupEventPayload: Record<string, never>;
     /** @description 알림 내역 조회 응답 */
     NotificationReadResponse: {
       /**
@@ -1590,14 +1612,13 @@ export interface components {
        * @example 1
        */
       notificationId?: number;
-      /** @description 알림 내용 */
-      content?: string;
+      payload?: components["schemas"]["GroupEventPayload"];
       /**
        * @description 이벤트 종류
        * @example SAVING
        * @enum {string}
        */
-      eventType?: "SAVING";
+      eventType?: "SAVING" | "NUDGE" | "AI_ADVICE_CREATED";
       /**
        * Format: date-time
        * @description 생성 시간
@@ -2401,6 +2422,42 @@ export interface operations {
       };
       /** @description 저금통이 아직 존재하지 않음 */
       404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  createGroupNudge: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 재촉하기 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
         headers: {
           [name: string]: unknown;
         };

@@ -4,9 +4,14 @@ import GroupInviteUrlCard from "./GroupInviteUrlCard";
 import FamilyMemberList from "./FamilyMemberList";
 import InviteUrlForm from "./InviteUrlForm";
 import { getGroupCrew } from "@/app/(sidebar)/family/_api";
+import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
+import { safeServerFetch } from "@/lib/api";
 
 export default async function FamilyManagePageView() {
-  const groupCrew = await getGroupCrew();
+  const groupCrew = await safeServerFetch(() => getGroupCrew());
+  if (groupCrew instanceof Error) {
+    return <ServerComponentErrorFallback message={groupCrew.message} />;
+  }
 
   return (
     <div className="flex flex-col gap-600">

@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import InfoTooltip from "@/components/common/InfoTooltip/InfoTooltip";
-import ErrorBoundary from "@/components/ui/ErrorBoundary/ErrorBoundary";
 import {
   AI_RECOMMENDATION_DESCRIPTION,
   ANNUAL_DISEASE_SUBTITLE,
@@ -30,11 +29,9 @@ export default function AnnualDiseaseRisk() {
           <span className={unitClasses}>{ANNUAL_DISEASE_UNIT}</span>
         </div>
 
-        <ErrorBoundary refreshOnReset>
-          <Suspense fallback={<AnnualDiseaseRiskSkeleton />}>
-            <AnnualDiseaseRiskContent />
-          </Suspense>
-        </ErrorBoundary>
+        <Suspense fallback={<AnnualDiseaseRiskSkeleton />}>
+          <AnnualDiseaseRiskContent />
+        </Suspense>
       </div>
     </section>
   );

@@ -1,6 +1,6 @@
 import { authCookies, redirectToLogin } from "@/app/api/auth/_lib";
 import { requireBaseUrl } from "@/app/api/auth/_utils";
-import { client } from "@/lib/api";
+import { postAuthRefresh } from "@/api/authBackendApi";
 import type { NextRequest } from "next/server";
 
 export function extractBearerToken(headers: Headers) {
@@ -35,24 +35,18 @@ export async function refreshTokens(request: NextRequest) {
     return { ok: false, response: baseEnv.response } as const;
   }
   const accessToken = request.cookies.get(authCookies.access)?.value;
-  const refreshToken = request.cookies.get(authCookies.refresh)?.value;
   if (!accessToken) {
     return { ok: false, response: redirectToLogin(request), reason: "access token is missing" };
   }
+  const refreshToken = request.cookies.get(authCookies.refresh)?.value;
   if (!refreshToken) {
     return { ok: false, response: redirectToLogin(request), reason: "refresh token is missing" };
   }
 
-  const { response: refreshResponse } = await client.POST("/api/auth/refresh", {
-    body: {
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    },
-  });
-
-  if (!refreshResponse.ok) {
+  try {
+    const refreshResponse = await postAuthRefresh(accessToken, refreshToken);
+    return { ok: true, headers: refreshResponse.headers } as const;
+  } catch {
     return { ok: false, response: redirectToLogin(request), reason: "refresh token is invalid" };
   }
-
-  return { ok: true, headers: refreshResponse.headers } as const;
 }

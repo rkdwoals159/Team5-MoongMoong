@@ -2,10 +2,32 @@ import type { components } from "@schema";
 import type { MAIN_CATEGORIES } from "@/app/(sidebar)/dashboard/_constants";
 import type { ExpenseData } from "@/app/(sidebar)/dashboard/_types";
 
-export type MemberExpensesUpsertRequest = components["schemas"]["MemberExpensesUpsertRequest"];
-export type LastMonthComparisonResponse = components["schemas"]["LastMonthComparisonResponse"];
+export type PatchExpensesRequest = components["schemas"]["MemberExpensesUpsertRequest"];
+export type MemberExpensesUpsertRequest = PatchExpensesRequest;
 
-export type SummaryData = {
+export type GetCompareLastMonthComparisonResponse =
+  components["schemas"]["LastMonthComparisonResponse"];
+export type LastMonthComparisonResponse = GetCompareLastMonthComparisonResponse;
+
+export type GetExpenseByPeriodExpense = {
+  selected?: boolean | null;
+  expenseId: number;
+  spentAt: string;
+  usage: string;
+  cost?: number | null;
+  mainCategory?: string | null;
+  subCategory?: string;
+  memo: string;
+  modifiedAt?: string;
+};
+
+export type GetExpensesByPeriodResponse = {
+  total: number;
+  expenses: GetExpenseByPeriodExpense[];
+};
+export type ExpensesByPeriodResponse = GetExpensesByPeriodResponse;
+
+export type GetCompareLastMonthResponse = {
   progressData: {
     totalRatio?: number | null;
     medicalRatio?: number | null;
@@ -13,6 +35,7 @@ export type SummaryData = {
   };
   petImageUrl: string;
 };
+export type SummaryData = GetCompareLastMonthResponse;
 
 export type CategorizeExpenseResponse = {
   requestId: string;

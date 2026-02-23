@@ -7,10 +7,11 @@ import type { PetUpdateRequest } from "@/api/types/settingsApi.type";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import type { DogBreedCode } from "@/constants";
 import type { DiseaseCode } from "@/api/types/forecastApi.type";
-import type { PetInfoResponse } from "@/api/types/perInfoApi.type";
+import type { GetPetInfoResponse } from "@/api/types/perInfoApi.type";
 import type { DogFormValues } from "@/app/(sidebar)/settings/types";
+import { getErrorMessage } from "@/lib/api/errorMessage";
 
-export default function useDogSettingsForm(dog: PetInfoResponse) {
+export default function useDogSettingsForm(dog: GetPetInfoResponse) {
   const { showToast } = useToast();
   const [original, setOriginal] = useState<DogFormValues>(() => toInitialValues(dog));
   const [petName, setPetName] = useState(original.petName);
@@ -76,14 +77,16 @@ export default function useDogSettingsForm(dog: PetInfoResponse) {
       diseases,
     };
 
-    const response = await updatePetInfo(body);
-    if (!response) {
-      showToast({ variant: "error", message: "반려견 정보 수정에 실패했어요." });
-      return;
+    try {
+      await updatePetInfo(body);
+      setOriginal({ petName, breed, gender, birthDate, district, diseases: [...diseases] });
+      showToast({ variant: "success", message: "반려견 정보가 저장됐어요." });
+    } catch (error) {
+      showToast({
+        variant: "error",
+        message: getErrorMessage(error, "반려견 정보 수정에 실패했어요."),
+      });
     }
-
-    setOriginal({ petName, breed, gender, birthDate, district, diseases: [...diseases] });
-    showToast({ variant: "success", message: "반려견 정보가 저장됐어요." });
   }
 
   return {
@@ -107,7 +110,7 @@ export default function useDogSettingsForm(dog: PetInfoResponse) {
 }
 
 // 내장 함수
-function toInitialValues(dog: PetInfoResponse): DogFormValues {
+function toInitialValues(dog: GetPetInfoResponse): DogFormValues {
   return {
     petName: dog.petName ?? "",
     breed: (dog.breed ?? "ETC") as DogBreedCode,

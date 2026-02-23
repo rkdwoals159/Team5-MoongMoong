@@ -1,12 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-
-type UseOutsideClickOptions<T extends Element> = {
-  isActive: boolean;
-  refs: Array<React.RefObject<T | null>>;
-  onOutside: () => void;
-};
+import type { UseOutsideClickOptions } from "@/types/common";
 
 export const useOutsideClick = <T extends Element>({
   isActive,

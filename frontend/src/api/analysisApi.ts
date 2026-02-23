@@ -1,9 +1,9 @@
 import { client } from "@/lib/api";
 import type {
-  CategoryAnalysisResult,
-  GroupExpenseResponse,
-  MedicalAnalysisResult,
-  PetReadResponse,
+  GetCategoryAnalysisResponse,
+  GetAnalysisGroupExpensesItem,
+  GetMedicalAnalysisResponse,
+  GetPetInfoResponse,
 } from "@/api/types/analysisApi.type";
 /**
  * 그룹 소비내역 조회
@@ -14,16 +14,12 @@ import type {
 export async function getGroupExpenses(
   startDate: string,
   endDate: string,
-): Promise<GroupExpenseResponse[]> {
-  const { data, error } = await client.GET("/api/expenses/group", {
+): Promise<GetAnalysisGroupExpensesItem[]> {
+  const { data } = await client.GET("/api/expenses/group", {
     params: { query: { startDate, endDate } },
   });
-  if (error || !data) {
-    console.error(error?.code, error?.message, error?.status);
-    return [];
-  }
 
-  return data.expenses ?? [];
+  return data?.expenses ?? [];
 }
 
 /**
@@ -35,17 +31,12 @@ export async function getGroupExpenses(
 export async function getCategoryAnalysis(
   startDate: string,
   endDate: string,
-): Promise<CategoryAnalysisResult> {
-  const { data, error } = await client.GET("/api/expenses/group/analysis/category", {
+): Promise<GetCategoryAnalysisResponse> {
+  const { data } = await client.GET("/api/expenses/group/analysis/category", {
     params: { query: { startDate, endDate } },
   });
 
-  if (error || !data) {
-    console.error(error?.code, error?.message, error?.status);
-    return { total: 0, items: [] };
-  }
-
-  return { total: data.total ?? 0, items: data.categoryAnalysis ?? [] };
+  return { total: data?.total ?? 0, items: data?.categoryAnalysis ?? [] };
 }
 
 /**
@@ -58,29 +49,20 @@ export async function getCategoryAnalysis(
 export async function getMedicalAnalysis(
   startDate: string,
   endDate: string,
-): Promise<MedicalAnalysisResult> {
-  const { data, error } = await client.GET("/api/expenses/group/analysis/medical", {
+): Promise<GetMedicalAnalysisResponse> {
+  const { data } = await client.GET("/api/expenses/group/analysis/medical", {
     params: { query: { startDate, endDate } },
   });
-  if (error || !data) {
-    console.error(error?.code, error?.message, error?.status);
-    return { total: 0, items: [] };
-  }
 
-  return { total: data.totalMedical ?? 0, items: data.medicalAnalysis ?? [] };
+  return { total: data?.totalMedical ?? 0, items: data?.medicalAnalysis ?? [] };
 }
 
 /**
  * 반려동물 정보 조회
  * @returns : 반려동물 정보
  */
-export async function getPetInfo(): Promise<PetReadResponse | null> {
-  const { data, error } = await client.GET("/api/pet");
+export async function getPetInfo(): Promise<GetPetInfoResponse | null> {
+  const { data } = await client.GET("/api/pet");
 
-  if (error || !data) {
-    console.error(error?.code, error?.message, error?.status);
-    return null;
-  }
-
-  return data;
+  return data ?? null;
 }

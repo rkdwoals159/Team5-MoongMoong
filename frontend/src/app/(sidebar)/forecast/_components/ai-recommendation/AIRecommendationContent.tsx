@@ -1,11 +1,17 @@
 import { getAIRecommendation } from "@/api/forecastApi";
+import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
+import { safeServerFetch } from "@/lib/api";
 
 /**
  * AI 의사 권장사항 컴포넌트
  * @returns AI 의사 권장사항 컴포넌트
  */
 export default async function AIRecommendationContent() {
-  const recommendation = await getAIRecommendation();
+  const recommendation = await safeServerFetch(() => getAIRecommendation());
+
+  if (recommendation instanceof Error) {
+    return <ServerComponentErrorFallback message={recommendation.message} />;
+  }
 
   // recommendation은 있지만 advice나 expectedCost가 없으면 정보 없음 메시지 표시
   if (!recommendation.advice && recommendation.expectedCost == null) {

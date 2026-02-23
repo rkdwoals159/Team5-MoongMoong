@@ -47,4 +47,15 @@ describe("AnalysisTable", () => {
 
     expect(container.textContent).toContain("우리 가족이 반려동물에게 쓴 비용");
   });
+
+  it("반려동물 조회 중 에러가 발생하면 서버 폴백을 노출한다", async () => {
+    const ui = await AnalysisTable({
+      petInfoPromise: Promise.resolve(new Error("반려동물 조회 실패")),
+      expensesPromise: Promise.resolve(rows),
+    });
+
+    const { container } = render(ui);
+
+    expect(container.textContent).toContain("반려동물 조회 실패");
+  });
 });

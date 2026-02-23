@@ -3,6 +3,8 @@ import SettingsManageModalView from "@/app/(sidebar)/settings/_components/Settin
 import { getMemberInfoServer } from "@/api/settingsApiQueries";
 import { getPetInfo } from "@/api/petInfoApi";
 import type { SettingsTab } from "@/app/(sidebar)/settings/types";
+import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
+import { safeServerFetch } from "@/lib/api";
 
 export default async function InterceptedSettingsPage({
   searchParams,
@@ -13,8 +15,16 @@ export default async function InterceptedSettingsPage({
   const currentTabParam = resolved?.tab;
   const currentTab: SettingsTab = currentTabParam === "dog" ? "dog" : "account";
 
-  const account = currentTab === "account" ? await getMemberInfoServer() : null;
-  const dog = currentTab === "dog" ? await getPetInfo() : null;
+  const account =
+    currentTab === "account" ? await safeServerFetch(() => getMemberInfoServer()) : null;
+  if (account instanceof Error) {
+    return <ServerComponentErrorFallback message={account.message} />;
+  }
+
+  const dog = currentTab === "dog" ? await safeServerFetch(() => getPetInfo()) : null;
+  if (dog instanceof Error) {
+    return <ServerComponentErrorFallback message={dog.message} />;
+  }
 
   return (
     <SettingsModal>

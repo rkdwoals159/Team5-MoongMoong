@@ -1,3 +1,5 @@
+import type { RefObject } from "react";
+
 export type PanelLayout = {
   leftPx: number;
   topPx: number;
@@ -12,4 +14,9 @@ export type CalculatePanelLayoutParams = {
   boundaryRight: number;
   boundaryTop: number;
   boundaryBottom: number;
+};
+
+export type PanelLayoutElementRefs = {
+  panelAnchorRef: RefObject<HTMLElement | null>;
+  panelContainerRef: RefObject<HTMLElement | null>;
 };

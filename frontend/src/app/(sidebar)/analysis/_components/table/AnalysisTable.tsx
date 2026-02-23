@@ -3,14 +3,23 @@ import { formatAmount } from "@/utils/amount";
 import { buildExpenseColumns } from "@/app/(sidebar)/analysis/_lib/ExpenseColumns";
 import type { AnalysisTableSectionProps } from "@/app/(sidebar)/analysis/_types/componentPropsType.type";
 import AnalysisTableEmpty from "./AnalysisTableEmpty";
+import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
 
 export default async function AnalysisTable({
   petInfoPromise,
   expensesPromise,
 }: AnalysisTableSectionProps) {
   const petInfo = await petInfoPromise;
-  const petName = petInfo?.petName ?? "반려동물";
+  if (petInfo instanceof Error) {
+    return <ServerComponentErrorFallback message={petInfo.message} />;
+  }
+
   const rows = await expensesPromise;
+  if (rows instanceof Error) {
+    return <ServerComponentErrorFallback message={rows.message} />;
+  }
+
+  const petName = petInfo?.petName ?? "반려동물";
   const totalCost = rows.reduce((sum, row) => sum + (row.cost ?? 0), 0);
   const totalLabel = `총 ${formatAmount(totalCost)}`;
 

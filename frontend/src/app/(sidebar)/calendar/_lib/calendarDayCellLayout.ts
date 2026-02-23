@@ -1,4 +1,3 @@
-import type { RefObject } from "react";
 import {
   BOUNDARY_INSET,
   PANEL_ABSOLUTE_MIN_TABLE_HEIGHT,
@@ -12,12 +11,11 @@ import {
   SAFE_VIEWPORT_MARGIN,
   HORIZONTAL_EPSILON,
 } from "@/app/(sidebar)/calendar/_constants/calendarDayCell";
-import type { CalculatePanelLayoutParams, PanelLayout } from "@/app/(sidebar)/calendar/_types";
-
-export type PanelLayoutElementRefs = {
-  panelAnchorRef: RefObject<HTMLElement | null>;
-  panelContainerRef: RefObject<HTMLElement | null>;
-};
+import type {
+  CalculatePanelLayoutParams,
+  PanelLayout,
+  PanelLayoutElementRefs,
+} from "@/app/(sidebar)/calendar/_types";
 
 export function calculatePanelLayout({
   buttonRect,

@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createNewSaving } from "@/api/savingApiActions";
+import { postBank } from "@/api/savingApi";
+import { API_ERROR_MESSAGES } from "@/api/constants";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
+import { executeWithToastError } from "@/lib/api/executeWithToastError";
 
 export function useCreateSaving() {
   const router = useRouter();
@@ -14,23 +16,16 @@ export function useCreateSaving() {
     setIsSubmitting(true);
 
     try {
-      const response = await createNewSaving(amount);
-      if (!response) {
-        showToast({
-          variant: "error",
-          message: "저금통 생성에 실패했어요.",
-        });
-        return;
-      }
-      showToast({
-        variant: "success",
-        message: "저금통 생성에 성공했어요.",
-      });
-      router.refresh();
-    } catch {
-      showToast({
-        variant: "error",
-        message: "저금통 생성 중 오류가 발생했어요.",
+      await executeWithToastError(() => postBank(amount), {
+        showToast,
+        fallbackMessage: API_ERROR_MESSAGES.BANK_CREATE,
+        onSuccess: () => {
+          showToast({
+            variant: "success",
+            message: "저금통 생성에 성공했어요.",
+          });
+          router.refresh();
+        },
       });
     } finally {
       setIsSubmitting(false);

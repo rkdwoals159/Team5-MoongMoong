@@ -1,16 +1,5 @@
-import { NextResponse } from "next/server";
-
+import type { EnvCheck } from "@/app/api/auth/_types";
 import { jsonError } from "./json";
-
-type EnvCheck =
-  | {
-      ok: true;
-      value: string;
-    }
-  | {
-      ok: false;
-      response: NextResponse;
-    };
 
 export function requireEnv(value: string | undefined, message: string): EnvCheck {
   if (!value) {

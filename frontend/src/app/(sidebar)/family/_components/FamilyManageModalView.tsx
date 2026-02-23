@@ -4,9 +4,14 @@ import GroupInviteUrlCard from "./GroupInviteUrlCard";
 import FamilyMemberList from "./FamilyMemberList";
 import { getGroupCrew } from "@/app/(sidebar)/family/_api";
 import InviteUrlForm from "./InviteUrlForm";
+import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
+import { safeServerFetch } from "@/lib/api";
 
 export default async function FamilyManageModalView() {
-  const groupCrew = await getGroupCrew();
+  const groupCrew = await safeServerFetch(() => getGroupCrew());
+  if (groupCrew instanceof Error) {
+    return <ServerComponentErrorFallback message={groupCrew.message} />;
+  }
 
   return (
     <div className={cardClasses}>

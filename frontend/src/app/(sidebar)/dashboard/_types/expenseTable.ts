@@ -29,7 +29,17 @@ export type UseExpensesV2Return = {
   resetKey: number;
 };
 
-type MemberExpensesUpsertRequest = components["schemas"]["MemberExpensesUpsertRequest"];
+export type MemberExpensesUpsertRequest = components["schemas"]["MemberExpensesUpsertRequest"];
+export type MemberExpenseUpsertRequest = components["schemas"]["MemberExpenseUpsertRequest"];
+
+export type BuildPatchPayloadResult = {
+  payload: MemberExpensesUpsertRequest;
+  invalidCount: number;
+};
+
+export type DashboardTableProps = {
+  tableClassName?: string;
+};
 
 /**
  * 셀 단위 업데이트 (localId로 행 식별)

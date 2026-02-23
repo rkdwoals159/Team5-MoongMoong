@@ -17,3 +17,8 @@ export type RefreshAuthTokenResponse = ApiCallResult<
   components["schemas"]["AuthTokenRefreshResponse"]
 >;
 export type LogoutAuthResponse = ApiCallResult;
+
+export type PostAuthLoginResult = {
+  data: AuthLoginResponse | undefined;
+  response: Response;
+};

@@ -1,5 +1,7 @@
 import type { components } from "@schema";
 
+export type SummaryDataState = "noData" | "decrease" | "increase";
+
 /**
  * 총지출, 의료비 지출 데이터 타입
  */

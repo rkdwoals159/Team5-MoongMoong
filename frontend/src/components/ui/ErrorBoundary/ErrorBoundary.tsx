@@ -34,7 +34,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   };
 
   componentDidUpdate(prevProps: ErrorBoundaryProps, prevState: ErrorBoundaryState) {
-    // 에러에서 복구되었으면 (prev error 가 null 이 아니고 현재 error 가 null 이면) 연속 재시도 횟수 초기화
+    // 에러에서 복구되었으면 연속 재시도 횟수 초기화
     if (prevState.error !== null && this.state.error === null) {
       this.setState({ retryAttempts: 0 });
       return;
@@ -59,22 +59,18 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     const { error, retryKey, retryAttempts } = this.state;
 
     if (error !== null) {
-      // 에러 접근 가능한 fallback 컴포넌트
       if (FallbackComponent) {
         return <FallbackComponent error={error} resetErrorBoundary={this.resetErrorBoundary} />;
       }
 
-      // 정적 React Node
       if (fallback !== undefined) {
         return fallback;
       }
 
-      // 기본 fallback 컴포넌트
       return (
         <DefaultErrorFallback
           message={message}
           onReset={this.resetErrorBoundary}
-          refreshOnReset={this.props.refreshOnReset}
           retryAttempts={retryAttempts}
         />
       );

@@ -1,17 +1,17 @@
 import type { components } from "@schema";
 
-export type GroupExpenseResponse = components["schemas"]["GroupExpenseResponse"];
-export type CategoryCostResponse = components["schemas"]["CategoryCostResponse"];
-export type MedicalAnalysisResponse = components["schemas"]["MedicalAnalysisResponse"];
+export type GetAnalysisGroupExpensesItem = components["schemas"]["GroupExpenseResponse"];
+export type GetCategoryAnalysisItem = components["schemas"]["CategoryCostResponse"];
+export type GetMedicalAnalysisItem = components["schemas"]["MedicalAnalysisResponse"];
 
-export type CategoryAnalysisResult = {
+export type GetCategoryAnalysisResponse = {
   total: number;
-  items: CategoryCostResponse[];
+  items: GetCategoryAnalysisItem[];
 };
 
-export type MedicalAnalysisResult = {
+export type GetMedicalAnalysisResponse = {
   total: number;
-  items: MedicalAnalysisResponse[];
+  items: GetMedicalAnalysisItem[];
 };
 
-export type PetReadResponse = components["schemas"]["PetReadResponse"];
+export type GetPetInfoResponse = components["schemas"]["PetReadResponse"];

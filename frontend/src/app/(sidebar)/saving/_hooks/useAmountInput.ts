@@ -1,17 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import type { UseAmountInputOptions } from "@/app/(sidebar)/saving/_types";
 
 const DEFAULT_MAX_INPUT_LENGTH = 12;
 const INPUT_LENGTH_BUFFER = 2; // max 초과 입력 시 즉시 차단 대신 경고를 보여주기 위한 여유 자릿수
-
-export type UseAmountInputOptions = {
-  initialValue?: number;
-  min?: number;
-  minWarningMessage?: string;
-  max?: number;
-  maxWarningMessage?: string;
-};
 
 export function useAmountInput(options: UseAmountInputOptions = {}) {
   const { initialValue, min, minWarningMessage, max, maxWarningMessage } = options;

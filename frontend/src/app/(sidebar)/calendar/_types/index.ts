@@ -2,7 +2,11 @@ import type { CSSProperties, RefObject } from "react";
 import type { components } from "@/types/schema";
 
 export type { CalendarErrorProps } from "./calendarError";
-export type { CalculatePanelLayoutParams, PanelLayout } from "./calendarDayCell";
+export type {
+  CalculatePanelLayoutParams,
+  PanelLayout,
+  PanelLayoutElementRefs,
+} from "./calendarDayCell";
 export type ExpenseCategory =
   | "미용"
   | "의료비"

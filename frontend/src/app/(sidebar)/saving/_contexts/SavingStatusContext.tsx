@@ -1,12 +1,7 @@
 "use client";
 
-import type { SavingStatus } from "@/app/(sidebar)/saving/_types";
-import { createContext, Dispatch, PropsWithChildren, SetStateAction } from "react";
-
-type SavingStatusContextType = {
-  status: SavingStatus;
-  setStatus: Dispatch<SetStateAction<SavingStatus>>;
-};
+import type { SavingStatusContextType } from "@/app/(sidebar)/saving/_types";
+import { createContext, type PropsWithChildren } from "react";
 
 export const SavingStatusContext = createContext<SavingStatusContextType | null>(null);
 

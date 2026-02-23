@@ -63,3 +63,21 @@ export type UseSavingPaymentOptions = {
   onSuccess: () => void;
   handleDrop: (name: string, amount: number, createdAt: string, targetAmount: number) => void;
 };
+
+export type SavingStatusContextType = {
+  status: SavingStatus;
+  setStatus: React.Dispatch<React.SetStateAction<SavingStatus>>;
+};
+
+export type UseAmountInputOptions = {
+  initialValue?: number;
+  min?: number;
+  minWarningMessage?: string;
+  max?: number;
+  maxWarningMessage?: string;
+};
+
+export type UseCountUpOptions = {
+  duration?: number;
+  disabled?: boolean;
+};

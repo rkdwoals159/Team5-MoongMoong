@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
-import ErrorBoundary from "@/components/ui/ErrorBoundary/ErrorBoundary";
 import SavingSkeleton from "@/app/(sidebar)/saving/_components/SavingSkeleton";
 
 export const metadata: Metadata = {
@@ -16,9 +15,7 @@ export default function SavingLayout({ children }: { children: React.ReactNode }
         <div className="py-300 text-neutral-900">
           <h1 className="typo-headline-s-bold">저금통</h1>
         </div>
-        <ErrorBoundary message="저금통 정보를 불러오는데 실패했어요." refreshOnReset>
-          <Suspense fallback={<SavingSkeleton />}>{children}</Suspense>
-        </ErrorBoundary>
+        <Suspense fallback={<SavingSkeleton />}>{children}</Suspense>
       </div>
     </>
   );

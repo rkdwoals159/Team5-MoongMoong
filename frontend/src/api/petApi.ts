@@ -1,26 +1,27 @@
 import { client } from "@/lib/api";
-import type { PetCreateRequest, PetInfoResponse } from "@/api/types";
+import type { PetCreateRequest, PetCreateResponse, PetInfoResponse } from "@/api/types";
 
 /**
  * 로그인 사용자의 반려동물 정보를 조회한다.
  */
 export async function getPetInfo(): Promise<PetInfoResponse | null> {
-  const { data, error } = await client.GET("/api/pet");
-
-  if (error || !data) {
-    console.error(error?.code, error?.message, error?.status);
+  try {
+    const { data } = await client.GET("/api/pet");
+    return data ?? null;
+  } catch {
     return null;
   }
-
-  return data;
 }
 
 /**
  * 반려동물 생성 API를 호출한다.
  */
-export async function postCreatePet(payload: PetCreateRequest) {
-  const { data, error, response } = await client.POST("/api/pet", {
+export async function postCreatePet(payload: PetCreateRequest): Promise<PetCreateResponse> {
+  const { data } = await client.POST("/api/pet", {
     body: payload,
   });
-  return { data, error, response };
+  if (!data) {
+    throw new Error("반려동물 정보를 저장하지 못했어요.");
+  }
+  return data;
 }

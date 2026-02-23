@@ -1,37 +1,6 @@
-export type DogBreedCode =
-  | "GRE"
-  | "DAL"
-  | "DAS"
-  | "DOB"
-  | "GOL"
-  | "LAB"
-  | "MAL"
-  | "BUL"
-  | "BEA"
-  | "BIC"
-  | "SHE"
-  | "SCH"
-  | "MIL"
-  | "MIS"
-  | "HUS"
-  | "HOU"
-  | "GER"
-  | "JIN"
-  | "CHS"
-  | "CHL"
-  | "COC"
-  | "TER"
-  | "POM"
-  | "POO"
-  | "SHI"
-  | "WEL"
-  | "ETC";
+import type { DogBreed } from "@/types/common";
 
-export type DogBreed = {
-  code: DogBreedCode;
-  koName: string;
-  enName: string;
-};
+export type { DogBreedCode } from "@/types/common";
 
 /**
  * 반려견 견종 매핑 테이블

@@ -10,11 +10,16 @@ import {
 } from "@/app/(sidebar)/family/_constants";
 import { getPetInfo } from "@/api/petInfoApi";
 import { BREEDS } from "@/app/onBoarding/_constants/dataTable";
+import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
+import { safeServerFetch } from "@/lib/api";
 
 export default async function DogInfoSection({ size = "compact" }: DogInfoSectionProps) {
   const isLarge = size === "large";
 
-  const petInfo = await getPetInfo();
+  const petInfo = await safeServerFetch(() => getPetInfo());
+  if (petInfo instanceof Error) {
+    return <ServerComponentErrorFallback message={petInfo.message} />;
+  }
 
   if (!petInfo) {
     return <DefaultDogInfoSection size={size} />;

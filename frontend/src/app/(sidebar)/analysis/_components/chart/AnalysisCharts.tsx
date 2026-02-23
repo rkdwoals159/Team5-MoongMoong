@@ -3,6 +3,7 @@ import { formatAmount } from "@/utils/amount";
 import CategoryAnalysisChart from "./CategoryAnalysisChart";
 import MedicalAnalysisChart from "./MedicalAnalysisChart";
 import { formatRatio } from "@/app/(sidebar)/analysis/_utils";
+import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
 
 import type { components } from "@/types/schema";
 import type {
@@ -13,7 +14,12 @@ import type {
 export async function CategoryAnalysisChartCard({
   categoryPromise,
 }: CategoryAnalysisChartCardProps) {
-  const { items: categoryItems } = await categoryPromise;
+  const categoryData = await categoryPromise;
+  if (categoryData instanceof Error) {
+    return <ServerComponentErrorFallback message={categoryData.message} />;
+  }
+
+  const { items: categoryItems } = categoryData;
   const topCategory = categoryItems.reduce<components["schemas"]["CategoryCostResponse"] | null>(
     (current, item) => {
       if (!current || (item.ratio && item.ratio > (current?.ratio ?? 0))) return item;
@@ -44,8 +50,17 @@ export async function MedicalAnalysisChartCard({
   medicalPromise,
 }: MedicalAnalysisChartCardProps) {
   const petInfo = await petInfoPromise;
+  if (petInfo instanceof Error) {
+    return <ServerComponentErrorFallback message={petInfo.message} />;
+  }
+
+  const medicalData = await medicalPromise;
+  if (medicalData instanceof Error) {
+    return <ServerComponentErrorFallback message={medicalData.message} />;
+  }
+
   const petName = petInfo?.petName ?? "반려동물";
-  const { items: medicalItems, total: medicalTotal } = await medicalPromise;
+  const { items: medicalItems, total: medicalTotal } = medicalData;
   const medicalTotalLabel = medicalTotal > 0 ? `총 ${formatAmount(medicalTotal)}` : "-";
 
   return (

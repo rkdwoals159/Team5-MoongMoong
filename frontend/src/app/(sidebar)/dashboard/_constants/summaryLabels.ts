@@ -3,6 +3,7 @@ import DoctorIcon from "@/assets/icons/dashboard/img_doctor.svg";
 import GraphDegradeIcon from "@/assets/icons/dashboard/img_graph_degrade.svg";
 import GraphRisingIcon from "@/assets/icons/dashboard/img_graph_rising.svg";
 import GraphStraightIcon from "@/assets/icons/dashboard/img_graph_straight.svg";
+import type { SummaryDataState } from "@/app/(sidebar)/dashboard/_types/summary";
 
 export function getLabelNoData(petName: string) {
   return {
@@ -21,8 +22,6 @@ export function getLabelWithData(petName: string) {
 export function getSummaryValue(data: number | null): string {
   return data === null ? "-" : `${Math.abs(data)}% ${data < 0 ? "줄었어요" : "늘었어요"}`;
 }
-
-export type SummaryDataState = "noData" | "decrease" | "increase";
 
 const getSummaryDataState = (data: number | null): SummaryDataState =>
   data === null ? "noData" : data < 0 ? "decrease" : "increase";

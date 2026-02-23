@@ -12,10 +12,7 @@ import { mapFormDataToPetPayload } from "@/app/onBoarding/_lib";
 async function createPetAction(formData: FormData) {
   "use server";
   const payload = mapFormDataToPetPayload(formData);
-  const { error, response } = await postCreatePet(payload);
-  if (error || !response.ok) {
-    throw new Error("반려동물 정보를 저장하지 못했어요.");
-  }
+  await postCreatePet(payload);
   redirect("/dashboard");
 }
 
@@ -30,7 +27,7 @@ export default function OnBoardingPage() {
       </header>
       <main className="mx-auto flex w-full max-w-[1440px] flex-col items-center px-[50px] pb-1100 pt-[120px]">
         <section className="w-full max-w-[500px]">
-          <ErrorBoundary refreshOnReset>
+          <ErrorBoundary>
             <OnboardingForm action={createPetAction} />
           </ErrorBoundary>
         </section>

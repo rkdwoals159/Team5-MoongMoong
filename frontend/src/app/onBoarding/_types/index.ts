@@ -1,9 +1,11 @@
 import type { components } from "@schema";
 import type { ReactNode } from "react";
+import type { ADMINISTRATIVE_DISTRICTS } from "@/app/onBoarding/_constants";
 
 export type OnboardingStep = 0 | 1 | 2;
 export type GenderValue = "M" | "F" | "";
 export type OnboardingOption = { value: string; label: string };
+export type City = keyof typeof ADMINISTRATIVE_DISTRICTS;
 
 export type OnboardingFormData = {
   petName: string;

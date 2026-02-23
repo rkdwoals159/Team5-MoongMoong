@@ -4,8 +4,8 @@ import { decodeState, getReturnTo } from "./state";
 import { redirectToLogin } from "./redirect";
 import { redirectWithAuthCookies } from "./response";
 import { runPostLoginFlow } from "./postLogin";
-import { requestGoogleAccessToken, requestGoogleUserEmail, resolveCallbackEnv } from "./oauth";
-import { client } from "@/lib/api";
+import { postAuthLogin } from "@/api/authBackendApi";
+import { postGoogleAccessToken, getGoogleUserEmail, resolveCallbackEnv } from "./oauth";
 
 function buildLoginFailureHandler(request: NextRequest, returnTo: string) {
   return (reason: string, detail?: unknown) => {
@@ -37,35 +37,41 @@ export async function handleAuthCallback(request: NextRequest) {
     return failLogin("auth code is missing");
   }
 
-  const tokenResult = await requestGoogleAccessToken(authCode, env.value);
+  const tokenResult = await postGoogleAccessToken(authCode, env.value);
   if (!tokenResult.ok) {
     return failLogin(tokenResult.reason, tokenResult.detail);
   }
   const accessToken = tokenResult.data.accessToken;
 
-  const userInfoResult = await requestGoogleUserEmail(accessToken);
+  const userInfoResult = await getGoogleUserEmail(accessToken);
   if (!userInfoResult.ok) {
     return failLogin(userInfoResult.reason, userInfoResult.detail);
   }
 
-  const { data, error, response } = await client.POST("/api/auth/login", {
-    body: { accessToken, inviteUrl: inviteUrl ?? undefined },
-  });
+  try {
+    const loginResult = await postAuthLogin(accessToken, inviteUrl);
 
-  if (error || !response.ok) {
-    return failLogin("backend login error", error ?? response);
+    if (!loginResult.data) {
+      return failLogin("backend login error: data is missing");
+    }
+
+    const postLoginResult = await runPostLoginFlow({
+      data: loginResult.data,
+      inviteUrl,
+      returnTo,
+      authorization: loginResult.response.headers.get("authorization") ?? undefined,
+    });
+
+    if (!postLoginResult.ok) {
+      return failLogin(postLoginResult.reason, postLoginResult.detail);
+    }
+
+    return redirectWithAuthCookies(
+      request,
+      postLoginResult.redirectTo,
+      loginResult.response.headers,
+    );
+  } catch (error) {
+    return failLogin("backend login error", error);
   }
-
-  const postLoginResult = await runPostLoginFlow({
-    data,
-    inviteUrl,
-    returnTo,
-    authorization: response.headers.get("authorization") ?? undefined,
-  });
-
-  if (!postLoginResult.ok) {
-    return failLogin(postLoginResult.reason, postLoginResult.detail);
-  }
-
-  return redirectWithAuthCookies(request, postLoginResult.redirectTo, response.headers);
 }

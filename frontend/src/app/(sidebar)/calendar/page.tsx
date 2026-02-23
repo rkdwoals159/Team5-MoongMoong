@@ -4,10 +4,18 @@ import CalendarHeader from "./_components/CalendarHeader";
 import { getCalendarPageProps } from "@/app/(sidebar)/calendar/_lib/getCalendarProps";
 import { getGroupExpenses } from "@/api/calendarApi";
 import PageHeader from "@/components/layout/Header/PageHeader";
+import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
+import { safeServerFetch } from "@/lib/api";
 
 export default async function CalendarPage({ searchParams }: CalendarPageProps) {
   const resolvedSearchParams = (await searchParams) ?? {};
-  const expenseMap = await getGroupExpenses(resolvedSearchParams.month);
+  const expenseMapResult = await safeServerFetch(() =>
+    getGroupExpenses(resolvedSearchParams.month),
+  );
+  if (expenseMapResult instanceof Error) {
+    return <ServerComponentErrorFallback message={expenseMapResult.message} />;
+  }
+  const expenseMap = expenseMapResult;
   const { headerProps, gridProps } = getCalendarPageProps(resolvedSearchParams, expenseMap);
 
   return (

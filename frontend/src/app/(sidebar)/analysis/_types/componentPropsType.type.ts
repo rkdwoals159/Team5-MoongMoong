@@ -1,6 +1,14 @@
 import type { components } from "@/types/schema";
+
+export type SafeServerResult<T> = T | Error;
+
 export type AnalysisChartEmptyProps = {
   message?: string;
+};
+
+export type AnalysisErrorProps = {
+  error: Error & { digest?: string };
+  reset: () => void;
 };
 
 export type AnalysisHeaderProps = {
@@ -9,8 +17,8 @@ export type AnalysisHeaderProps = {
 };
 
 export type AnalysisTableSectionProps = {
-  petInfoPromise: Promise<components["schemas"]["PetReadResponse"] | null>;
-  expensesPromise: Promise<components["schemas"]["GroupExpenseResponse"][]>;
+  petInfoPromise: Promise<SafeServerResult<components["schemas"]["PetReadResponse"] | null>>;
+  expensesPromise: Promise<SafeServerResult<components["schemas"]["GroupExpenseResponse"][]>>;
 };
 
 export type AnalysisSearchParams = {
@@ -24,17 +32,21 @@ export type AnalysisPageProps = {
 };
 
 export type CategoryAnalysisChartCardProps = {
-  categoryPromise: Promise<{
-    total: number;
-    items: components["schemas"]["CategoryCostResponse"][];
-  }>;
+  categoryPromise: Promise<
+    SafeServerResult<{
+      total: number;
+      items: components["schemas"]["CategoryCostResponse"][];
+    }>
+  >;
 };
 export type MedicalAnalysisChartCardProps = {
-  petInfoPromise: Promise<components["schemas"]["PetReadResponse"] | null>;
-  medicalPromise: Promise<{
-    total: number;
-    items: components["schemas"]["MedicalAnalysisResponse"][];
-  }>;
+  petInfoPromise: Promise<SafeServerResult<components["schemas"]["PetReadResponse"] | null>>;
+  medicalPromise: Promise<
+    SafeServerResult<{
+      total: number;
+      items: components["schemas"]["MedicalAnalysisResponse"][];
+    }>
+  >;
 };
 
 export type MedicalAnalysisChartProps = {

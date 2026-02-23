@@ -6,9 +6,11 @@ import SavingModal from "@/app/(sidebar)/saving/_components/modals/SavingModal";
 import SavingBreakSummaryModal from "@/app/(sidebar)/saving/_components/modals/SavingBreakSummaryModal";
 import type { BreakSummary } from "@/app/(sidebar)/saving/_types/";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
-import { breakSaving } from "@/api/savingApiActions";
+import { deleteBank } from "@/api/savingApi";
+import { API_ERROR_MESSAGES } from "@/api/constants";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
+import { executeWithToastError } from "@/lib/api/executeWithToastError";
 
 export default function SavingButton({
   handleDrop,
@@ -27,21 +29,20 @@ export default function SavingButton({
     if (isBreaking) return;
     setIsBreaking(true);
 
-    const response = await breakSaving();
-    if (!response) {
-      showToast({
-        variant: "error",
-        message: "저금통 깨기에 실패했어요.",
+    try {
+      await executeWithToastError(() => deleteBank(), {
+        showToast,
+        fallbackMessage: API_ERROR_MESSAGES.BANK_BREAK,
+        onSuccess: (response) => {
+          setBreakSummary({
+            days: response.days ?? 0,
+            message: response.message ?? "축하해요! 저금통이 열렸어요 🎉",
+          });
+        },
       });
+    } finally {
       setIsBreaking(false);
-      return;
     }
-
-    setBreakSummary({
-      days: response.days ?? 0,
-      message: response.message ?? "축하해요! 저금통이 열렸어요 🎉",
-    });
-    setIsBreaking(false);
   };
 
   return (

@@ -1,10 +1,13 @@
-import type { ExpenseData, EditableExpenseRow } from "@/app/(sidebar)/dashboard/_types";
+import type {
+  BuildPatchPayloadResult,
+  EditableExpenseRow,
+  ExpenseData,
+  MemberExpenseUpsertRequest,
+  MemberExpensesUpsertRequest,
+} from "@/app/(sidebar)/dashboard/_types";
 import { SYNC_FIELDS } from "@/app/(sidebar)/dashboard/_constants";
 import { createEmptyRow } from "@/app/(sidebar)/dashboard/_lib/createEmptyRow";
 import { joinNonEmpty } from "@/utils/string";
-import type { components } from "@schema";
-type MemberExpensesUpsertRequest = components["schemas"]["MemberExpensesUpsertRequest"];
-type MemberExpenseUpsertRequest = components["schemas"]["MemberExpenseUpsertRequest"];
 
 /** ExpenseData → EditableExpenseRow 변환 */
 export const serverToEditableRow = (serverRow: ExpenseData): EditableExpenseRow => {
@@ -82,11 +85,6 @@ function isRowValidForPatch(row: EditableExpenseRow): boolean {
 
   return true;
 }
-
-export type BuildPatchPayloadResult = {
-  payload: MemberExpensesUpsertRequest;
-  invalidCount: number;
-};
 
 /** rows에서 isDirty/isNew 기준으로 PATCH 페이로드 생성. 필수 필드가 비어 있는 행은 제외하고 invalidCount에 반영. */
 export const buildPatchPayload = (rows: EditableExpenseRow[]): BuildPatchPayloadResult => {

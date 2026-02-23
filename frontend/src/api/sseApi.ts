@@ -3,9 +3,13 @@
 import { client } from "@/lib/api";
 
 export async function postSSEToken() {
-  const { data, error } = await client.POST("/api/auth/sse-token");
-  if (error || !data) {
+  try {
+    const { data } = await client.POST("/api/auth/sse-token");
+    if (!data || typeof data.connectionToken !== "string" || data.connectionToken.length === 0) {
+      return null;
+    }
+    return data.connectionToken;
+  } catch {
     return null;
   }
-  return data.connectionToken;
 }

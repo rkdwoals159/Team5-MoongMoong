@@ -132,7 +132,7 @@ describe("expenseRows", () => {
 
       expect(payload?.expenses?.length).toBe(1);
       expect(payload?.expenses?.[0]?.isNew).toBe(true);
-      expect(payload?.expenses?.[0]?.expenseId ?? undefined).toBeUndefined();
+      expect(payload?.expenses?.[0]?.expenseId).toBeNull();
     });
 
     it("삭제된 행(isDeleted=true)은 deletedIds에 포함된다", () => {

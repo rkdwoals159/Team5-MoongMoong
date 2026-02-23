@@ -1,14 +1,12 @@
 import { DISEASE_CODE_SHORT_NAMES } from "@/app/(sidebar)/forecast/_constants";
 import { ADMINISTRATIVE_DISTRICTS, BREEDS, DISEASES } from "@/app/onBoarding/_constants";
-import type { OnboardingPayload, OnboardingOption } from "@/app/onBoarding/_types";
+import type { City, OnboardingPayload, OnboardingOption } from "@/app/onBoarding/_types";
 
 export const BREED_LABEL_OPTIONS = Object.values(BREEDS);
 
 export const BREED_LABEL_TO_CODE = Object.fromEntries(
   Object.entries(BREEDS).map(([code, label]) => [label, code]),
 );
-
-type City = keyof typeof ADMINISTRATIVE_DISTRICTS;
 
 export const CITY_OPTIONS = Object.keys(ADMINISTRATIVE_DISTRICTS) as City[];
 

@@ -1,6 +1,6 @@
 import type { MemberInfoResponse } from "@/api/types/settingsApi.type";
-import type { PetInfoResponse } from "@/api/types/perInfoApi.type";
-import { DiseaseCode } from "@/api/types/forecastApi.type";
+import type { GetPetInfoResponse } from "@/api/types/perInfoApi.type";
+import type { DiseaseCode } from "@/api/types/forecastApi.type";
 import type { DogBreedCode } from "@/constants";
 
 export type SettingsTab = "account" | "dog";
@@ -11,7 +11,7 @@ export type AccountSettingsSectionProps = {
 };
 
 export type DogSettingsSectionProps = {
-  dog: PetInfoResponse;
+  dog: GetPetInfoResponse;
   onClose?: () => void;
 };
 
@@ -23,7 +23,12 @@ export type NavItem = {
 export type SettingsManageModalViewProps = {
   currentTab: SettingsTab;
   account: MemberInfoResponse | null;
-  dog: PetInfoResponse | null;
+  dog: GetPetInfoResponse | null;
+};
+
+export type SettingsErrorProps = {
+  error: Error & { digest?: string };
+  reset: () => void;
 };
 
 export type DogFormValues = {

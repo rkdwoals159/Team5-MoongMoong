@@ -5,11 +5,7 @@ import {
   VERCEL_BLOB_HOST,
   DEFAULT_IMAGE_PATH_PREFIX,
 } from "@/api/constants";
-
-export type ValidateImageFileOptions = {
-  maxBytes: number;
-  allowedMimeTypes: readonly string[];
-};
+import type { ValidateImageFileOptions } from "@/api/types/uploadImageApi.type";
 
 /**
  * 이미지 파일 용량·타입 검사. 실패 시 에러 메시지 반환.

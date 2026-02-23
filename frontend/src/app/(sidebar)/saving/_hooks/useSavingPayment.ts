@@ -5,9 +5,11 @@ import { ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
 import useTossPayments from "@/app/(sidebar)/saving/_hooks/useTossPayments";
-import { getBankInfo } from "@/app/(sidebar)/saving/_api";
-import type { BankInfoResponse } from "@/api/types/savingApi.type";
+import { getBank } from "@/api/savingApi";
+import { API_ERROR_MESSAGES } from "@/api/constants";
+import type { GetBankResponse } from "@/api/types/savingApi.type";
 import type { UseSavingPaymentOptions } from "@/app/(sidebar)/saving/_types/saving";
+import { executeWithToastError } from "@/lib/api/executeWithToastError";
 
 export function useSavingPayment({ onSuccess, handleDrop }: UseSavingPaymentOptions) {
   const { status, setStatus } = useSavingStatus();
@@ -26,12 +28,11 @@ export function useSavingPayment({ onSuccess, handleDrop }: UseSavingPaymentOpti
 
     if (!response) return false;
 
-    let bankInfo: BankInfoResponse | null = null;
-    try {
-      bankInfo = await getBankInfo();
-    } catch (error) {
-      console.error(error);
-      showToast({ variant: "error", message: "랭킹 정보를 불러오지 못했습니다." });
+    const bankInfo = await executeWithToastError<GetBankResponse | null>(() => getBank(), {
+      showToast,
+      fallbackMessage: API_ERROR_MESSAGES.BANK_INFO,
+    });
+    if (bankInfo === undefined) {
       return false;
     }
 

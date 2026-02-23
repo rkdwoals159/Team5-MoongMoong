@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { client } from "@/lib/api";
+import { toApiRouteErrorResponse } from "@/app/api/_utils/routeError";
 
 export async function PUT(request: NextRequest) {
-  const body = await request.json();
-  const { data, error } = await client.PUT("/api/pet", { body });
-  if (error || !data) return NextResponse.json(null, { status: 500 });
-  return NextResponse.json(data);
+  try {
+    const body = await request.json();
+    const { data } = await client.PUT("/api/pet", { body });
+    if (!data) {
+      throw new Error("반려동물 정보 수정 응답이 없습니다.");
+    }
+    return NextResponse.json(data);
+  } catch (error) {
+    return toApiRouteErrorResponse(error);
+  }
 }

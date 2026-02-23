@@ -4,6 +4,8 @@ import DogSettingsSection from "./_components/DogSettingsSection";
 import { getMemberInfoServer } from "@/api/settingsApiQueries";
 import { getPetInfo } from "@/api/petInfoApi";
 import type { SettingsTab } from "./types";
+import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
+import { safeServerFetch } from "@/lib/api";
 
 export default async function SettingsPage({
   searchParams,
@@ -14,8 +16,16 @@ export default async function SettingsPage({
   const currentTabParam = resolved?.tab;
   const currentTab: SettingsTab = currentTabParam === "dog" ? "dog" : "account";
 
-  const account = currentTab === "account" ? await getMemberInfoServer() : null;
-  const dog = currentTab === "dog" ? await getPetInfo() : null;
+  const account =
+    currentTab === "account" ? await safeServerFetch(() => getMemberInfoServer()) : null;
+  if (account instanceof Error) {
+    return <ServerComponentErrorFallback message={account.message} />;
+  }
+
+  const dog = currentTab === "dog" ? await safeServerFetch(() => getPetInfo()) : null;
+  if (dog instanceof Error) {
+    return <ServerComponentErrorFallback message={dog.message} />;
+  }
 
   return (
     <article className="flex flex-col gap-850 px-850">

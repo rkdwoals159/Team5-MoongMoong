@@ -54,11 +54,11 @@ export async function uploadImageToVercel(formData: FormData): Promise<UploadPet
  */
 export async function updateImageUrl(url: string): Promise<UploadPetImageResult> {
   try {
-    const { data, error } = await client.PATCH(`/api/member/profile`, {
+    const { data } = await client.PATCH(`/api/member/profile`, {
       body: { memberImageUrl: url },
     });
-    if (error || !data) {
-      return { ok: false, error: error?.message ?? "이미지 URL 업데이트에 실패했습니다." };
+    if (!data) {
+      return { ok: false, error: "이미지 URL 업데이트에 실패했습니다." };
     }
     const updatedUrl = data.memberImageUrl;
     if (typeof updatedUrl !== "string") {

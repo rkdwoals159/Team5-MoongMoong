@@ -1,9 +1,10 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
-import { confirmPayment, failPayment, requestOrderId } from "@/api/savingApiActions";
+import { postCoinPaymentConfirm, postCoinFailure, postCoinOrderId } from "@/api/savingApi";
 import { isFailResponse, isConfirmResponse } from "@/app/(sidebar)/saving/_types";
 import type {
+  PostCoinPaymentConfirmResponse,
   PaymentInstance,
   TossPaymentConfirmResponse,
   TossPaymentFailResponse,
@@ -36,18 +37,21 @@ export default function useTossPayments(customerKey: string) {
 
   // 결제 플로우
   const requestPayment = useCallback(
-    async (requestAmount: number) => {
+    async (requestAmount: number): Promise<PostCoinPaymentConfirmResponse> => {
       // 이미 진행 중이면 중복 요청 방지
-      if (isLoading) return null;
+      if (isLoading) {
+        throw new Error("결제가 진행 중입니다.");
+      }
       if (!payment) {
-        setError(new Error("결제 모듈이 준비되지 않았습니다."));
-        return null;
+        const error = new Error("결제 모듈이 준비되지 않았습니다.");
+        setError(error);
+        throw error;
       }
       setError(null);
       setIsLoading(true);
 
       try {
-        const { orderId, amount } = await requestOrderId(requestAmount);
+        const { orderId, amount } = await postCoinOrderId(requestAmount);
 
         if (orderId == null) {
           throw new Error("주문 ID가 유효하지 않습니다.");
@@ -76,7 +80,7 @@ export default function useTossPayments(customerKey: string) {
 
         // Toss Payments SDK 결제 실패 응답인지 판별
         if (isFailResponse(requestPaymentResponse)) {
-          await failPayment(
+          await postCoinFailure(
             requestPaymentResponse.code,
             requestPaymentResponse.orderId,
             requestPaymentResponse.message,
@@ -99,7 +103,7 @@ export default function useTossPayments(customerKey: string) {
         }
 
         // 결제 승인 요청
-        const confirmResponse = await confirmPayment(
+        const confirmResponse = await postCoinPaymentConfirm(
           requestPaymentResponse.paymentKey,
           requestPaymentResponse.orderId,
           requestPaymentResponse.amount.value,
@@ -109,8 +113,7 @@ export default function useTossPayments(customerKey: string) {
       } catch (e) {
         const error = e instanceof Error ? e : new Error("주문 ID 요청에 실패했습니다.");
         setError(error);
-        // 에러 상태로만 관리하고 throw하지 않음 (컴포넌트에서 error 상태를 감시하도록)
-        return null;
+        throw error;
       } finally {
         setIsLoading(false);
       }
