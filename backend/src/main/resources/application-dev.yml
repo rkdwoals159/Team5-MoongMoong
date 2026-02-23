@@ -114,7 +114,7 @@ category-classification:
     [중요 규칙]
     - mainCategory는 반드시 아래 중 하나:
       '사료/간식', '의료비', '물품구매비', '미용', '기타'
-    - mainCategory가 '의료비'가 아니면 subCategory는 null
+    - mainCategory가 '의료비'가 아니면 subCategory는 반드시 null로 반환해주세요
     - mainCategory가 '의료비'인 경우 subCategory는 반드시 아래 중 하나:
       [진료비, 예방접종, 약/처방, 검사비, 수술/입원, 기타 의료비]
 
@@ -145,7 +145,7 @@ medical-advice :
     - ratio는 0~100 사이의 퍼센트 값(%)
 
     [작성 가이드]
-    - medicalAdvice: disease와 ratio를 근거로 예방 및 관리법을 제안하는 전문적인 한 문장
+    - medicalAdvice: disease와 ratio를 근거로 예방 및 관리법을 제안하는 띄어쓰기 포함 330문장 내외의 문장
       * treatments 항목명(검사명, 수술명 등)을 나열하지 않는다.
       * 문장 시작은 반드시 다음 중 하나의 템플릿을 따른다.
       - ratio >= 70: "내년 {disease} 질환의 발생 확률이 높으므로 "

@@ -20,6 +20,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -27,10 +28,13 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 class DatabaseSchemaManagerTest {
 
     @Container
-    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")
-            .withDatabaseName("testdb")
-            .withUsername("test")
-            .withPassword("test");
+    static MySQLContainer<?> mysql =
+            new MySQLContainer<>(
+                    DockerImageName.parse("mysql:8.0.36")
+            )
+                    .withDatabaseName("testdb")
+                    .withUsername("test")
+                    .withPassword("test");
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
