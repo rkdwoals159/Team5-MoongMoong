@@ -24,10 +24,12 @@ export type DataTableProps<T> = {
   rowKey?: (row: T, index: number) => string | number;
   className?: string;
   selectedCell?: { rowIndex: number; accessor: keyof T } | null;
-  sortConfig?: { sortBy: keyof T; sortOrder: "asc" | "desc" };
+  sortConfig?: Array<{ sortBy: keyof T; sortOrder: "asc" | "desc" }>;
   onSort?: (accessor: keyof T) => void;
   onCellClick?: (rowIndex: number, accessor: keyof T) => void;
   onKeyDown?: (e: KeyboardEvent<HTMLDivElement>) => void;
+  bottomSlot?: ReactNode;
+  scrollContainerRef?: React.RefObject<HTMLDivElement | null>;
 };
 
 // DataTableShell 컴포넌트에서 사용
@@ -38,6 +40,8 @@ export type DataTableShellProps = {
   className?: string;
   columns: DataTableShellCol[];
   children: ReactNode;
+  bottomSlot?: ReactNode;
+  scrollContainerRef?: React.RefObject<HTMLDivElement | null>;
   tabIndex?: number;
   onKeyDown?: (e: KeyboardEvent<HTMLDivElement>) => void;
 } & React.ComponentPropsWithoutRef<"table">;

@@ -21,9 +21,6 @@ export type UseExpenseCategoryUpdateParams = {
   updateCellByLocalId: UpdateCellByLocalId;
 };
 
-/** 정렬 가능한 컬럼 (selected 제외) */
-export type SortableExpenseAccessor = "spentAt" | "usage" | "cost" | "mainCategory" | "memo";
-
 /**
  * useAutoCategorize 파라미터 타입
  */

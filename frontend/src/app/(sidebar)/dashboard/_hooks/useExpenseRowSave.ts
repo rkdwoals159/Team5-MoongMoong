@@ -7,42 +7,38 @@ import {
   SAVE_VALIDATION_ERROR_MESSAGE,
 } from "@/app/(sidebar)/dashboard/_constants";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
-import { patchExpenses, getExpensesByPeriod } from "@/api/dashboardApi";
+import { patchExpenses } from "@/api/client/dashboardApi";
 
 export function useExpenseRowSave({
   getPatchPayload,
-  mergeRowsFromServer,
   hasUnsavedChanges,
+  onSaveSuccess,
 }: UseExpenseRowSaveParams) {
   const { showToast } = useToast();
 
-  const handleSave = useCallback(
-    async (startDate: string, endDate: string): Promise<void> => {
-      if (!hasUnsavedChanges) return;
+  const handleSave = useCallback(async (): Promise<void> => {
+    if (!hasUnsavedChanges) return;
 
-      const { payload, invalidCount } = getPatchPayload();
-      if (invalidCount > 0) {
-        showToast({
-          variant: "error",
-          message: SAVE_VALIDATION_ERROR_MESSAGE,
-        });
-        return;
-      }
+    const { payload, invalidCount } = getPatchPayload();
+    if (invalidCount > 0) {
+      showToast({
+        variant: "error",
+        message: SAVE_VALIDATION_ERROR_MESSAGE,
+      });
+      return;
+    }
 
-      try {
-        await patchExpenses(payload);
-        const { expenses } = await getExpensesByPeriod(startDate, endDate);
-        mergeRowsFromServer(expenses);
-      } catch (error) {
-        console.error("Failed to save expenses:", error);
-        showToast({
-          variant: "error",
-          message: error instanceof Error ? error.message : SAVE_ERROR_MESSAGE,
-        });
-      }
-    },
-    [getPatchPayload, mergeRowsFromServer, hasUnsavedChanges, showToast],
-  );
+    try {
+      await patchExpenses(payload);
+      onSaveSuccess();
+    } catch (error) {
+      console.error("Failed to save expenses:", error);
+      showToast({
+        variant: "error",
+        message: error instanceof Error ? error.message : SAVE_ERROR_MESSAGE,
+      });
+    }
+  }, [getPatchPayload, hasUnsavedChanges, showToast, onSaveSuccess]);
 
   return { handleSave };
 }

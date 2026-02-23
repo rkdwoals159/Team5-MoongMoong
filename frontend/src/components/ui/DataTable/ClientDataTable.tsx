@@ -29,7 +29,8 @@ const renderHeaderCell = <T,>(
   onSort: DataTableProps<T>["onSort"],
 ) => {
   const isSortable = col.sortable && onSort;
-  const isSorted = sortConfig?.sortBy === col.accessor;
+  const sortEntry = sortConfig?.find((s) => s.sortBy === col.accessor);
+  const isSorted = sortEntry !== undefined;
   const handleClick = () => (isSortable ? onSort?.(col.accessor) : undefined);
 
   return (
@@ -58,7 +59,7 @@ const renderHeaderCell = <T,>(
       {isSorted ? (
         <span className="inline-flex items-center gap-100">
           {col.label}
-          <SortIcon order={sortConfig?.sortOrder ?? "asc"} />
+          <SortIcon order={sortEntry.sortOrder} />
         </span>
       ) : (
         col.label
@@ -120,6 +121,8 @@ const ClientDataTable = <T,>({
   onSort,
   onCellClick,
   onKeyDown,
+  bottomSlot,
+  scrollContainerRef,
   ...rest
 }: DataTableProps<T>) => {
   const hasCellInteraction = mode === "edit" && (onCellClick ?? onKeyDown);
@@ -147,6 +150,8 @@ const ClientDataTable = <T,>({
       columns={colgroupColumns}
       tabIndex={hasCellInteraction ? 0 : undefined}
       onKeyDown={hasCellInteraction ? onKeyDown : undefined}
+      bottomSlot={bottomSlot}
+      scrollContainerRef={scrollContainerRef}
       {...rest}
     >
       <thead className="bg-gray-50 sticky top-0 z-10">

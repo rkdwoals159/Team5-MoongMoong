@@ -8,7 +8,7 @@ import type {
   UseExpenseTableSelectionParams,
 } from "@/app/(sidebar)/dashboard/_types";
 import { EDITABLE_ACCESSORS } from "@/app/(sidebar)/dashboard/_constants";
-import { isNewRow } from "../_utils";
+import { isNewRow } from "@/app/(sidebar)/dashboard/_utils";
 import { formatDateKey } from "@/utils/date";
 
 /**

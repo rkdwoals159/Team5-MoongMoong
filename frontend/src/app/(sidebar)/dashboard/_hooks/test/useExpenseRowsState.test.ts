@@ -23,7 +23,7 @@ describe("useExpenseRowsState", () => {
   describe("초기화", () => {
     it("빈 배열로 초기화하면 빈 행 1개만 존재한다", () => {
       const emptyData: ExpenseData[] = [];
-      const { result } = renderHook(() => useExpenseRowsState(emptyData));
+      const { result } = renderHook(() => useExpenseRowsState(emptyData, 0));
 
       expect(result.current.displayInitialRows).toHaveLength(1);
       expect(result.current.displayInitialRows[0]?.isNew).toBe(true);
@@ -33,7 +33,7 @@ describe("useExpenseRowsState", () => {
 
     it("서버 데이터로 초기화하면 EditableExpenseRow로 변환된다", () => {
       const serverData = [createMockServerRow(1), createMockServerRow(2)];
-      const { result } = renderHook(() => useExpenseRowsState(serverData));
+      const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       expect(result.current.displayInitialRows).toHaveLength(3);
       expect(result.current.displayInitialRows[0]?.localId).toBe("exp-1");
@@ -46,7 +46,7 @@ describe("useExpenseRowsState", () => {
   describe("updateCellByLocalId", () => {
     it("기존 행의 일반 필드를 업데이트하면 isDirty가 변경되지 않는다", () => {
       const serverData = [createMockServerRow(1)];
-      const { result } = renderHook(() => useExpenseRowsState(serverData));
+      const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       act(() => {
         result.current.updateCellByLocalId("exp-1", "selected", true);
@@ -59,7 +59,7 @@ describe("useExpenseRowsState", () => {
 
     it("기존 행의 SYNC_FIELDS를 업데이트하면 isDirty가 true가 된다", () => {
       const serverData = [createMockServerRow(1)];
-      const { result } = renderHook(() => useExpenseRowsState(serverData));
+      const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       act(() => {
         result.current.updateCellByLocalId("exp-1", "usage", "저녁식사");
@@ -73,7 +73,7 @@ describe("useExpenseRowsState", () => {
 
     it("신규 행(expenseId가 null)의 SYNC_FIELDS를 업데이트해도 isDirty는 false를 유지한다", () => {
       const emptyData: ExpenseData[] = [];
-      const { result } = renderHook(() => useExpenseRowsState(emptyData));
+      const { result } = renderHook(() => useExpenseRowsState(emptyData, 0));
 
       const emptyRowLocalId = result?.current?.displayInitialRows[0]?.localId ?? "";
 
@@ -89,7 +89,7 @@ describe("useExpenseRowsState", () => {
 
     it("빈 행을 편집하면 새 행이 추가된다", () => {
       const emptyData: ExpenseData[] = [];
-      const { result } = renderHook(() => useExpenseRowsState(emptyData));
+      const { result } = renderHook(() => useExpenseRowsState(emptyData, 0));
 
       const emptyRowLocalId = result?.current?.displayInitialRows[0]?.localId ?? "";
 
@@ -102,7 +102,7 @@ describe("useExpenseRowsState", () => {
 
     it("존재하지 않는 localId를 업데이트하면 새 행이 추가된다", () => {
       const serverData = [createMockServerRow(1)];
-      const { result } = renderHook(() => useExpenseRowsState(serverData));
+      const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       const initialLength = result.current.displayInitialRows.length;
 
@@ -115,7 +115,7 @@ describe("useExpenseRowsState", () => {
 
     it("이미 isDirty인 행을 업데이트해도 isDirty가 유지된다", () => {
       const serverData = [createMockServerRow(1)];
-      const { result } = renderHook(() => useExpenseRowsState(serverData));
+      const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       act(() => {
         result.current.updateCellByLocalId("exp-1", "usage", "첫 번째 수정");
@@ -136,7 +136,7 @@ describe("useExpenseRowsState", () => {
   describe("updateAllCells", () => {
     it("모든 행의 특정 필드를 일괄 업데이트한다", () => {
       const serverData = [createMockServerRow(1), createMockServerRow(2)];
-      const { result } = renderHook(() => useExpenseRowsState(serverData));
+      const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       act(() => {
         result.current.updateAllCells("selected", true);
@@ -150,7 +150,7 @@ describe("useExpenseRowsState", () => {
   describe("deleteSelectedRows", () => {
     it("선택된 행들의 isDeleted를 true로 설정한다", () => {
       const serverData = [createMockServerRow(1), createMockServerRow(2), createMockServerRow(3)];
-      const { result } = renderHook(() => useExpenseRowsState(serverData));
+      const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       act(() => {
         result.current.updateAllCells("selected", true);
@@ -163,7 +163,7 @@ describe("useExpenseRowsState", () => {
 
     it("선택되지 않은 행은 변경되지 않는다", () => {
       const serverData = [createMockServerRow(1), createMockServerRow(2)];
-      const { result } = renderHook(() => useExpenseRowsState(serverData));
+      const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       act(() => {
         result.current.updateCellByLocalId("exp-1", "selected", true);
@@ -181,7 +181,7 @@ describe("useExpenseRowsState", () => {
         createMockServerRow(1, { cost: 10000, usage: "점심" }),
         createMockServerRow(2, { cost: 5000, usage: "커피" }),
       ];
-      const { result } = renderHook(() => useExpenseRowsState(serverData));
+      const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       act(() => {
         result.current.updateAllCells("selected", true);
@@ -199,34 +199,10 @@ describe("useExpenseRowsState", () => {
     });
   });
 
-  describe("mergeRowsFromServer", () => {
-    it("서버 데이터와 로컬 데이터를 병합한다", () => {
-      const serverData = [createMockServerRow(1, { usage: "초기값" })];
-      const { result } = renderHook(() => useExpenseRowsState(serverData));
-
-      act(() => {
-        result.current.updateCellByLocalId("exp-1", "usage", "로컬 수정");
-      });
-
-      expect(result.current.hasUnsavedChanges).toBe(true);
-
-      const newServerData = [createMockServerRow(1, { usage: "서버 업데이트" })];
-
-      act(() => {
-        result.current.mergeRowsFromServer(newServerData);
-      });
-
-      const row = result.current.displayInitialRows.find((r) => r.localId === "exp-1");
-      expect(row?.usage).toBe("서버 업데이트");
-      expect(row?.isDirty).toBe(false);
-      expect(row?.isNew).toBe(false);
-    });
-  });
-
   describe("getPatchPayload", () => {
     it("isNew, isDirty, isDeleted 행을 페이로드로 생성한다", () => {
       const serverData = [createMockServerRow(1), createMockServerRow(2)];
-      const { result } = renderHook(() => useExpenseRowsState(serverData));
+      const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       act(() => {
         result.current.updateCellByLocalId("exp-1", "usage", "수정된 항목");
@@ -246,7 +222,7 @@ describe("useExpenseRowsState", () => {
 
     it("변경사항이 없으면 빈 페이로드를 반환한다", () => {
       const serverData = [createMockServerRow(1)];
-      const { result } = renderHook(() => useExpenseRowsState(serverData));
+      const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       const { payload } = result.current.getPatchPayload();
 

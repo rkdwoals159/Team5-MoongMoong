@@ -1,21 +1,41 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import type { RefObject } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useAutoCategorize } from "@/app/(sidebar)/dashboard/_hooks/useAutoCategorize";
 import { useExpenseRowsState } from "@/app/(sidebar)/dashboard/_hooks/useExpenseRowsState";
 import { useExpenseRowSave } from "@/app/(sidebar)/dashboard/_hooks/useExpenseRowSave";
+import { useScrollToTopOnSave } from "@/app/(sidebar)/dashboard/_hooks/useScrollToTopOnSave";
 import { useExpenseCellPopup } from "@/app/(sidebar)/dashboard/_hooks/useExpenseCellPopup";
 import { useExpenseCategoryUpdate } from "@/app/(sidebar)/dashboard/_hooks/useExpenseCategoryUpdate";
 import { useExpenseTableColumns } from "@/app/(sidebar)/dashboard/_hooks/UseExpenseTableColumns";
 import { useExpenseTableSelection } from "@/app/(sidebar)/dashboard/_hooks/useExpenseTableSelection";
-import { useExpenseTableSort } from "@/app/(sidebar)/dashboard/_hooks/useExpenseTableSort";
+import { isNewRow } from "@/app/(sidebar)/dashboard/_utils";
 import type {
   ExpenseData,
   SelectedCell,
   UseExpenseTableReturn,
 } from "@/app/(sidebar)/dashboard/_types";
-export const useExpenseTable = (initialData: ExpenseData[]): UseExpenseTableReturn => {
+import type { MainCategoryFilter } from "@/api/types/dashboardApi.type";
+
+export const useExpenseTable = ({
+  initialData,
+  resetKey,
+  onSaveSuccess,
+  scrollContainerRef,
+  mainCategoryFilter,
+  onCategoryFilterChange,
+}: {
+  initialData: ExpenseData[];
+  resetKey: number;
+  onSaveSuccess: () => void;
+  scrollContainerRef: RefObject<HTMLDivElement | null>;
+  mainCategoryFilter: MainCategoryFilter | null;
+  onCategoryFilterChange: (category: MainCategoryFilter | null) => void;
+}): UseExpenseTableReturn => {
   const [selectedCell, setSelectedCell] = useState<SelectedCell>(null);
+
+  const onSaveSuccessWithScroll = useScrollToTopOnSave(scrollContainerRef, onSaveSuccess);
 
   const {
     displayInitialRows,
@@ -25,13 +45,18 @@ export const useExpenseTable = (initialData: ExpenseData[]): UseExpenseTableRetu
     deleteSelectedRows,
     mergeSelectedRows,
     getPatchPayload,
-    mergeRowsFromServer,
     hasUnsavedChanges,
     selectedCount,
     totalExpense,
-  } = useExpenseRowsState(initialData);
+  } = useExpenseRowsState(initialData, resetKey);
 
-  const { sortedRows, sortConfig, handleSort } = useExpenseTableSort(displayInitialRows);
+  // 서버에서 정렬된 데이터를 받으므로 새 행(isNew)만 맨 아래 고정하고 나머지는 그대로 유지
+  // 사용자가 새로 입력하는 행은 서버 정렬 대상이 아니므로, 정렬 결과에서 제외한다.
+  const sortedRows = useMemo(() => {
+    const savedRows = displayInitialRows.filter((r) => !isNewRow(r));
+    const newRows = displayInitialRows.filter((r) => isNewRow(r));
+    return [...savedRows, ...newRows];
+  }, [displayInitialRows]);
 
   const {
     show: showCategoryPopup,
@@ -63,8 +88,8 @@ export const useExpenseTable = (initialData: ExpenseData[]): UseExpenseTableRetu
 
   const { handleSave } = useExpenseRowSave({
     getPatchPayload,
-    mergeRowsFromServer,
     hasUnsavedChanges,
+    onSaveSuccess: onSaveSuccessWithScroll,
   });
 
   const { triggerCategorize } = useAutoCategorize({ updateCellByLocalId });
@@ -77,6 +102,8 @@ export const useExpenseTable = (initialData: ExpenseData[]): UseExpenseTableRetu
     onCategoryCellClick: handleOpenCategoryPopup,
     onDateCellClick: handleOpenDatePicker,
     onUsageChange: triggerCategorize,
+    mainCategoryFilter,
+    onCategoryFilterChange,
   });
 
   const { handleCategorySelect } = useExpenseCategoryUpdate({
@@ -115,8 +142,6 @@ export const useExpenseTable = (initialData: ExpenseData[]): UseExpenseTableRetu
     hasUnsavedChanges,
     selectedCount,
     totalExpense,
-    sortConfig,
-    handleSort,
     onCellClick,
     onKeyDown: handleKeyDown,
   };

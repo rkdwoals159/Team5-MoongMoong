@@ -318,6 +318,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/pet-medical-ai": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["refresh_1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v2/expenses": {
     parameters: {
       query?: never;
@@ -352,6 +368,10 @@ export interface paths {
     get: operations["findNotification"];
     put?: never;
     post?: never;
+    /**
+     * 다중 알림을 삭제합니다.
+     * @description 현재 참여한 그룹에서 발생한 알림을 다중 삭재합니다.
+     */
     delete: operations["deleteNotification"];
     options?: never;
     head?: never;
@@ -639,6 +659,10 @@ export interface paths {
     get?: never;
     put?: never;
     post?: never;
+    /**
+     * 단건 알림을 삭제합니다.
+     * @description 현재 참여한 그룹에서 발생한 알림을 삭재합니다.
+     */
     delete: operations["deleteNotification_1"];
     options?: never;
     head?: never;
@@ -1979,12 +2003,10 @@ export interface components {
        */
       petImageUrl?: string;
     };
-    Member: {
-      /** Format: int64 */
-      id?: number;
-      email: string;
-      name: string;
-      imageUrl?: string;
+    /** @description 알림 다중 삭제 요청 */
+    NotificationsDeleteRequest: {
+      /** @description 알림 ID 리스트 */
+      notificationIds: number[];
     };
     /** @description 저금통 깨기 응답 */
     BankBreakResponse: {
@@ -2991,6 +3013,24 @@ export interface operations {
       };
     };
   };
+  refresh_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
   getMemberExpensesByPeriodV2: {
     parameters: {
       query: {
@@ -3068,8 +3108,26 @@ export interface operations {
           "application/json;charset=UTF-8": components["schemas"]["NotificationReadResponse"];
         };
       };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
       /** @description 알림 수신 정보를 찾을 수 없습니다. */
       404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
         headers: {
           [name: string]: unknown;
         };
@@ -3081,21 +3139,42 @@ export interface operations {
   };
   deleteNotification: {
     parameters: {
-      query: {
-        member: components["schemas"]["Member"];
-      };
+      query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    requestBody?: never;
+    /** @description 알림 다중 삭제 요청 */
+    requestBody: {
+      content: {
+        "application/json;charset=UTF-8": components["schemas"]["NotificationsDeleteRequest"];
+      };
+    };
     responses: {
-      /** @description OK */
+      /** @description 다중 알림 삭제 성공 */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content?: never;
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
       };
     };
   };
@@ -3653,9 +3732,7 @@ export interface operations {
   };
   deleteNotification_1: {
     parameters: {
-      query: {
-        member: components["schemas"]["Member"];
-      };
+      query?: never;
       header?: never;
       path: {
         notificationId: number;
@@ -3664,12 +3741,39 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description OK */
+      /** @description 알림 삭제 성공 */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content?: never;
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 해당 크루의 알림 정보를 찾을 수 없습니다. */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
       };
     };
   };

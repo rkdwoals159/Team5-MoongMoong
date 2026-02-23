@@ -1,3 +1,4 @@
 export { useExpenseTable } from "./useExpenseTable";
-export { useExpensePeriodQuery } from "./useExpensePeriodQuery";
 export { useSetRangeToUrl } from "./useSetRangeToUrl";
+export { useServerSortConfig } from "./useServerSortConfig";
+export { useExpensesV2 } from "./useExpensesV2";

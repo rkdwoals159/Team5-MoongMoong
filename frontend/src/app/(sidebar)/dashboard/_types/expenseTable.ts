@@ -1,7 +1,33 @@
 import type { DataTableColumn } from "@/components/ui/DataTable/dataTable.type";
 import type { components } from "@schema";
 import type { EditableExpenseRow, ExpenseData } from "./expense";
-import type { SortableExpenseAccessor } from "@/app/(sidebar)/dashboard/_types";
+import type {
+  MainCategoryFilter,
+  ServerSortField,
+  SortConfigV2,
+} from "@/api/types/dashboardApi.type";
+
+/**
+ * useExpensesV2 파라미터 타입
+ */
+export type UseExpensesV2Params = {
+  toSortParams: () => string[];
+  mainCategoryFilter: MainCategoryFilter | null;
+};
+
+/**
+ * useExpensesV2 반환 타입
+ */
+export type UseExpensesV2Return = {
+  startDate: string;
+  endDate: string;
+  expenses: ExpenseData[];
+  refetch: () => void;
+  hasNext: boolean;
+  isLoadingMore: boolean;
+  loadMore: () => void;
+  resetKey: number;
+};
 
 type MemberExpensesUpsertRequest = components["schemas"]["MemberExpensesUpsertRequest"];
 
@@ -39,12 +65,10 @@ export type UseExpenseTableReturn = {
   handleCloseDatePicker: () => void;
   deleteSelectedRows: () => void;
   mergeSelectedRows: () => void;
-  handleSave: (startDate: string, endDate: string) => Promise<void>;
+  handleSave: () => Promise<void>;
   hasUnsavedChanges: boolean;
   selectedCount: number;
   totalExpense: number;
-  sortConfig: { sortBy: SortableExpenseAccessor; sortOrder: "asc" | "desc" };
-  handleSort: (accessor: SortableExpenseAccessor) => void;
   onCellClick: (rowIndex: number, accessor: keyof ExpenseData) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 };
@@ -60,6 +84,8 @@ export type UseExpenseTableColumnsParams = {
   onCategoryCellClick: (rowIndex: number) => void;
   onDateCellClick: (rowIndex: number) => void;
   onUsageChange?: (localId: string, usage: string) => void;
+  mainCategoryFilter: MainCategoryFilter | null;
+  onCategoryFilterChange: (category: MainCategoryFilter | null) => void;
 };
 
 /**
@@ -67,8 +93,8 @@ export type UseExpenseTableColumnsParams = {
  */
 export type UseExpenseRowSaveParams = {
   getPatchPayload: () => { payload: MemberExpensesUpsertRequest; invalidCount: number };
-  mergeRowsFromServer: (newRows: ExpenseData[]) => void;
   hasUnsavedChanges: boolean;
+  onSaveSuccess: () => void;
 };
 
 /**
@@ -79,6 +105,15 @@ export type EditableDataTableProps = {
   startDate: string;
   endDate: string;
   className?: string;
+  sortConfig: SortConfigV2;
+  onSort: (field: ServerSortField) => void;
+  onSaveSuccess: () => void;
+  resetKey: number;
+  hasNext: boolean;
+  isLoadingMore: boolean;
+  loadMore: () => void;
+  mainCategoryFilter: MainCategoryFilter | null;
+  onCategoryFilterChange: (category: MainCategoryFilter | null) => void;
 };
 
 /**

@@ -1,19 +1,43 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { renderHook, act } from "@testing-library/react";
 import { useExpenseTableSelection } from "@/app/(sidebar)/dashboard/_hooks/useExpenseTableSelection";
-import type { SelectedCell } from "@/app/(sidebar)/dashboard/_types";
-import { ExpenseData } from "@/api/types/dashboardApi.type";
+import type {
+  SelectedCell,
+  ExpenseData,
+  EditableExpenseRow,
+} from "@/app/(sidebar)/dashboard/_types";
+
+/** 테스트용 빈 행: sortedRows 길이만 맞추기 위한 더미 */
+function mockSortedRows(count: number): (ExpenseData | EditableExpenseRow)[] {
+  return Array.from({ length: count }, (_, i) => ({
+    expenseId: i + 1,
+    spentAt: "2026-02-01",
+    usage: "",
+    cost: 0,
+    mainCategory: "",
+    subCategory: null,
+    memo: null,
+    localId: `exp-${i + 1}`,
+    isNew: false,
+    isDirty: false,
+    isDeleted: false,
+  }));
+}
 
 /**
  * 테스트용 래퍼: selectedCell 상태를 보유하고 useExpenseTableSelection에 전달
  */
 function useExpenseTableSelectionTestWrapper(rowCount: number) {
   const [selectedCell, setSelectedCell] = useState<SelectedCell>(null);
+  const updateCellByLocalId = useCallback(() => {}, []);
+  const sortedRows = mockSortedRows(rowCount);
   const { onCellClick, handleKeyDown } = useExpenseTableSelection({
     rowCount,
     selectedCell,
     setSelectedCell,
+    sortedRows,
+    updateCellByLocalId,
   });
   return { selectedCell, setSelectedCell, onCellClick, handleKeyDown };
 }
@@ -168,8 +192,8 @@ describe("useExpenseTableSelection", () => {
       act(() => {
         result.current.setSelectedCell({
           rowIndex: 0,
-          accessor: "invalidAccessor" as keyof ExpenseData,
-        });
+          accessor: "invalidAccessor",
+        } as unknown as SelectedCell);
       });
 
       const mockEvent = createKeyboardEvent("Tab");

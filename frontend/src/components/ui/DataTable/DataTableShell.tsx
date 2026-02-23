@@ -8,6 +8,8 @@ const DataTableShell = ({
   className,
   columns,
   children,
+  bottomSlot,
+  scrollContainerRef,
   tabIndex,
   onKeyDown,
   ...tableRest
@@ -20,7 +22,7 @@ const DataTableShell = ({
     tabIndex={tabIndex}
     onKeyDown={onKeyDown}
   >
-    <div className="data-table-scroll flex-1 min-h-0 overflow-auto">
+    <div ref={scrollContainerRef} className="data-table-scroll flex-1 min-h-0 overflow-auto">
       <table
         {...tableRest}
         className="w-full border-separate border-spacing-0 text-left table-fixed"
@@ -32,6 +34,7 @@ const DataTableShell = ({
         </colgroup>
         {children}
       </table>
+      {bottomSlot}
     </div>
   </div>
 );

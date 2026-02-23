@@ -15,6 +15,7 @@ export type DropdownListBoxProps = {
   focusedIndex: number;
   onSelect: (value: string) => void;
   onMouseEnter: (index: number) => void;
+  className?: string;
 };
 
 export type DropdownListItemProps = {

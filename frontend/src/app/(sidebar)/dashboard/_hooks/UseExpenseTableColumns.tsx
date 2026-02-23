@@ -16,6 +16,7 @@ import {
 import DateInput from "@/app/(sidebar)/dashboard/_components/dashboard-table/DateInput";
 import Chip from "@/components/common/Chip/Chip";
 import CheckBox from "@/components/common/CheckBox/CheckBox";
+import CategoryFilterHeader from "@/app/(sidebar)/dashboard/_components/dashboard-table/CategoryFilterHeader";
 
 /**
  * 지출 테이블 컬럼 정의 및 셀 렌더러/에디터 생성 훅
@@ -28,6 +29,8 @@ export const useExpenseTableColumns = ({
   onCategoryCellClick,
   onDateCellClick,
   onUsageChange,
+  mainCategoryFilter,
+  onCategoryFilterChange,
 }: UseExpenseTableColumnsParams): DataTableColumn<ExpenseData>[] => {
   const isAllSelected =
     selectedCount === displayInitialRows.length - 1 && displayInitialRows.length > 1;
@@ -146,8 +149,15 @@ export const useExpenseTableColumns = ({
       { label: "날짜", accessor: "spentAt", render: createRenderDate, sortable: true },
       { label: "사용내역", accessor: "usage", editor: createEditor("usage"), sortable: true },
       { label: "비용", accessor: "cost", editor: createEditorCost, sortable: true },
-      { label: "항목", accessor: "mainCategory", render: createRenderCategory, sortable: true },
-      { label: "메모", accessor: "memo", editor: createEditor("memo"), sortable: true },
+      {
+        label: (
+          <CategoryFilterHeader value={mainCategoryFilter} onChange={onCategoryFilterChange} />
+        ),
+        accessor: "mainCategory",
+        render: createRenderCategory,
+        sortable: false,
+      },
+      { label: "메모", accessor: "memo", editor: createEditor("memo"), sortable: false },
     ],
     [
       isAllSelected,
@@ -157,6 +167,8 @@ export const useExpenseTableColumns = ({
       createEditor,
       createEditorCost,
       createRenderCategory,
+      mainCategoryFilter,
+      onCategoryFilterChange,
     ],
   );
 };

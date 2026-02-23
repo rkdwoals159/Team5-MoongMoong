@@ -1,5 +1,5 @@
-import { postCategorizeExpense } from "@/api/dashboardApi";
-import { CATEGORIZE_ERROR_MESSAGE } from "@/api/constants";
+import { postCategorizeExpense } from "@/api/client/dashboardApi";
+import { EXPENSES_CATEGORIZE_ERROR_MESSAGE } from "@/api/constants";
 import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import type { UseAutoCategorizeParams } from "@/app/(sidebar)/dashboard/_types";
@@ -31,7 +31,7 @@ export function useAutoCategorize({ updateCellByLocalId }: UseAutoCategorizePara
     } catch (e) {
       showToast({
         variant: "error",
-        message: e instanceof Error ? e.message : CATEGORIZE_ERROR_MESSAGE,
+        message: e instanceof Error ? e.message : EXPENSES_CATEGORIZE_ERROR_MESSAGE,
       });
     }
   }, AUTO_CATEGORIZE_DEBOUNCE_MS);

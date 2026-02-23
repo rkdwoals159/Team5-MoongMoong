@@ -2,12 +2,12 @@ import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useAutoCategorize } from "@/app/(sidebar)/dashboard/_hooks/useAutoCategorize";
-import { postCategorizeExpense } from "@/api/dashboardApi";
+import { postCategorizeExpense } from "@/api/client/dashboardApi";
 
 const mockPostCategorizeExpense = vi.mocked(postCategorizeExpense);
 const { mockShowToast } = vi.hoisted(() => ({ mockShowToast: vi.fn() }));
 
-vi.mock("@/api/dashboardApi", () => ({
+vi.mock("@/api/client/dashboardApi", () => ({
   postCategorizeExpense: vi.fn(),
 }));
 

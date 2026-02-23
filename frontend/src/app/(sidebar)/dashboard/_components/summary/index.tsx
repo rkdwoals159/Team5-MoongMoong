@@ -1,4 +1,4 @@
-import { getCompareLastMonth } from "@/api/dashboardApi";
+import { getCompareLastMonth } from "@/api/server/dashboardApi";
 import PetProfileImage from "@/app/(sidebar)/dashboard/_components/summary/PetProfileImage";
 import SummaryCard from "@/app/(sidebar)/dashboard/_components/summary/SummaryCard";
 

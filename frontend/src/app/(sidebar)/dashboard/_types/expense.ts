@@ -22,11 +22,3 @@ export type EditableExpenseRow = ExpenseData & {
   isDirty: boolean;
   isDeleted: boolean;
 };
-
-/**
- * 소비내역 기간별 조회 응답 타입
- */
-export type ExpensesByPeriodResponse = {
-  total: number;
-  expenses: ExpenseData[];
-};

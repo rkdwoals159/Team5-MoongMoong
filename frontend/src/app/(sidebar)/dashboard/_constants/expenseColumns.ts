@@ -39,6 +39,9 @@ export const EXPENSE_COLUMNS: DataTableColumn<ExpenseData>[] = [
 /** EditableDataTable 기본 표시 행 수 */
 export const EDITABLE_TABLE_MIN_ROWS = 1;
 
+/** 기간별 소비내역 한 페이지 기본 조회 수 */
+export const DEFAULT_PAGE_SIZE = 10;
+
 /** CategoryPopup 높이 (팝업 위치 계산용) */
 export const CATEGORY_POPUP_HEIGHT = 240;
 

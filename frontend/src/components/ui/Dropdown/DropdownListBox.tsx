@@ -8,8 +8,9 @@ const DropdownListBox = ({
   focusedIndex,
   onSelect,
   onMouseEnter,
+  className,
 }: DropdownListBoxProps) => {
-  const listBoxClasses = cn(dropDownListBoxBaseClasses);
+  const listBoxClasses = cn(dropDownListBoxBaseClasses, className ?? "");
 
   return (
     <ul

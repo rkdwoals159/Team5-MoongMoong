@@ -1,24 +1,40 @@
-import { useCallback, useMemo, useState, useEffect } from "react";
+import { useCallback, useMemo, useState, useEffect, useRef } from "react";
 import type { ExpenseData, EditableExpenseRow } from "@/app/(sidebar)/dashboard/_types";
 import { SYNC_FIELDS } from "@/app/(sidebar)/dashboard/_constants";
 import {
   createEmptyRow,
   serverToEditableRow,
-  mergeRows,
   buildPatchPayload,
   mergeSelectedRowsLogic,
   calculateTotalExpense,
   getExpenseRowKey,
 } from "@/app/(sidebar)/dashboard/_lib";
 
-export function useExpenseRowsState(initialData: ExpenseData[]) {
+export function useExpenseRowsState(initialData: ExpenseData[], resetKey: number) {
   const [rows, setRows] = useState<EditableExpenseRow[]>(() =>
     initialData.map(serverToEditableRow),
   );
 
+  const prevResetKeyRef = useRef(resetKey);
+
   useEffect(() => {
-    setRows(initialData.map(serverToEditableRow));
-  }, [initialData]);
+    const isReset = prevResetKeyRef.current !== resetKey;
+    prevResetKeyRef.current = resetKey;
+
+    setRows((prev) => {
+      if (isReset) {
+        // 정렬/날짜/조건 변경 → 전체 교체
+        return initialData.map(serverToEditableRow);
+      }
+      // loadMore append → 이미 존재하는 expenseId는 제외하고 새 항목만 추가
+      const existingIds = new Set(prev.map((r) => r.expenseId).filter(Boolean));
+      const newItems = initialData
+        .filter((item) => item.expenseId != null && !existingIds.has(item.expenseId))
+        .map(serverToEditableRow);
+      if (newItems.length === 0) return prev;
+      return [...prev, ...newItems];
+    });
+  }, [initialData, resetKey]);
 
   const visibleRows = useMemo(() => rows.filter((row) => !row.isDeleted), [rows]);
   const displayInitialRows = useMemo(() => [...visibleRows, createEmptyRow(0)], [visibleRows]);
@@ -78,11 +94,6 @@ export function useExpenseRowsState(initialData: ExpenseData[]) {
     [],
   );
 
-  /** 서버 데이터와 병합 핸들러 */
-  const mergeRowsFromServer = useCallback((newRows: ExpenseData[]) => {
-    setRows((prev) => mergeRows(prev, newRows));
-  }, []);
-
   /** 선택된 셀 삭제 핸들러 */
   const deleteSelectedRows = useCallback(() => {
     setRows((prev) => prev.map((row) => (row.selected ? { ...row, isDeleted: true } : row)));
@@ -125,7 +136,6 @@ export function useExpenseRowsState(initialData: ExpenseData[]) {
     deleteSelectedRows,
     mergeSelectedRows,
     getPatchPayload,
-    mergeRowsFromServer,
     hasUnsavedChanges,
     selectedCount,
     totalExpense,
