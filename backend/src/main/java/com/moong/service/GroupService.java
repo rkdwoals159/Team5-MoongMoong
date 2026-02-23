@@ -14,12 +14,14 @@ import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.CrewRepository;
 import com.moong.repository.PetGroupRepository;
 import com.moong.repository.PetRepository;
+import com.moong.repository.medicaladvice.GroupMedicalAdviceRepository;
 import com.moong.repository.notification.NotificationCursorRepository;
 import com.moong.util.InviteCodeGenerator;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class GroupService {
 
     private final CrewRepository crewRepository;
     private final PetGroupRepository petGroupRepository;
+    private final GroupMedicalAdviceRepository groupMedicalAdviceRepository;
     private final PetRepository petRepository;
     private final NotificationCursorRepository notificationCursorRepository;
     private final InviteCodeGenerator inviteCodeGenerator;
@@ -58,6 +61,7 @@ public class GroupService {
         //TODO 순서 조정 문제
         crewRepository.deleteById(crew.getId());
         petGroupRepository.deleteById(crew.getPetGroup().getId());
+        groupMedicalAdviceRepository.deleteByPetGroup_Id(crew.getPetGroup().getId());
         notificationCursorRepository.deleteByCrew_Id(crew.getId());
         Crew savedCrew = crewRepository.save(new Crew(targetGroup, member));
         notificationCursorRepository.save(new NotificationCursor(savedCrew));

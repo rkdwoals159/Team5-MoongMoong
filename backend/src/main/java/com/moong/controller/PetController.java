@@ -8,6 +8,7 @@ import com.moong.dto.request.pet.PetUpdateRequest;
 import com.moong.dto.response.pet.PetCreateResponse;
 import com.moong.dto.response.pet.PetReadResponse;
 import com.moong.dto.response.pet.PetUpdateResponse;
+import com.moong.facade.petgroup.PetGroupFacadeService;
 import com.moong.service.GroupService;
 import com.moong.service.PetService;
 import jakarta.validation.Valid;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PetController implements PetControllerSwagger {
 
+    private final PetGroupFacadeService petGroupFacadeService;
     private final PetService petService;
     private final GroupService groupService;
 
@@ -32,9 +34,7 @@ public class PetController implements PetControllerSwagger {
             @AuthMember Member member,
             @RequestBody @Valid PetCreateRequest petCreateRequest
     ) {
-        //TODO Facade 고민
-        PetCreateResponse response = petService.createPet(member, petCreateRequest);
-        groupService.firstJoin(member, response.petId());
+        PetCreateResponse response = petGroupFacadeService.firstJoin(member, petCreateRequest);
         return ResponseEntity.ok(response);
     }
 

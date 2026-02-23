@@ -3,11 +3,12 @@ package com.moong.repository;
 import com.moong.domain.entity.PetGroup;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface PetGroupRepository extends Repository<PetGroup, Long> {
 
@@ -32,6 +33,19 @@ public interface PetGroupRepository extends Repository<PetGroup, Long> {
 
     default PetGroup getFetchedPetByPetId(long petId) {
         return findFetchedPetByPetId(petId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.PET_GROUP_NOT_FOUND));
+    }
+
+    @Query("""
+            select pg
+            from PetGroup pg
+            join fetch pg.pet
+            where pg.id = :groupId
+            """)
+    Optional<PetGroup> findFetchedPetById(long groupId);
+
+    default PetGroup getFetchedPetById(long groupId) {
+        return findFetchedPetById(groupId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.PET_GROUP_NOT_FOUND));
     }
 

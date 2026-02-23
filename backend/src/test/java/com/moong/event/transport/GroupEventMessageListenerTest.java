@@ -2,30 +2,31 @@ package com.moong.event.transport;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moong.DataBaseCleaner;
+import com.moong.event.EventType;
+import com.moong.event.dto.AiAdviceCreatedPayload;
 import com.moong.event.dto.CoinCreatedPayload;
 import com.moong.event.group.GroupEvent;
-import com.moong.event.EventType;
 import com.moong.service.SseService;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.connection.Message;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @ActiveProfiles("test")
 @ExtendWith(DataBaseCleaner.class)
@@ -86,6 +87,46 @@ class GroupEventMessageListenerTest {
                     assertThat(data.coinId()).isEqualTo(1L);
                     assertThat(data.amount()).isEqualTo(5000);
                     assertThat(data.name()).isEqualTo("민수");
+                }
+        );
+    }
+
+    @DisplayName("data는 정상적으로 AdviceCreatedPayload로 변환된다")
+    @Test
+    void onMessage_parseOuterFields_AdviceCreatedPayload() {
+        String json = """
+                {
+                  "eventType": "AI_ADVICE_CREATED",
+                  "eventId": 10,
+                  "groupId": 1,
+                  "senderId": 3,
+                  "data": {
+                    "message": "AI 의사 권장사항 생성이 완료되었습니다!"
+                  }
+                }
+                """;
+        Message message = mock(Message.class);
+        when(message.getBody()).thenReturn(json.getBytes(StandardCharsets.UTF_8));
+
+        groupEventMessageListener.onMessage(message, null);
+
+        ArgumentCaptor<GroupEvent<AiAdviceCreatedPayload>> captor =
+                ArgumentCaptor.forClass(GroupEvent.class);
+
+        verify(sseService).sendGroupNotification(captor.capture());
+
+        GroupEvent<AiAdviceCreatedPayload> event = captor.getValue();
+
+        assertAll(
+                () -> assertThat(event.eventType()).isEqualTo(EventType.AI_ADVICE_CREATED),
+                () -> assertThat(event.eventId()).isEqualTo(10L),
+                () -> assertThat(event.groupId()).isEqualTo(1L),
+                () -> assertThat(event.senderId()).isEqualTo(3L),
+                () -> assertThat(event.data()).isNotNull(),
+                () -> assertThat(event.data()).isInstanceOf(AiAdviceCreatedPayload.class),
+                () -> {
+                    AiAdviceCreatedPayload data = event.data();
+                    assertThat(data.message()).isEqualTo("AI 의사 권장사항 생성이 완료되었습니다!");
                 }
         );
     }

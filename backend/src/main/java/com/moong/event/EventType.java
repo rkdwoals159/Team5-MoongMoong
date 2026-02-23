@@ -1,5 +1,6 @@
 package com.moong.event;
 
+import com.moong.event.dto.AiAdviceCreatedPayload;
 import com.moong.event.dto.CoinCreatedPayload;
 import com.moong.event.dto.NudgePayload;
 import com.moong.event.group.GroupEventPayload;
@@ -7,7 +8,8 @@ import com.moong.event.group.GroupEventPayload;
 public enum EventType {
 
     SAVING(CoinCreatedPayload.class),
-    NUDGE(NudgePayload.class);
+    NUDGE(NudgePayload.class),
+    AI_ADVICE_CREATED(AiAdviceCreatedPayload.class);
 
     private final Class<? extends GroupEventPayload> payloadClass;
 

@@ -24,4 +24,16 @@ public record GroupEventMessage<T extends GroupEventPayload>(
                 new CoinCreatedPayload(member, coin)
         );
     }
+
+    public static GroupEventMessage<AiAdviceCreatedPayload> adviceCreated(
+            long memberId,
+            long groupId
+    ) {
+        return new GroupEventMessage<>(
+                EventType.AI_ADVICE_CREATED,
+                groupId,
+                memberId,
+                new AiAdviceCreatedPayload()
+        );
+    }
 }

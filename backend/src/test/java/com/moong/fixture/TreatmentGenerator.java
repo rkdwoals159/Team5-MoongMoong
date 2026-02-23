@@ -27,4 +27,19 @@ public class TreatmentGenerator {
 
         return treatmentRepository.save(treatment);
     }
+
+    public Treatment generatedSaved(Disease disease, String name, int minPrice, int averagePrice, int maxPrice){
+        Treatment treatment = new Treatment(
+                null,
+                disease,
+                name,
+                "",
+                "서울시",
+                "중구",
+                minPrice,
+                averagePrice,
+                maxPrice
+        );
+        return treatmentRepository.save(treatment);
+    }
 }

@@ -3,6 +3,7 @@ package com.moong.service;
 import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.Member;
 import com.moong.event.SseEventSender;
+import com.moong.event.dto.AiAdviceCreatedPayload;
 import com.moong.event.transport.CustomSseEmitter;
 import com.moong.event.group.GroupEvent;
 import com.moong.event.group.GroupEventPayload;
@@ -55,7 +56,9 @@ public class SseService {
 
     public void sendGroupNotification(GroupEvent<? extends GroupEventPayload> event) {
         groupConnectionRepository.findAllMemberIdsByGroupId(event.groupId()).stream()
-                .filter(memberId -> memberId != event.senderId())
+                .filter(memberId ->
+                        (event.data() instanceof AiAdviceCreatedPayload) || memberId != event.senderId()
+                )
                 .forEach(memberId -> {
                     SseEmitter.SseEventBuilder eventBuilder = SseEmitter.event()
                             .id(String.valueOf(event.eventId()))

@@ -1,13 +1,9 @@
 package com.moong.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import com.moong.domain.entity.Crew;
 import com.moong.domain.entity.Member;
 import com.moong.domain.entity.Pet;
 import com.moong.domain.entity.PetGroup;
-import com.moong.domain.entity.WorriedDisease;
 import com.moong.domain.enums.Breed;
 import com.moong.domain.enums.Disease;
 import com.moong.domain.enums.Gender;
@@ -15,15 +11,28 @@ import com.moong.dto.request.pet.PetCreateRequest;
 import com.moong.dto.request.pet.PetUpdateRequest;
 import com.moong.dto.response.pet.PetReadResponse;
 import com.moong.dto.response.pet.PetUpdateResponse;
+import com.moong.service.GroupMedicalAdviceService;
 import io.restassured.http.ContentType;
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 class PetControllerTest extends BaseControllerTest {
+
+    @MockitoBean
+    private GroupMedicalAdviceService groupMedicalAdviceService;
 
     @DisplayName("인증에 성공한 사용자가 강아지 정보 입력에 성공")
     @Test
@@ -48,6 +57,9 @@ class PetControllerTest extends BaseControllerTest {
                 .post("/api/pet")
                 .then()
                 .statusCode(200);
+
+        verify(groupMedicalAdviceService, times(1))
+                .createMedicalAdvice(anyLong(), anyLong(), any());
     }
 
     @DisplayName("강아지 정보 입력시 인증에 실패하면 401을 반환한다")
