@@ -15,7 +15,7 @@ export default function SavingStatus() {
           <span>{status.target.toLocaleString()}원</span>
         </div>
         <div className="py-250 px-400 bg-gray-700 rounded-250">
-          <span className="typo-body-l-bold text-white-100">{progress.toFixed(0)}% 달성</span>
+          <span className="typo-body-l-bold text-white-100">{progress.toFixed(2)}% 달성</span>
         </div>
       </div>
     </div>

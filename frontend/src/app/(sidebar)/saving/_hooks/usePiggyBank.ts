@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Engine, Render, Runner, Composite, Events } from "matter-js";
+import { Engine, Render, Runner, Composite, Events, Mouse, MouseConstraint } from "matter-js";
 import type { Body } from "matter-js";
 import { PIGGY_BANK } from "@/app/(sidebar)/saving/_constants";
 import type { ToolTipState } from "@/app/(sidebar)/saving/_types";
@@ -15,6 +15,7 @@ export default function usePiggyBank() {
   const engineRef = useRef<Engine | null>(null);
   const renderRef = useRef<Render | null>(null);
   const runnerRef = useRef<Runner | null>(null);
+  const mouseRef = useRef<Mouse | null>(null);
   const sizeRef = useRef<{ width: number; height: number }>({ width: 0, height: 0 });
   const wallsRef = useRef<Body[]>([]);
   const [ready, setReady] = useState(false);
@@ -66,7 +67,12 @@ export default function usePiggyBank() {
       renderRef.current.canvas.height = height;
       renderRef.current.options.width = width;
       renderRef.current.options.height = height;
-      Render.setPixelRatio(renderRef.current, window.devicePixelRatio || 1);
+      const dpr = window.devicePixelRatio || 1;
+      Render.setPixelRatio(renderRef.current, dpr);
+
+      if (mouseRef.current) {
+        mouseRef.current.pixelRatio = dpr;
+      }
 
       if (wallsRef.current.length) {
         Composite.remove(engineRef.current.world, wallsRef.current);
@@ -86,8 +92,34 @@ export default function usePiggyBank() {
     });
     resizeObserver.observe(sceneRef.current);
 
+    /** MouseConstraint 설정 (드래그 인터랙션) */
+    const mouse = Mouse.create(render.canvas);
+    mouseRef.current = mouse;
+    const mouseConstraint = MouseConstraint.create(engine, {
+      mouse,
+      constraint: {
+        stiffness: PIGGY_BANK.DRAG_STIFFNESS,
+        render: { visible: false },
+      },
+    });
+    Composite.add(engine.world, mouseConstraint);
+    render.mouse = mouse;
+    render.canvas.style.touchAction = "none";
+
     /** 마우스 이벤트 핸들러 */
+    let isDragging = false;
+
+    Events.on(mouseConstraint, "startdrag", () => {
+      isDragging = true;
+      setToolTip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
+    });
+
+    Events.on(mouseConstraint, "enddrag", () => {
+      isDragging = false;
+    });
+
     const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging) return;
       const result = findTooltipTarget(engine, render.canvas, e);
       if (!result) {
         setToolTip((prev) => (prev.visible ? { ...prev, visible: false } : prev));
@@ -124,6 +156,9 @@ export default function usePiggyBank() {
         cancelAnimationFrame(rafId);
       }
       resizeObserver.disconnect();
+      Events.off(mouseConstraint, "startdrag");
+      Events.off(mouseConstraint, "enddrag");
+      Composite.remove(engine.world, mouseConstraint);
       render.canvas.removeEventListener("mousemove", handleMouseMove);
       render.canvas.removeEventListener("mouseleave", handleMouseLeave);
       Events.off(render, "afterRender", handleAfterRender);

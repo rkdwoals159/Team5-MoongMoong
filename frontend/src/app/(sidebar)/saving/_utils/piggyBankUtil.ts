@@ -39,16 +39,13 @@ export const createCoinBody = (
   size: { width: number; height: number },
 ): Body => {
   const { width, height } = size;
-  const x = Math.max(
-    PIGGY_BANK.BALL_DROP_OFFSET,
-    Math.random() * (width - PIGGY_BANK.BALL_DROP_OFFSET * 2) + PIGGY_BANK.BALL_DROP_OFFSET,
-  );
   const safeTarget = targetAmount > 0 ? targetAmount : 1;
   const radius = clamp(
     (height / 2) * Math.sqrt(amount / safeTarget),
     PIGGY_BANK.MIN_RADIUS,
     height / 2 - PIGGY_BANK.MIN_RADIUS,
   );
+  const x = Math.random() * (width - radius * 2) + radius;
   const spriteScale = (radius * 2) / PIGGY_BANK.SCALE_BASE;
   const tooltipText = `저금 금액: ${formatAmount(Math.round(amount))}\n저금한 날: ${formatCreatedAt(createdAt)}`;
 
@@ -73,12 +70,19 @@ export const createCoinBody = (
 export const renderLabels = (ctx: CanvasRenderingContext2D, bodies: Body[]): void => {
   ctx.save();
   ctx.fillStyle = PIGGY_BANK.LABEL_FILL_COLOR;
-  ctx.font = PIGGY_BANK.LABEL_FONT;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   bodies.forEach((body: BallBody) => {
     if (body.isStatic || !body.plugin?.toolTip) return;
     const text = body.plugin.label;
+    const fontSize = body.circleRadius
+      ? clamp(
+          body.circleRadius * PIGGY_BANK.LABEL_FONT_RATIO,
+          PIGGY_BANK.LABEL_FONT_MIN,
+          PIGGY_BANK.LABEL_FONT_MAX,
+        )
+      : 16;
+    ctx.font = `bold ${Math.round(fontSize)}px pretendard`;
     const radiusOffset = body.circleRadius ? body.circleRadius * PIGGY_BANK.LABEL_RADIUS_RATIO : 0;
     ctx.fillText(text, body.position.x, body.position.y + radiusOffset);
   });

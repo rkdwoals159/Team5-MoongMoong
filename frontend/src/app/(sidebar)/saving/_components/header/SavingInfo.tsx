@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import SavingStatus from "@/app/(sidebar)/saving/_components/header/SavingStatus";
 import SavingTargetChangeButton from "@/app/(sidebar)/saving/_components/header/SavingTargetChangeButton";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
@@ -6,6 +7,11 @@ import { calcProgress } from "@/app/(sidebar)/saving/_utils";
 export default function SavingInfo() {
   const { status } = useSavingStatus();
   const progress = calcProgress(status.current, status.target);
+  const [animated, setAnimated] = useState(false);
+
+  useEffect(() => {
+    requestAnimationFrame(() => setAnimated(true));
+  }, []);
 
   return (
     <div>
@@ -24,8 +30,8 @@ export default function SavingInfo() {
           aria-valuenow={Number(progress.toFixed(0))}
         >
           <div
-            className="h-full rounded-full bg-yellow-300 transition-[width] duration-500 ease-out"
-            style={{ width: `${progress.toFixed(0)}%` }}
+            className="h-full rounded-full bg-yellow-300 transition-[width] duration-700 ease-out"
+            style={{ width: animated ? `${progress.toFixed(0)}%` : "0%" }}
           />
         </div>
       </div>

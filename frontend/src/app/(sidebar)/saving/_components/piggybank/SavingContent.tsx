@@ -5,7 +5,7 @@ import { useSSESaving } from "@/app/(sidebar)/saving/_hooks/useSSESaving";
 import SavingButton from "./SavingButton";
 import SavingNudgeButton from "./SavingNudgeButton";
 import Loading from "@/components/common/Loading/Loading";
-import { DROP_DELAY } from "@/app/(sidebar)/saving/_constants";
+import { DROP_DELAY, MAX_DROP_DURATION } from "@/app/(sidebar)/saving/_constants";
 import { useTooltipStyle } from "@/app/(sidebar)/saving/_hooks/useTooltipStyle";
 
 export default function SavingContent() {
@@ -37,10 +37,14 @@ export default function SavingContent() {
     hasDroppedRef.current = true;
     if (!status.coins.length) return;
     const timers: ReturnType<typeof setTimeout>[] = [];
+    const delay =
+      status.coins.length > 1
+        ? Math.min(DROP_DELAY, MAX_DROP_DURATION / (status.coins.length - 1))
+        : DROP_DELAY;
     status.coins.forEach((coin, index) => {
       const timerId = setTimeout(() => {
         handleDrop(coin.name ?? "", coin.amount ?? 0, coin.createdAt ?? "", targetRef.current);
-      }, DROP_DELAY * index);
+      }, delay * index);
       timers.push(timerId);
     });
     return () => timers.forEach(clearTimeout);
