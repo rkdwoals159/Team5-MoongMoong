@@ -83,6 +83,25 @@ class GroupServiceTest extends BaseServiceTest {
                     .hasMessage(ErrorCode.ALREADY_PARTICIPATE_ANOTHER_PET_GROUP.getMessage());
         }
 
+        @DisplayName("성공 : 신규회원이 초대코드로 모임에 참여할 수 있다")
+        @Test
+        void participateSuccess_When_FreshMan() {
+            Pet savedPet = petGenerator.generateSaved();
+            Member geonwoo = memberGenerator.generateSaved("김건우");
+            Member hyeonmin = memberGenerator.generateSaved("전현민");
+            PetGroup petGroup1 = petGroupGenerator.generateSaved(savedPet);
+
+            crewGenerator.generateSaved(petGroup1, geonwoo);
+            InviteCode inviteCode = inviteCodeGenerator.encrypt(petGroup1.getId());
+
+            assertThatCode(() ->
+                    groupService.participate(
+                            hyeonmin,
+                            new PetGroupParticipateRequest(InviteCode.HTTP_INVITE_URL_PREFIX + inviteCode.getCode())
+                    )
+            ).doesNotThrowAnyException();
+        }
+
         @DisplayName("실패 : 펫 그룹 정원이 모두 찼을 때 그룹에 참여할 수 없다")
         @Test
         void participateFail_When_GroupIsFull() {

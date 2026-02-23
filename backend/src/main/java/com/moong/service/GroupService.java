@@ -17,6 +17,7 @@ import com.moong.repository.PetRepository;
 import com.moong.repository.medicaladvice.GroupMedicalAdviceRepository;
 import com.moong.repository.notification.NotificationCursorRepository;
 import com.moong.util.InviteCodeGenerator;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,9 +49,6 @@ public class GroupService {
 
     @Transactional
     public PetGroupParticipateResponse participate(Member member, PetGroupParticipateRequest request) {
-        Crew crew = crewRepository.getByMemberId(member.getId());
-        validateMemberIsAlone(crew.getPetGroup().getId());
-
         InviteCode inviteCode = InviteCode.parseFromUrl(request.inviteUrl());
         long decodedGroupId = inviteCodeGenerator.decode(inviteCode);
         PetGroup targetGroup = petGroupRepository.getById(decodedGroupId);
@@ -58,13 +56,21 @@ public class GroupService {
         validateGroupIsFull(targetGroupCrews);
         validateAlreadyAttended(targetGroupCrews, member.getId());
 
+        Optional<Crew> foundCrew = crewRepository.findByMemberId(member.getId());
+        foundCrew.ifPresent(crew -> {
+            validateMemberIsAlone(crew.getPetGroup().getId());
+            changeGroupInfo(crew);
+        });
+        Crew savedCrew = crewRepository.save(new Crew(targetGroup, member));
+        notificationCursorRepository.save(new NotificationCursor(savedCrew));
+        return new PetGroupParticipateResponse(savedCrew.getId());
+    }
+
+    private void changeGroupInfo(Crew crew) {
         crewRepository.deleteById(crew.getId());
         petGroupRepository.deleteById(crew.getPetGroup().getId());
         groupMedicalAdviceRepository.deleteByPetGroup_Id(crew.getPetGroup().getId());
         notificationCursorRepository.deleteByCrew_Id(crew.getId());
-        Crew savedCrew = crewRepository.save(new Crew(targetGroup, member));
-        notificationCursorRepository.save(new NotificationCursor(savedCrew));
-        return new PetGroupParticipateResponse(savedCrew.getId());
     }
 
     private void validateMemberIsAlone(long memberGroupId) {
