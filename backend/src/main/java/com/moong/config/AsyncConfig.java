@@ -1,7 +1,5 @@
 package com.moong.config;
 
-import java.util.Arrays;
-import java.util.concurrent.Executor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +8,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.Arrays;
+import java.util.concurrent.Executor;
 
 @Slf4j
 @Profile("!test")
@@ -57,6 +58,20 @@ public class AsyncConfig implements AsyncConfigurer {
         executor.setRejectedExecutionHandler((r, ex) -> {
             log.warn("emailEventExecutor rejected task. poolSize={}, active={}, queued={}",
                     ex.getPoolSize(), ex.getActiveCount(), ex.getQueue().size());
+        });
+        executor.initialize();
+        return executor;
+    }
+
+    @Bean(name = "rankingRebuildExecutor")
+    public Executor rankingRebuildExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(2);
+        executor.setMaxPoolSize(4);
+        executor.setQueueCapacity(100);
+        executor.setRejectedExecutionHandler((r, ex) -> {
+            log.warn("rankingRebuildExecutor rejected task. poolSize={}, active={}, queued={}",
+                      ex.getPoolSize(), ex.getActiveCount(), ex.getQueue().size());
         });
         executor.initialize();
         return executor;

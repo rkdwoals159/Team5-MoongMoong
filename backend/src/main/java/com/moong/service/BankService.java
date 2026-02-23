@@ -1,7 +1,6 @@
 package com.moong.service;
 
 import com.moong.domain.bank.BankRankings;
-import com.moong.view.bank.CoinView;
 import com.moong.domain.entity.Bank;
 import com.moong.domain.entity.Coin;
 import com.moong.domain.entity.Crew;
@@ -14,13 +13,13 @@ import com.moong.dto.response.bank.BankCreateResponse;
 import com.moong.dto.response.bank.BankInfoResponse;
 import com.moong.dto.response.bank.BankUpdateResponse;
 import com.moong.dto.response.bank.BankWithBankBreakResponse;
-import com.moong.dto.response.bank.CoinCreateResponse;
 import com.moong.dto.response.bank.CoinsResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
 import com.moong.repository.BankRepository;
 import com.moong.repository.CoinRepository;
 import com.moong.repository.CrewRepository;
+import com.moong.view.bank.CoinView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -64,11 +63,7 @@ public class BankService {
 
     public BankInfoResponse findBankInfo(Member member) {
         Bank foundBank = findBank(member.getId());
-        if (foundBank.isCurrentAmountZero()) {
-            return new BankInfoResponse(foundBank, BankRankings.emptyBankRankings());
-        }
-
-        BankRankings bankRankings = rankingService.getRanking(foundBank.getId());
+        BankRankings bankRankings = rankingService.getRanking(foundBank.getId(), foundBank.isCurrentAmountZero());
         return new BankInfoResponse(foundBank, bankRankings);
     }
 

@@ -4,14 +4,17 @@ import com.moong.domain.bank.BankRanking;
 import com.moong.key.ranking.RedisRankingKey;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 public interface RankingCache {
 
-    Optional<List<BankRanking>> getRanking(RedisRankingKey rankingKey);
+    CacheResult<List<BankRanking>> getRanking(RedisRankingKey rankingKey);
 
-    void rebuildIfEmpty(RedisRankingKey rankingKey, Supplier<List<BankRanking>> rawProvider);
+    void markAsEmpty(RedisRankingKey rankingKey);
+
+    void rebuildAsync(RedisRankingKey rankingKey, Supplier<List<BankRanking>> provider);
+
+    void syncToRedis(String rankingKey, List<BankRanking> rankings);
 
     void updateRanking(RedisRankingKey rankingKey,
                        String rawMemberName,

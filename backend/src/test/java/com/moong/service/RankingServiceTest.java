@@ -1,5 +1,7 @@
 package com.moong.service;
 
+import com.moong.cache.CacheResult;
+import com.moong.cache.CacheStatus;
 import com.moong.cache.RankingCache;
 import com.moong.domain.bank.BankRanking;
 import com.moong.domain.bank.BankRankings;
@@ -18,12 +20,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -50,15 +53,16 @@ class RankingServiceTest extends BaseServiceTest {
         );
 
         RedisRankingKey rankingKey = new RedisRankingKey(bankId);
-        when(rankingCache.getRanking(rankingKey)).thenReturn(Optional.of(raw));
+        CacheResult<List<BankRanking>> cacheHit = new CacheResult<>(raw, CacheStatus.SUCCESS, 40 * 60 * 60L);
+        when(rankingCache.getRanking(rankingKey)).thenReturn(cacheHit);
 
-        BankRankings rankings = rankingService.getRanking(bankId);
+        BankRankings rankings = rankingService.getRanking(bankId, false);
 
         assertAll(
                 () -> assertThat(rankings).isNotNull(),
                 () -> verify(rankingCache).getRanking(rankingKey),
                 () -> verify(coinRepository, never()).getFetchedAllByBank_Id(anyLong(), any(Sort.class)),
-                () -> verify(rankingCache, never()).rebuildIfEmpty(any(RedisRankingKey.class), any())
+                () -> verify(rankingCache, never()).rebuildAsync(any(), any())
         );
     }
 
@@ -73,17 +77,106 @@ class RankingServiceTest extends BaseServiceTest {
         );
         RedisRankingKey rankingKey = new RedisRankingKey(bankId);
 
-        when(rankingCache.getRanking(rankingKey)).thenReturn(Optional.empty());
+        when(rankingCache.getRanking(rankingKey))
+                .thenReturn(new CacheResult<>(CacheStatus.EMPTY));
         when(coinRepository.getFetchedAllByBank_Id(eq(bankId), any(Sort.class)))
                 .thenReturn(coinViews);
 
-        BankRankings result = rankingService.getRanking(bankId);
+        BankRankings result = rankingService.getRanking(bankId, false);
 
         assertAll(
                 () -> assertThat(result).isNotNull(),
                 () -> verify(rankingCache).getRanking(rankingKey),
                 () -> verify(coinRepository).getFetchedAllByBank_Id(eq(bankId), any(Sort.class)),
-                () -> verify(rankingCache).rebuildIfEmpty(any(RedisRankingKey.class), any())
+                () -> verify(rankingCache).syncToRedis(eq(rankingKey.value()), anyList()),
+                () -> verify(rankingCache, never()).rebuildAsync(any(), any())
+        );
+    }
+
+    @DisplayName("캐시가 비어있고 저금통 잔액이 0원이면 DB 조회 대신 빈 랭킹키를 생성한다")
+    @Test
+    void shouldMarkAsEmpty_whenCacheMissAndAmountZero() {
+        // given
+        long bankId = 1L;
+        boolean isCurrentAmountZero = true;
+        RedisRankingKey rankingKey = new RedisRankingKey(bankId);
+
+        when(rankingCache.getRanking(rankingKey)).thenReturn(new CacheResult<>(CacheStatus.EMPTY));
+
+        // when
+        BankRankings result = rankingService.getRanking(bankId, isCurrentAmountZero);
+
+        // then
+        assertAll(
+                () -> assertThat(result.getValues()).isEmpty(),
+                () -> verify(rankingCache).getRanking(rankingKey),
+                () -> verify(coinRepository, never()).getFetchedAllByBank_Id(anyLong(), any()),
+                () -> verify(rankingCache).markAsEmpty(rankingKey)
+        );
+    }
+
+    @DisplayName("캐시의 Soft TTL이 지났다면 비동기 갱신을 수행한다")
+    @Test
+    void shouldRebuildAsync_whenCacheIsStaleWithData() {
+        // given
+        long bankId = 1L;
+        RedisRankingKey rankingKey = new RedisRankingKey(bankId);
+        List<BankRanking> staleData = List.of(new BankRanking(1L, "올드비", 100L));
+
+        CacheResult<List<BankRanking>> staleHit = new CacheResult<>(staleData, CacheStatus.SUCCESS, 10 * 60 * 60L);
+        when(rankingCache.getRanking(rankingKey)).thenReturn(staleHit);
+
+        // when
+        BankRankings result = rankingService.getRanking(bankId, false);
+
+        // then
+        assertAll(
+                () -> assertThat(result.getValues()).hasSize(1),
+                () -> verify(rankingCache).getRanking(rankingKey),
+                () -> verify(rankingCache).rebuildAsync(eq(rankingKey), any())
+        );
+    }
+
+    @DisplayName("캐시의 Soft TTL이 지났더라도 저금통 잔액이 0원이면 랭킹이 존재하지 않으므로 비동기 갱신을 건너뛴다")
+    @Test
+    void shouldNotRebuildAsync_whenCacheIsStaleButEmptyMarker() {
+        // given
+        long bankId = 1L;
+        RedisRankingKey rankingKey = new RedisRankingKey(bankId);
+
+        CacheResult<List<BankRanking>> emptyMarkerHit = new CacheResult<>(List.of(), CacheStatus.SUCCESS, 10 * 60 * 60L);
+        when(rankingCache.getRanking(rankingKey)).thenReturn(emptyMarkerHit);
+
+        // when
+        BankRankings result = rankingService.getRanking(bankId, true);
+
+        // then
+        assertAll(
+                () -> assertThat(result.getValues()).isEmpty(),
+                () -> verify(rankingCache, never()).rebuildAsync(any(), any()),
+                () -> verify(coinRepository, never()).getFetchedAllByBank_Id(anyLong(), any())
+        );
+    }
+
+    @DisplayName("Redis 장애 발생 시 DB 조회를 하지 않고 빈 결과를 반환한다")
+    @Test
+    void shouldProtectDatabase_whenRedisError() {
+        // given
+        long bankId = 1L;
+        boolean isCurrentAmountZero = false;
+        RedisRankingKey rankingKey = new RedisRankingKey(bankId);
+        CacheResult<List<BankRanking>> cacheError = new CacheResult<>(CacheStatus.ERROR);
+        when(rankingCache.getRanking(rankingKey)).thenReturn(cacheError);
+
+        // when
+        BankRankings rankings = rankingService.getRanking(bankId, isCurrentAmountZero);
+
+        // then
+        assertAll(
+                () -> assertThat(rankings.getValues()).isEmpty(),
+                () -> verify(rankingCache).getRanking(rankingKey),
+                () -> verify(coinRepository, never()).getFetchedAllByBank_Id(anyLong(), any(Sort.class)),
+                () -> verify(rankingCache, never()).syncToRedis(anyString(), anyList())
         );
     }
 
@@ -107,6 +200,6 @@ class RankingServiceTest extends BaseServiceTest {
     void shouldSoftDeleteRankingWithTTL() {
         rankingService.deleteRanking(1L);
 
-        verify(rankingCache).softDeleteRanking(new RedisRankingKey(1L), 5L);
+        verify(rankingCache).softDeleteRanking(new RedisRankingKey(1L), 30L);
     }
 }
