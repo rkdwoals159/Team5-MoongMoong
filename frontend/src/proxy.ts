@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, userAgent } from "next/server";
 import {
   ACCESS_COOKIE,
   AUTH_LOGIN_PATH,
@@ -7,12 +7,26 @@ import {
 } from "./app/api/auth/_constants";
 import { validateAccessToken } from "./app/api/auth/_lib";
 
+const BLOCKED_DEVICE_TYPES = new Set(["mobile", "tablet"]);
+const PUBLIC_PATHS = new Set([AUTH_LOGIN_PATH, "/unsupported-device"]);
+const BOT_USER_AGENT_PATTERN =
+  /(bot|crawler|spider|slurp|preview|facebookexternalhit|facebot|twitterbot|slackbot|discordbot|linkedinbot|telegrambot|whatsapp|kakao.*(?:bot|preview|scrap)|naverbot|daumoa)/i;
+
 export async function proxy(request: NextRequest) {
   if (process.env.LHCI === "true") {
     return NextResponse.next();
   }
 
   const { pathname, search } = request.nextUrl;
+
+  if (shouldBlockMobileRequest(request) && pathname !== "/unsupported-device") {
+    return redirectToUnsupportedDevice(request);
+  }
+
+  if (PUBLIC_PATHS.has(pathname)) {
+    return NextResponse.next();
+  }
+
   const returnTo = `${pathname}${search}`;
   const token = request.cookies.get(ACCESS_COOKIE)?.value;
 
@@ -37,7 +51,7 @@ export const config = {
   matcher: [
     {
       source:
-        "/((?!api/auth|login|assets|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.json|.*\\..*).*)",
+        "/((?!api/auth|assets|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|manifest.json|.*\\..*).*)",
       missing: [
         { type: "header", key: "next-router-prefetch" },
         { type: "header", key: "next-router-segment-prefetch" },
@@ -73,6 +87,28 @@ function redirectToRefresh(request: NextRequest, returnTo: string) {
   refreshUrl.pathname = AUTH_REFRESH_PATH;
   refreshUrl.searchParams.set("returnTo", returnTo);
   return NextResponse.redirect(refreshUrl);
+}
+
+/**
+ * 모바일/태블릿 기기 차단 여부 확인
+ */
+function shouldBlockMobileRequest(request: NextRequest) {
+  const { device, ua } = userAgent(request);
+  const isBlockedDevice = BLOCKED_DEVICE_TYPES.has(device.type ?? "");
+  const isAllowedBot = BOT_USER_AGENT_PATTERN.test(ua ?? "");
+  return isBlockedDevice && !isAllowedBot;
+}
+
+/**
+ * 모바일 접속 차단 안내 페이지로 리다이렉트
+ */
+function redirectToUnsupportedDevice(request: NextRequest) {
+  const unsupportedUrl = request.nextUrl.clone();
+  const from = `${request.nextUrl.pathname}${request.nextUrl.search}`;
+  unsupportedUrl.pathname = "/unsupported-device";
+  unsupportedUrl.search = "";
+  unsupportedUrl.searchParams.set("from", from);
+  return NextResponse.redirect(unsupportedUrl);
 }
 
 /**
