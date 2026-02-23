@@ -7,6 +7,7 @@ import { getSSENotificationMessage } from "@/lib/sse/sseNotification";
 import { useServerEvent } from "@/store/ServerEventProvider";
 import type { SSEEvent } from "@/types/sse";
 import { useCallback } from "react";
+import { EVENT_TOAST_DURATION } from "@/constants/sseConnection";
 
 export default function SSEListener() {
   const { showToast } = useToast();
@@ -16,7 +17,11 @@ export default function SSEListener() {
   const handleEvent = useCallback(
     (event: SSEEvent) => {
       setLastEvent(event);
-      showToast({ variant: "success", message: getSSENotificationMessage(event) });
+      showToast({
+        variant: event.event === "NUDGE" ? "nudge" : "notification",
+        message: getSSENotificationMessage(event),
+        duration: EVENT_TOAST_DURATION,
+      });
     },
     [showToast, setLastEvent],
   );

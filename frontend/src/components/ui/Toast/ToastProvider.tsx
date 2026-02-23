@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useMemo } from "react";
 import { cn } from "@/utils/style";
 import Toast from "./Toast";
-import { ANIMATION_MS } from "./toastConstants";
+import { ANIMATION_MS } from "./toast.constant";
 import { useToastStore } from "./toastStore";
 import type { ToastContextValue } from "./toast.type";
 
@@ -19,6 +19,11 @@ const ToastProvider = ({ children }: { children: React.ReactNode }) => {
     [showToast, dismissToast],
   );
 
+  const defaultToasts = toasts.filter((t) => t.variant !== "notification" && t.variant !== "nudge");
+  const notificationToasts = toasts.filter(
+    (t) => t.variant === "notification" || t.variant === "nudge",
+  );
+
   return (
     <ToastContext.Provider value={value}>
       {children}
@@ -27,7 +32,25 @@ const ToastProvider = ({ children }: { children: React.ReactNode }) => {
           "pointer-events-none fixed left-1/2 -translate-x-1/2 bottom-700 z-50 flex w-full max-w-[515px] flex-col gap-300 px-500",
         )}
       >
-        {toasts.map((toast) => (
+        {defaultToasts.map((toast) => (
+          <div
+            key={toast.id}
+            className={cn(
+              "pointer-events-auto",
+              toast.state === "closing" ? "toast-out" : "toast-in",
+            )}
+            style={{ "--toast-duration": `${ANIMATION_MS}ms` } as React.CSSProperties}
+          >
+            <Toast variant={toast.variant} message={toast.message} />
+          </div>
+        ))}
+      </div>
+      <div
+        className={cn(
+          "pointer-events-none fixed right-500 bottom-700 z-50 flex w-full max-w-[300px] flex-col gap-300",
+        )}
+      >
+        {notificationToasts.map((toast) => (
           <div
             key={toast.id}
             className={cn(

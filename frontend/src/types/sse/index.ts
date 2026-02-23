@@ -4,19 +4,25 @@ export type SSEProps = {
   connectionToken?: string | null;
 };
 
-export type SSEEventType = "SAVING";
+export type SSEEventType = "SAVING" | "NUDGE";
 
 export type SavingEvent = {
   event: "SAVING";
   data: {
     coinId: number;
-    createdAt: string;
     amount: number;
     name: string;
   };
 };
 
-export type SSEEvent = SavingEvent;
+export type NudgeEvent = {
+  event: "NUDGE";
+  data: {
+    memberName: string;
+  };
+};
+
+export type SSEEvent = SavingEvent | NudgeEvent;
 export type SSEConnectionStatus = "connecting" | "open" | "closed";
 
 export type ParsedSSEEvent = {

@@ -1,4 +1,4 @@
-type ToastVariant = "error" | "success";
+type ToastVariant = "error" | "success" | "notification" | "nudge";
 
 export type ToastType = {
   variant?: ToastVariant;

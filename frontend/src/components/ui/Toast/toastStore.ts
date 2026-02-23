@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { TimerId, ToastItem, ToastOptions, ToastStore } from "./toast.type";
-import { ANIMATION_MS, DEFAULT_DURATION } from "./toastConstants";
+import { ANIMATION_MS, DEFAULT_DURATION } from "./toast.constant";
 import { generateUniqueId } from "@/utils/generateUniqueId";
 
 export const useToastStore = (): ToastStore => {

@@ -1,7 +1,9 @@
 import usePiggyBank from "@/app/(sidebar)/saving/_hooks/usePiggyBank";
 import { useEffect, useRef, useMemo } from "react";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
+import { useSSESaving } from "@/app/(sidebar)/saving/_hooks/useSSESaving";
 import SavingButton from "./SavingButton";
+import SavingNudgeButton from "./SavingNudgeButton";
 import Loading from "@/components/common/Loading/Loading";
 import { DROP_DELAY } from "@/app/(sidebar)/saving/_constants";
 import { useTooltipStyle } from "@/app/(sidebar)/saving/_hooks/useTooltipStyle";
@@ -9,6 +11,7 @@ import { useTooltipStyle } from "@/app/(sidebar)/saving/_hooks/useTooltipStyle";
 export default function SavingContent() {
   const { ready, toolTip, sceneRef, handleDrop, clearCoins } = usePiggyBank();
   const { status } = useSavingStatus();
+  useSSESaving({ handleDrop });
   const hasDroppedRef = useRef(false);
   const targetRef = useRef(status.target);
   const tooltipStyle = useTooltipStyle({ sceneRef, toolTip });
@@ -67,7 +70,12 @@ export default function SavingContent() {
         </div>
       )}
 
-      <SavingButton handleDrop={handleDrop} />
+      <div className="flex gap-300 w-2/3 mx-auto">
+        <div className="flex-[3]">
+          <SavingButton handleDrop={handleDrop} />
+        </div>
+        <SavingNudgeButton />
+      </div>
     </div>
   );
 }

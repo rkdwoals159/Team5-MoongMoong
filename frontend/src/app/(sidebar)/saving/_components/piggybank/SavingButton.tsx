@@ -51,7 +51,7 @@ export default function SavingButton({
         <Button
           variant="primary"
           size="large"
-          className="w-1/3 mx-auto"
+          className="w-full"
           isDisabled={isBreaking}
           onClick={handleBreak}
         >
@@ -61,7 +61,7 @@ export default function SavingButton({
         <Button
           variant="primary"
           size="large"
-          className="w-1/3 mx-auto"
+          className="w-full"
           onClick={() => setIsModalOpen(true)}
         >
           저금하기
