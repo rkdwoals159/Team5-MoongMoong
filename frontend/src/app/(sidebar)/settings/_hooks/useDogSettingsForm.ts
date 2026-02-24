@@ -3,14 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { DOG_BREEDS, DISEASE_TAB_ORDER } from "@/constants";
-import { updatePetInfo } from "@/api/server/settingsApiActions";
+import { updatePetInfo } from "@/api/client/settingsApiActions";
 import type { PetUpdateRequest } from "@/api/types/settingsApi.type";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import type { DogBreedCode } from "@/constants";
 import type { DiseaseCode } from "@/api/types/forecastApi.type";
 import type { GetPetInfoResponse } from "@/api/types/perInfoApi.type";
 import type { DogFormValues } from "@/app/(sidebar)/settings/types";
-import { getErrorMessage } from "@/lib/api/errorMessage";
+import { getErrorMessage } from "@/api/lib/errorMessage";
 
 export default function useDogSettingsForm(dog: GetPetInfoResponse) {
   const router = useRouter();

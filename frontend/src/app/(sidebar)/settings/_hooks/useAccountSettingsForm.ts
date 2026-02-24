@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { updateMemberName } from "@/api/server/settingsApiActions";
+import { updateMemberName } from "@/api/client/settingsApiActions";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import type { MemberInfoResponse } from "@/api/types/settingsApi.type";
-import { getErrorMessage } from "@/lib/api/errorMessage";
+import { getErrorMessage } from "@/api/lib/errorMessage";
 
 export default function useAccountSettingsForm(account: MemberInfoResponse) {
   const router = useRouter();

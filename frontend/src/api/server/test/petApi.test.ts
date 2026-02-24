@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mockGet = vi.fn();
 const mockPost = vi.fn();
 
-vi.mock("@/lib/api", () => ({
+vi.mock("@/api/lib/client", () => ({
   client: {
     GET: (...args: unknown[]) => mockGet(...args),
     POST: (...args: unknown[]) => mockPost(...args),

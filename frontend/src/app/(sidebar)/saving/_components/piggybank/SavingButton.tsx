@@ -10,7 +10,7 @@ import { deleteBank } from "@/api/client/savingApi";
 import { API_ERROR_MESSAGES } from "@/api/constants";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
-import { executeWithToastError } from "@/lib/api/executeWithToastError";
+import { executeWithToastError } from "@/api/lib/executeWithToastError";
 
 export default function SavingButton({
   handleDrop,

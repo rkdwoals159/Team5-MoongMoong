@@ -1,6 +1,6 @@
 "use server";
 
-import { client } from "@/lib/api";
+import { client } from "@/api/lib/client";
 import type { NotificationReadResponse } from "@/components/layout/Notification/notification.type";
 
 export async function getNotifications(

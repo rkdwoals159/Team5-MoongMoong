@@ -1,7 +1,7 @@
 import { getDiseaseRanking, getDiseaseStatistics } from "@/api/server/forecastApi";
 import AnnualDiseaseRiskClient from "./AnnualDiseaseRiskClient";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
-import { safeServerFetch } from "@/lib/api";
+import { safeServerFetch } from "@/api/lib/client";
 
 export default async function AnnualDiseaseRiskContent() {
   const result = await safeServerFetch(() =>

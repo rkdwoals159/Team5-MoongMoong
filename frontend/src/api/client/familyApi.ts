@@ -1,6 +1,6 @@
 "use server";
 
-import { client } from "@/lib/api";
+import { client } from "@/api/lib/client";
 
 export async function getGroupCrew() {
   const { data } = await client.GET("/api/group/crews");

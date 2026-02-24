@@ -1,5 +1,5 @@
-import { getErrorMessage } from "@/lib/api/errorMessage";
-import type { ExecuteWithToastErrorOptions } from "@/lib/api/type";
+import { getErrorMessage } from "@/api/lib/errorMessage";
+import type { ExecuteWithToastErrorOptions } from "@/api/lib/type";
 
 export const executeWithToastError = async <T>(
   task: () => Promise<T>,

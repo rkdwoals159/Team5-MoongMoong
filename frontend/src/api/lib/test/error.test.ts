@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { API_ERROR_MESSAGES } from "@/api/constants";
-import { toApiHttpError } from "@/lib/api/error";
+import { toApiHttpError } from "@/api/lib/error";
 
 const withUrl = (response: Response, url: string): Response => {
   Object.defineProperty(response, "url", {

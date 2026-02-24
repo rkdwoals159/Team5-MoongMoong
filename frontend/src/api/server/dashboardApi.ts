@@ -1,5 +1,5 @@
 import type { SummaryData } from "@/api/types/dashboardApi.type";
-import { client } from "@/lib/api";
+import { client } from "@/api/lib/client";
 
 /**
  * 지난달 대비 비교 데이터 조회 (Server Action)

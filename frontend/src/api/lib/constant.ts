@@ -1,5 +1,5 @@
 import { API_ERROR_MESSAGES } from "@/api/constants";
-import type { ApiErrorMessageKey, BackendErrorCode } from "@/lib/api/type";
+import type { ApiErrorMessageKey, BackendErrorCode } from "@/api/lib/type";
 
 export const STATUS_ERROR_MESSAGE_MAP: Partial<Record<number, string>> = {
   400: "요청 값이 올바르지 않습니다.",

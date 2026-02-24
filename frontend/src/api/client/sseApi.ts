@@ -1,6 +1,6 @@
 "use server";
 
-import { client } from "@/lib/api";
+import { client } from "@/api/lib/client";
 
 export async function postSSEToken() {
   try {

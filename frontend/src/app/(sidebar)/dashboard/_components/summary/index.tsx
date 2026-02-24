@@ -2,7 +2,7 @@ import { getCompareLastMonth } from "@/api/server/dashboardApi";
 import PetProfileImage from "@/app/(sidebar)/dashboard/_components/summary/PetProfileImage";
 import SummaryCard from "@/app/(sidebar)/dashboard/_components/summary/SummaryCard";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
-import { safeServerFetch } from "@/lib/api";
+import { safeServerFetch } from "@/api/lib/client";
 
 const Summary = async () => {
   const summaryResult = await safeServerFetch(() => getCompareLastMonth());

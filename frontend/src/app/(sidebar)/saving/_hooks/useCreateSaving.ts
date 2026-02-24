@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { postBank } from "@/api/client/savingApi";
 import { API_ERROR_MESSAGES } from "@/api/constants";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
-import { executeWithToastError } from "@/lib/api/executeWithToastError";
+import { executeWithToastError } from "@/api/lib/executeWithToastError";
 
 export function useCreateSaving() {
   const router = useRouter();

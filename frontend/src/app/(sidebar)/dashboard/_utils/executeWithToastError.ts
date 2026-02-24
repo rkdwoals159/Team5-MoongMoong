@@ -1,1 +1,1 @@
-export { executeWithToastError } from "@/lib/api/executeWithToastError";
+export { executeWithToastError } from "@/api/lib/executeWithToastError";

@@ -5,7 +5,7 @@ import { getCalendarPageProps } from "@/app/(sidebar)/calendar/_lib/getCalendarP
 import { getGroupExpenses } from "@/api/server/calendarApi";
 import PageHeader from "@/components/layout/Header/PageHeader";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
-import { safeServerFetch } from "@/lib/api";
+import { safeServerFetch } from "@/api/lib/client";
 
 export default async function CalendarPage({ searchParams }: CalendarPageProps) {
   const resolvedSearchParams = (await searchParams) ?? {};

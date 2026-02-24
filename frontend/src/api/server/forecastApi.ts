@@ -1,4 +1,4 @@
-import { client } from "@/lib/api";
+import { client } from "@/api/lib/client";
 import type {
   DiseaseCode,
   GetDiseaseStatisticsResponse,

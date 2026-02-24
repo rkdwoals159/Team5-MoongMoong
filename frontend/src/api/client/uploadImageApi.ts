@@ -1,6 +1,6 @@
 "use server";
 
-import { client } from "@/lib/api";
+import { client } from "@/api/lib/client";
 import { put } from "@vercel/blob";
 import type { UploadPetImageResult } from "@/api/types/uploadImageApi.type";
 import {

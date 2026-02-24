@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockPatch = vi.fn();
 
-vi.mock("@/lib/api", () => ({
+vi.mock("@/api/lib/client", () => ({
   client: {
     PATCH: (...args: unknown[]) => mockPatch(...args),
   },

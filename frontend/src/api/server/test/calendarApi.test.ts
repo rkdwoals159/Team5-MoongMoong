@@ -12,7 +12,7 @@ vi.mock("@/utils/date", () => ({
   resolveMonthRange: (...args: unknown[]) => mockResolveMonthRange(...args),
 }));
 
-vi.mock("@/lib/api", () => ({
+vi.mock("@/api/lib/client", () => ({
   client: {
     GET: (...args: unknown[]) => mockGet(...args),
   },

@@ -1,4 +1,4 @@
-import { client } from "@/lib/api";
+import { client } from "@/api/lib/client";
 import type { PostAuthLoginResult } from "@/api/types/authApi.type";
 
 export async function postAuthLogout(refreshToken: string): Promise<void> {

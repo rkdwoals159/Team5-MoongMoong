@@ -1,6 +1,6 @@
 import { API_ERROR_MESSAGES } from "@/api/constants";
-import { BACKEND_ERROR_CODE_MAP, BACKEND_ERROR_CODE_TO_API_ERROR_KEY } from "@/lib/api/constant";
-import type { BackendErrorCode } from "@/lib/api/type";
+import { BACKEND_ERROR_CODE_MAP, BACKEND_ERROR_CODE_TO_API_ERROR_KEY } from "@/api/lib/constant";
+import type { BackendErrorCode } from "@/api/lib/type";
 
 // backend/src/main/java/com/moong/exception/errorcode/ErrorCode.java 기준
 const isBackendErrorCode = (value: unknown): value is BackendErrorCode => {

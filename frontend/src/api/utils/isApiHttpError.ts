@@ -1,4 +1,4 @@
-import type { ApiHttpError } from "@/lib/api/type";
+import type { ApiHttpError } from "@/api/lib/type";
 
 export const isApiHttpError = (error: unknown): error is ApiHttpError => {
   return (

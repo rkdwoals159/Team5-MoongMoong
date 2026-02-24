@@ -1,4 +1,4 @@
-import { client } from "@/lib/api";
+import { client } from "@/api/lib/client";
 import type { MemberInfoResponse } from "@/api/types/settingsApi.type";
 import { isApiHttpError } from "@/api/utils/isApiHttpError";
 

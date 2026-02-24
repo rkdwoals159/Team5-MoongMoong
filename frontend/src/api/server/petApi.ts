@@ -1,4 +1,4 @@
-import { client } from "@/lib/api";
+import { client } from "@/api/lib/client";
 import type { GetPetInfoResponse } from "../types/perInfoApi.type";
 import type { PetCreateRequest, PetCreateResponse } from "@/api/types";
 /**

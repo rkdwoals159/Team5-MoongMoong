@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { API_ERROR_MESSAGES } from "@/api/constants";
-import { getApiErrorMessageByBackendErrorCode } from "@/lib/api/errorCode";
+import { getApiErrorMessageByBackendErrorCode } from "@/api/lib/errorCode";
 
 describe("getApiErrorMessageByBackendErrorCode", () => {
   it("정의된 백엔드 코드면 API 메시지를 반환한다", () => {

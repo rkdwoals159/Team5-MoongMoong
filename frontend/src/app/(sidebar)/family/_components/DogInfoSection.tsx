@@ -11,7 +11,7 @@ import {
 import { getPetInfo } from "@/api/server/petApi";
 import { BREEDS } from "@/app/onBoarding/_constants/dataTable";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
-import { safeServerFetch } from "@/lib/api";
+import { safeServerFetch } from "@/api/lib/client";
 
 export default async function DogInfoSection({ size = "compact" }: DogInfoSectionProps) {
   const isLarge = size === "large";

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { client } from "@/lib/api";
+import { client } from "@/api/lib/client";
 import { toApiRouteErrorResponse } from "@/app/api/_utils/routeError";
 
 export async function PUT(request: NextRequest) {

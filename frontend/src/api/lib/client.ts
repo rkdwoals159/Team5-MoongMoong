@@ -4,8 +4,8 @@ import createClient, { type Middleware } from "openapi-fetch";
 import type { paths } from "@schema";
 import { API_ERROR_MESSAGES } from "@/api/constants";
 import { ACCESS_COOKIE } from "@/app/api/auth/_constants";
-import { toApiHttpError } from "@/lib/api/error";
-import type { ApiHttpError } from "@/lib/api/type";
+import { toApiHttpError } from "@/api/lib/error";
+import type { ApiHttpError } from "@/api/lib/type";
 
 const defaultHeaders = {
   "Content-Type": "application/json",

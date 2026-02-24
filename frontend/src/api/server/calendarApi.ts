@@ -3,7 +3,7 @@ import type {
   GetCalendarGroupExpensesMap,
   GetCalendarGroupDailyExpensesResponse,
 } from "@/api/types/calendarApi.type";
-import { client } from "@/lib/api";
+import { client } from "@/api/lib/client";
 import { resolveMonthRange } from "@/utils/date";
 
 /**

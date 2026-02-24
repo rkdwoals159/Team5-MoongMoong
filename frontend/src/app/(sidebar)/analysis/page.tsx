@@ -14,7 +14,7 @@ import {
   CategoryAnalysisChartCard,
   MedicalAnalysisChartCard,
 } from "./_components/chart/AnalysisCharts";
-import { safeServerFetch } from "@/lib/api";
+import { safeServerFetch } from "@/api/lib/client";
 
 import type { AnalysisPageProps } from "./_types/componentPropsType.type";
 

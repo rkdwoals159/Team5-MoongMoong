@@ -9,7 +9,7 @@ import { getBank } from "@/api/client/savingApi";
 import { API_ERROR_MESSAGES } from "@/api/constants";
 import type { GetBankResponse } from "@/api/types/savingApi.type";
 import type { UseSavingPaymentOptions } from "@/app/(sidebar)/saving/_types/saving";
-import { executeWithToastError } from "@/lib/api/executeWithToastError";
+import { executeWithToastError } from "@/api/lib/executeWithToastError";
 
 export function useSavingPayment({ onSuccess, handleDrop }: UseSavingPaymentOptions) {
   const { status, setStatus } = useSavingStatus();

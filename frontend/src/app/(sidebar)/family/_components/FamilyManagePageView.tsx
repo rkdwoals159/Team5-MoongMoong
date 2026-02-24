@@ -5,7 +5,7 @@ import FamilyMemberList from "./FamilyMemberList";
 import InviteUrlForm from "./InviteUrlForm";
 import { getGroupCrew } from "@/api/client/familyApi";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
-import { safeServerFetch } from "@/lib/api";
+import { safeServerFetch } from "@/api/lib/client";
 
 export default async function FamilyManagePageView() {
   const groupCrew = await safeServerFetch(() => getGroupCrew());

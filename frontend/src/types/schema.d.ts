@@ -793,6 +793,12 @@ export interface components {
         | "INF"
       )[];
     };
+    ErrorResponse: {
+      code?: string;
+      /** Format: int32 */
+      status?: number;
+      message?: string;
+    };
     /** @description 반려동물 수정 응답 */
     PetUpdateResponse: {
       /**
@@ -878,12 +884,6 @@ export interface components {
         | "END"
         | "INF"
       )[];
-    };
-    ErrorResponse: {
-      code?: string;
-      /** Format: int32 */
-      status?: number;
-      message?: string;
     };
     /** @description 반려동물 생성 요청 */
     PetCreateRequest: {

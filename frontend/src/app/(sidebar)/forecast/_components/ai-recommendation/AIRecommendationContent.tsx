@@ -1,6 +1,6 @@
 import { getAIRecommendation } from "@/api/server/forecastApi";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
-import { safeServerFetch } from "@/lib/api";
+import { safeServerFetch } from "@/api/lib/client";
 
 /**
  * AI 의사 권장사항 컴포넌트

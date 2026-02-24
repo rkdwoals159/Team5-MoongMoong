@@ -4,7 +4,7 @@ import { getMemberInfoServer } from "@/api/server/settingsApiQueries";
 import { getPetInfo } from "@/api/server/petApi";
 import type { SettingsTab } from "@/app/(sidebar)/settings/types";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
-import { safeServerFetch } from "@/lib/api";
+import { safeServerFetch } from "@/api/lib/client";
 
 export default async function InterceptedSettingsPage({
   searchParams,
