@@ -398,6 +398,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/notifications/count": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * 읽지 않은 알림 개수를 조회합니다.
+     * @description 현재 자신이 읽지 않은 알림 개수를 조회합니다.
+     */
+    get: operations["countNotification"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/member": {
     parameters: {
       query?: never;
@@ -773,12 +793,6 @@ export interface components {
         | "INF"
       )[];
     };
-    ErrorResponse: {
-      code?: string;
-      /** Format: int32 */
-      status?: number;
-      message?: string;
-    };
     /** @description 반려동물 수정 응답 */
     PetUpdateResponse: {
       /**
@@ -864,6 +878,12 @@ export interface components {
         | "END"
         | "INF"
       )[];
+    };
+    ErrorResponse: {
+      code?: string;
+      /** Format: int32 */
+      status?: number;
+      message?: string;
     };
     /** @description 반려동물 생성 요청 */
     PetCreateRequest: {
@@ -1626,6 +1646,14 @@ export interface components {
        */
       createdAt?: string;
     };
+    /** @description 알림 개수 조회 응답 */
+    NotificationCountResponse: {
+      /**
+       * Format: int64
+       * @description 삭제되지 않은 알림 개수
+       */
+      count?: number;
+    };
     /** @description 회원 정보 응답 */
     MemberInfoResponse: {
       /**
@@ -1643,17 +1671,6 @@ export interface components {
        * @example S3 image Url
        */
       memberImageUrl?: string;
-    };
-    /** @description 그룹 질병 통계 응답 */
-    GroupMedicalStatisticsResponse: {
-      /**
-       * Format: int64
-       * @description 통계 시작 연도
-       * @example 2026
-       */
-      startYear?: number;
-      /** @description 질병별 통계 목록 */
-      statistics?: components["schemas"]["MedicalStatisticsResponse"][];
     };
     /** @description 질병별 통계 정보 */
     MedicalStatisticsResponse: {
@@ -1689,8 +1706,19 @@ export interface components {
        */
       ratios?: number[];
     };
+    /** @description 그룹 질병 통계 응답 */
+    PetMedicalStatisticsResponse: {
+      /**
+       * Format: int64
+       * @description 통계 시작 연도
+       * @example 2026
+       */
+      startYear?: number;
+      /** @description 질병별 통계 목록 */
+      statistics?: components["schemas"]["MedicalStatisticsResponse"][];
+    };
     /** @description 그룹 의사 권장사항 응답 */
-    GroupMedicalInfoResponse: {
+    PetMedicalInfoResponse: {
       /**
        * Format: int64
        * @description 내년 연간 예상 비용
@@ -2023,11 +2051,6 @@ export interface components {
        * @example https://avatars.githubusercontent.com/u/148152234?v=4
        */
       petImageUrl?: string;
-    };
-    /** @description 알림 다중 삭제 요청 */
-    NotificationsDeleteRequest: {
-      /** @description 알림 ID 리스트 */
-      notificationIds: number[];
     };
     /** @description 저금통 깨기 응답 */
     BankBreakResponse: {
@@ -3201,12 +3224,7 @@ export interface operations {
       path?: never;
       cookie?: never;
     };
-    /** @description 알림 다중 삭제 요청 */
-    requestBody: {
-      content: {
-        "application/json;charset=UTF-8": components["schemas"]["NotificationsDeleteRequest"];
-      };
-    };
+    requestBody?: never;
     responses: {
       /** @description 다중 알림 삭제 성공 */
       200: {
@@ -3214,6 +3232,44 @@ export interface operations {
           [name: string]: unknown;
         };
         content?: never;
+      };
+      /** @description 인증되지 않은 사용자 */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+      /** @description 서버 오류 */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["ErrorResponse"];
+        };
+      };
+    };
+  };
+  countNotification: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description 알림 개수 조회 성공 */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json;charset=UTF-8": components["schemas"]["NotificationCountResponse"];
+        };
       };
       /** @description 인증되지 않은 사용자 */
       401: {
@@ -3328,7 +3384,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json;charset=UTF-8": components["schemas"]["GroupMedicalStatisticsResponse"];
+          "application/json;charset=UTF-8": components["schemas"]["PetMedicalStatisticsResponse"];
         };
       };
     };
@@ -3348,7 +3404,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json;charset=UTF-8": components["schemas"]["GroupMedicalInfoResponse"];
+          "application/json;charset=UTF-8": components["schemas"]["PetMedicalInfoResponse"];
         };
       };
       /** @description 인증되지 않은 사용자 */

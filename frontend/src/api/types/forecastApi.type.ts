@@ -19,7 +19,7 @@ export type GetDiseaseRankingResponse = NonNullable<
 >;
 
 export type GetDiseaseStatisticsResponse = NonNullable<
-  components["schemas"]["GroupMedicalStatisticsResponse"]
+  components["schemas"]["PetMedicalStatisticsResponse"]
 >;
 
 export type GetDiseaseCostResponse = NonNullable<
@@ -27,5 +27,5 @@ export type GetDiseaseCostResponse = NonNullable<
 >;
 
 export type GetAIRecommendationResponse = NonNullable<
-  components["schemas"]["GroupMedicalInfoResponse"]
+  components["schemas"]["PetMedicalInfoResponse"]
 >;

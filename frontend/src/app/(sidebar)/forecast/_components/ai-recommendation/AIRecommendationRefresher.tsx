@@ -1,6 +1,6 @@
 "use client";
 
-import { useServerEvent } from "@/store/ServerEventProvider";
+import { useServerEvent } from "@/hooks/ServerEventProvider";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 

@@ -6,10 +6,18 @@ import type {
   GetDiseaseCostResponse,
   GetAIRecommendationResponse,
 } from "@/api/types/forecastApi.type";
+import { isApiHttpError } from "@/api/utils/isApiHttpError";
 
-export async function getAIRecommendation(): Promise<GetAIRecommendationResponse> {
-  const { data } = await client.GET("/api/group/medical/info");
-  return data as GetAIRecommendationResponse;
+export async function getAIRecommendation(): Promise<GetAIRecommendationResponse | null> {
+  try {
+    const { data } = await client.GET("/api/group/medical/info");
+    return data as GetAIRecommendationResponse;
+  } catch (error) {
+    if (isApiHttpError(error) && error.status === 404) {
+      return null;
+    }
+    throw error;
+  }
 }
 
 /**

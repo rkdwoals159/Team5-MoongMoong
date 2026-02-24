@@ -5,11 +5,16 @@ import NotificationIcon from "@/assets/components/ic_notification.svg";
 import ClientModal from "@/components/ui/Modal/ClientModal";
 import { NOTIFICATION_TEXT } from "@/constants/notification";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useUnreadNotiCount } from "@/hooks/useUnreadNotiCount";
+import { useServerEvent } from "@/hooks/ServerEventProvider";
 import NotificationModal from "./NotificationModal";
 
 export default function Notification() {
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLDivElement>(null);
+  const isOpenRef = useRef(isOpen);
+  const { lastEvent } = useServerEvent();
+
   const {
     notifications,
     isLoading,
@@ -20,13 +25,38 @@ export default function Notification() {
     fetchPage,
     deleteOne,
     deleteAll,
+    addNotification,
   } = useNotifications();
+
+  const {
+    unreadCount,
+    effectiveLastSeenId,
+    incrementUnreadCount,
+    resetUnreadCount,
+    updateClientLastSeen,
+  } = useUnreadNotiCount(lastSeenNotificationId);
+
+  useEffect(() => {
+    isOpenRef.current = isOpen;
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!lastEvent || !lastEvent.id) return;
+
+    if (isOpenRef.current) {
+      addNotification(lastEvent);
+      updateClientLastSeen(lastEvent.id);
+    } else {
+      incrementUnreadCount();
+    }
+  }, [lastEvent, addNotification, updateClientLastSeen, incrementUnreadCount]);
 
   useEffect(() => {
     if (isOpen) {
       fetchPage(0);
+      resetUnreadCount();
     }
-  }, [isOpen, fetchPage]);
+  }, [isOpen, fetchPage, resetUnreadCount]);
 
   return (
     <div ref={buttonRef} className="relative">
@@ -38,6 +68,11 @@ export default function Notification() {
         className={`relative flex items-center cursor-pointer ${isOpen ? "text-yellow-300" : "hover-bell-swing"}`}
       >
         <NotificationIcon className="size-8 transition-colors" />
+        {unreadCount > 0 && (
+          <span className="animate-badge-pop absolute -top-1 -right-1 flex min-w-[18px] h-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-bold leading-[18px] text-white">
+            {unreadCount > 99 ? "99+" : unreadCount}
+          </span>
+        )}
       </button>
       <ClientModal
         open={isOpen}
@@ -52,7 +87,7 @@ export default function Notification() {
           isLoading={isLoading}
           isInitialized={isInitialized}
           hasNext={hasNext}
-          lastSeenNotificationId={lastSeenNotificationId}
+          lastSeenNotificationId={effectiveLastSeenId}
           observerRef={observerRef}
           onClearAll={deleteAll}
           onDelete={deleteOne}

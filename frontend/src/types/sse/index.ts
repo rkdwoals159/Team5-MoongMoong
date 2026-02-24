@@ -7,6 +7,7 @@ export type SSEProps = {
 export type SSEEventType = "SAVING" | "NUDGE" | "AI_ADVICE_CREATED";
 
 export type SavingEvent = {
+  id?: number;
   event: "SAVING";
   data: {
     coinId: number;
@@ -16,6 +17,7 @@ export type SavingEvent = {
 };
 
 export type NudgeEvent = {
+  id?: number;
   event: "NUDGE";
   data: {
     memberName: string;
@@ -23,6 +25,7 @@ export type NudgeEvent = {
 };
 
 export type AIAdviceCreatedEvent = {
+  id?: number;
   event: "AI_ADVICE_CREATED";
   data: { message: string };
 };

@@ -6,9 +6,11 @@ import { NotificationItem } from "./notification.type";
 
 export default function NotificationCard({
   item,
+  index,
   onDelete,
 }: {
   item: NotificationItem;
+  index: number;
   onDelete: (id: number) => void;
 }) {
   const icon =
@@ -19,7 +21,7 @@ export default function NotificationCard({
     );
 
   return (
-    <div className="flex flex-col border-b border-gray-100 px-[30px] py-[12px]">
+    <div className={`flex flex-col px-[30px] py-[12px] ${index % 2 === 1 ? "bg-gray-50" : ""}`}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-[18px]">
           <div

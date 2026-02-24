@@ -1,6 +1,5 @@
 import { NOTIFICATION_TEXT } from "@/constants/notification";
 
-// API 응답 타입 (백엔드 스키마 미반영 → 직접 정의)
 export type NotificationReadResponse = {
   lastSeenNotificationId?: number;
   page?: number;

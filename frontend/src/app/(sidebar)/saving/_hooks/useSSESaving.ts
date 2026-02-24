@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useServerEvent } from "@/store/ServerEventProvider";
+import { useServerEvent } from "@/hooks/ServerEventProvider";
 import { useSavingStatus } from "@/app/(sidebar)/saving/_hooks/useSavingStatus";
 import { getBank } from "@/api/client/savingApi";
 

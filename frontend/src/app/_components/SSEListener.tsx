@@ -4,7 +4,7 @@ import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { useSSE } from "@/hooks/useSSE";
 import { useSSEToken } from "@/hooks/useSSEToken";
 import { getSSENotificationMessage } from "@/lib/sse/sseNotification";
-import { useServerEvent } from "@/store/ServerEventProvider";
+import { useServerEvent } from "@/hooks/ServerEventProvider";
 import type { SSEEvent } from "@/types/sse";
 import { useCallback } from "react";
 import { EVENT_TOAST_DURATION } from "@/constants/sseConnection";

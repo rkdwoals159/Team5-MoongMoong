@@ -54,7 +54,10 @@ export function useSSE({ onEvent, onError, connectionToken }: SSEProps) {
 
         for (const event of events) {
           if (event.id) lastEventIdRef.current = event.id;
+          const parsed = event.id ? Number(event.id) : undefined;
+          const numericId = parsed !== undefined && Number.isFinite(parsed) ? parsed : undefined;
           onEventRef.current({
+            id: numericId,
             event: event.event,
             data: event.data,
           } as SSEEvent);

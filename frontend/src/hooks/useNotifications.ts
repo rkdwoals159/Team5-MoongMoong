@@ -17,6 +17,8 @@ import {
   EVENT_TYPE_TITLE,
   NOTIFICATION_TEXT,
 } from "@/constants/notification";
+import { useToast } from "@/components/ui/Toast/ToastProvider";
+import type { SSEEvent } from "@/types/sse";
 
 export function useNotifications() {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
@@ -26,6 +28,7 @@ export function useNotifications() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [lastSeenNotificationId, setLastSeenNotificationId] = useState(0);
   const observerRef = useRef<HTMLDivElement | null>(null);
+  const { showToast } = useToast();
 
   const fetchPage = useCallback(async (pageNum: number) => {
     setIsLoading(true);
@@ -66,15 +69,29 @@ export function useNotifications() {
   }, []);
 
   const deleteAll = useCallback(async () => {
-    const ids = notifications.map((n) => n.id);
-    setNotifications([]);
-    setHasNext(false);
     try {
-      await deleteAllNotifications(ids);
+      await deleteAllNotifications();
+      setNotifications([]);
+      setHasNext(false);
     } catch (e) {
       console.error(e);
+      showToast({
+        message: "알림 전체 삭제에 실패했어요.",
+        variant: "error",
+      });
     }
-  }, [notifications]);
+  }, [showToast]);
+
+  const addNotification = useCallback((event: SSEEvent) => {
+    const item: NotificationItem = {
+      id: event.id ?? 0,
+      type: event.event,
+      title: EVENT_TYPE_TITLE[event.event] ?? NOTIFICATION_TEXT.TITLE,
+      content: getNotificationContent(event.event, event.data as Record<string, unknown>),
+      time: formatRelativeTime(new Date().toISOString()),
+    };
+    setNotifications((prev) => [item, ...prev]);
+  }, []);
 
   useEffect(() => {
     const sentinel = observerRef.current;
@@ -103,6 +120,7 @@ export function useNotifications() {
     fetchPage,
     deleteOne,
     deleteAll,
+    addNotification,
   };
 }
 

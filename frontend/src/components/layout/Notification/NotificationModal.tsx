@@ -48,16 +48,16 @@ export default function NotificationModal({
           </div>
         ) : (
           <>
-            {notifications.map((item) => (
+            {notifications.map((item, index) => (
               <div key={item.id}>
                 {hasNewNotifications && item.id === lastSeenNotificationId && <LastSeenDivider />}
-                <NotificationCard item={item} onDelete={onDelete} />
+                <NotificationCard item={item} index={index} onDelete={onDelete} />
               </div>
             ))}
-            {hasNext && <div ref={observerRef} className="h-1 shrink-0" />}
+            {hasNext && !isLoading && <div ref={observerRef} className="h-1 shrink-0" />}
           </>
         )}
-        {isLoading && (
+        {isLoading && isInitialized && (
           <div className="flex shrink-0 items-center justify-center py-4">
             <div className="size-5 animate-spin rounded-full border-2 border-gray-200 border-t-gray-500" />
           </div>
