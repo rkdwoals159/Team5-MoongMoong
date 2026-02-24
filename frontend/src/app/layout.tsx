@@ -25,7 +25,7 @@ const getMetadataBase = () => {
 const pretendard = localFont({
   src: [
     {
-      path: "../../public/fonts/PretendardVariable.woff2",
+      path: "../../public/fonts/PretendardVariable.400-700.3713.woff2",
       style: "normal",
     },
   ],
