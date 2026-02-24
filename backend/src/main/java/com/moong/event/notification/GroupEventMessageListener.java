@@ -43,8 +43,8 @@ public class GroupEventMessageListener implements MessageListener {
                     payload
             );
 
-            log.info("received pubsub: eventType={}, eventId={}, groupId={}, senderId={}",
-                    event.eventType(), event.eventId(), event.groupId(), event.senderId());
+            log.info("received pubsub: eventType={}, eventId={}, groupId={}, senderId={}, data={}",
+                    event.eventType(), event.eventId(), event.groupId(), event.senderId(), event.data());
 
             sseService.sendGroupNotification(event);
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.moong.repository.sse;
 
 import com.moong.event.notification.CustomSseEmitter;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,10 @@ public class EmitterRepository {
 
     public Optional<CustomSseEmitter> findById(long memberId) {
         return Optional.ofNullable(emitters.get(memberId));
+    }
+
+    public List<CustomSseEmitter> findAll() {
+        return emitters.values().stream().toList();
     }
 
     public boolean deleteByMemberIdAndEmitter(long memberId, CustomSseEmitter emitter) {
