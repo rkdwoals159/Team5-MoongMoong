@@ -28,14 +28,13 @@ public record MemberExpensesPeriodResponseV2(
 ) {
 
     public MemberExpensesPeriodResponseV2(
+            long total,
             List<MemberExpense> sliceExpenses,
             boolean hasNext,
             Pageable requestPageable
     ) {
         this(
-                sliceExpenses.stream()
-                        .mapToLong(MemberExpense::getCost)
-                        .sum(),
+                total,
                 requestPageable.getPageNumber(),
                 requestPageable.getPageSize(),
                 hasNext,

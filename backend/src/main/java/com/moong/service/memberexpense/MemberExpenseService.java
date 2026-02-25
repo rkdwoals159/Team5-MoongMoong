@@ -50,7 +50,6 @@ public class MemberExpenseService {
     private final MemberExpenseRepository memberExpenseRepository;
     private final CrewRepository crewRepository;
     private final GroupExpenseRepository groupExpenseRepository;
-    private final MonthlyExpenseRegressionAnalyzer expenseRegressionAnalyzer;
     private final MonthlyExpenseRegressionAnalyzer monthlyExpenseRegressionAnalyzer;
 
     public MemberExpensesPeriodResponse getMemberExpensesByPeriod(
@@ -78,6 +77,11 @@ public class MemberExpenseService {
     }
 
     public MemberExpensesPeriodResponseV2 getMemberExpensesByPeriodV2(MemberExpenseReadCommand command) {
+        long total = memberExpenseRepository.sumCostByMemberIdAndPeriod(
+                command.getMember().getId(),
+                command.getStartDate(),
+                command.getEndDate()
+        );
         if (command.hasLastRowId()) {
             MemberExpense lastRowId = memberExpenseRepository.getById(command.getLastRowId());
             List<MemberExpense> findExpenses = memberExpenseRepository.findByLastRowAndCondition(
@@ -89,7 +93,7 @@ public class MemberExpenseService {
                     command.getSort(),
                     command.getPageSize() + 1
             );
-            return makeMemberExpensesByPeriodResponse(findExpenses, command.getPageable());
+            return makeMemberExpensesByPeriodResponse(total, findExpenses, command.getPageable());
         }
         List<MemberExpense> findExpenses = memberExpenseRepository.findByCondition(
                 command.getStartDate(),
@@ -99,17 +103,18 @@ public class MemberExpenseService {
                 command.getSort(),
                 command.getPageSize() + 1
         );
-        return makeMemberExpensesByPeriodResponse(findExpenses, command.getPageable());
+        return makeMemberExpensesByPeriodResponse(total, findExpenses, command.getPageable());
     }
 
     private MemberExpensesPeriodResponseV2 makeMemberExpensesByPeriodResponse(
+            long total,
             List<MemberExpense> expenses,
             Pageable pageable
     ) {
         if(expenses.size() == pageable.getPageSize() + 1) {
-            return new MemberExpensesPeriodResponseV2(expenses.subList(0, pageable.getPageSize()), true, pageable);
+            return new MemberExpensesPeriodResponseV2(total, expenses.subList(0, pageable.getPageSize()), true, pageable);
         }
-        return new MemberExpensesPeriodResponseV2(expenses, false, pageable);
+        return new MemberExpensesPeriodResponseV2(total, expenses, false, pageable);
     }
 
     public LastMonthComparisonResponse compareLastMonthExpense(Member member) {

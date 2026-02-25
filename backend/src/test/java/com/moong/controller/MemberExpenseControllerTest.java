@@ -53,6 +53,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
         MemberExpense memberExpense2 = memberExpenseGenerator.generateSaved(startDate, "사용처2", 200, MainCategoryType.FOOD_AND_TREATS, null, null, null, member);
         MemberExpense memberExpense3 = memberExpenseGenerator.generateSaved(endDate, "사용처3", 300, MainCategoryType.GROOMING, null, null, null, member);
         MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(endDate, "사용처4", 400, MainCategoryType.OTHER, null, null, null, member);
+        long total = memberExpense1.getCost() + memberExpense2.getCost() + memberExpense3.getCost() + memberExpense4.getCost();
         String accessToken = jwtTokenGenerator.generateAccessToken(member);
 
         MemberExpensesPeriodResponseV2 response = given().log().all()
@@ -71,7 +72,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 .as(MemberExpensesPeriodResponseV2.class);
 
         assertAll(
-                () -> assertThat(response.total()).isEqualTo(memberExpense3.getCost() + memberExpense4.getCost()),
+                () -> assertThat(response.total()).isEqualTo(total),
                 () -> assertThat(response.size()).isEqualTo(pageSize),
                 () -> assertThat(response.page()).isEqualTo(pageNo),
                 () -> assertThat(response.hasNext()).isTrue(),
@@ -95,6 +96,8 @@ class MemberExpenseControllerTest extends BaseControllerTest {
         MemberExpense memberExpense4 = memberExpenseGenerator.generateSaved(endDate, "사용처4", 400, MainCategoryType.OTHER, null, null, null, member);
         MemberExpense memberExpense5 = memberExpenseGenerator.generateSaved(endDate, "사용처5", 500, MainCategoryType.SUPPLIES, null, null, null, member);
         MemberExpense memberExpense6 = memberExpenseGenerator.generateSaved(endDate, "사용처6", 600, MainCategoryType.SUPPLIES, null, null, null, member);
+        long total = memberExpense1.getCost() + memberExpense2.getCost() + memberExpense3.getCost() + memberExpense4.getCost() + memberExpense5.getCost() + memberExpense6.getCost();
+
         String accessToken = jwtTokenGenerator.generateAccessToken(member);
 
         MemberExpensesPeriodResponseV2 response = given().log().all()
@@ -113,8 +116,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 .as(MemberExpensesPeriodResponseV2.class);
 
         assertAll(
-                () -> assertThat(response.total())
-                        .isEqualTo(memberExpense6.getCost() + memberExpense5.getCost() + memberExpense4.getCost() + memberExpense3.getCost()),
+                () -> assertThat(response.total()).isEqualTo(total),
                 () -> assertThat(response.size()).isEqualTo(pageSize),
                 () -> assertThat(response.page()).isEqualTo(pageNo),
                 () -> assertThat(response.hasNext()).isTrue(),
@@ -140,6 +142,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
         MemberExpense memberExpense5 = memberExpenseGenerator.generateSaved(endDate, "사용처5", 500, MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
         MemberExpense memberExpense6 = memberExpenseGenerator.generateSaved(endDate, "사용처6", 600, MainCategoryType.OTHER, null, null, null, member);
         MemberExpense memberExpense7 = memberExpenseGenerator.generateSaved(endDate, "사용처7", 700, MainCategoryType.MEDICAL_EXPENSES, null, null, null, member);
+        long total = memberExpense1.getCost() + memberExpense2.getCost() + memberExpense3.getCost() + memberExpense4.getCost() + memberExpense5.getCost() + memberExpense6.getCost() + memberExpense7.getCost();
         String accessToken = jwtTokenGenerator.generateAccessToken(member);
 
         MemberExpensesPeriodResponseV2 response = given().log().all()
@@ -159,8 +162,7 @@ class MemberExpenseControllerTest extends BaseControllerTest {
                 .as(MemberExpensesPeriodResponseV2.class);
 
         assertAll(
-                () -> assertThat(response.total())
-                        .isEqualTo(memberExpense1.getCost() + memberExpense3.getCost() + memberExpense7.getCost()),
+                () -> assertThat(response.total()).isEqualTo(total),
                 () -> assertThat(response.size()).isEqualTo(pageSize),
                 () -> assertThat(response.page()).isEqualTo(pageNo),
                 () -> assertThat(response.hasNext()).isTrue(),
