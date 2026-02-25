@@ -31,6 +31,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -101,6 +102,9 @@ public abstract class BaseServiceTest {
 
     @MockitoBean
     protected TossPaymentClient tossPaymentClient;
+
+    @MockitoBean
+    private RedissonClient redissonClient;
 
     protected void runAtSameTime(int count, Runnable task) throws InterruptedException {
         List<Thread> threads = IntStream.range(0, count)

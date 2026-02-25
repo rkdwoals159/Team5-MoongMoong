@@ -7,9 +7,11 @@ import com.moong.fixture.MemberGenerator;
 import com.moong.fixture.PetGenerator;
 import com.moong.fixture.PetGroupGenerator;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @ActiveProfiles("test")
 @ExtendWith(DataBaseCleaner.class)
@@ -32,4 +34,7 @@ public abstract class BaseSseControllerTest {
 
     @Autowired
     protected CrewGenerator crewGenerator;
+
+    @MockitoBean
+    protected RedissonClient redissonClient;
 }

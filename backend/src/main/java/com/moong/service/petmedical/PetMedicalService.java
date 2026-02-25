@@ -19,6 +19,9 @@ import com.moong.repository.crew.CrewRepository;
 import com.moong.repository.treatment.TreatmentRepository;
 import com.moong.repository.medicaladvice.GroupMedicalAdviceRepository;
 import com.moong.repository.petmedical.PetMedicalRepository;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +43,11 @@ public class PetMedicalService {
     private final TreatmentRepository treatmentRepository;
 
     public void syncFromAiServerOptimized() {
+        Optional<LocalDateTime> latestCreatedDate = petMedicalRepository.findLatestCreatedDate();
+        if(latestCreatedDate.isPresent()
+                && latestCreatedDate.get().toLocalDate().isEqual(LocalDate.now())) {
+            return;
+        }
         aiPetMedicalClient.getPetMedicalsStream()
                 .buffer(PET_MEDICAL_BATCH_SIZE)
                 .doOnNext(batch -> {

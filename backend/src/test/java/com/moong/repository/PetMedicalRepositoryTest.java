@@ -127,7 +127,7 @@ class PetMedicalRepositoryTest extends BaseRepositoryTest {
         petMedicalGenerator.generateSaved(Breed.CHL, 3, Gender.F, Disease.CAR, 3);
         LocalDate createdDate = LocalDate.now();
 
-        LocalDate actual = petMedicalRepository.findLatestCreatedDate()
+        LocalDate actual = petMedicalRepository.findLatestCreatedDate().get()
                 .toLocalDate();
 
         assertThat(actual).isEqualTo(createdDate);

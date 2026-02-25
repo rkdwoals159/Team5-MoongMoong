@@ -1,5 +1,6 @@
 package com.moong.service.petgroup;
 
+import com.moong.annotation.lock.DistributedLock;
 import com.moong.domain.petgroup.InviteCode;
 import com.moong.domain.crew.Crew;
 import com.moong.domain.member.Member;
@@ -18,6 +19,7 @@ import com.moong.repository.medicaladvice.GroupMedicalAdviceRepository;
 import com.moong.repository.notification.NotificationCursorRepository;
 import com.moong.util.generator.InviteCodeGenerator;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +50,12 @@ public class PetGroupService {
     }
 
     @Transactional
+    @DistributedLock(
+            key = "'participate:' + #request.inviteUrl() + ':' + #member.id",
+            waitTime = 3,
+            leaseTime = 2,
+            timeUnit = TimeUnit.SECONDS
+    )
     public PetGroupParticipateResponse participate(Member member, PetGroupParticipateRequest request) {
         InviteCode inviteCode = InviteCode.parseFromUrl(request.inviteUrl());
         long decodedGroupId = inviteCodeGenerator.decode(inviteCode);

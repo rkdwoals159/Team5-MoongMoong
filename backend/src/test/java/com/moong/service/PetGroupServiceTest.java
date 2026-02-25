@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.moong.domain.petgroup.InviteCode;
 import com.moong.domain.crew.Crew;
 import com.moong.domain.member.Member;
 import com.moong.domain.pet.Pet;
+import com.moong.domain.petgroup.InviteCode;
 import com.moong.domain.petgroup.PetGroup;
 import com.moong.dto.request.petgroup.PetGroupParticipateRequest;
 import com.moong.dto.response.petgroup.GroupCrewResponse;
@@ -39,6 +39,7 @@ class PetGroupServiceTest extends BaseServiceTest {
 
     @Autowired
     private InviteCodeGenerator inviteCodeGenerator;
+
 
     @DisplayName("첫 회원가입시 개인이 혼자 존재하는 그룹을 만든다")
     @Test

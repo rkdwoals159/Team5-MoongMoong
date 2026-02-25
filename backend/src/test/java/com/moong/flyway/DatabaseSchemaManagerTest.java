@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -52,6 +53,9 @@ class DatabaseSchemaManagerTest {
 
     @MockitoBean
     private MailService mailService;
+
+    @MockitoBean
+    protected RedissonClient redissonClient;
 
     @DisplayName("flyway 스크립트를 모두 잘 실행한다")
     @Test

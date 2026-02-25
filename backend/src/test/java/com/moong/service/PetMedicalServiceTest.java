@@ -3,7 +3,9 @@ package com.moong.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.never;
 
+import com.moong.client.petmedical.AiPetMedicalClient;
 import com.moong.domain.groupmedical.GroupMedicalAdvice;
 import com.moong.domain.member.Member;
 import com.moong.domain.pet.Pet;
@@ -21,18 +23,24 @@ import com.moong.dto.response.treatment.TreatmentResponse;
 import com.moong.dto.response.treatment.TreatmentsResponse;
 import com.moong.exception.custom.BusinessException;
 import com.moong.exception.errorcode.ErrorCode;
+import com.moong.repository.petmedical.PetMedicalRepository;
 import com.moong.service.petmedical.PetMedicalService;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 class PetMedicalServiceTest extends BaseServiceTest {
 
     @Autowired
     private PetMedicalService petMedicalService;
+
+    @MockitoBean
+    private AiPetMedicalClient aiPetMedicalClient;
 
     @DisplayName("그룹 의사 권장사항을 조회할 수 있다")
     @Test
@@ -203,5 +211,20 @@ class PetMedicalServiceTest extends BaseServiceTest {
         TreatmentsResponse response = petMedicalService.getTreatment(member, Disease.DER);
 
         assertThat(response.treatments()).isEmpty();
+    }
+
+    @DisplayName("이미 갱신이 완료된 작업의 경우 AI 서버로부터 중복 갱신을 수행하지 않는다")
+    @Test
+    void notSyncFromAiServerWhenIsAlreadyDone() {
+        Member member = memberGenerator.generateSaved("softeer");
+        Pet pet = petGenerator.generateSaved("서울시", "중구");
+        PetGroup petGroup = petGroupGenerator.generateSaved(pet);
+        crewGenerator.generateSaved(petGroup, member);
+        treatmentGenerator.generateSaved(Disease.DER, "피부염", "서울시", "영등포구");
+        petMedicalGenerator.generateSavePetMedicals(Breed.BEA, 20, Gender.F);
+
+        petMedicalService.syncFromAiServerOptimized();
+
+        Mockito.verify(aiPetMedicalClient, never()).getPetMedicalsStream();
     }
 }

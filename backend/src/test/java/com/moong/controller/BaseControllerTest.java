@@ -18,6 +18,7 @@ import java.security.SecureRandom;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -87,6 +88,9 @@ public abstract class BaseControllerTest {
 
     @MockitoBean
     protected OAuthClient oAuthClient;
+
+    @MockitoBean
+    private RedissonClient redissonClient;
 
     @LocalServerPort
     private int port;

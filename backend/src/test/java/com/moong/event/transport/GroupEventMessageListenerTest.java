@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.connection.Message;
@@ -40,6 +41,9 @@ class GroupEventMessageListenerTest {
 
     @MockitoBean
     private SseService sseService;
+
+    @MockitoBean
+    protected RedissonClient redissonClient;
 
     @BeforeEach
     void setUp() {

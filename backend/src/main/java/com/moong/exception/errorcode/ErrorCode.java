@@ -69,6 +69,8 @@ public enum ErrorCode {
     MEDIA_TYPE_NOT_SUPPORTED(415, "허용되지 않은 미디어 타입입니다.", true),
 
     //5XX
+    DISTRIBUTED_LOCK_ACQUIRED_FAILED(500, "분산락 획득에 실패하였습니다", false),
+    DISTRIBUTED_LOCK_INTERRUPT(500, "분산락 획득에 실패하였습니다", false),
     MEMBER_EXPENSE_ROW_MAPPING_ERROR(500, "회원 소비내역 데이터 행 매핑 과정에서 문제가 생겼습니다", false),
     MONTHLY_REPORT_SEND_ERROR(500, "월간 레포트 발송 과정에서 문제가 생겼습니다", true),
     WELCOME_MAIL_SEND_ERROR(500, "환영 메일 발송 과정에서 문제가 생겼습니다", true),

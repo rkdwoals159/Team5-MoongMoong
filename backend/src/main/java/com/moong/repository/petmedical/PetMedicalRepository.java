@@ -37,14 +37,18 @@ public interface PetMedicalRepository extends Repository<PetMedical, Long>, PetM
     );
 
     default PetMedical findTopRatioPetMedical(Breed breed, int age, Gender gender) {
-        LocalDate latestDate = findLatestCreatedDate().toLocalDate();
+        LocalDate latestDate = findLatestCreatedDate()
+                .orElseThrow(() -> new BusinessException(ErrorCode.PET_MEDICAL_NOT_FOUND))
+                .toLocalDate();
         return findLatestTopByBreedAndAgeAndGenderOrderByRatioDesc(
                 breed, age, gender, latestDate.atStartOfDay(), latestDate.plusDays(1).atStartOfDay()
         ).orElseThrow(() -> new BusinessException(ErrorCode.PET_MEDICAL_NOT_FOUND));
     }
 
     default List<PetMedical> findByBreedAndAgeAndGender(Breed breed, int age, Gender gender) {
-        LocalDate latestDate = findLatestCreatedDate().toLocalDate();
+        LocalDate latestDate = findLatestCreatedDate()
+                .orElseThrow(() -> new BusinessException(ErrorCode.PET_MEDICAL_NOT_FOUND))
+                .toLocalDate();
         return findMedicalByBreedAndAgeAndGenderAndCreatedAtBetween(
                 breed,
                 age,
@@ -55,7 +59,9 @@ public interface PetMedicalRepository extends Repository<PetMedical, Long>, PetM
     }
 
     default List<PetMedical> findByBreedAndGenderAndAgeBetween(Breed breed, Gender gender, int minAge, int maxAge) {
-        LocalDate latestDate = findLatestCreatedDate().toLocalDate();
+        LocalDate latestDate = findLatestCreatedDate()
+                .orElseThrow(() -> new BusinessException(ErrorCode.PET_MEDICAL_NOT_FOUND))
+                .toLocalDate();
         return findByBreedAndGenderAndAgeBetweenAndCreatedAtBetween(
                 breed,
                 gender,
@@ -71,7 +77,7 @@ public interface PetMedicalRepository extends Repository<PetMedical, Long>, PetM
             FROM PetMedical pm
             """
     )
-    LocalDateTime findLatestCreatedDate();
+    Optional<LocalDateTime> findLatestCreatedDate();
 
     @Query("""
             SELECT p
