@@ -6,15 +6,14 @@ import com.moong.domain.ranking.key.RedisRankingMemberKey;
 import com.moong.domain.ranking.key.RedisRankingRebuildKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.connection.zset.DefaultTuple;
-import org.springframework.data.redis.connection.zset.Tuple;
-import org.springframework.data.redis.core.RedisCallback;
+import org.redisson.api.RedissonClient;
+import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -31,6 +30,7 @@ public class RedisRankingCache implements RankingCache {
     private static final String EMPTY_MARKER = "EMPTY_MARKER";
 
     private final StringRedisTemplate redisTemplate;
+    private final RedissonClient redissonClient;
 
     public CacheResult<List<BankRanking>> getRanking(RedisRankingKey rankingKey) {
         try{
@@ -59,7 +59,8 @@ public class RedisRankingCache implements RankingCache {
 
     public void markAsEmpty(RedisRankingKey rankingKey) {
         redisTemplate.opsForZSet().add(rankingKey.value(), EMPTY_MARKER, 0);
-        redisTemplate.expire(rankingKey.value(), HARD_TTL_SECONDS, TimeUnit.SECONDS);
+        redissonClient.getScoredSortedSet(rankingKey.value())
+                .expire(Duration.ofSeconds(HARD_TTL_SECONDS));
     }
 
     @Async("rankingRebuildExecutor")
@@ -79,21 +80,16 @@ public class RedisRankingCache implements RankingCache {
     public void syncToRedis(String rankingKey, List<BankRanking> rankings) {
         if (rankings.isEmpty()) return;
 
-        Set<Tuple> tuples = rankings.stream()
-                .map(r -> new DefaultTuple(
-                        new RedisRankingMemberKey(r.getMemberId(), r.getMemberName())
-                                .value()
-                                .getBytes(StandardCharsets.UTF_8),
-                        (double) r.getTotal()
-                ))
+        Set<ZSetOperations.TypedTuple<String>> typedTuples = rankings.stream()
+                .map(r -> {
+                    String memberValue = new RedisRankingMemberKey(r.getMemberId(), r.getMemberName()).value();
+                    return (ZSetOperations.TypedTuple<String>) new DefaultTypedTuple<>(memberValue, (double) r.getTotal());
+                })
                 .collect(Collectors.toSet());
 
-        redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
-            byte[] rawKey = rankingKey.getBytes(StandardCharsets.UTF_8);
-            connection.zAdd(rawKey, tuples);
-            connection.expire(rawKey, HARD_TTL_SECONDS); // 저장할 때마다 2일 연장
-            return null;
-        });
+        redisTemplate.opsForZSet().add(rankingKey, typedTuples);
+        redissonClient.getScoredSortedSet(rankingKey)
+                .expire(Duration.ofSeconds(HARD_TTL_SECONDS)); // 저장할 때마다 2일 연장
         log.info("redis 갱신 완료 : {} ", rankingKey);
     }
 

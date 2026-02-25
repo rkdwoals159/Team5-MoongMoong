@@ -145,7 +145,7 @@ medical-advice :
     - ratio는 0~100 사이의 퍼센트 값(%)
 
     [작성 가이드]
-    - medicalAdvice: disease와 ratio를 근거로 예방 및 관리법을 제안하는 띄어쓰기 포함 330문장 내외의 문장
+    - medicalAdvice: disease와 ratio를 근거로 예방 및 관리법을 제안하는 띄어쓰기 포함 200자 내외의 문장
       * treatments 항목명(검사명, 수술명 등)을 나열하지 않는다.
       * 문장 시작은 반드시 다음 중 하나의 템플릿을 따른다.
       - ratio >= 70: "내년 {disease} 질환의 발생 확률이 높으므로 "

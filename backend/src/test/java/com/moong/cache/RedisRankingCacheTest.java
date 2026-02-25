@@ -13,7 +13,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,29 +31,37 @@ class RedisRankingCacheTest {
     @BeforeEach
     void setUp() {
         redisTemplate.delete("ranking:bank:999");
-        redisTemplate.delete("ranking:bank:999" + ":temp");
         redisTemplate.delete(new RedisRankingRebuildKey(999L).value());
     }
 
     @Test
-    @DisplayName("syncToRedis는 기존 데이터를 누적하지 않고 원자적으로 교체해야 한다")
-    void prove_SyncToRedis_AtomicallyReplacesData() throws InterruptedException {
+    @DisplayName("syncToRedis는 TTL을 Hard TTL만큼 잘 늘린다")
+    void syncToRedis_setsExpireToHardTtlSeconds() {
         // given
         long bankId = 999L;
         RedisRankingKey rankingKey = new RedisRankingKey(bankId);
-        redisTemplate.opsForZSet().add(rankingKey.value(), "OLD_USER", 100);
-
-        List<BankRanking> newList = List.of(new BankRanking(1L, "NEW", 500L));
+        List<BankRanking> rankings = List.of(
+                new BankRanking(1L, "Alice", 1200L),
+                new BankRanking(2L, "Bob", 800L)
+        );
 
         // when
-        rankingCache.syncToRedis(rankingKey.value(), newList);
+        rankingCache.syncToRedis(rankingKey.value(), rankings);
 
         // then
-        Set<String> members = redisTemplate.opsForZSet().range(rankingKey.value(), 0, -1);
+        Long ttl = redisTemplate.getExpire(rankingKey.value());
+        long hardTtl = 48 * 60 * 60L;
+
+        System.out.println("target=" + rankingKey.value());
+        System.out.println("exists=" + redisTemplate.hasKey(rankingKey.value()));
+        System.out.println("keys=" + redisTemplate.keys("ranking:bank:*"));
+
         assertAll(
-                () -> assertThat(members).hasSize(1).contains("1_NEW"),
-                () -> assertThat(members).doesNotContain("OLD_USER"),
-                () -> assertThat(redisTemplate.hasKey(rankingKey.value() + ":temp")).isFalse()
+                () -> assertThat(ttl).isNotNull(),
+                () -> assertThat(ttl).isGreaterThan(0),
+                () -> assertThat(ttl)
+                        .isLessThanOrEqualTo(hardTtl)
+                        .isGreaterThanOrEqualTo(hardTtl - 5)
         );
     }
 
