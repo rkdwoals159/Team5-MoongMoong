@@ -18,7 +18,8 @@ public interface RankingCache {
 
     void updateRanking(RedisRankingKey rankingKey,
                        String rawMemberName,
-                       long amount);
+                       long amount,
+                       Supplier<List<BankRanking>> provider);
 
     void softDeleteRanking(RedisRankingKey rankingKey, long ttlSeconds);
 }

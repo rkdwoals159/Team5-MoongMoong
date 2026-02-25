@@ -3,13 +3,13 @@ package com.moong.service;
 import com.moong.cache.CacheResult;
 import com.moong.cache.CacheStatus;
 import com.moong.cache.RankingCache;
-import com.moong.domain.ranking.BankRanking;
-import com.moong.domain.ranking.BankRankings;
 import com.moong.domain.bank.Bank;
 import com.moong.domain.crew.Crew;
 import com.moong.domain.member.Member;
 import com.moong.domain.pet.Pet;
 import com.moong.domain.petgroup.PetGroup;
+import com.moong.domain.ranking.BankRanking;
+import com.moong.domain.ranking.BankRankings;
 import com.moong.domain.ranking.key.RedisRankingKey;
 import com.moong.repository.bank.CoinRepository;
 import com.moong.service.ranking.RankingService;
@@ -193,7 +193,12 @@ class RankingServiceTest extends BaseServiceTest {
         rankingService.updateRanking(member, 500L);
 
         String rawMemberName = member.getId() + "_" + member.getName();
-        verify(rankingCache).updateRanking(new RedisRankingKey(bank.getId()), rawMemberName, 500L);
+        verify(rankingCache).updateRanking(
+                eq(new RedisRankingKey(bank.getId())),
+                eq(rawMemberName),
+                eq(500L),
+                any()
+        );
     }
 
     @DisplayName("랭킹 삭제 요청 시 지정된 TTL로 캐시를 만료 처리한다")

@@ -38,7 +38,7 @@ public class FakeRankingCache implements RankingCache {
     }
 
     @Override
-    public void updateRanking(RedisRankingKey rankingKey, String rawMemberName, long amount) {
+    public void updateRanking(RedisRankingKey rankingKey, String rawMemberName, long amount, Supplier<List<BankRanking>> provider) {
 
     }
 

@@ -79,8 +79,6 @@ public class RedisRankingCache implements RankingCache {
     public void syncToRedis(String rankingKey, List<BankRanking> rankings) {
         if (rankings.isEmpty()) return;
 
-        String tempKey = rankingKey + ":temp";
-
         Set<Tuple> tuples = rankings.stream()
                 .map(r -> new DefaultTuple(
                         new RedisRankingMemberKey(r.getMemberId(), r.getMemberName())
@@ -91,11 +89,9 @@ public class RedisRankingCache implements RankingCache {
                 .collect(Collectors.toSet());
 
         redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
-            byte[] rawTempKey = tempKey.getBytes(StandardCharsets.UTF_8);
             byte[] rawKey = rankingKey.getBytes(StandardCharsets.UTF_8);
-            connection.zAdd(rawTempKey, tuples);
-            connection.expire(rawTempKey, HARD_TTL_SECONDS); // 저장할 때마다 2일 연장
-            connection.keyCommands().rename(rawTempKey, rawKey);
+            connection.zAdd(rawKey, tuples);
+            connection.expire(rawKey, HARD_TTL_SECONDS); // 저장할 때마다 2일 연장
             return null;
         });
         log.info("redis 갱신 완료 : {} ", rankingKey);
@@ -103,9 +99,18 @@ public class RedisRankingCache implements RankingCache {
 
     public void updateRanking(RedisRankingKey rankingKey,
                               String rawMemberName,
-                              long amount) {
+                              long amount,
+                              Supplier<List<BankRanking>> provider) {
         try{
-            redisTemplate.opsForZSet().incrementScore(rankingKey.value(), rawMemberName, amount);
+            Boolean isKeyExists = redisTemplate.hasKey(rankingKey.value());
+
+            if (Boolean.FALSE.equals(isKeyExists)) {
+                syncToRedis(rankingKey.value(), provider.get());
+                return;
+            }
+
+            redisTemplate.opsForZSet()
+                    .incrementScore(rankingKey.value(), rawMemberName, amount);
         } catch (Exception e) {
             log.error("update ranking error - bankId: {}, {}", rankingKey.bankId(), e.getMessage(), e);
         }

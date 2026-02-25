@@ -71,7 +71,8 @@ public class RankingService {
             rankingCache.updateRanking(
                     new RedisRankingKey(bank.getId()),
                     rawMemberName,
-                    amount
+                    amount,
+                    () -> fetchFromDb(bank.getId())
             );
         } catch (Exception e) {
             log.error("Ranking update error - bankId: {}, {}", bank.getId(), e.getMessage(), e);
