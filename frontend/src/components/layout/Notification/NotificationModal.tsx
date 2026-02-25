@@ -44,7 +44,7 @@ export default function NotificationModal({
       <div className="flex h-[calc(30vh)] flex-col overflow-y-auto no-scrollbar">
         {isInitialized && notifications.length === 0 ? (
           <div className="flex h-full items-center justify-center">
-            <p className="typo-body-m-medium text-gray-400">{NOTIFICATION_TEXT.EMPTY}</p>
+            <p className="typo-body-m-medium text-gray-500">{NOTIFICATION_TEXT.EMPTY}</p>
           </div>
         ) : (
           <>

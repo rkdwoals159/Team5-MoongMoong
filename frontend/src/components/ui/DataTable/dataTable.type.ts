@@ -23,6 +23,7 @@ export type DataTableProps<T> = {
   mode?: "read" | "edit";
   rowKey?: (row: T, index: number) => string | number;
   className?: string;
+  "aria-label"?: string;
   selectedCell?: { rowIndex: number; accessor: keyof T } | null;
   sortConfig?: Array<{ sortBy: keyof T; sortOrder: "asc" | "desc" }>;
   onSort?: (accessor: keyof T) => void;

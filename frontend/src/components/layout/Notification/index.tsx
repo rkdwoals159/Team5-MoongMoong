@@ -63,11 +63,12 @@ export default function Notification() {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
+        aria-label="알림"
         aria-haspopup="dialog"
         aria-expanded={isOpen}
         className={`relative flex items-center cursor-pointer ${isOpen ? "text-yellow-300" : "hover-bell-swing"}`}
       >
-        <NotificationIcon className="size-8 transition-colors" />
+        <NotificationIcon aria-hidden="true" className="size-8 transition-colors" />
         {unreadCount > 0 && (
           <span className="animate-badge-pop absolute -top-1 -right-1 flex min-w-[18px] h-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-bold leading-[18px] text-white">
             {unreadCount > 99 ? "99+" : unreadCount}

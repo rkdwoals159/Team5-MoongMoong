@@ -62,6 +62,8 @@ const CategoryPopup = ({
   return (
     <div
       ref={popupRef}
+      role="dialog"
+      aria-label="카테고리 선택"
       className="fixed z-50 w-[288px] rounded-lg border border-border-light bg-white shadow-lg overflow-hidden"
       style={{
         top: `${position.top}px`,

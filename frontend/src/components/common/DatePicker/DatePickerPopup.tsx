@@ -195,7 +195,7 @@ export default function DatePickerPopup({
                 disabled={isDisabled}
                 className={cn(
                   "size-8 flex items-center justify-center rounded typo-body-s-medium transition-colors cursor-pointer",
-                  !cell.isCurrentMonth && "text-gray-300 hover:bg-gray-100 hover:text-text-base",
+                  !cell.isCurrentMonth && "text-gray-500 hover:bg-gray-100 hover:text-text-base",
                   cell.isCurrentMonth && "text-text-base hover:bg-gray-100",
                   isSelected && "bg-gray-800 text-white hover:bg-gray-800",
                   isToday && !isSelected && "font-bold",

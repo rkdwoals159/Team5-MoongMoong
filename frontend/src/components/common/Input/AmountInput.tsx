@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import { cn } from "@/utils/style";
 import WarningIcon from "@/assets/icons/components/warning.svg";
 import { formatAmountPlain } from "@/utils/amount";
@@ -17,8 +18,12 @@ const AmountInput = ({
   onBlur,
   onAnimationEnd,
   ref,
+  id: idProp,
   ...inputProps
 }: AmountInputProps) => {
+  const generatedId = useId();
+  const id = idProp ?? generatedId;
+  const warningId = `${id}-warning`;
   const numericValue = Number(value) || 0;
 
   const wrapperClasses = cn(
@@ -39,19 +44,26 @@ const AmountInput = ({
         <input
           {...inputProps}
           ref={ref}
+          id={id}
           type="text"
           inputMode="numeric"
           value={value ? formatAmountPlain(numericValue) : ""}
           placeholder={placeholder}
           disabled={isDisabled}
+          aria-invalid={!!warningMessage}
+          aria-describedby={warningMessage ? warningId : undefined}
           onChange={onChange}
           onBlur={onBlur}
           className="flex-1 bg-transparent outline-none typo-body-m-medium placeholder:text-gray-300"
         />
-        <span className="typo-body-m-medium text-gray-400">{suffix}</span>
+        <span className="typo-body-m-medium text-gray-500">{suffix}</span>
       </div>
       {warningMessage ? (
-        <div className="absolute -bottom-700 left-0 flex items-center gap-200 px-300 typo-body-s-medium text-red-500">
+        <div
+          id={warningId}
+          role="alert"
+          className="absolute -bottom-700 left-0 flex items-center gap-200 px-300 typo-body-s-medium text-red-500"
+        >
           <WarningIcon className="w-4 h-4" aria-hidden="true" />
           <span>{warningMessage}</span>
         </div>

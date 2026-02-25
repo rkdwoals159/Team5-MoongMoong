@@ -27,7 +27,7 @@ const CategoryFilterIcon = ({ isOpen }: { isOpen: boolean }) => {
 
   return (
     <span
-      className="inline-flex shrink-0 text-gray-300"
+      className="inline-flex shrink-0 text-gray-500"
       aria-label={isOpen ? "필터 열기" : "필터 닫기"}
     >
       <Icon aria-hidden="true" />

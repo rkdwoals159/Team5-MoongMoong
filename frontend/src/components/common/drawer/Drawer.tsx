@@ -35,6 +35,7 @@ const Drawer = ({
       className={cn(baseClasses, variantClasses[variantKey], className ?? "")}
       data-variant={variantKey}
       data-full-width={fullWidth ? "true" : "false"}
+      aria-current={isSelected ? "page" : undefined}
     >
       <span className="inline-flex items-center gap-[inherit]">
         {iconToRender && (

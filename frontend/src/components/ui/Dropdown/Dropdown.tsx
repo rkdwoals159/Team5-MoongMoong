@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useId, useState, useRef, useEffect } from "react";
 import type { DropdownProps } from "@/components/ui/Dropdown/dropdown.type";
 import ChevronIcon from "@/components/ui/Dropdown/ChevronIcon";
 import WarningIcon from "@/assets/components/ic_warning.svg";
@@ -30,6 +30,8 @@ const Dropdown = ({
   fullWidth = true,
   className,
 }: DropdownProps) => {
+  const generatedId = useId();
+  const errorId = `${generatedId}-error`;
   const [isOpen, setIsOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -145,6 +147,8 @@ const Dropdown = ({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-label={placeholder}
+        aria-invalid={!!errorMessage}
+        aria-describedby={errorMessage ? errorId : undefined}
         className={triggerClasses}
       >
         <span className={cn("flex-1 text-left truncate", !isValidSelection ? "text-text-sub" : "")}>
@@ -155,8 +159,8 @@ const Dropdown = ({
 
       {/* Error Message */}
       {errorMessage && (
-        <div className="flex items-center mt-200 gap-200 px-250">
-          <WarningIcon width={16} height={16} className="text-red-500" />
+        <div id={errorId} role="alert" className="flex items-center mt-200 gap-200 px-250">
+          <WarningIcon width={16} height={16} aria-hidden="true" className="text-red-500" />
           <p className="typo-body-s-medium text-red-500">{errorMessage}</p>
         </div>
       )}

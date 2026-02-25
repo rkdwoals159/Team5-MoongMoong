@@ -43,7 +43,7 @@ export default function SavingTargetModal({
       </button>
 
       <h3 className="typo-title-m-bold text-gray-800">목표 금액 설정</h3>
-      <p className="mt-200 typo-body-m-medium text-gray-400">
+      <p className="mt-200 typo-body-m-medium text-gray-500">
         우리 가족의 목표 금액을 설정해주세요.
       </p>
 

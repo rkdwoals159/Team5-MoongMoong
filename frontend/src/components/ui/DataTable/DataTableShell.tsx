@@ -31,7 +31,11 @@ const DataTableShell = memo(function DataTableShell({
       tabIndex={tabIndex}
       onKeyDown={onKeyDown}
     >
-      <table className="w-full border-separate border-spacing-0 text-left table-fixed shrink-0">
+      <table
+        className="w-full border-separate border-spacing-0 text-left table-fixed shrink-0"
+        role="presentation"
+        aria-hidden="true"
+      >
         <colgroup>{colDefs}</colgroup>
         {headerSlot}
       </table>

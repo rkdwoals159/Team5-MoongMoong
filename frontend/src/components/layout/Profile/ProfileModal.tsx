@@ -25,7 +25,7 @@ export default function ProfileModal({
       <div className="border-t border-gray-100 mx-700" />
 
       <div className="flex justify-between items-center py-600 px-700">
-        <span className="typo-body-m-medium text-gray-400">닉네임</span>
+        <span className="typo-body-m-medium text-gray-500">닉네임</span>
         <span className="typo-body-m-bold text-gray-800">{nickname}</span>
       </div>
 

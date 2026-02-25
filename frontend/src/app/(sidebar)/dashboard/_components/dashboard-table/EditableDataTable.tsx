@@ -81,6 +81,7 @@ const EditableDataTable = ({
         columns={columns}
         data={sortedRows}
         rowKey={rowKey}
+        aria-label="지출 기록 테이블"
         className="flex-1 min-h-0 rounded-t-600 border border-b-0 border-gray-50"
         selectedCell={selectedCell}
         sortConfig={tableSortConfig}
@@ -94,7 +95,7 @@ const EditableDataTable = ({
           <>
             <div ref={sentinelRef} className="h-4" />
             {isLoadingMore && (
-              <div className="py-2 text-center text-sm text-gray-400">불러오는 중...</div>
+              <div className="py-2 text-center text-sm text-gray-500">불러오는 중...</div>
             )}
           </>
         }

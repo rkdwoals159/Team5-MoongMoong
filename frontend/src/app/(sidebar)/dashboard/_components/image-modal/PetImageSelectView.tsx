@@ -50,7 +50,7 @@ export default function PetImageSelectView({ onFileSelect }: PetImageSelectViewP
           )}
           onClick={() => fileInputRef.current?.click()}
         >
-          <span className={cn("typo-body-m-medium truncate text-gray-300")}>
+          <span className={cn("typo-body-m-medium truncate text-gray-500")}>
             {SELECT_VIEW_FILE_NAME_PLACEHOLDER}
           </span>
         </button>

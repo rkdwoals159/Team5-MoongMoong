@@ -45,7 +45,7 @@ export default async function Home({
             </span>
             <span className="typo-body-m-bold text-gray-800">구글 계정으로 시작하기</span>
           </Link>
-          <p className="typo-body-m-medium text-gray-400">
+          <p className="typo-body-m-medium text-gray-500">
             구글, 애플, 또는 이메일로 계속 진행하여, moongmoong&nbsp;
             {/* todo - 실제 링크로 변경 */}
             <span className="underline">서비스 약관</span> 및&nbsp;

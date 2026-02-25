@@ -15,9 +15,9 @@ export default function NotificationCard({
 }) {
   const icon =
     item.type === "AI_ADVICE_CREATED" ? (
-      <MedicIcon className="size-6" />
+      <MedicIcon aria-hidden="true" className="size-6" />
     ) : (
-      <PiggyBankIcon className="size-6" />
+      <PiggyBankIcon aria-hidden="true" className="size-6" />
     );
 
   return (
@@ -32,7 +32,7 @@ export default function NotificationCard({
           <div className="flex min-w-0 flex-1 flex-col gap-[2px]">
             <p className="typo-body-m-bold text-gray-800">{item.title}</p>
             <p className="typo-body-s-medium text-gray-600">{item.content}</p>
-            <p className="typo-caption-s-medium text-gray-300">{item.time}</p>
+            <p className="typo-caption-s-medium text-gray-500">{item.time}</p>
           </div>
         </div>
         <button
@@ -41,7 +41,7 @@ export default function NotificationCard({
           aria-label={NOTIFICATION_TEXT.DELETE_ARIA_LABEL}
           onClick={() => onDelete(item.id)}
         >
-          <CloseIcon className="size-[14px]" />
+          <CloseIcon aria-hidden="true" className="size-[14px]" />
         </button>
       </div>
     </div>

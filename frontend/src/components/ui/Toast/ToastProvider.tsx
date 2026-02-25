@@ -28,6 +28,8 @@ const ToastProvider = ({ children }: { children: React.ReactNode }) => {
     <ToastContext.Provider value={value}>
       {children}
       <div
+        aria-live="assertive"
+        aria-atomic="false"
         className={cn(
           "pointer-events-none fixed left-1/2 -translate-x-1/2 bottom-700 z-50 flex w-full max-w-[515px] flex-col gap-300 px-500",
         )}
@@ -46,6 +48,8 @@ const ToastProvider = ({ children }: { children: React.ReactNode }) => {
         ))}
       </div>
       <div
+        aria-live="polite"
+        aria-atomic="false"
         className={cn(
           "pointer-events-none fixed right-500 bottom-700 z-50 flex w-full max-w-[300px] flex-col gap-300",
         )}

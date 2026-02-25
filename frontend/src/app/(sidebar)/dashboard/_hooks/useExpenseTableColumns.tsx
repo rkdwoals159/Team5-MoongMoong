@@ -17,6 +17,12 @@ import Chip from "@/components/common/Chip/Chip";
 import CheckBox from "@/components/common/CheckBox/CheckBox";
 import CategoryFilterHeader from "@/app/(sidebar)/dashboard/_components/dashboard-table/CategoryFilterHeader";
 
+const ACCESSOR_LABEL_MAP: Partial<Record<keyof EditableExpenseRow, string>> = {
+  usage: "사용내역",
+  cost: "비용",
+  memo: "메모",
+};
+
 /**
  * 지출 테이블 컬럼 정의 및 셀 렌더러/에디터 생성 훅
  */
@@ -42,6 +48,7 @@ export const useExpenseTableColumns = ({
       ) => {
         return (
           <input
+            aria-label={ACCESSOR_LABEL_MAP[accessor] ?? String(accessor)}
             className="w-full bg-transparent outline-none px-500 py-200 truncate"
             value={String(value ?? "")}
             onChange={(e) => {
@@ -93,6 +100,7 @@ export const useExpenseTableColumns = ({
         <input
           type="text"
           inputMode="numeric"
+          aria-label="비용"
           className="w-full bg-transparent outline-none px-500 py-200"
           value={displayValue}
           onChange={(e) => {
@@ -131,6 +139,7 @@ export const useExpenseTableColumns = ({
     (_value: EditableExpenseRow[keyof EditableExpenseRow], _row: EditableExpenseRow) => {
       return (
         <CheckBox
+          aria-label="행 선택"
           isChecked={_row.isSelected}
           onChange={() => updateCellByLocalId(_row.localId, "isSelected", !_row.isSelected)}
         />
@@ -147,7 +156,13 @@ export const useExpenseTableColumns = ({
   return useMemo(
     () => [
       {
-        label: <CheckBox isChecked={isAllSelected} onChange={handleToggleAllCheckBox} />,
+        label: (
+          <CheckBox
+            aria-label="전체 선택"
+            isChecked={isAllSelected}
+            onChange={handleToggleAllCheckBox}
+          />
+        ),
         accessor: "isSelected" as keyof EditableExpenseRow,
         render: createRenderCheckBox,
         width: "48px",

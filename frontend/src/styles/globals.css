@@ -561,7 +561,7 @@ body {
   --color-primary-checked: var(--color-yellow-150);
 
   --color-text-base: var(--color-gray-800);
-  --color-text-sub: var(--color-gray-300);
+  --color-text-sub: var(--color-gray-500);
   --color-text-inverse: var(--color-white-100); /* 원본 'test-inverse' 오타 교정 */
 
   --color-border-heavy: var(--color-gray-300);

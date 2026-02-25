@@ -82,7 +82,7 @@ export default function AnnualDiseaseRiskChart({
 function NoSelectedDiseasesChart() {
   return (
     <div className="flex h-[320px] w-full items-center justify-center pt-600">
-      <p className="text-body-m text-gray-400">선택된 질환이 없습니다.</p>
+      <p className="text-body-m text-gray-500">선택된 질환이 없습니다.</p>
     </div>
   );
 }

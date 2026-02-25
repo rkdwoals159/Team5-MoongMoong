@@ -13,6 +13,7 @@ const Loading = ({ count, height = 24 }: LoadingProps) => {
     return Array.from({ length: count }, (_, index) => (
       <LoadingIcon
         key={index}
+        aria-hidden="true"
         className={`loading-icon block [--animation-delay:${index * 0.2}s]`}
         width={width}
         height={height}
@@ -20,7 +21,17 @@ const Loading = ({ count, height = 24 }: LoadingProps) => {
     ));
   }, [count, height]);
 
-  return <div className="flex items-center justify-center gap-600">{loadingIcons}</div>;
+  return (
+    <div
+      role="status"
+      aria-label="로딩 중"
+      aria-busy="true"
+      className="flex items-center justify-center gap-600"
+    >
+      <span className="sr-only">로딩 중...</span>
+      {loadingIcons}
+    </div>
+  );
 };
 
 export default Loading;

@@ -22,7 +22,7 @@ export default function AnalysisChartTooltip({
       <div className="flex w-full items-start justify-between gap-300">
         <div className="flex flex-col gap-200">
           <Chip label={label} level="major" color={color} />
-          <span className="typo-caption-s-medium text-gray-400">
+          <span className="typo-caption-s-medium text-gray-500">
             {formatAmountPlain(Number(rawValue))}원
           </span>
         </div>

@@ -15,5 +15,5 @@ export default function MedicalExpenseHeader({
 
 const headerClasses = "flex items-start justify-between gap-500";
 const titleContainerClasses = "flex flex-col gap-200";
-const subtitleClasses = "typo-body-l-medium text-gray-300";
+const subtitleClasses = "typo-body-l-medium text-gray-500";
 const titleClasses = "typo-headline-l-bold text-gray-800";

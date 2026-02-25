@@ -32,7 +32,7 @@ export function useSSEToken() {
     async function fetchToken() {
       try {
         const token = await postSSEToken();
-        if (cancelled) return;
+        if (cancelled || document.visibilityState !== "visible") return;
         setConnectionToken(token);
       } catch {
         if (!cancelled) {

@@ -5,7 +5,7 @@ export default function SavingRanking() {
   return (
     <>
       <h2 className="typo-title-l-bold">우리 가족 저금 랭킹</h2>
-      <p className="typo-body-l-medium text-gray-400">누가 {status.petName}를 가장 사랑할까?</p>
+      <p className="typo-body-l-medium text-gray-500">누가 {status.petName}를 가장 사랑할까?</p>
       <div className="flex flex-col gap-300 mt-700 overflow-y-auto flex-1 min-h-0">
         {status.rankings.map((ranking, index) => (
           <div key={ranking.userName} className="flex gap-500 mt-500">

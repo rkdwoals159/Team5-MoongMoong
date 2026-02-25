@@ -5,9 +5,9 @@ export default function TreatmentCard({ treatment }: { treatment: TreatmentRespo
   return (
     <div className={cardClasses}>
       <div className={contentClasses}>
-        <h1 className={(name?.length ?? 0) > 12 ? nameLongClasses : nameClasses} title={name}>
+        <h3 className={(name?.length ?? 0) > 12 ? nameLongClasses : nameClasses} title={name}>
           {name}
-        </h1>
+        </h3>
         <p className={descriptionClasses}>{description}</p>
       </div>
       <div className={priceContainerClasses}>
@@ -38,5 +38,5 @@ const nameLongClasses = "typo-title-s-bold text-gray-800 line-clamp-1";
 const descriptionClasses = "typo-body-l-bold text-gray-500 line-clamp-2";
 
 const priceContainerClasses = "flex items-start flex-col";
-const priceLabelClasses = "typo-body-l-medium text-gray-300";
+const priceLabelClasses = "typo-body-l-medium text-gray-500";
 const averageLabelClasses = "typo-headline-m-bold text-gray-800";

@@ -16,7 +16,7 @@ const SortIcon = memo(function SortIcon({ order }: { order: "asc" | "desc" }) {
 
   return (
     <span
-      className="inline-flex shrink-0 text-gray-300"
+      className="inline-flex shrink-0 text-gray-500"
       aria-label={order === "asc" ? "오름차순" : "내림차순"}
     >
       <Icon aria-hidden="true" />
@@ -34,16 +34,25 @@ const renderHeaderCell = <T,>(
   const sortEntry = sortConfig?.find((s) => s.sortBy === col.accessor);
   const isSorted = sortEntry !== undefined;
   const handleClick = () => (isSortable ? onSort?.(col.accessor) : undefined);
+  const ariaSortValue = isSortable
+    ? isSorted
+      ? sortEntry.sortOrder === "asc"
+        ? ("ascending" as const)
+        : ("descending" as const)
+      : ("none" as const)
+    : undefined;
 
   return (
     <th
       key={String(col.accessor)}
+      scope="col"
       className={cn(
         TH_BASE_CLASS,
         isSortable ? "cursor-pointer select-none hover:bg-gray-100" : "",
         isSorted ? "bg-gray-100" : "",
       )}
       style={{ width: col.width }}
+      aria-sort={ariaSortValue}
       onClick={handleClick}
       onKeyDown={
         isSortable
@@ -55,7 +64,6 @@ const renderHeaderCell = <T,>(
             }
           : undefined
       }
-      role={isSortable ? "button" : undefined}
       tabIndex={isSortable ? 0 : undefined}
     >
       {isSorted ? (

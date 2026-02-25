@@ -3,7 +3,7 @@
 import { cn } from "@/utils/style";
 import WarningIcon from "@/assets/icons/components/warning.svg";
 import type { TextInputProps } from "./input.type";
-import { useState } from "react";
+import { useId, useState } from "react";
 
 type TextInputInternalProps = TextInputProps & {};
 
@@ -22,7 +22,10 @@ const TextInput = ({
   defaultValue,
   ...rest
 }: TextInputInternalProps) => {
-  const { onChange, onBlur, ...inputProps } = rest;
+  const { onChange, onBlur, id: idProp, ...inputProps } = rest;
+  const generatedId = useId();
+  const id = idProp ?? generatedId;
+  const errorId = `${id}-error`;
   const [internalTouched, setInternalTouched] = useState(false);
   const isTouched = typeof touched === "boolean" ? touched : internalTouched;
   const shouldShowError = isTouched && !!showError && !!errorMessage && !isDisabled;
@@ -67,18 +70,21 @@ const TextInput = ({
       <div className={wrapperClasses} data-error={shouldShowError ? "true" : "false"}>
         <input
           {...inputProps}
+          id={id}
           type="text"
           value={inputValue}
           defaultValue={inputDefaultValue}
           placeholder={placeholder}
           maxLength={maxLength}
           disabled={isDisabled}
+          aria-invalid={shouldShowError}
+          aria-describedby={shouldShowError ? errorId : undefined}
           onChange={handleChange}
           onBlur={handleBlur}
           className="flex-1 bg-transparent outline-none typo-body-m-medium placeholder:text-gray-300"
         />
         {showCounter && stringValue.length > 0 ? (
-          <span className="typo-body-m-medium text-gray-300">
+          <span className="typo-body-m-medium text-gray-500">
             {stringValue.length}/{maxLength}자
           </span>
         ) : null}
@@ -87,7 +93,11 @@ const TextInput = ({
         renderError ? (
           renderError(errorMessage ?? "")
         ) : (
-          <div className="flex items-center gap-200 px-300 typo-body-s-medium text-red-500">
+          <div
+            id={errorId}
+            role="alert"
+            className="flex items-center gap-200 px-300 typo-body-s-medium text-red-500"
+          >
             <WarningIcon className="w-4 h-4" aria-hidden="true" />
             <span>{errorMessage}</span>
           </div>

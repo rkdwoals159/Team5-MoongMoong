@@ -10,6 +10,7 @@ const InfoTooltip = ({ description, iconSize = 20 }: InfoTooltipProps) => {
     <div className="relative shrink-0">
       <button
         type="button"
+        aria-label="도움말"
         className="p-0 border-none bg-transparent cursor-pointer flex items-center"
         onMouseEnter={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}

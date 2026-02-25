@@ -92,7 +92,7 @@ export default function SavingBreakSummaryModal({
           총 <span className="typo-body-l-bold">{displayDays + 1}일</span> 동안 저금했어요.
         </p>
         <p
-          className={`mt-300 typo-body-m-medium text-center text-gray-400 ${
+          className={`mt-300 typo-body-m-medium text-center text-gray-500 ${
             reduceMotion ? "" : "saving-break-stagger-in"
           }`}
           style={reduceMotion ? undefined : { animationDelay: `${ANIMATION_DELAY.MESSAGE}ms` }}

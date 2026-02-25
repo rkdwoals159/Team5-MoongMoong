@@ -72,7 +72,7 @@ function DefaultDogInfoSection({ size }: { size: "compact" | "large" }) {
           height: isLarge ? LARGE_SIZE : COMPACT_SIZE,
         }}
       />
-      <p className="typo-caption-s-regular text-gray-400">반려동물 정보를 불러올 수 없습니다</p>
+      <p className="typo-caption-s-regular text-gray-500">반려동물 정보를 불러올 수 없습니다</p>
     </div>
   );
 }

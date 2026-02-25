@@ -117,7 +117,7 @@ export default function PetImageChangeModal({
         <button
           type="button"
           onClick={handleOverlayClose}
-          className="self-end text-gray-400 transition-colors hover:text-gray-700 cursor-pointer"
+          className="self-end text-gray-500 transition-colors hover:text-gray-700 cursor-pointer"
           aria-label="닫기"
         >
           <CloseIcon className="size-5" aria-hidden="true" />

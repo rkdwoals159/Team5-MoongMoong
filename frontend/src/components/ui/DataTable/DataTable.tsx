@@ -39,7 +39,12 @@ const DataTable = <T,>({
         <thead className="bg-gray-50">
           <tr>
             {columns.map((col) => (
-              <th key={String(col.accessor)} className={TH_BASE_CLASS} style={{ width: col.width }}>
+              <th
+                key={String(col.accessor)}
+                scope="col"
+                className={TH_BASE_CLASS}
+                style={{ width: col.width }}
+              >
                 {col.label}
               </th>
             ))}

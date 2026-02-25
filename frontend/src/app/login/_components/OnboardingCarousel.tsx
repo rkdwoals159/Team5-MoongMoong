@@ -64,7 +64,10 @@ export default function OnboardingCarousel() {
                 aria-label={`온보딩 ${index + 1} 이미지 클릭`}
               >
                 {slide.image}
-                <p className="pointer-events-none absolute bottom-[82px] left-0 right-0 text-center typo-headline-l-bold text-text-base">
+                <p
+                  aria-hidden="true"
+                  className="pointer-events-none absolute bottom-[82px] left-0 right-0 text-center typo-headline-l-bold text-text-base"
+                >
                   {slide.title[0]}
                   <br />
                   {slide.title[1]}

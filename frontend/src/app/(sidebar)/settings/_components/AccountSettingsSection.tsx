@@ -18,7 +18,7 @@ export default function AccountSettingsSection({ account, onClose }: AccountSett
         <div className="flex flex-col gap-600">
           <div className="flex flex-col gap-200">
             <span className="typo-caption-s-bold text-gray-500">로그인 계정</span>
-            <span className="typo-body-m text-gray-300">{email}</span>
+            <span className="typo-body-m text-gray-500">{email}</span>
           </div>
 
           <div className="flex flex-col gap-200">

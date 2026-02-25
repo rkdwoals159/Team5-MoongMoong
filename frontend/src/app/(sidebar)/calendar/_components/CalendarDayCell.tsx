@@ -105,7 +105,7 @@ function CalendarDayCell({
 
           <div className="mt-600">
             {viewModel.visibleExpenses.length === 0 ? (
-              <p className="typo-caption-s-medium text-gray-300">
+              <p className="typo-caption-s-medium text-gray-500">
                 조건에 맞는 소비 내역이 없습니다.
               </p>
             ) : (
