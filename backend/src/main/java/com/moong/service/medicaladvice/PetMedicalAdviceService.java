@@ -68,7 +68,7 @@ public class PetMedicalAdviceService {
         }
     }
 
-    @Async("groupEventPublisherExecutor")
+    @Async("createAIMedicalAdviceEventExecutor")
     public void createMedicalAdvice(long memberId, long groupId, LocalDate date) {
         Year nextYear = Year.from(date).plusYears(1);
         AiMedicalAdviceRequest input = getAiMedicalAdviceInput(groupId, date);

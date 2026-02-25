@@ -63,6 +63,20 @@ public class AsyncConfig implements AsyncConfigurer {
         return executor;
     }
 
+    @Bean(name = "createAIMedicalAdviceEventExecutor")
+    public Executor createAIMedicalAdviceEventExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(2);
+        executor.setMaxPoolSize(4);
+        executor.setQueueCapacity(100);
+        executor.setRejectedExecutionHandler((r, ex) -> {
+            log.warn("createAIMedicalAdviceEventExecutor rejected task. poolSize={}, active={}, queued={}",
+                    ex.getPoolSize(), ex.getActiveCount(), ex.getQueue().size());
+        });
+        executor.initialize();
+        return executor;
+    }
+
     @Bean(name = "rankingRebuildExecutor")
     public Executor rankingRebuildExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
