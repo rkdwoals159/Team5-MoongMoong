@@ -22,6 +22,7 @@ export type UseExpensesV2Return = {
   startDate: string;
   endDate: string;
   expenses: ExpenseData[];
+  total: number;
   refetch: () => void;
   hasNext: boolean;
   isLoadingMore: boolean;
@@ -61,9 +62,9 @@ export type UpdateAllCells = (accessor: keyof EditableExpenseRow, value: string 
  * useExpenseTable 반환 타입
  */
 export type UseExpenseTableReturn = {
-  sortedRows: ExpenseData[];
-  rowKey: (row: ExpenseData, rowIndex: number) => string | number;
-  columns: DataTableColumn<ExpenseData>[];
+  sortedRows: EditableExpenseRow[];
+  rowKey: (row: EditableExpenseRow, rowIndex: number) => string | number;
+  columns: DataTableColumn<EditableExpenseRow>[];
   selectedCell: SelectedCell;
   showCategoryPopup: boolean;
   popupPosition: { top: number; left: number };
@@ -78,8 +79,8 @@ export type UseExpenseTableReturn = {
   handleSave: () => Promise<void>;
   hasUnsavedChanges: boolean;
   selectedCount: number;
-  totalExpense: number;
-  onCellClick: (rowIndex: number, accessor: keyof ExpenseData) => void;
+  costDelta: number;
+  onCellClick: (rowIndex: number, accessor: keyof EditableExpenseRow) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 };
 
@@ -112,6 +113,7 @@ export type UseExpenseRowSaveParams = {
  */
 export type EditableDataTableProps = {
   initialData: ExpenseData[];
+  total: number;
   startDate: string;
   endDate: string;
   className?: string;
@@ -129,7 +131,7 @@ export type EditableDataTableProps = {
 /**
  * EditableDataTable selectedCell 타입
  */
-export type SelectedCell = { rowIndex: number; accessor: keyof ExpenseData } | null;
+export type SelectedCell = { rowIndex: number; accessor: keyof EditableExpenseRow } | null;
 
 /**
  * useExpenseTableSelection 파라미터 타입

@@ -15,11 +15,20 @@ const DashboardTable = ({ tableClassName }: DashboardTableProps) => {
   const { mainCategoryFilter, handleFilterChange } = useMainCategoryFilter();
 
   // 정렬 파라미터를 데이터 조회에 전달
-  const { startDate, endDate, expenses, refetch, hasNext, isLoadingMore, loadMore, resetKey } =
-    useExpensesV2({
-      toSortParams,
-      mainCategoryFilter,
-    });
+  const {
+    startDate,
+    endDate,
+    expenses,
+    total,
+    refetch,
+    hasNext,
+    isLoadingMore,
+    loadMore,
+    resetKey,
+  } = useExpensesV2({
+    toSortParams,
+    mainCategoryFilter,
+  });
   const setRangeToUrl = useSetRangeToUrl();
 
   return (
@@ -30,7 +39,8 @@ const DashboardTable = ({ tableClassName }: DashboardTableProps) => {
         onRangeChange={(start, end) => setRangeToUrl(start, end)}
       />
       <EditableDataTable
-        initialData={expenses} // 1) 초기 데이터를 테이블에 전달
+        initialData={expenses} // 0) 초기 데이터를 테이블에 전달
+        total={total} // 1) 서버에서 계산한 기간 내 총 지출 금액
         startDate={startDate} // 2) 시작 날짜를 테이블에 전달
         endDate={endDate} // 3) 종료 날짜를 테이블에 전달
         className={tableClassName ?? ""} // 4) 테이블 컴포넌트 클래스 전달

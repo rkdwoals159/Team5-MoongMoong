@@ -12,5 +12,6 @@ export function createEmptyRow(placeholderId: number): EditableExpenseRow {
     isNew: true,
     isDirty: false,
     isDeleted: false,
+    isSelected: false,
   };
 }

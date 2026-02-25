@@ -2,7 +2,6 @@
  * 소비내역 데이터 타입
  */
 export type ExpenseData = {
-  selected?: boolean | null;
   expenseId: number;
   spentAt: string;
   usage: string;
@@ -21,4 +20,5 @@ export type EditableExpenseRow = ExpenseData & {
   isNew: boolean;
   isDirty: boolean;
   isDeleted: boolean;
+  isSelected: boolean;
 };

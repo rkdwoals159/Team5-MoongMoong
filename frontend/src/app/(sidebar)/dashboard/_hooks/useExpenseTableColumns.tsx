@@ -4,7 +4,6 @@ import { useCallback, useMemo } from "react";
 import type { DataTableColumn } from "@/components/ui/DataTable/dataTable.type";
 import type {
   EditableExpenseRow,
-  ExpenseData,
   UseExpenseTableColumnsParams,
 } from "@/app/(sidebar)/dashboard/_types";
 import { formatAmountPlain } from "@/utils/amount";
@@ -31,23 +30,25 @@ export const useExpenseTableColumns = ({
   onUsageChange,
   mainCategoryFilter,
   onCategoryFilterChange,
-}: UseExpenseTableColumnsParams): DataTableColumn<ExpenseData>[] => {
+}: UseExpenseTableColumnsParams): DataTableColumn<EditableExpenseRow>[] => {
   const isAllSelected =
     selectedCount === displayInitialRows.length - 1 && displayInitialRows.length > 1;
 
   const createEditor = useCallback(
-    (accessor: keyof ExpenseData) => {
-      const editor = (value: ExpenseData[keyof ExpenseData], _row: ExpenseData) => {
-        const row = _row as EditableExpenseRow;
+    (accessor: keyof EditableExpenseRow) => {
+      const editor = (
+        value: EditableExpenseRow[keyof EditableExpenseRow],
+        _row: EditableExpenseRow,
+      ) => {
         return (
           <input
             className="w-full bg-transparent outline-none px-500 py-200 truncate"
             value={String(value ?? "")}
             onChange={(e) => {
               const v = e.target.value;
-              updateCellByLocalId(row.localId, accessor, v);
+              updateCellByLocalId(_row.localId, accessor, v);
               if (accessor === "usage") {
-                onUsageChange?.(row.localId, v);
+                onUsageChange?.(_row.localId, v);
               }
             }}
           />
@@ -59,7 +60,11 @@ export const useExpenseTableColumns = ({
   );
 
   const createRenderCategory = useCallback(
-    (value: ExpenseData[keyof ExpenseData], _row: ExpenseData, rowIndex: number) => {
+    (
+      value: EditableExpenseRow[keyof EditableExpenseRow],
+      _row: EditableExpenseRow,
+      rowIndex: number,
+    ) => {
       const mainCategory = String(value ?? "");
       const subCategory = String(_row?.subCategory ?? "");
       const color = CATEGORY_COLOR_MAP[mainCategory] || DEFAULT_CATEGORY_COLOR;
@@ -79,8 +84,7 @@ export const useExpenseTableColumns = ({
   );
 
   const createEditorCost = useCallback(
-    (value: ExpenseData[keyof ExpenseData], _row: ExpenseData) => {
-      const row = _row as EditableExpenseRow;
+    (value: EditableExpenseRow[keyof EditableExpenseRow], _row: EditableExpenseRow) => {
       const num =
         typeof value === "number" ? value : value != null && value !== "" ? Number(value) : 0;
       const displayValue = num ? formatAmountPlain(num) : "";
@@ -95,7 +99,7 @@ export const useExpenseTableColumns = ({
             const raw = e.target.value.replace(/[^0-9]/g, "");
             if (raw.length > COST_MAX_DIGITS) return;
             const parsed = raw === "" ? 0 : Number(raw);
-            updateCellByLocalId(row.localId, "cost", String(parsed));
+            updateCellByLocalId(_row.localId, "cost", String(parsed));
           }}
         />
       );
@@ -104,7 +108,11 @@ export const useExpenseTableColumns = ({
   );
 
   const createRenderDate = useCallback(
-    (value: ExpenseData[keyof ExpenseData], _row: ExpenseData, rowIndex: number) => {
+    (
+      value: EditableExpenseRow[keyof EditableExpenseRow],
+      _row: EditableExpenseRow,
+      rowIndex: number,
+    ) => {
       const dateValue = value ? String(value) : "";
       return (
         <DateInput
@@ -120,12 +128,11 @@ export const useExpenseTableColumns = ({
   );
 
   const createRenderCheckBox = useCallback(
-    (value: ExpenseData[keyof ExpenseData], _row: ExpenseData) => {
-      const row = _row as EditableExpenseRow;
+    (_value: EditableExpenseRow[keyof EditableExpenseRow], _row: EditableExpenseRow) => {
       return (
         <CheckBox
-          isChecked={!!value}
-          onChange={() => updateCellByLocalId(row.localId, "selected", !value)}
+          isChecked={_row.isSelected}
+          onChange={() => updateCellByLocalId(_row.localId, "isSelected", !_row.isSelected)}
         />
       );
     },
@@ -134,14 +141,14 @@ export const useExpenseTableColumns = ({
 
   const handleToggleAllCheckBox = useCallback(() => {
     const nextValue = !isAllSelected;
-    updateAllCells("selected", nextValue);
+    updateAllCells("isSelected", nextValue);
   }, [isAllSelected, updateAllCells]);
 
   return useMemo(
     () => [
       {
         label: <CheckBox isChecked={isAllSelected} onChange={handleToggleAllCheckBox} />,
-        accessor: "selected" as keyof ExpenseData,
+        accessor: "isSelected" as keyof EditableExpenseRow,
         render: createRenderCheckBox,
         width: "48px",
         sortable: false,

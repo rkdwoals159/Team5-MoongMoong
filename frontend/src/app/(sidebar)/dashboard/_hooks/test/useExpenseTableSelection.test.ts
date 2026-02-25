@@ -152,7 +152,7 @@ describe("useExpenseTableSelection", () => {
       });
 
       expect(mockEvent.preventDefault).toHaveBeenCalled();
-      expect(result.current.selectedCell).toEqual({ rowIndex: 1, accessor: "selected" });
+      expect(result.current.selectedCell).toEqual({ rowIndex: 1, accessor: "isSelected" });
     });
 
     it("마지막 행 마지막 컬럼에서 Tab을 누르면 이동하지 않는다", () => {
@@ -183,7 +183,7 @@ describe("useExpenseTableSelection", () => {
       });
 
       expect(mockEvent.preventDefault).toHaveBeenCalled();
-      expect(result.current.selectedCell).toEqual({ rowIndex: 0, accessor: "selected" });
+      expect(result.current.selectedCell).toEqual({ rowIndex: 0, accessor: "isSelected" });
     });
 
     it("유효하지 않은 accessor를 가진 셀에서 Tab을 누르면 변경되지 않는다", () => {
@@ -280,7 +280,7 @@ describe("useExpenseTableSelection", () => {
       const { result } = renderHook(() => useExpenseTableSelectionTestWrapper(1));
 
       act(() => {
-        result.current.setSelectedCell({ rowIndex: 0, accessor: "selected" });
+        result.current.setSelectedCell({ rowIndex: 0, accessor: "isSelected" });
       });
 
       const mockEvent = createKeyboardEvent("Tab");
@@ -364,7 +364,7 @@ describe("useExpenseTableSelection", () => {
       act(() => {
         result.current.handleKeyDown(mockEvent);
       });
-      expect(result.current.selectedCell).toEqual({ rowIndex: 0, accessor: "selected" });
+      expect(result.current.selectedCell).toEqual({ rowIndex: 0, accessor: "isSelected" });
 
       // 계속 Tab으로 이동
       act(() => {
@@ -396,7 +396,7 @@ describe("useExpenseTableSelection", () => {
       act(() => {
         result.current.handleKeyDown(mockEvent);
       });
-      expect(result.current.selectedCell).toEqual({ rowIndex: 1, accessor: "selected" });
+      expect(result.current.selectedCell).toEqual({ rowIndex: 1, accessor: "isSelected" });
     });
 
     it("사용자가 컬럼 내에서 Enter로 아래로 이동하며 데이터를 입력한다", () => {

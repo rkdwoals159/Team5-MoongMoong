@@ -5,13 +5,12 @@ import { useCallback, useMemo, useState } from "react";
 import { useAutoCategorize } from "@/app/(sidebar)/dashboard/_hooks/useAutoCategorize";
 import { useExpenseRowsState } from "@/app/(sidebar)/dashboard/_hooks/useExpenseRowsState";
 import { useExpenseRowSave } from "@/app/(sidebar)/dashboard/_hooks/useExpenseRowSave";
-import { useScrollToTopOnSave } from "@/app/(sidebar)/dashboard/_hooks/useScrollToTopOnSave";
 import { useExpenseCellPopup } from "@/app/(sidebar)/dashboard/_hooks/useExpenseCellPopup";
-import { useExpenseCategoryUpdate } from "@/app/(sidebar)/dashboard/_hooks/useExpenseCategoryUpdate";
-import { useExpenseTableColumns } from "@/app/(sidebar)/dashboard/_hooks/UseExpenseTableColumns";
+import { useExpenseTableColumns } from "@/app/(sidebar)/dashboard/_hooks/useExpenseTableColumns";
 import { useExpenseTableSelection } from "@/app/(sidebar)/dashboard/_hooks/useExpenseTableSelection";
 import { isNewRow } from "@/app/(sidebar)/dashboard/_utils";
 import type {
+  EditableExpenseRow,
   ExpenseData,
   SelectedCell,
   UseExpenseTableReturn,
@@ -35,7 +34,10 @@ export const useExpenseTable = ({
 }): UseExpenseTableReturn => {
   const [selectedCell, setSelectedCell] = useState<SelectedCell>(null);
 
-  const onSaveSuccessWithScroll = useScrollToTopOnSave(scrollContainerRef, onSaveSuccess);
+  const onSaveSuccessWithScroll = useCallback(() => {
+    scrollContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    onSaveSuccess();
+  }, [scrollContainerRef, onSaveSuccess]);
 
   const {
     displayInitialRows,
@@ -47,7 +49,7 @@ export const useExpenseTable = ({
     getPatchPayload,
     hasUnsavedChanges,
     selectedCount,
-    totalExpense,
+    costDelta,
   } = useExpenseRowsState(initialData, resetKey);
 
   // 서버에서 정렬된 데이터를 받으므로 새 행(isNew)만 맨 아래 고정하고 나머지는 그대로 유지
@@ -106,11 +108,15 @@ export const useExpenseTable = ({
     onCategoryFilterChange,
   });
 
-  const { handleCategorySelect } = useExpenseCategoryUpdate({
-    selectedCell,
-    displayInitialRows: sortedRows,
-    updateCellByLocalId,
-  });
+  const handleCategorySelect = useCallback(
+    (mainCategory: string, subCategory?: string) => {
+      if (!selectedCell) return;
+      const row = sortedRows[selectedCell.rowIndex] as EditableExpenseRow | undefined;
+      if (!row?.localId) return;
+      updateCellByLocalId(row.localId, "mainCategory", mainCategory, "subCategory", subCategory);
+    },
+    [selectedCell, sortedRows, updateCellByLocalId],
+  );
 
   const handleDateSelect = useCallback(
     (dateKey: string) => {
@@ -141,7 +147,7 @@ export const useExpenseTable = ({
     handleSave,
     hasUnsavedChanges,
     selectedCount,
-    totalExpense,
+    costDelta,
     onCellClick,
     onKeyDown: handleKeyDown,
   };

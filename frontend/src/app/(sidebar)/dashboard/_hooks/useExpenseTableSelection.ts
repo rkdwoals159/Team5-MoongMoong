@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect } from "react";
 import type {
-  ExpenseData,
   EditableExpenseRow,
   SelectedCell,
   UseExpenseTableSelectionParams,
@@ -39,7 +38,7 @@ export function useExpenseTableSelection({
   // 새 행의 어느 셀이든 선택되면 spentAt이 비어 있을 때 오늘 날짜로 자동 설정
   useEffect(() => {
     if (!selectedCell) return;
-    if (selectedCell.accessor === "selected") return;
+    if (selectedCell.accessor === "isSelected") return;
     const row = sortedRows[selectedCell.rowIndex];
     if (!row || !isNewRow(row)) return;
     const editableRow = row as EditableExpenseRow;
@@ -51,7 +50,7 @@ export function useExpenseTableSelection({
   }, [selectedCell, sortedRows, updateCellByLocalId]);
 
   const onCellClick = useCallback(
-    (rowIndex: number, accessor: keyof ExpenseData) => {
+    (rowIndex: number, accessor: keyof EditableExpenseRow) => {
       setSelectedCell({ rowIndex, accessor });
     },
     [setSelectedCell],

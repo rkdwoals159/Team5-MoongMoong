@@ -31,6 +31,7 @@ export function useExpensesV2({
   });
 
   const [expenses, setExpenses] = useState<ExpenseData[]>([]);
+  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
   const [hasNext, setHasNext] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -74,6 +75,7 @@ export function useExpensesV2({
       const result = await fetchPageData(0);
       if (cancelled || !result) return;
       setExpenses(result.expenses);
+      setTotal(result.total);
       setHasNext(result.hasNext);
       setPage(0);
       setResetKey((k) => k + 1);
@@ -100,5 +102,15 @@ export function useExpensesV2({
     setIsLoadingMore(false);
   }, [hasNext, isLoadingMore, expenses, page, fetchPageData]);
 
-  return { startDate, endDate, expenses, refetch, hasNext, isLoadingMore, loadMore, resetKey };
+  return {
+    startDate,
+    endDate,
+    expenses,
+    total,
+    refetch,
+    hasNext,
+    isLoadingMore,
+    loadMore,
+    resetKey,
+  };
 }

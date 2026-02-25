@@ -17,6 +17,7 @@ export const serverToEditableRow = (serverRow: ExpenseData): EditableExpenseRow 
     isNew: false,
     isDirty: false,
     isDeleted: false,
+    isSelected: false,
   };
 };
 
@@ -164,7 +165,7 @@ export const buildMergedRowFromSelected = (
 
 /** 선택된 행 병합 후 전체 rows 배열 반환 (병합 불가 시 null) */
 export const mergeSelectedRowsLogic = (rows: EditableExpenseRow[]): EditableExpenseRow[] | null => {
-  const selected = rows.filter((row) => row.selected && !row.isDeleted);
+  const selected = rows.filter((row) => row.isSelected && !row.isDeleted);
   const merged = buildMergedRowFromSelected(selected);
   if (!merged) return null;
 

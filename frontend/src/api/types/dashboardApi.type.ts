@@ -10,7 +10,6 @@ export type GetCompareLastMonthComparisonResponse =
 export type LastMonthComparisonResponse = GetCompareLastMonthComparisonResponse;
 
 export type GetExpenseByPeriodExpense = {
-  selected?: boolean | null;
   expenseId: number;
   spentAt: string;
   usage: string;

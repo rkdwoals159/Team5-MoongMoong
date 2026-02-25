@@ -1,5 +1,4 @@
-import type { ExpenseData } from "./expense";
-import type { SelectedCell, UpdateCellByLocalId } from "./expenseTable";
+import type { UpdateCellByLocalId } from "./expenseTable";
 
 /**
  * CategoryPopup 컴포넌트 타입
@@ -11,16 +10,6 @@ export type CategoryPopupProps = {
   currentMainCategory?: string;
   currentSubCategory?: string;
 };
-
-/**
- * useExpenseCategoryUpdate 파라미터 타입
- */
-export type UseExpenseCategoryUpdateParams = {
-  selectedCell: SelectedCell;
-  displayInitialRows: ExpenseData[];
-  updateCellByLocalId: UpdateCellByLocalId;
-};
-
 /**
  * useAutoCategorize 파라미터 타입
  */

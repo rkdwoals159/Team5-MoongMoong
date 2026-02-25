@@ -1,13 +1,13 @@
 import type { DataTableColumn } from "@/components/ui/DataTable/dataTable.type";
-import type { ExpenseData } from "@/app/(sidebar)/dashboard/_types";
+import type { EditableExpenseRow, ExpenseData } from "@/app/(sidebar)/dashboard/_types";
 import {
   DATE_PICKER_HEIGHT,
   DATE_PICKER_GAP,
 } from "@/components/common/DatePicker/datePicker.constants";
 
 /** Tab/Enter 네비게이션 순서 (useExpenseTableSelection) */
-export const EDITABLE_ACCESSORS: (keyof ExpenseData)[] = [
-  "selected",
+export const EDITABLE_ACCESSORS: (keyof EditableExpenseRow)[] = [
+  "isSelected",
   "spentAt",
   "usage",
   "cost",

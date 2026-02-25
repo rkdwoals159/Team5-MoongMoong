@@ -3,7 +3,6 @@ import {
   mergeRows,
   buildPatchPayload,
   mergeSelectedRowsLogic,
-  calculateTotalExpense,
   getExpenseRowKey,
 } from "@/app/(sidebar)/dashboard/_lib/expenseRows";
 import { createEmptyRow } from "@/app/(sidebar)/dashboard/_lib/createEmptyRow";
@@ -15,7 +14,6 @@ export {
   mergeRows,
   buildPatchPayload,
   mergeSelectedRowsLogic,
-  calculateTotalExpense,
   getExpenseRowKey,
   resolveDashboardRange,
 };

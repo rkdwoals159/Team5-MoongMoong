@@ -6,7 +6,6 @@ import {
   serverToEditableRow,
   buildPatchPayload,
   mergeSelectedRowsLogic,
-  calculateTotalExpense,
   getExpenseRowKey,
 } from "@/app/(sidebar)/dashboard/_lib";
 
@@ -14,6 +13,7 @@ export function useExpenseRowsState(initialData: ExpenseData[], resetKey: number
   const [rows, setRows] = useState<EditableExpenseRow[]>(() =>
     initialData.map(serverToEditableRow),
   );
+  const [costDelta, setCostDelta] = useState(0);
 
   const prevResetKeyRef = useRef(resetKey);
 
@@ -34,6 +34,10 @@ export function useExpenseRowsState(initialData: ExpenseData[], resetKey: number
       if (newItems.length === 0) return prev;
       return [...prev, ...newItems];
     });
+
+    if (isReset) {
+      setCostDelta(0);
+    }
   }, [initialData, resetKey]);
 
   const visibleRows = useMemo(() => rows.filter((row) => !row.isDeleted), [rows]);
@@ -56,6 +60,12 @@ export function useExpenseRowsState(initialData: ExpenseData[], resetKey: number
           const row = prev[idx];
           if (!row) return prev;
 
+          if (accessor === "cost") {
+            const prevCost = Number(row.cost) || 0;
+            const newCost = Number(value) || 0;
+            setCostDelta((d) => d + newCost - prevCost);
+          }
+
           const isSyncField =
             SYNC_FIELDS.includes(accessor as (typeof SYNC_FIELDS)[number]) ||
             (subAccessor !== undefined &&
@@ -72,6 +82,11 @@ export function useExpenseRowsState(initialData: ExpenseData[], resetKey: number
         }
 
         // displayInitialRows 맨 아래 빈 행(아직 state에 없음) 편집 시 → 새 행 추가
+        if (accessor === "cost") {
+          const newCost = Number(value) || 0;
+          setCostDelta((d) => d + newCost);
+        }
+
         return [
           ...prev,
           {
@@ -96,7 +111,18 @@ export function useExpenseRowsState(initialData: ExpenseData[], resetKey: number
 
   /** 선택된 셀 삭제 핸들러 */
   const deleteSelectedRows = useCallback(() => {
-    setRows((prev) => prev.map((row) => (row.selected ? { ...row, isDeleted: true } : row)));
+    setRows((prev) => {
+      let costToSubtract = 0;
+      const next = prev.map((row) => {
+        if (row.isSelected && !row.isDeleted) {
+          costToSubtract += Number(row.cost) || 0;
+          return { ...row, isDeleted: true };
+        }
+        return row;
+      });
+      if (costToSubtract !== 0) setCostDelta((d) => d - costToSubtract);
+      return next;
+    });
   }, []);
 
   /** 선택된 셀 병합 핸들러 */
@@ -118,12 +144,9 @@ export function useExpenseRowsState(initialData: ExpenseData[], resetKey: number
 
   /** 선택된 셀 개수 체크 핸들러 */
   const selectedCount = useMemo(
-    () => rows.filter((row) => row.selected && !row.isDeleted).length,
+    () => rows.filter((row) => row.isSelected && !row.isDeleted).length,
     [rows],
   );
-
-  /** 총 소비 금액 계산 */
-  const totalExpense = useMemo(() => calculateTotalExpense(visibleRows), [visibleRows]);
 
   /** 행 식별 키 (DataTable rowKey prop) */
   const rowKey = getExpenseRowKey;
@@ -138,6 +161,6 @@ export function useExpenseRowsState(initialData: ExpenseData[], resetKey: number
     getPatchPayload,
     hasUnsavedChanges,
     selectedCount,
-    totalExpense,
+    costDelta,
   };
 }

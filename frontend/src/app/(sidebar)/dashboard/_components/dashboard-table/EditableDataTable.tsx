@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import type { EditableDataTableProps, ExpenseData } from "@/app/(sidebar)/dashboard/_types";
+import type { EditableDataTableProps, EditableExpenseRow } from "@/app/(sidebar)/dashboard/_types";
 import { useExpenseTable } from "@/app/(sidebar)/dashboard/_hooks";
 import { useInfiniteScroll } from "@/app/(sidebar)/dashboard/_hooks/useInfiniteScroll";
 import ClientDataTable from "@/components/ui/DataTable/ClientDataTable";
@@ -17,6 +17,7 @@ import type { ServerSortField } from "@/api/types/dashboardApi.type";
  */
 const EditableDataTable = ({
   initialData,
+  total,
   className,
   sortConfig,
   onSort,
@@ -48,7 +49,7 @@ const EditableDataTable = ({
     handleSave,
     hasUnsavedChanges,
     selectedCount,
-    totalExpense,
+    costDelta,
     onCellClick,
     onKeyDown,
   } = useExpenseTable({
@@ -69,13 +70,13 @@ const EditableDataTable = ({
   // SortConfigV2 → DataTable의 sortConfig 형태로 변환
   // ClientDataTable은 공용 컴포넌트이므로 형태를 맞춰줌
   const tableSortConfig = sortConfig.map(({ field, order }) => ({
-    sortBy: field as keyof ExpenseData,
+    sortBy: field as keyof EditableExpenseRow,
     sortOrder: order,
   }));
 
   return (
     <div className={cn("flex flex-col flex-1 min-h-0", className ?? "")}>
-      <ClientDataTable<ExpenseData>
+      <ClientDataTable<EditableExpenseRow>
         mode="edit"
         columns={columns}
         data={sortedRows}
@@ -84,7 +85,9 @@ const EditableDataTable = ({
         selectedCell={selectedCell}
         sortConfig={tableSortConfig}
         onSort={(accessor) => onSort(accessor as ServerSortField)}
-        onCellClick={onCellClick}
+        onCellClick={(rowIndex, accessor) =>
+          onCellClick(rowIndex, accessor as keyof EditableExpenseRow)
+        }
         onKeyDown={onKeyDown}
         scrollContainerRef={scrollContainerRef}
         bottomSlot={
@@ -119,7 +122,7 @@ const EditableDataTable = ({
 
       <div className="sticky bottom-0 shrink-0 -mx-8">
         <ExpenseTableToolbar
-          totalExpense={totalExpense}
+          totalExpense={total + costDelta}
           selectedCount={selectedCount}
           hasUnsavedChanges={hasUnsavedChanges}
           onSave={handleSave}

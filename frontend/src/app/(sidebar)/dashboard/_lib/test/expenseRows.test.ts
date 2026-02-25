@@ -6,7 +6,6 @@ import {
   buildPatchPayload,
   buildMergedRowFromSelected,
   mergeSelectedRowsLogic,
-  calculateTotalExpense,
   getExpenseRowKey,
 } from "@/app/(sidebar)/dashboard/_lib/expenseRows";
 import type { ExpenseData, EditableExpenseRow } from "@/app/(sidebar)/dashboard/_types";
@@ -40,6 +39,7 @@ function createMockEditableRow(
     isNew: false,
     isDirty: false,
     isDeleted: false,
+    isSelected: false,
     ...overrides,
   };
 }
@@ -162,9 +162,9 @@ describe("expenseRows", () => {
   describe("buildMergedRowFromSelected", () => {
     it("선택된 행들의 비용이 합산된다", () => {
       const selected = [
-        createMockEditableRow(1, { cost: 10000, selected: true }),
-        createMockEditableRow(2, { cost: 20000, selected: true }),
-        createMockEditableRow(3, { cost: 30000, selected: true }),
+        createMockEditableRow(1, { cost: 10000 }),
+        createMockEditableRow(2, { cost: 20000 }),
+        createMockEditableRow(3, { cost: 30000 }),
       ];
 
       const merged = buildMergedRowFromSelected(selected);
@@ -174,8 +174,8 @@ describe("expenseRows", () => {
 
     it("선택된 행들의 용도가 합쳐진다", () => {
       const selected = [
-        createMockEditableRow(1, { usage: "점심", selected: true }),
-        createMockEditableRow(2, { usage: "커피", selected: true }),
+        createMockEditableRow(1, { usage: "점심" }),
+        createMockEditableRow(2, { usage: "커피" }),
       ];
 
       const merged = buildMergedRowFromSelected(selected);
@@ -186,9 +186,9 @@ describe("expenseRows", () => {
 
     it("날짜는 가장 빠른 날짜가 선택된다", () => {
       const selected = [
-        createMockEditableRow(1, { spentAt: "2024-01-20", selected: true }),
-        createMockEditableRow(2, { spentAt: "2024-01-15", selected: true }),
-        createMockEditableRow(3, { spentAt: "2024-01-25", selected: true }),
+        createMockEditableRow(1, { spentAt: "2024-01-20" }),
+        createMockEditableRow(2, { spentAt: "2024-01-15" }),
+        createMockEditableRow(3, { spentAt: "2024-01-25" }),
       ];
 
       const merged = buildMergedRowFromSelected(selected);
@@ -198,8 +198,8 @@ describe("expenseRows", () => {
 
     it("날짜가 없는 행들을 병합하면 빈 문자열이 반환된다", () => {
       const selected = [
-        createMockEditableRow(1, { spentAt: "", selected: true }),
-        createMockEditableRow(2, { spentAt: "", selected: true }),
+        createMockEditableRow(1, { spentAt: "" }),
+        createMockEditableRow(2, { spentAt: "" }),
       ];
 
       const merged = buildMergedRowFromSelected(selected);
@@ -209,9 +209,9 @@ describe("expenseRows", () => {
 
     it("병합 후 원본 행들은 isDeleted=true로 표시된다", () => {
       const rows = [
-        createMockEditableRow(1, { cost: 10000, selected: true }),
-        createMockEditableRow(2, { cost: 20000, selected: true }),
-        createMockEditableRow(3, { cost: 30000, selected: false }),
+        createMockEditableRow(1, { cost: 10000, isSelected: true }),
+        createMockEditableRow(2, { cost: 20000, isSelected: true }),
+        createMockEditableRow(3, { cost: 30000 }),
       ];
 
       const result = mergeSelectedRowsLogic(rows);
@@ -221,33 +221,6 @@ describe("expenseRows", () => {
       expect(result?.[0]?.isDeleted).toBe(true);
       expect(result?.[1]?.isDeleted).toBe(true);
       expect(result?.[2]?.isDeleted).toBe(false);
-    });
-  });
-
-  describe("calculateTotalExpense", () => {
-    it("숫자 비용들이 정확히 합산된다", () => {
-      const rows = [
-        createMockEditableRow(1, { cost: 10000 }),
-        createMockEditableRow(2, { cost: 20000 }),
-        createMockEditableRow(3, { cost: 30000 }),
-      ];
-
-      const total = calculateTotalExpense(rows);
-
-      expect(total).toBe(60000);
-    });
-
-    it("null, undefined, 빈 문자열은 0으로 처리된다", () => {
-      const rows = [
-        createMockEditableRow(1, { cost: 0 }),
-        createMockEditableRow(2, { cost: undefined }),
-        createMockEditableRow(3, { cost: null }),
-        createMockEditableRow(4, { cost: 10000 }),
-      ];
-
-      const total = calculateTotalExpense(rows);
-
-      expect(total).toBe(10000);
     });
   });
 

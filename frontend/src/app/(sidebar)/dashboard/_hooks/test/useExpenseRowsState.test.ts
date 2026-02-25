@@ -49,11 +49,11 @@ describe("useExpenseRowsState", () => {
       const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       act(() => {
-        result.current.updateCellByLocalId("exp-1", "selected", true);
+        result.current.updateCellByLocalId("exp-1", "isSelected", true);
       });
 
       const updatedRow = result.current.displayInitialRows.find((r) => r.localId === "exp-1");
-      expect(updatedRow?.selected).toBe(true);
+      expect(updatedRow?.isSelected).toBe(true);
       expect(updatedRow?.isDirty).toBe(false);
     });
 
@@ -139,11 +139,11 @@ describe("useExpenseRowsState", () => {
       const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       act(() => {
-        result.current.updateAllCells("selected", true);
+        result.current.updateAllCells("isSelected", true);
       });
 
       const rows = result.current.displayInitialRows.slice(0, -1);
-      expect(rows.every((r) => r.selected === true)).toBe(true);
+      expect(rows.every((r) => r.isSelected === true)).toBe(true);
     });
   });
 
@@ -153,7 +153,7 @@ describe("useExpenseRowsState", () => {
       const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       act(() => {
-        result.current.updateAllCells("selected", true);
+        result.current.updateAllCells("isSelected", true);
         result.current.deleteSelectedRows();
       });
 
@@ -166,7 +166,7 @@ describe("useExpenseRowsState", () => {
       const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       act(() => {
-        result.current.updateCellByLocalId("exp-1", "selected", true);
+        result.current.updateCellByLocalId("exp-1", "isSelected", true);
         result.current.deleteSelectedRows();
       });
 
@@ -184,7 +184,7 @@ describe("useExpenseRowsState", () => {
       const { result } = renderHook(() => useExpenseRowsState(serverData, 0));
 
       act(() => {
-        result.current.updateAllCells("selected", true);
+        result.current.updateAllCells("isSelected", true);
         result.current.mergeSelectedRows();
       });
 
@@ -206,7 +206,7 @@ describe("useExpenseRowsState", () => {
 
       act(() => {
         result.current.updateCellByLocalId("exp-1", "usage", "수정된 항목");
-        result.current.updateCellByLocalId("exp-2", "selected", true);
+        result.current.updateCellByLocalId("exp-2", "isSelected", true);
         result.current.deleteSelectedRows();
       });
 
