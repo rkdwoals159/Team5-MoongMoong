@@ -1,6 +1,6 @@
 import type { PostLoginParams, PostLoginResult } from "@/app/api/auth/_types/postLogin";
 
-import { AUTH_DEFAULT_RETURN_TO, ONBOARDING_RETURN_TO } from "@/app/api/auth/_constants";
+import { ONBOARDING_RETURN_TO } from "@/app/api/auth/_constants";
 import { postGroupParticipate } from "@/api/server/authApi";
 import { isApiHttpError } from "../../_utils/routeError";
 

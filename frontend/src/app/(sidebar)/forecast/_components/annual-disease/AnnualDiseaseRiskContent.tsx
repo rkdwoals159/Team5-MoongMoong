@@ -8,7 +8,12 @@ export default async function AnnualDiseaseRiskContent() {
     Promise.all([getDiseaseRanking(), getDiseaseStatistics()]),
   );
 
-  if (result instanceof Error) return <ServerComponentErrorFallback message={result.message} />;
+  if (result instanceof Error)
+    return (
+      <div className="flex w-full justify-center py-1200">
+        <ServerComponentErrorFallback message={result.message} />
+      </div>
+    );
 
   const [diseaseList, statisticsData] = result;
 

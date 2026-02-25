@@ -14,6 +14,10 @@ const PetProfileImage = ({ petImageUrl }: PetProfileImageProps) => {
     setIsModalOpen(true);
   };
 
+  if (!imageUrl)
+    return (
+      <div className="size-[210px] shrink-0 overflow-hidden border bg-gray-500 border-border-light rounded-700"></div>
+    );
   return (
     <>
       <div className="size-[210px] shrink-0 overflow-hidden border border-border-light rounded-700">

@@ -3,34 +3,41 @@ import PetProfileImage from "@/app/(sidebar)/dashboard/_components/summary/PetPr
 import SummaryCard from "@/app/(sidebar)/dashboard/_components/summary/SummaryCard";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
 import { safeServerFetch } from "@/api/lib/client";
+import SummaryWrapper from "./SummaryWrapper";
+import SummaryCardWrapper from "./SummaryCardWrapper";
 
 const Summary = async () => {
   const summaryResult = await safeServerFetch(() => getCompareLastMonth());
   if (summaryResult instanceof Error) {
-    return <ServerComponentErrorFallback message={summaryResult.message} />;
+    return (
+      <SummaryWrapper>
+        <SummaryCardWrapper>
+          <ServerComponentErrorFallback message={summaryResult.message} />
+        </SummaryCardWrapper>
+        <SummaryCardWrapper>
+          <ServerComponentErrorFallback message={summaryResult.message} />
+        </SummaryCardWrapper>
+        <PetProfileImage petImageUrl={""} />
+      </SummaryWrapper>
+    );
   }
 
   const { progressData, petImageUrl } = summaryResult;
 
   return (
-    <section className="w-full">
-      <div
-        className="grid w-full items-stretch gap-500"
-        style={{ gridTemplateColumns: "1fr 1fr 210px" }}
-      >
-        <SummaryCard
-          variant="totalExpense"
-          data={progressData.totalRatio ?? null}
-          petName={progressData.petName ?? ""}
-        />
-        <SummaryCard
-          variant="medicalExpense"
-          data={progressData.medicalRatio ?? null}
-          petName={progressData.petName ?? ""}
-        />
-        <PetProfileImage petImageUrl={petImageUrl} />
-      </div>
-    </section>
+    <SummaryWrapper>
+      <SummaryCard
+        variant="totalExpense"
+        data={progressData.totalRatio ?? null}
+        petName={progressData.petName ?? ""}
+      />
+      <SummaryCard
+        variant="medicalExpense"
+        data={progressData.medicalRatio ?? null}
+        petName={progressData.petName ?? ""}
+      />
+      <PetProfileImage petImageUrl={petImageUrl} />
+    </SummaryWrapper>
   );
 };
 

@@ -3,8 +3,7 @@ import { formatAmount } from "@/utils/amount";
 import CategoryAnalysisChart from "./CategoryAnalysisChart";
 import MedicalAnalysisChart from "./MedicalAnalysisChart";
 import { formatRatio } from "@/app/(sidebar)/analysis/_utils";
-import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
-
+import AnalysisChartEmpty from "./AnalysisChartEmpty";
 import type { components } from "@/types/schema";
 import type {
   CategoryAnalysisChartCardProps,
@@ -16,7 +15,7 @@ export async function CategoryAnalysisChartCard({
 }: CategoryAnalysisChartCardProps) {
   const categoryData = await categoryPromise;
   if (categoryData instanceof Error) {
-    return <ServerComponentErrorFallback message={categoryData.message} />;
+    return <AnalysisChartEmpty message={categoryData.message} />;
   }
 
   const { items: categoryItems } = categoryData;
@@ -51,12 +50,12 @@ export async function MedicalAnalysisChartCard({
 }: MedicalAnalysisChartCardProps) {
   const petInfo = await petInfoPromise;
   if (petInfo instanceof Error) {
-    return <ServerComponentErrorFallback message={petInfo.message} />;
+    return <AnalysisChartEmpty message={petInfo.message} />;
   }
 
   const medicalData = await medicalPromise;
   if (medicalData instanceof Error) {
-    return <ServerComponentErrorFallback message={medicalData.message} />;
+    return <AnalysisChartEmpty message={medicalData.message} />;
   }
 
   const petName = petInfo?.petName ?? "반려동물";

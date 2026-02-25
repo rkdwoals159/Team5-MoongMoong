@@ -1,6 +1,9 @@
 import { API_ERROR_MESSAGES } from "@/api/constants";
 import { getApiErrorMessageByBackendErrorCode } from "@/api/lib/errorCode";
-import { STATUS_ERROR_MESSAGE_MAP, RESPONSE_PATH_ERROR_MESSAGE_MAP } from "@/api/lib/constant";
+import {
+  STATUS_ERROR_MESSAGE_MAP,
+  RESPONSE_PATH_ERROR_MESSAGE_MAP,
+} from "@/api/constants/errorCodeMap";
 import type { ApiHttpError, ErrorResponse } from "@/api/lib/type";
 
 export const toApiHttpError = async (

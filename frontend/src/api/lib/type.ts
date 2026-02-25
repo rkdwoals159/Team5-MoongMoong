@@ -1,5 +1,5 @@
 import type { ToastOptions } from "@/components/ui/Toast/toast.type";
-import type { BACKEND_ERROR_CODE_MAP } from "@/api/lib/constant";
+import type { BACKEND_ERROR_CODE_MAP } from "@/api/constants/errorCodeMap";
 
 export type ErrorResponse = {
   code?: unknown;

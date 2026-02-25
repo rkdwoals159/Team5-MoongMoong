@@ -4,6 +4,7 @@ import { DISEASE_TAB_ORDER } from "@/app/(sidebar)/forecast/_constants";
 import MedicalExpense from "@/app/(sidebar)/forecast/_components/medical-expense";
 import ServerComponentErrorFallback from "@/components/ui/ErrorBoundary/ServerComponentErrorFallback";
 import { safeServerFetch } from "@/api/lib/client";
+import MedicalExpenseWrapper from "../_components/medical-expense/MedicalExpenseWrapper";
 
 export default async function MedicalExpensePage({
   searchParams,
@@ -14,7 +15,13 @@ export default async function MedicalExpensePage({
 
   const diseaseListResult = await safeServerFetch(() => getDiseaseRanking());
   if (diseaseListResult instanceof Error) {
-    return <ServerComponentErrorFallback message={diseaseListResult.message} />;
+    return (
+      <MedicalExpenseWrapper>
+        <div className="flex w-full justify-center py-1200">
+          <ServerComponentErrorFallback message={diseaseListResult.message} />
+        </div>
+      </MedicalExpenseWrapper>
+    );
   }
 
   // 질병 목록 조회 (fetch 캐시로 중복 없음)

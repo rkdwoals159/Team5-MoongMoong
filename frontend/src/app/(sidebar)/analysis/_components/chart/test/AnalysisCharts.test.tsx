@@ -18,6 +18,8 @@ vi.mock("@/app/(sidebar)/analysis/_components/chart/CategoryAnalysisChart", () =
   default: () => null,
 }));
 
+vi.mock("@/assets/icons/analysis/ic_warning.svg", () => ({ default: () => null }));
+
 describe("MedicalAnalysisChartCard", () => {
   it("반려동물 정보가 없으면 기본 이름으로 제목을 노출한다", async () => {
     const ui = await MedicalAnalysisChartCard({

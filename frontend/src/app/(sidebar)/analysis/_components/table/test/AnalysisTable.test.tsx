@@ -1,8 +1,10 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render } from "@testing-library/react";
 
 import AnalysisTable from "@/app/(sidebar)/analysis/_components/table/AnalysisTable";
 import type { components } from "@/types/schema";
+
+vi.mock("@/assets/icons/analysis/ic_warning.svg", () => ({ default: () => null }));
 
 type GroupExpenseResponse = components["schemas"]["GroupExpenseResponse"];
 

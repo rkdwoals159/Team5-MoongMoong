@@ -1,5 +1,8 @@
 import { API_ERROR_MESSAGES } from "@/api/constants";
-import { BACKEND_ERROR_CODE_MAP, BACKEND_ERROR_CODE_TO_API_ERROR_KEY } from "@/api/lib/constant";
+import {
+  BACKEND_ERROR_CODE_MAP,
+  BACKEND_ERROR_CODE_TO_API_ERROR_KEY,
+} from "@/api/constants/errorCodeMap";
 import type { BackendErrorCode } from "@/api/lib/type";
 
 // backend/src/main/java/com/moong/exception/errorcode/ErrorCode.java 기준
