@@ -1,5 +1,6 @@
 "use client";
 
+import { HEARTBEAT_TIMEOUT } from "@/constants/sseConnection";
 import { parseSSE } from "@/lib/sse/parseSSE";
 import type { SSEConnectionStatus, SSEEvent, SSEProps } from "@/types/sse";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -20,10 +21,12 @@ export function useSSE({ onEvent, onError, connectionToken }: SSEProps) {
   }, [onError]);
 
   const connect = useCallback(async (token: string) => {
-    abortRef.current?.abort();
+    abortRef.current?.abort("new-connection");
     const controller = new AbortController();
     abortRef.current = controller;
     setStatus("connecting");
+
+    let heartbeatTimer: ReturnType<typeof setTimeout> | null = null;
 
     try {
       const response = await fetch(process.env.NEXT_PUBLIC_SSE_URL!, {
@@ -44,9 +47,19 @@ export function useSSE({ onEvent, onError, connectionToken }: SSEProps) {
       const decoder = new TextDecoder();
       let buffer = "";
 
+      const resetHeartbeat = () => {
+        if (heartbeatTimer) clearTimeout(heartbeatTimer);
+        heartbeatTimer = setTimeout(() => {
+          controller.abort("heartbeat-timeout");
+        }, HEARTBEAT_TIMEOUT);
+      };
+
+      resetHeartbeat();
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
+        resetHeartbeat();
 
         buffer += decoder.decode(value, { stream: true });
         const { events, lastPart } = parseSSE(buffer);
@@ -64,16 +77,24 @@ export function useSSE({ onEvent, onError, connectionToken }: SSEProps) {
         }
       }
 
+      if (heartbeatTimer) clearTimeout(heartbeatTimer);
+
+      if (!controller.signal.aborted) {
+        setStatus("closed");
+        onErrorRef.current?.(new Error("SSE 스트림이 서버에 의해 종료되었습니다."));
+        return;
+      }
       setStatus("closed");
     } catch (e) {
-      if (controller.signal.aborted) return;
+      if (heartbeatTimer) clearTimeout(heartbeatTimer);
+      if (controller.signal.aborted && controller.signal.reason !== "heartbeat-timeout") return;
       setStatus("closed");
       onErrorRef.current?.(e instanceof Error ? e : new Error(String(e)));
     }
   }, []);
 
   const disconnect = useCallback(() => {
-    abortRef.current?.abort();
+    abortRef.current?.abort("user-disconnect");
     setStatus("closed");
   }, []);
 

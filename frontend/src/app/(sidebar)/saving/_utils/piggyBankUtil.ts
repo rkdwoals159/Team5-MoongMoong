@@ -1,12 +1,14 @@
-import { Bodies, Query, type Engine } from "matter-js";
-import type { Body } from "matter-js";
+import type { Engine, Body } from "matter-js";
+
+type MatterBodies = typeof import("matter-js").Bodies;
+type MatterQuery = typeof import("matter-js").Query;
 import { PIGGY_BANK } from "@/app/(sidebar)/saving/_constants";
 import type { BallBody, ToolTipState } from "@/app/(sidebar)/saving/_types";
 import { formatAmount } from "@/utils/amount";
 import { clamp, formatCreatedAt } from "@/app/(sidebar)/saving/_utils/savingUtil";
 
 /** 바닥·좌·우 벽 Body 생성 */
-export const createWalls = (width: number, height: number): Body[] => [
+export const createWalls = (Bodies: MatterBodies, width: number, height: number): Body[] => [
   // 바닥
   Bodies.rectangle(
     width / 2,
@@ -32,6 +34,7 @@ export const createWalls = (width: number, height: number): Body[] => [
 
 /** 코인 원형 Body 생성 (위치·크기·스프라이트 계산 포함) */
 export const createCoinBody = (
+  Bodies: MatterBodies,
   name: string,
   amount: number,
   createdAt: string,
@@ -91,6 +94,7 @@ export const renderLabels = (ctx: CanvasRenderingContext2D, bodies: Body[]): voi
 
 /** 마우스 좌표의 코인 Body 탐색 후 툴팁 데이터 반환 */
 export const findTooltipTarget = (
+  Query: MatterQuery,
   engine: Engine,
   canvas: HTMLCanvasElement,
   e: MouseEvent,
