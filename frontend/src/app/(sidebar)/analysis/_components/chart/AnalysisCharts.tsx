@@ -4,11 +4,13 @@ import CategoryAnalysisChart from "./CategoryAnalysisChart";
 import MedicalAnalysisChart from "./MedicalAnalysisChart";
 import { formatRatio } from "@/app/(sidebar)/analysis/_utils";
 import AnalysisChartEmpty from "./AnalysisChartEmpty";
+import ErrorBoundary from "@/components/ui/ErrorBoundary/ErrorBoundary";
 import type { components } from "@/types/schema";
 import type {
   CategoryAnalysisChartCardProps,
   MedicalAnalysisChartCardProps,
 } from "@/app/(sidebar)/analysis/_types/componentPropsType.type";
+import { CLIENT_ERROR_MESSAGES } from "@/api/constants";
 
 export async function CategoryAnalysisChartCard({
   categoryPromise,
@@ -39,7 +41,9 @@ export async function CategoryAnalysisChartCard({
         </div>
       </div>
       <h2 className="mt-200 typo-headline-l-bold text-text-base">{topCategoryLabel}</h2>
-      <CategoryAnalysisChart data={categoryItems} />
+      <ErrorBoundary message={CLIENT_ERROR_MESSAGES.CHART_ERROR}>
+        <CategoryAnalysisChart data={categoryItems} />
+      </ErrorBoundary>
     </section>
   );
 }
@@ -71,7 +75,9 @@ export async function MedicalAnalysisChartCard({
         </div>
       </div>
       <h2 className="mt-200 typo-headline-l-bold text-text-base">{medicalTotalLabel}</h2>
-      <MedicalAnalysisChart data={medicalItems} />
+      <ErrorBoundary message={CLIENT_ERROR_MESSAGES.CHART_ERROR}>
+        <MedicalAnalysisChart data={medicalItems} />
+      </ErrorBoundary>
     </section>
   );
 }

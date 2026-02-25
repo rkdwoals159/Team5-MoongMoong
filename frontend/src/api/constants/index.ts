@@ -37,3 +37,8 @@ export const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
 export const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"] as const;
 export const VERCEL_BLOB_HOST = "blob.vercel-storage.com";
 export const DEFAULT_IMAGE_PATH_PREFIX = "img_dog_default";
+
+export const CLIENT_ERROR_MESSAGES = {
+  PIGGYBANK_ERROR: "저금통을 불러올 수 없습니다",
+  CHART_ERROR: "차트를 불러올 수 없습니다",
+};
