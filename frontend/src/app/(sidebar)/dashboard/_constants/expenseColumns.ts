@@ -53,6 +53,9 @@ export { DATE_PICKER_HEIGHT, DATE_PICKER_GAP };
 /** 비용 입력 최대 자릿수 */
 export const COST_MAX_DIGITS = 8;
 
+/** 텍스트 입력 최대 글자수 (사용내역, 메모) */
+export const TEXT_MAX_LENGTH = 250;
+
 /** useExpenseCellPopup variant별 accessor·높이·간격 */
 export const CELL_POPUP_VARIANT_CONFIG = {
   category: {

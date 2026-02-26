@@ -75,7 +75,7 @@ function isRowValidForPatch(row: EditableExpenseRow): boolean {
       : row.cost != null && row.cost !== ""
         ? Number(row.cost)
         : null;
-  if (cost == null || Number.isNaN(cost)) return false;
+  if (cost == null || Number.isNaN(cost) || cost === 0) return false;
 
   const mainCategory = row.mainCategory;
   if (mainCategory == null || String(mainCategory).trim() === "") return false;

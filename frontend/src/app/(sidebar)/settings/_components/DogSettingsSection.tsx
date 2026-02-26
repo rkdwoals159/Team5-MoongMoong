@@ -22,6 +22,7 @@ export default function DogSettingsSection({ dog, onClose }: DogSettingsSectionP
     district,
     diseases,
     isSaveDisabled,
+    birthDateError,
     handlePetNameChange,
     handleBreedChange,
     handleGenderSelect,
@@ -68,6 +69,8 @@ export default function DogSettingsSection({ dog, onClose }: DogSettingsSectionP
             maxLength={7}
             showCounter={false}
             placeholder="YYYY-MM"
+            showError={!!birthDateError}
+            errorMessage={birthDateError ?? undefined}
             onChange={handleBirthDateChange}
           />
         </FieldWrapper>

@@ -39,7 +39,10 @@ const DataTableShell = memo(function DataTableShell({
         <colgroup>{colDefs}</colgroup>
         {headerSlot}
       </table>
-      <div ref={scrollContainerRef} className="data-table-scroll flex-1 min-h-0 overflow-auto">
+      <div
+        ref={scrollContainerRef}
+        className="data-table-scroll flex-1 min-h-0 overflow-auto pt-100"
+      >
         <table
           {...tableRest}
           className="w-full border-separate border-spacing-0 text-left table-fixed"

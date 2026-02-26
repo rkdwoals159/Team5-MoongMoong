@@ -10,6 +10,7 @@ export {
   CELL_POPUP_VARIANT_CONFIG,
   SYNC_FIELDS,
   COST_MAX_DIGITS,
+  TEXT_MAX_LENGTH,
 } from "@/app/(sidebar)/dashboard/_constants/expenseColumns";
 
 export {
@@ -30,6 +31,7 @@ export {
   EXPENSES_ERROR_MESSAGE,
   SAVE_ERROR_MESSAGE,
   SAVE_VALIDATION_ERROR_MESSAGE,
+  UNSAVED_CHANGE_WARNING_MESSAGE,
 } from "@/app/(sidebar)/dashboard/_constants/messages";
 
 export { AUTO_CATEGORIZE_DEBOUNCE_MS } from "@/app/(sidebar)/dashboard/_constants/expenseCategory";

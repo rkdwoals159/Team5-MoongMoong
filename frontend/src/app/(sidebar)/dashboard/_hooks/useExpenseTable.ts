@@ -8,6 +8,7 @@ import { useExpenseRowSave } from "@/app/(sidebar)/dashboard/_hooks/useExpenseRo
 import { useExpenseCellPopup } from "@/app/(sidebar)/dashboard/_hooks/useExpenseCellPopup";
 import { useExpenseTableColumns } from "@/app/(sidebar)/dashboard/_hooks/useExpenseTableColumns";
 import { useExpenseTableSelection } from "@/app/(sidebar)/dashboard/_hooks/useExpenseTableSelection";
+import { useUnsavedChangesWarning } from "@/app/(sidebar)/dashboard/_hooks/useUnsavedChangesWarning";
 import { isNewRow } from "@/app/(sidebar)/dashboard/_utils";
 import type {
   EditableExpenseRow,
@@ -51,6 +52,8 @@ export const useExpenseTable = ({
     selectedCount,
     costDelta,
   } = useExpenseRowsState(initialData, resetKey);
+
+  useUnsavedChangesWarning(hasUnsavedChanges);
 
   // 서버에서 정렬된 데이터를 받으므로 새 행(isNew)만 맨 아래 고정하고 나머지는 그대로 유지
   // 사용자가 새로 입력하는 행은 서버 정렬 대상이 아니므로, 정렬 결과에서 제외한다.

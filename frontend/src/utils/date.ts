@@ -135,6 +135,19 @@ export function clampDate(value: string, min?: string, max?: string): string {
   return result;
 }
 
+/** YYYY-MM 형식 생년월일로 만 나이(소수 포함)를 계산 */
+export function getPetAge(value: string): number {
+  const [yearStr, monthStr] = value.split("-");
+  if (!yearStr || !monthStr) return 0;
+
+  const year = Number(yearStr);
+  const month = Number(monthStr);
+  const now = new Date();
+  const currentMonth = now.getMonth() + 1;
+  const currentYear = now.getFullYear();
+  return currentYear - year + (currentMonth - month) / 12;
+}
+
 /** 주어진 날짜를 주어진 단위로 증가 또는 감소 */
 export function shiftByUnit(dateKey: string, unit: NavigationUnit, delta: number): string {
   switch (unit) {

@@ -11,6 +11,7 @@ import type { DiseaseCode } from "@/api/types/forecastApi.type";
 import type { GetPetInfoResponse } from "@/api/types/perInfoApi.type";
 import type { DogFormValues } from "@/app/(sidebar)/settings/types";
 import { getErrorMessage } from "@/api/lib/errorMessage";
+import { getPetAge } from "@/utils/date";
 
 export default function useDogSettingsForm(dog: GetPetInfoResponse) {
   const router = useRouter();
@@ -35,7 +36,9 @@ export default function useDogSettingsForm(dog: GetPetInfoResponse) {
     district !== original.district ||
     isDiseasesChanged;
 
-  const isSaveDisabled = !isChanged || !petName.trim() || !birthDate || !district;
+  const birthDateError = getBirthDateError(birthDate);
+
+  const isSaveDisabled = !isChanged || !petName.trim() || !!birthDateError || !district;
 
   function handlePetNameChange(e: React.ChangeEvent<HTMLInputElement>) {
     setPetName(e.target.value);
@@ -102,6 +105,7 @@ export default function useDogSettingsForm(dog: GetPetInfoResponse) {
     district,
     diseases,
     isSaveDisabled,
+    birthDateError,
     // 핸들러
     handlePetNameChange,
     handleBreedChange,
@@ -113,7 +117,16 @@ export default function useDogSettingsForm(dog: GetPetInfoResponse) {
   };
 }
 
-// 내장 함수
+const BIRTH_DATE_REGEXP = /^(19|20)\d{2}-(0[1-9]|1[0-2])$/;
+
+function getBirthDateError(birthDate: string): string | null {
+  if (!birthDate) return null;
+  if (!BIRTH_DATE_REGEXP.test(birthDate)) return "올바른 형식으로 입력해 주세요. (YYYY-MM)";
+  if (getPetAge(birthDate) < 0) return "미래 날짜는 입력할 수 없습니다.";
+  if (getPetAge(birthDate) > 20) return "나이는 스무살 이하여야 합니다.";
+  return null;
+}
+
 function toInitialValues(dog: GetPetInfoResponse): DogFormValues {
   return {
     petName: dog.petName ?? "",

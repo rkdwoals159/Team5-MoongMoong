@@ -11,6 +11,7 @@ import {
   CATEGORY_COLOR_MAP,
   DEFAULT_CATEGORY_COLOR,
   COST_MAX_DIGITS,
+  TEXT_MAX_LENGTH,
 } from "@/app/(sidebar)/dashboard/_constants";
 import DateInput from "@/app/(sidebar)/dashboard/_components/dashboard-table/DateInput";
 import Chip from "@/components/common/Chip/Chip";
@@ -50,6 +51,7 @@ export const useExpenseTableColumns = ({
           <input
             aria-label={ACCESSOR_LABEL_MAP[accessor] ?? String(accessor)}
             className="w-full bg-transparent outline-none px-500 py-200 truncate"
+            maxLength={TEXT_MAX_LENGTH}
             value={String(value ?? "")}
             onChange={(e) => {
               const v = e.target.value;

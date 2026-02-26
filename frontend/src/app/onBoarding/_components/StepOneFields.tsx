@@ -29,7 +29,7 @@ export default function StepOneFields({
           <TextInput
             placeholder="강아지 이름을 입력해주세요"
             maxLength={MAX_PET_NAME_LENGTH}
-            showCounter={false}
+            showCounter={true}
             value={data.petName}
             touched={showErrors}
             showError={hasPetNameError}

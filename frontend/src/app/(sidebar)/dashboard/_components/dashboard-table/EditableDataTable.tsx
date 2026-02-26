@@ -85,7 +85,10 @@ const EditableDataTable = ({
         className="flex-1 min-h-0 rounded-t-600 border border-b-0 border-gray-50"
         selectedCell={selectedCell}
         sortConfig={tableSortConfig}
-        onSort={(accessor) => onSort(accessor as ServerSortField)}
+        onSort={(accessor) => {
+          scrollContainerRef.current?.scrollTo({ top: 0 });
+          onSort(accessor as ServerSortField);
+        }}
         onCellClick={(rowIndex, accessor) =>
           onCellClick(rowIndex, accessor as keyof EditableExpenseRow)
         }

@@ -4,6 +4,7 @@ import {
   ONBOARDING_BIRTH_DATE_REGEXP,
   ONBOARDING_FIELD_ERROR_MESSAGES,
 } from "@/app/onBoarding/_constants";
+import { getPetAge } from "@/utils/date";
 import type {
   OnboardingFormData,
   OnboardingStep,
@@ -29,17 +30,6 @@ function isFutureBirthDate(value: string): boolean {
   const currentYear = now.getFullYear();
 
   return year > currentYear || (year === currentYear && month > currentMonth);
-}
-function getPetAge(value: string): number {
-  const [yearStr, monthStr] = value.split("-");
-  if (!yearStr || !monthStr) return 0;
-
-  const year = Number(yearStr);
-  const month = Number(monthStr);
-  const now = new Date();
-  const currentMonth = now.getMonth() + 1;
-  const currentYear = now.getFullYear();
-  return currentYear - year + (currentMonth - month) / 12;
 }
 
 export function normalizeBirthDate(input: string): string {
