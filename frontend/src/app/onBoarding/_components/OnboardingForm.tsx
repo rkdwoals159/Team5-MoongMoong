@@ -15,6 +15,7 @@ import StepOneFields from "./StepOneFields";
 import StepThreeFields from "./StepThreeFields";
 import StepTwoFields from "./StepTwoFields";
 import { useOnboardingForm } from "@/app/onBoarding/_hooks/useOnboardingForm";
+import { validateForm } from "../_utils";
 
 const STEP_COMPONENTS = [StepOneFields, StepTwoFields, StepThreeFields] as const;
 
@@ -88,6 +89,7 @@ export default function OnboardingForm({ action }: OnboardingFormProps) {
         size="xxlarge"
         fullWidth
         onClick={handlePrimaryButtonClick}
+        isDisabled={isLastStep && !validateForm(formData)}
       >
         {primaryLabel}
       </Button>

@@ -7,17 +7,17 @@ export const DAY_CELL_DETAIL_COLUMNS: DataTableColumn<GroupExpenseItem>[] = [
   {
     label: "닉네임",
     accessor: "nickName",
-    width: "88px",
+    width: "140px",
     render: (value) => (
-      <span className="block max-w-[80px] truncate px-200 py-100">{String(value ?? "-")}</span>
+      <span className="block w-full truncate px-500 py-100">{String(value ?? "-")}</span>
     ),
   },
   {
     label: "사용내역",
     accessor: "usage",
-    width: "144px",
+    width: "150px",
     render: (value) => (
-      <span className="block max-w-[136px] truncate px-200 py-100">{String(value ?? "-")}</span>
+      <span className="block w-full truncate px-500 py-100">{String(value ?? "-")}</span>
     ),
   },
   {
@@ -27,7 +27,7 @@ export const DAY_CELL_DETAIL_COLUMNS: DataTableColumn<GroupExpenseItem>[] = [
     render: (value) => {
       const amount = Number(value ?? 0);
       return (
-        <span className="block whitespace-nowrap px-200 py-100 tabular-nums text-gray-700">
+        <span className="block w-full whitespace-nowrap px-500 py-100 tabular-nums text-gray-700">
           {Number.isFinite(amount) ? `${amount.toLocaleString()}원` : "-"}
         </span>
       );
@@ -38,7 +38,7 @@ export const DAY_CELL_DETAIL_COLUMNS: DataTableColumn<GroupExpenseItem>[] = [
     accessor: "mainCategory",
     width: "92px",
     render: (value) => (
-      <div className="px-200 py-100">
+      <div className="block w-full px-500 py-100">
         <Chip
           label={String(value ?? "-")}
           level="major"

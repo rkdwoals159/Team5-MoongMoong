@@ -31,6 +31,7 @@ export const ONBOARDING_FIELD_ERROR_MESSAGES = {
   GENDER_REQUIRED: "성별을 선택해주세요.",
   BIRTH_DATE_REQUIRED: "출생 년월을 입력해주세요.",
   BIRTH_DATE_INVALID: "YYYY-MM 형식으로 입력해주세요.",
+  BIRTH_AGE_INVALID: "나이는 스무살 이하여야 합니다.",
   CITY_REQUIRED: "시/도를 선택해주세요.",
   DISTRICT_REQUIRED: "시/구/군을 선택해주세요.",
   FUTURE_BIRTH_DATE: "미래 날짜는 입력할 수 없습니다.",
