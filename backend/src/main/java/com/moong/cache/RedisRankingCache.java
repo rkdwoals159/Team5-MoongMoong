@@ -113,6 +113,7 @@ public class RedisRankingCache implements RankingCache {
     }
 
     public void softDeleteRanking(RedisRankingKey rankingKey, long ttlSeconds) {
-        redisTemplate.expire(rankingKey.value(), ttlSeconds, TimeUnit.SECONDS);
+        redissonClient.getScoredSortedSet(rankingKey.value())
+                .expire(Duration.ofSeconds(ttlSeconds));
     }
 }
