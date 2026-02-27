@@ -30,7 +30,8 @@ export default function CategoryAnalysisChart({ data }: CategoryAnalysisChartPro
             outerRadius={110}
             label={renderPieChartLabel}
             labelLine={false}
-            isAnimationActive={false}
+            isAnimationActive={true}
+            animationDuration={900}
           />
           <RechartsTooltip<number, string>
             content={(props) => <AnalysisChartTooltip {...props} />}

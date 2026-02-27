@@ -31,7 +31,8 @@ export default function MedicalAnalysisChart({ data }: MedicalAnalysisChartProps
             shape={renderSector}
             label={renderPieChartLabel}
             labelLine={false}
-            isAnimationActive={false}
+            isAnimationActive={true}
+            animationDuration={900}
           />
           <RechartsTooltip<number, string>
             content={(props) => <AnalysisChartTooltip {...props} />}
