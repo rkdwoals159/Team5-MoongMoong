@@ -11,7 +11,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 @Slf4j
 @Configuration
-@EnableScheduling
+//@EnableScheduling
 public class SchedulingConfig {
 
     private static final String SCHEDULER_PREFIX = "moong-scheduler-";
